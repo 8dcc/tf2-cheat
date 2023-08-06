@@ -2,12 +2,19 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <dlfcn.h>
+#include "include/main.h"
+#include "include/globals.h"
 
 static bool loaded = false;
 
 __attribute__((constructor)) /* Entry point when injected */
 void load(void) {
     printf("tf2-cheat injected!\n");
+
+    if (!globals_init()) {
+        fprintf(stderr, "load: error loading globals, aborting\n");
+        self_unload();
+    }
 
     loaded = true;
 }
@@ -17,7 +24,10 @@ void unload() {
     if (!loaded)
         return;
 
-    /* TODO: Unhook stuff */
+    if (!resore_vtables()) {
+        fprintf(stderr, "unload: error restoring vtables, aborting\n");
+        self_unload();
+    }
 
     printf("tf2-cheat unloaded.\n\n");
 }
