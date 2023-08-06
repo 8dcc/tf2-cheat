@@ -23,16 +23,6 @@
 
 /*----------------------------------------------------------------------------*/
 
-typedef struct {
-    uint8_t r, g, b;
-} rgb_t;
-
-typedef struct {
-    uint8_t r, g, b, a;
-} rgba_t;
-
-/*----------------------------------------------------------------------------*/
-
 void* get_interface(void* handle, const char* name);
 size_t vmt_size(void* vmt);
 

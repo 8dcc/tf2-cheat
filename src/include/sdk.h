@@ -20,6 +20,16 @@ typedef struct {
 } vec3_t;
 
 typedef struct {
+    uint8_t r, g, b;
+} rgb_t;
+
+typedef struct {
+    uint8_t r, g, b, a;
+} rgba_t;
+
+typedef rgba_t Color;
+
+typedef struct {
     void* vt;
     int command_number;
     int tick_count;
