@@ -1,28 +1,17 @@
-#+title: Title
+#+title: TF2 Cheat
 #+options: toc:nil
 #+startup: showeverything
-#+export_file_name: ./doc/README.md
 #+author: 8dcc
 
-#+begin_comment
-*TODO:* Change PROJECT-NAME and title
-*TODO:* Change ~pidof "PROJECT-NAME"~ / ~realpath "libPROJECT-NAME.so"~ / ~PROJECT-NAME already loaded...~
-*TODO:* Change ~libPROJECT-NAME.so~ in Makefile
-*TODO:* Change PROJECT-NAME in main.c
-#+end_comment
-
-*Short description.*
+*Linux cheat for Team Fortress 2 made in C.*
 
 #+TOC: headlines 2
-
-* Description
-Long description.
 
 * Building
 
 #+begin_src console
-$ git clone https://github.com/8dcc/PROJECT-NAME
-$ cd PROJECT-NAME
+$ git clone https://github.com/8dcc/tf2-cheat
+$ cd tf2-cheat
 $ make
 ...
 #+end_src
@@ -36,5 +25,5 @@ $ ./injector.sh
 
 ...
 
-PROJECT-NAME loaded!
+tf2-cheat loaded!
 #+end_src
