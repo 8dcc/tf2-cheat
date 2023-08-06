@@ -4,6 +4,7 @@
 #include <dlfcn.h>
 #include "include/main.h"
 #include "include/globals.h"
+#include "include/hooks.h"
 
 static bool loaded = false;
 
@@ -13,6 +14,11 @@ void load(void) {
 
     if (!globals_init()) {
         fprintf(stderr, "load: error loading globals, aborting\n");
+        self_unload();
+    }
+
+    if (!hooks_init()) {
+        fprintf(stderr, "load: error loading hooks, aborting\n");
         self_unload();
     }
 
