@@ -7,7 +7,7 @@ static bool loaded = false;
 
 __attribute__((constructor)) /* Entry point when injected */
 void load(void) {
-    printf("PROJECT-NAME injected!\n");
+    printf("tf2-cheat injected!\n");
 
     loaded = true;
 }
@@ -19,11 +19,11 @@ void unload() {
 
     /* TODO: Unhook stuff */
 
-    printf("PROJECT-NAME unloaded.\n\n");
+    printf("tf2-cheat unloaded.\n\n");
 }
 
 void self_unload(void) {
-    void* self = dlopen("libPROJECT-NAME.so", RTLD_LAZY | RTLD_NOLOAD);
+    void* self = dlopen("libtf2cheat.so", RTLD_LAZY | RTLD_NOLOAD);
 
     /* Close the call we just made to dlopen() */
     dlclose(self);
