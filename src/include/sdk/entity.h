@@ -62,7 +62,9 @@ typedef struct {
 
 struct Entity {
     VMT_Entity* vmt;
-    PAD(0x368);
+    PAD(0x10C);
+    vec3_t velocity; /* 0x110 */
+    PAD(0x250);
     int flags; /* 0x36C */
 };
 
