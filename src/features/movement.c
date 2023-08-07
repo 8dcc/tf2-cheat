@@ -62,7 +62,6 @@ void bhop(usercmd_t* cmd) {
         cmd->buttons &= ~IN_JUMP;
 
     if (is_jumping) {
-
         switch (settings.autostrafe) {
             default:
             case OFF:
