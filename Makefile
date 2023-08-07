@@ -1,7 +1,7 @@
 
 CC=gcc
 CFLAGS=-Wall -Wextra -m32 -fPIC
-LDFLAGS=
+LDFLAGS=-lm
 
 OBJS=obj/main.c.o obj/globals.c.o obj/hooks.c.o obj/util.c.o obj/features/movement.c.o
 BIN=libtf2cheat.so
