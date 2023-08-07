@@ -24,6 +24,7 @@
 void* h_client = NULL;
 
 DECL_INTF(BaseClient, baseclient);
+DECL_INTF(EntityList, entitylist);
 DECL_INTF(ClientMode, clientmode);
 
 /*----------------------------------------------------------------------------*/
@@ -45,6 +46,7 @@ bool globals_init(void) {
 
     /* Interfaces */
     GET_INTERFACE(BaseClient*, i_baseclient, h_client, "VClient017");
+    GET_INTERFACE(EntityList*, i_entitylist, h_client, "VClientEntityList003");
 
     /* Other interfaces */
     i_clientmode = get_clientmode();
