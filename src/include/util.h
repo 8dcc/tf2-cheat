@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <math.h>
+#include <link.h> /* link_map */
 #include "sdk.h"
 
 #define PRINT_BYTES(ptr, n)                        \
@@ -15,6 +16,10 @@
 
 /* Location of address + Size of offset + Offset */
 #define RELATIVE2ABSOLUTE(addr) (void*)((void*)(addr) + 4 + *(uint32_t*)(addr))
+
+/* Offset from dlopen() handler */
+#define GET_OFFSET(HANDLER, OFFSET) \
+    ((void*)(((struct link_map*)HANDLER)->l_addr) + OFFSET)
 
 #define DEG2RAD(n) ((n)*M_PI / 180.0f)
 #define RAD2DEG(n) ((n)*180.0f / M_PI)
