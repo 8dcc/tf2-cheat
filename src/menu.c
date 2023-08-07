@@ -6,6 +6,7 @@
 #define NK_IMPLEMENTATION
 #define NK_SDL_GL3_IMPLEMENTATION
 #include "include/menu.h"
+#include "include/settings.h"
 
 #define MENU_X 100
 #define MENU_Y 100
@@ -52,11 +53,16 @@ bool menu_init(SDL_Window* window) {
 void menu_render(void) {
     if (nk_begin(nk_ctx, "tf2-cheat", nk_rect(MENU_X, MENU_Y, MENU_W, MENU_H),
                  MENU_FLAGS)) {
-        /* REVIEW */
-        nk_layout_row_dynamic(nk_ctx, 20, 8);
+        nk_layout_row_dynamic(nk_ctx, 20, 1);
 
-        if (nk_button_label(nk_ctx, "Button"))
-            puts("Button pressed.");
+        nk_checkbox_label(nk_ctx, "Bhop", &settings.bhop);
+
+        nk_layout_row_dynamic(nk_ctx, 20, 2);
+
+        static const char* autostrafe_opts[] = { "Off", "Legit", "Rage" };
+        struct nk_vec2 size                  = { 70, 100 };
+        nk_label(nk_ctx, "Autostrafe", NK_TEXT_LEFT);
+        nk_combobox(nk_ctx, autostrafe_opts, 3, &settings.autostrafe, 15, size);
 
         nk_end(nk_ctx);
     }
