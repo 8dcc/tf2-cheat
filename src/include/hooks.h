@@ -2,7 +2,9 @@
 #define HOOKS_H_
 
 #include <stdbool.h>
+#include <SDL2/SDL.h>
 #include "sdk.h"
+#include "globals.h"
 
 /* NOTE: For commented version, see:
  *   https://github.com/8dcc/hl-cheat/blob/main/src/include/hooks.h */
@@ -20,10 +22,20 @@
 
 #define ORIGINAL(name, ...) ho_##name(__VA_ARGS__);
 
+#define HOOK_SDL(name)       \
+    ho_##name  = *name##Ptr; \
+    *name##Ptr = h_##name;
+
 /*----------------------------------------------------------------------------*/
 
 bool hooks_init(void);
 
 DECL_HOOK_EXTERN(bool, CreateMove, ClientMode*, float, usercmd_t*);
+
+/* SDL */
+extern SwapWindow_t ho_SwapWindow;
+extern PollEvent_t ho_PollEvent;
+void h_SwapWindow(SDL_Window* window);
+int h_PollEvent(SDL_Event* event);
 
 #endif /* HOOKS_H_ */

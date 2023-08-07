@@ -8,10 +8,16 @@
 
 DECL_HOOK(CreateMove);
 
+SwapWindow_t ho_SwapWindow = NULL;
+PollEvent_t ho_PollEvent   = NULL;
+
 /*----------------------------------------------------------------------------*/
 
 bool hooks_init(void) {
     HOOK(i_clientmode->vmt, CreateMove);
+
+    HOOK_SDL(SwapWindow);
+    HOOK_SDL(PollEvent);
 
     return true;
 }
@@ -27,6 +33,22 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
         return ret;
 
     bhop(cmd);
+
+    return ret;
+}
+
+/*----------------------------------------------------------------------------*/
+
+void h_SwapWindow(SDL_Window* window) {
+    printf("Hello from SwapWindow!\n");
+
+    ORIGINAL(SwapWindow, window);
+}
+
+int h_PollEvent(SDL_Event* event) {
+    int ret = ORIGINAL(PollEvent, event);
+
+    printf("Hello from PollEvent!\n");
 
     return ret;
 }
