@@ -20,6 +20,10 @@ typedef struct {
 } vec3_t;
 
 typedef struct {
+    float m[4][4];
+} VMatrix;
+
+typedef struct {
     uint8_t r, g, b;
 } rgb_t;
 
@@ -43,6 +47,7 @@ typedef rgba_t Color;
     instance->vmt->method(instance, __VA_ARGS__)
 
 typedef struct BaseClient BaseClient;
+typedef struct EngineClient EngineClient;
 typedef struct EntityList EntityList;
 typedef struct ClientMode ClientMode;
 
@@ -53,6 +58,22 @@ typedef struct {
 
 struct BaseClient {
     VMT_BaseClient* vmt;
+};
+
+typedef struct {
+    PAD(4 * 5);
+    void (*GetScreenSize)(EngineClient*, int* w, int* h); /* 5 */
+    PAD(4 * 6);
+    int (*GetLocalPlayer)(EngineClient*); /* 12 */
+    PAD(4 * 6);
+    void (*GetViewAngles)(EngineClient*, vec3_t* v); /* 19 */
+    void (*SetViewAngles)(EngineClient*, vec3_t* v); /* 20 */
+    PAD(4 * 15);
+    VMatrix* (*WorldToScreenMatrix)(EngineClient*); /* 36 */
+} VMT_EngineClient;
+
+struct EngineClient {
+    VMT_EngineClient* vmt;
 };
 
 typedef struct {

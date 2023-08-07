@@ -4,6 +4,7 @@
 #include "include/globals.h"
 
 #define CLIENT_SO "./tf/bin/client.so"
+#define ENGINE_SO "./bin/engine.so"
 
 #define GET_HANDLER(VAR, STR)                                   \
     VAR = dlopen(STR, RTLD_LAZY | RTLD_NOLOAD);                 \
@@ -22,10 +23,12 @@
 /*----------------------------------------------------------------------------*/
 
 void* h_client = NULL;
+void* h_engine = NULL;
 
 Entity* localplayer = NULL;
 
 DECL_INTF(BaseClient, baseclient);
+DECL_INTF(EngineClient, engine);
 DECL_INTF(EntityList, entitylist);
 DECL_INTF(ClientMode, clientmode);
 
@@ -45,9 +48,11 @@ static inline ClientMode* get_clientmode(void) {
 bool globals_init(void) {
     /* Handlers */
     GET_HANDLER(h_client, CLIENT_SO);
+    GET_HANDLER(h_engine, ENGINE_SO);
 
     /* Interfaces */
     GET_INTERFACE(BaseClient*, i_baseclient, h_client, "VClient017");
+    GET_INTERFACE(EngineClient*, i_engine, h_engine, "VEngineClient014");
     GET_INTERFACE(EntityList*, i_entitylist, h_client, "VClientEntityList003");
 
     /* Other interfaces */
