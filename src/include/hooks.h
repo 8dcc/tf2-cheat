@@ -29,10 +29,10 @@
 /*----------------------------------------------------------------------------*/
 
 bool hooks_init(void);
+bool hooks_restore(void);
 
 DECL_HOOK_EXTERN(bool, CreateMove, ClientMode*, float, usercmd_t*);
 
-/* SDL */
 extern SwapWindow_t ho_SwapWindow;
 extern PollEvent_t ho_PollEvent;
 void h_SwapWindow(SDL_Window* window);
