@@ -29,27 +29,10 @@ typedef struct {
 
 typedef rgba_t Color;
 
-typedef struct {
-    void* vmt;
-    int command_number;
-    int tick_count;
-    vec3_t viewangles;
-    float forwardmove;
-    float sidemove;
-    float upmove;
-    int buttons;
-    uint8_t impulse;
-    int weaponselect;
-    int weaponsubtype;
-    int random_seed;
-    short mousedx;
-    short mousedy;
-    bool hasbeenpredicted;
-} usercmd_t;
-
 /*----------------------------------------------------------------------------*/
 /* Classes */
 
+#include "sdk/usercmd_t.h"
 #include "sdk/entity.h"
 
 /*----------------------------------------------------------------------------*/
