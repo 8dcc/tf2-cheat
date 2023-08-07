@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <string.h> /* CLONE_VMT: memcpy */
 #include <stdlib.h> /* CLONE_VMT: malloc */
+#include <SDL2/SDL.h>
 #include "util.h"
 #include "sdk.h"
 
@@ -29,6 +30,10 @@
     extern VMT_##type* oVMTi_##name; \
     extern VMT_##type* nVMTi_##name;
 
+#define DECL_SDL_FUNC(retType, name, ...)     \
+    typedef retType (*name##_t)(__VA_ARGS__); \
+    extern name##_t* name##Ptr;
+
 #define CLONE_VMT(class, name)                                                \
     oVMT##name = name->vmt;                                                   \
     nVMT##name = malloc(vmt_size(name->vmt));                                 \
@@ -50,6 +55,9 @@ extern void* h_client;
 extern void* h_engine;
 
 extern Entity* localplayer;
+
+DECL_SDL_FUNC(void, SwapWindow, SDL_Window* window);
+DECL_SDL_FUNC(int, PollEvent, SDL_Event* event);
 
 DECL_INTF_EXTERN(BaseClient, baseclient);
 DECL_INTF_EXTERN(EngineClient, engine);
