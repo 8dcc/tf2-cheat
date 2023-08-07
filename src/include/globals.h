@@ -48,6 +48,8 @@
 
 extern void* h_client;
 
+extern Entity* localplayer;
+
 DECL_INTF_EXTERN(BaseClient, baseclient);
 DECL_INTF_EXTERN(EntityList, entitylist);
 DECL_INTF_EXTERN(ClientMode, clientmode);
