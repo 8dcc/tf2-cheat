@@ -371,6 +371,7 @@ nk_sdl_handle_event(SDL_Event *evt)
                     case SDLK_RETURN:    nk_input_key(ctx, NK_KEY_ENTER, down); break;
                     case SDLK_TAB:       nk_input_key(ctx, NK_KEY_TAB, down); break;
                     case SDLK_BACKSPACE: nk_input_key(ctx, NK_KEY_BACKSPACE, down); break;
+                    case SDLK_INSERT:    nk_input_key(ctx, NK_KEY_INSERT, down); break;
                     case SDLK_HOME:      nk_input_key(ctx, NK_KEY_TEXT_START, down);
                                          nk_input_key(ctx, NK_KEY_SCROLL_START, down); break;
                     case SDLK_END:       nk_input_key(ctx, NK_KEY_TEXT_END, down);

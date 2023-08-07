@@ -22,7 +22,7 @@
 #define MAX_VERTEX_MEMORY  512 * 1024
 #define MAX_ELEMENT_MEMORY 128 * 1024
 
-#define MENU_KEY NK_KEY_TEXT_START
+#define MENU_KEY NK_KEY_INSERT
 
 /*----------------------------------------------------------------------------*/
 
