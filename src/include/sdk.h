@@ -48,6 +48,11 @@ typedef struct {
 } usercmd_t;
 
 /*----------------------------------------------------------------------------*/
+/* Classes */
+
+#include "sdk/entity.h"
+
+/*----------------------------------------------------------------------------*/
 /* Interfaces */
 
 #define METHOD(instance, method) instance->vmt->method(instance)
@@ -55,6 +60,7 @@ typedef struct {
     instance->vmt->method(instance, __VA_ARGS__)
 
 typedef struct BaseClient BaseClient;
+typedef struct EntityList EntityList;
 typedef struct ClientMode ClientMode;
 
 typedef struct {
@@ -64,6 +70,15 @@ typedef struct {
 
 struct BaseClient {
     VMT_BaseClient* vmt;
+};
+
+typedef struct {
+    PAD(4 * 3);
+    Entity* (*GetClientEntity)(EntityList*, int entnum); /* 4 */
+} VMT_EntityList;
+
+struct EntityList {
+    VMT_EntityList* vmt;
 };
 
 typedef struct {
