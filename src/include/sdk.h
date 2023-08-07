@@ -30,7 +30,7 @@ typedef struct {
 typedef rgba_t Color;
 
 typedef struct {
-    void* vt;
+    void* vmt;
     int command_number;
     int tick_count;
     vec3_t viewangles;
@@ -50,9 +50,9 @@ typedef struct {
 /*----------------------------------------------------------------------------*/
 /* Interfaces */
 
-#define METHOD(instance, method) instance->vt->method(instance)
+#define METHOD(instance, method) instance->vmt->method(instance)
 #define METHOD_ARGS(instance, method, ...) \
-    instance->vt->method(instance, __VA_ARGS__)
+    instance->vmt->method(instance, __VA_ARGS__)
 
 typedef struct BaseClient BaseClient;
 typedef struct ClientMode ClientMode;
@@ -60,19 +60,19 @@ typedef struct ClientMode ClientMode;
 typedef struct {
     PAD(4 * 10);
     void (*HudProcessInput)(BaseClient*, bool bActive); /* 10 */
-} VT_BaseClient;
+} VMT_BaseClient;
 
 struct BaseClient {
-    VT_BaseClient* vt;
+    VMT_BaseClient* vmt;
 };
 
 typedef struct {
     PAD(4 * 22);
     bool (*CreateMove)(ClientMode*, float flInputSampleTime, usercmd_t* cmd);
-} VT_ClientMode;
+} VMT_ClientMode;
 
 struct ClientMode {
-    VT_ClientMode* vt;
+    VMT_ClientMode* vmt;
 };
 
 #endif /* SDK_H_ */

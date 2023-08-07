@@ -2,8 +2,8 @@
 #define GLOBALS_H_
 
 #include <stdbool.h>
-#include <string.h> /* CLONE_VTABLE: memcpy */
-#include <stdlib.h> /* CLONE_VTABLE: malloc */
+#include <string.h> /* CLONE_VMT: memcpy */
+#include <stdlib.h> /* CLONE_VMT: malloc */
 #include "util.h"
 #include "sdk.h"
 
@@ -12,37 +12,36 @@
  *   https://github.com/8dcc/hl-cheat/blob/main/src/include/hooks.h
  *   https://github.com/8dcc/bms-cheat/blob/main/src/include/hooks.h
  *
- * prefix | meaning
- * -------+-------------------------------
- * h_*    | handler ptr (global scope)
- * i_*    | interface ptr (global scope)
- * oVTi_* | original vtable pointer (will be replaced with our own vtable)
- * nVTi_* | new vtable pointer allocated by us
+ * prefix  | meaning
+ * --------+-------------------------------
+ * h_*     | handler ptr (global scope)
+ * i_*     | interface ptr (global scope)
+ * oVMTi_* | original vmt pointer (will be replaced with our own vmt)
+ * nVMTi_* | new vmt pointer allocated by us
  */
-#define DECL_INTF(type, name)      \
-    type* i_##name         = NULL; \
-    VT_##type* oVTi_##name = NULL; \
-    VT_##type* nVTi_##name = NULL;
+#define DECL_INTF(type, name)        \
+    type* i_##name           = NULL; \
+    VMT_##type* oVMTi_##name = NULL; \
+    VMT_##type* nVMTi_##name = NULL;
 
 #define DECL_INTF_EXTERN(type, name) \
     extern type* i_##name;           \
-    extern VT_##type* oVTi_##name;   \
-    extern VT_##type* nVTi_##name;
+    extern VMT_##type* oVMTi_##name; \
+    extern VMT_##type* nVMTi_##name;
 
-#define CLONE_VTABLE(class, name)                                           \
-    oVT##name = name->vt;                                                   \
-    nVT##name = malloc(vmt_size(name->vt));                                 \
-    if (!nVT##name) {                                                       \
-        fprintf(stderr, "CLONE_VTABLE: Could not allocate vtable for %s\n", \
-                #name);                                                     \
-        return false;                                                       \
-    }                                                                       \
-    memcpy(nVT##name, name->vt, vmt_size(name->vt));                        \
-    name->vt = nVT##name;
+#define CLONE_VMT(class, name)                                                \
+    oVMT##name = name->vmt;                                                   \
+    nVMT##name = malloc(vmt_size(name->vmt));                                 \
+    if (!nVMT##name) {                                                        \
+        fprintf(stderr, "CLONE_VMT: Could not allocate vmt for %s\n", #name); \
+        return false;                                                         \
+    }                                                                         \
+    memcpy(nVMT##name, name->vmt, vmt_size(name->vmt));                       \
+    name->vmt = nVMT##name;
 
-#define RESTORE_VTABLE(class, name) \
-    name->vt = oVT##name;           \
-    free(nVT##name);
+#define RESTORE_VMT(class, name) \
+    name->vmt = oVMT##name;      \
+    free(nVMT##name);
 
 /*----------------------------------------------------------------------------*/
 /* Global variables */

@@ -14,7 +14,7 @@
 
 #define GET_INTERFACE(TYPE, VAR, HANDLER, STR)                   \
     VAR = (TYPE)get_interface(HANDLER, STR);                     \
-    if (!VAR || !VAR->vt) {                                      \
+    if (!VAR || !VAR->vmt) {                                     \
         fprintf(stderr, "globals_init: cant't load " #VAR "\n"); \
         return false;                                            \
     }
@@ -32,7 +32,7 @@ DECL_INTF(ClientMode, clientmode);
 static inline ClientMode* get_clientmode(void) {
     const int byte_offset = 1;
 
-    void* func_ptr      = i_baseclient->vt->HudProcessInput;
+    void* func_ptr      = i_baseclient->vmt->HudProcessInput;
     void* g_pClientMode = *(void**)(func_ptr + byte_offset); /* 60 1F 06 02 */
     ClientMode* ret     = *(ClientMode**)g_pClientMode;
 
@@ -48,18 +48,18 @@ bool globals_init(void) {
 
     /* Other interfaces */
     i_clientmode = get_clientmode();
-    if (!i_clientmode || !i_clientmode->vt) {
+    if (!i_clientmode || !i_clientmode->vmt) {
         fprintf(stderr, "globals_init: couldn't load i_clientmodebms\n");
         return false;
     }
 
-    CLONE_VTABLE(ClientMode, i_clientmode);
+    CLONE_VMT(ClientMode, i_clientmode);
 
     return true;
 }
 
 bool resore_vtables(void) {
-    RESTORE_VTABLE(ClientMode, i_clientmode);
+    RESTORE_VMT(ClientMode, i_clientmode);
 
     return true;
 }

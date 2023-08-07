@@ -10,7 +10,7 @@ DECL_HOOK(CreateMove);
 /*----------------------------------------------------------------------------*/
 
 bool hooks_init(void) {
-    HOOK(i_clientmode->vt, CreateMove);
+    HOOK(i_clientmode->vmt, CreateMove);
 
     return true;
 }
