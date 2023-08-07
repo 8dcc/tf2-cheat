@@ -45,6 +45,9 @@ bool menu_init(SDL_Window* window) {
     nk_sdl_font_stash_begin(&nk_atlas);
     nk_sdl_font_stash_end();
 
+    /* Use our own cursors for menu */
+    nk_style_load_all_cursors(nk_ctx, nk_atlas->cursors);
+
     return true;
 }
 

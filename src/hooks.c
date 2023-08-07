@@ -58,10 +58,11 @@ void h_SwapWindow(SDL_Window* window) {
     /* Switch to our gl context */
     SDL_GL_MakeCurrent(window, gl_ctx);
 
-    /* Toggle menu */
+    /* Toggle menu and cursor */
     if (nk_input_is_key_released(&nk_ctx->input, MENU_KEY)) {
-        menu_open = !menu_open;
-        /* TODO: Cursor */
+        menu_open                    = !menu_open;
+        nk_ctx->style.cursor_visible = menu_open;
+        SDL_ShowCursor(!menu_open);
     }
 
     /* Render the menu */
