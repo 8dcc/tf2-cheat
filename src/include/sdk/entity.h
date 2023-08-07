@@ -12,7 +12,7 @@ typedef struct {
 struct Entity {
     VMT_Entity* vmt;
     PAD(0x368);
-    int m_fFlags; /* 0x36C */
+    int flags; /* 0x36C */
 };
 
 #endif /* ENTITY_H_ */
