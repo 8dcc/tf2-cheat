@@ -35,15 +35,16 @@ void unload() {
         self_unload();
     }
 
+    if (!hooks_restore()) {
+        fprintf(stderr, "unload: error restoring hooks, aborting\n");
+        self_unload();
+    }
+
     printf("tf2-cheat unloaded.\n\n");
 }
 
 void self_unload(void) {
     void* self = dlopen("libtf2cheat.so", RTLD_LAZY | RTLD_NOLOAD);
-
-    /* Close the call we just made to dlopen() */
-    dlclose(self);
-
-    /* Close the call our injector made */
-    dlclose(self);
+    dlclose(self); /* Close the call we just made to dlopen() */
+    dlclose(self); /* Close the call our injector made */
 }
