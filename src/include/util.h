@@ -26,6 +26,16 @@
 void* get_interface(void* handle, const char* name);
 size_t vmt_size(void* vmt);
 
+vec3_t vec_add(vec3_t a, vec3_t b);
+vec3_t vec_sub(vec3_t a, vec3_t b);
+bool vec_cmp(vec3_t a, vec3_t b);
+bool vec_is_zero(vec3_t v);
+float vec_len2d(vec3_t v);
+void vec_clamp(vec3_t v);
+void vec_norm(vec3_t v);
+vec3_t vec_to_ang(vec3_t v);
+float angle_delta_rad(float a, float b);
+
 bool protect_addr(void* ptr, int new_flags);
 
 #endif /* UTIL_H_ */
