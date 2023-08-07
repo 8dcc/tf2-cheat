@@ -2,6 +2,7 @@
 #define FEATURES_H_
 
 #include "../include/sdk.h"
+#include "../include/settings.h"
 
 /* src/features/movement.c */
 void bhop(usercmd_t* cmd);

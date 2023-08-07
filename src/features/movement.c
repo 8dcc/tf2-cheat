@@ -6,7 +6,7 @@
 #include "../include/util.h"
 #include "../include/sdk.h"
 
-void autostrafe_legit(usercmd_t* cmd) {
+static void autostrafe_legit(usercmd_t* cmd) {
     /* Check mouse x delta */
     if (cmd->mousedx < 0)
         cmd->sidemove = -450.0f;
@@ -14,7 +14,7 @@ void autostrafe_legit(usercmd_t* cmd) {
         cmd->sidemove = 450.0f;
 }
 
-void autostrafe_rage(usercmd_t* cmd) {
+static void autostrafe_rage(usercmd_t* cmd) {
     /* TODO: Get at runtime */
     static const float sv_airaccelerate = 10.0f;
     static const float sv_maxspeed      = 320.0f;
@@ -52,10 +52,8 @@ void autostrafe_rage(usercmd_t* cmd) {
     cmd->sidemove    = -sinf(movedir) * cl_sidespeed;
 }
 
-/* TODO: Bhop and autostrafe menu/settings
- * TODO: Make autostrafe functions static after menu */
 void bhop(usercmd_t* cmd) {
-    if (!localplayer || !METHOD(localplayer, IsAlive))
+    if (!settings.bhop || !localplayer || !METHOD(localplayer, IsAlive))
         return;
 
     const bool is_jumping = (cmd->buttons & IN_JUMP) != 0;
@@ -63,6 +61,18 @@ void bhop(usercmd_t* cmd) {
     if (!(localplayer->flags & FL_ONGROUND))
         cmd->buttons &= ~IN_JUMP;
 
-    if (is_jumping)
-        autostrafe_rage(cmd);
+    if (is_jumping) {
+
+        switch (settings.autostrafe) {
+            default:
+            case OFF:
+                break;
+            case LEGIT:
+                autostrafe_legit(cmd);
+                break;
+            case RAGE:
+                autostrafe_rage(cmd);
+                break;
+        }
+    }
 }
