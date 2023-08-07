@@ -41,6 +41,23 @@ typedef struct {
     PAD(4 * 11);
     vec3_t* (*GetAbsOrigin)(Entity*); /* 11 */
     vec3_t* (*GetAbsAngles)(Entity*); /* 12 */
+    PAD(4 * 66);
+    int (*GetIndex)(Entity*); /* 79 */
+    PAD(4 * 37);
+    int (*GetTeamNumber)(Entity*); /* 117 */
+    PAD(4 * 34);
+    int (*GetHealth)(Entity*);    /* 152 */
+    int (*GetMaxHealth)(Entity*); /* 153 */
+    PAD(4 * 29);
+    bool (*IsAlive)(Entity*);  /* 183 */
+    bool (*IsPlayer)(Entity*); /* 184 */
+    PAD(4 * 2);
+    bool (*IsNPC)(Entity*); /* 187 */
+    PAD(4 * 2);
+    bool (*IsWeapon)(Entity*); /* 190 */
+    PAD(4 * 3);
+    vec3_t (*EyePosition)(Entity*); /* 194 */
+    vec3_t (*EyeAngles)(Entity*);   /* 195 */
 } VMT_Entity;
 
 struct Entity {
