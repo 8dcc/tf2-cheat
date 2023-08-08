@@ -35,8 +35,37 @@ enum entity_flags {
     FL_UNBLOCKABLE_BY_PLAYER = (1 << 30)
 };
 
+/*----------------------------------------------------------------------------*/
+
+typedef struct Collideable Collideable;
+typedef struct Networkable Networkable;
 typedef struct Entity Entity;
 typedef struct Weapon Weapon;
+extern Entity* localplayer;
+
+typedef struct {
+    /* REVIEW: Prescalled or normal */
+    PAD(4 * 1);
+    vec3_t* (*ObbMinsPreScaled)(Collideable*); /* 1 */
+    vec3_t* (*ObbMaxsPreScaled)(Collideable*); /* 2 */
+    vec3_t* (*ObbMins)(Collideable*);          /* 3 */
+    vec3_t* (*ObbMaxs)(Collideable*);          /* 4 */
+} VMT_Collideable;
+
+struct Collideable {
+    VMT_Collideable* vmt;
+};
+
+typedef struct {
+    /* REVIEW */
+    PAD(4 * 8);
+    bool (*IsDormant)(Networkable*); /* 8 */
+    int (*GetIndex)(Networkable*);   /* 9 */
+} VMT_Networkable;
+
+struct Networkable {
+    VMT_Networkable* vmt;
+};
 
 typedef struct {
     PAD(4 * 11);
@@ -69,5 +98,22 @@ struct Entity {
     PAD(0x250);
     int flags; /* 0x36C */
 };
+
+static inline void* GetRendereable(Entity* ent) {
+    /* TODO: Rendereable struct */
+    return (Networkable*)((void*)ent + 0x4);
+}
+
+static inline Networkable* GetNetworkable(Entity* ent) {
+    return (Networkable*)((void*)ent + 0x8);
+}
+
+static inline bool IsLocalplayer(Entity* ent) {
+    return METHOD(localplayer, GetIndex) == METHOD(ent, GetIndex);
+}
+
+static inline bool IsTeammate(Entity* ent) {
+    return METHOD(localplayer, GetTeamNumber) == METHOD(ent, GetTeamNumber);
+}
 
 #endif /* ENTITY_H_ */

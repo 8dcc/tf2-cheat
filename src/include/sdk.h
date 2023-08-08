@@ -8,6 +8,10 @@
 #define PADSTR(n) STR(pad, n)
 #define PAD(n)    uint8_t PADSTR(__LINE__)[n]
 
+#define METHOD(instance, method) instance->vmt->method(instance)
+#define METHOD_ARGS(instance, method, ...) \
+    instance->vmt->method(instance, __VA_ARGS__)
+
 /*----------------------------------------------------------------------------*/
 /* Data structures and enums */
 
@@ -42,10 +46,6 @@ typedef rgba_t Color;
 
 /*----------------------------------------------------------------------------*/
 /* Interfaces */
-
-#define METHOD(instance, method) instance->vmt->method(instance)
-#define METHOD_ARGS(instance, method, ...) \
-    instance->vmt->method(instance, __VA_ARGS__)
 
 typedef struct BaseClient BaseClient;
 typedef struct EngineClient EngineClient;
