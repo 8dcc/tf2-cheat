@@ -57,7 +57,6 @@ struct Collideable {
 };
 
 typedef struct {
-    /* REVIEW */
     PAD(4 * 8);
     bool (*IsDormant)(Networkable*); /* 8 */
     int (*GetIndex)(Networkable*);   /* 9 */
@@ -111,7 +110,7 @@ static inline Networkable* GetNetworkable(Entity* ent) {
 }
 
 static inline bool IsLocalplayer(Entity* ent) {
-    return METHOD(localplayer, GetIndex) == METHOD(ent, GetIndex);
+    return METHOD(localplayer, GetIndex) == METHOD(i_engine, GetLocalPlayer);
 }
 
 static inline bool IsTeammate(Entity* ent) {
