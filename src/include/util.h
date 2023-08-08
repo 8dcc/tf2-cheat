@@ -45,6 +45,8 @@ static inline float dot_product(vec3_t a, vec3_t b) {
     return (a.x * b.x + a.y * b.y + a.z * b.z);
 }
 
+bool IsBehindAndFacingTarget(Entity* target);
+
 bool world_to_screen(vec3_t vec, vec2_t* screen);
 
 bool protect_addr(void* ptr, int new_flags);

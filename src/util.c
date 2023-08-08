@@ -118,6 +118,38 @@ float angle_delta_rad(float a, float b) {
 
 /*----------------------------------------------------------------------------*/
 
+bool IsBehindAndFacingTarget(Entity* target) {
+    if (!localplayer)
+        return false;
+
+    /* Get a vector from owner origin to target origin */
+    vec3_t vecToTarget;
+    vecToTarget   = vec_sub(*METHOD(target, WorldSpaceCenter),
+                            *METHOD(localplayer, WorldSpaceCenter));
+    vecToTarget.z = 0.0f;
+    vec_norm(&vecToTarget);
+
+    /* Get owner forward view vector */
+    vec3_t vecOwnerForward = ang_to_vec(METHOD(localplayer, EyeAngles));
+    vecOwnerForward.z      = 0.0f;
+    vec_norm(&vecOwnerForward);
+
+    /* Get target forward view vector */
+    vec3_t vecTargetForward = ang_to_vec(METHOD(target, EyeAngles));
+    vecTargetForward.z      = 0.0f;
+    vec_norm(&vecTargetForward);
+
+    /* Make sure owner is behind, facing and aiming at target's back */
+    float flPosVsTargetViewDot = dot_product(vecToTarget, vecTargetForward);
+    float flPosVsOwnerViewDot  = dot_product(vecToTarget, vecOwnerForward);
+    float flViewAnglesDot      = dot_product(vecTargetForward, vecOwnerForward);
+
+    return (flPosVsTargetViewDot > 0.f && flPosVsOwnerViewDot > 0.5 &&
+            flViewAnglesDot > -0.3f);
+}
+
+/*----------------------------------------------------------------------------*/
+
 /* clang-format off */
 #define MUL_ROW(matrix, idx, vec) \
     (matrix->m[idx][0] * vec.x +  \

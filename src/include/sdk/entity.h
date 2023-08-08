@@ -74,7 +74,12 @@ typedef struct {
     vec3_t* (*GetAbsAngles)(Entity*); /* 12 */
     PAD(4 * 66);
     int (*GetIndex)(Entity*); /* 79 */
-    PAD(4 * 37);
+
+    /* FIXME */
+    PAD(4 * 31);
+    vec3_t* (*WorldSpaceCenter)(Entity*); /* 111 */
+    PAD(4 * 5);
+
     int (*GetTeamNumber)(Entity*); /* 117 */
     PAD(4 * 34);
     int (*GetHealth)(Entity*);    /* 152 */
