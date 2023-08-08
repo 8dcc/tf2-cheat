@@ -36,6 +36,7 @@ enum entity_flags {
 };
 
 typedef struct Entity Entity;
+typedef struct Weapon Weapon;
 
 typedef struct {
     PAD(4 * 11);
@@ -54,8 +55,9 @@ typedef struct {
     PAD(4 * 2);
     bool (*IsNPC)(Entity*); /* 187 */
     PAD(4 * 2);
-    bool (*IsWeapon)(Entity*); /* 190 */
-    PAD(4 * 3);
+    bool (*IsWeapon)(Entity*);     /* 190 */
+    Weapon* (*GetWeapon)(Entity*); /* 191 */
+    PAD(4 * 2);
     vec3_t (*EyePosition)(Entity*); /* 194 */
     vec3_t (*EyeAngles)(Entity*);   /* 195 */
 } VMT_Entity;

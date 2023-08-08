@@ -38,6 +38,7 @@ typedef rgba_t Color;
 
 #include "sdk/usercmd_t.h"
 #include "sdk/entity.h"
+#include "sdk/weapon.h"
 
 /*----------------------------------------------------------------------------*/
 /* Interfaces */
