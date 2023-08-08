@@ -75,11 +75,15 @@ void player_esp(void) {
 
     /* Iterate all entities */
     for (int i = 1; i <= 32; i++) {
-        Entity* ent      = METHOD_ARGS(i_entitylist, GetClientEntity, i);
-        Networkable* net = GetNetworkable(ent);
+        if (i == METHOD(i_engine, GetLocalPlayer))
+            continue;
 
-        if (!ent || !net || !METHOD(ent, IsAlive) || METHOD(net, IsDormant) ||
-            IsLocalplayer(ent))
+        Entity* ent = METHOD_ARGS(i_entitylist, GetClientEntity, i);
+        if (!ent || !METHOD(ent, IsAlive))
+            continue;
+
+        Networkable* net = GetNetworkable(ent);
+        if (!net || METHOD(net, IsDormant))
             continue;
 
         if (!get_bbox(ent, &x, &y, &w, &h))
