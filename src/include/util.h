@@ -41,6 +41,8 @@ void vec_norm(vec3_t v);
 vec3_t vec_to_ang(vec3_t v);
 float angle_delta_rad(float a, float b);
 
+bool world_to_screen(vec3_t vec, vec2_t* screen);
+
 bool protect_addr(void* ptr, int new_flags);
 
 #endif /* UTIL_H_ */
