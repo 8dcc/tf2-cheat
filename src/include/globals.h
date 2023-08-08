@@ -53,6 +53,8 @@
 
 extern void* h_client;
 extern void* h_engine;
+extern void* h_matsurface;
+extern void* h_sdl2;
 
 extern Entity* localplayer;
 
@@ -62,6 +64,8 @@ DECL_SDL_FUNC(int, PollEvent, SDL_Event* event);
 DECL_INTF_EXTERN(BaseClient, baseclient);
 DECL_INTF_EXTERN(EngineClient, engine);
 DECL_INTF_EXTERN(EntityList, entitylist);
+DECL_INTF_EXTERN(EngineVGui, enginevgui);
+DECL_INTF_EXTERN(MatSurface, surface);
 DECL_INTF_EXTERN(ClientMode, clientmode);
 
 /*----------------------------------------------------------------------------*/
