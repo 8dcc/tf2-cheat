@@ -28,6 +28,10 @@ typedef struct {
 } VMatrix;
 
 typedef struct {
+    float m[3][4];
+} matrix3x4_t;
+
+typedef struct {
     uint8_t r, g, b;
 } rgb_t;
 

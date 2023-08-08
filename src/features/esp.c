@@ -3,38 +3,68 @@
 #include "../include/sdk.h"
 #include "../include/globals.h"
 
-#define OUTLINED_BOX(x0, y0, x1, y1, c, oc)                           \
-    METHOD_ARGS(i_surface, SetColor, oc.r, oc.g, oc.b, oc.a);         \
-    METHOD_ARGS(i_surface, DrawRect, x0 - 1, y0 - 1, x1 + 1, y1 + 1); \
-    METHOD_ARGS(i_surface, DrawRect, x0 + 1, y0 + 1, x1 - 1, y1 - 1); \
-    METHOD_ARGS(i_surface, SetColor, c.r, c.g, c.b, c.a);             \
-    METHOD_ARGS(i_surface, DrawRect, x0, y0, x1, y1);
+#define OUTLINED_BOX(x, y, w, h, c)                                       \
+    METHOD_ARGS(i_surface, SetColor, 0, 0, 0, 255);                       \
+    METHOD_ARGS(i_surface, DrawRect, x - 1, y - 1, x + w + 2, y + h + 2); \
+    METHOD_ARGS(i_surface, DrawRect, x + 1, y + 1, x + w - 2, y + h - 2); \
+    METHOD_ARGS(i_surface, SetColor, c.r, c.g, c.b, c.a);                 \
+    METHOD_ARGS(i_surface, DrawRect, x, y, x + w, y + h);
 
-static bool draw2dbox(vec3_t o, int bh, bool teammate) {
-    if (vec_is_zero(o))
+static bool get_bbox(Entity* ent, int* x, int* y, int* w, int* h) {
+    Collideable* collideable = METHOD(ent, GetCollideable);
+    if (!collideable)
         return false;
 
-    static const rgba_t out_col = { 0, 0, 0, 255 }; /* Outline */
-    const rgba_t col            = teammate ? (rgba_t){ 10, 240, 10, 255 }
-                                           : (rgba_t){ 240, 10, 10, 255 };
+    vec3_t obb_mins = *METHOD(collideable, ObbMins);
+    vec3_t obb_maxs = *METHOD(collideable, ObbMaxs);
 
-    /* Get top and bottom of player from origin with box height */
-    const vec3_t bot = { o.x, o.y, o.z };
-    const vec3_t top = { o.x, o.y, o.z + bh };
-
-    vec2_t s_bot, s_top;
-    if (!world_to_screen(bot, &s_bot) || !world_to_screen(top, &s_top))
+    Renderable* renderable = GetRenderable(ent);
+    if (!renderable)
         return false;
 
-    const int h = s_bot.y - s_top.y;
-    const int w = bh == 70 ? h * 0.40f : h * 0.75f;
+    matrix3x4_t* trans = METHOD(renderable, RenderableToWorldTransform);
 
-    const int x0 = s_top.x - w / 2;
-    const int y0 = s_top.y;
-    const int x1 = x0 + w;
-    const int y1 = y0 + h;
+    vec3_t points[] = { { obb_mins.x, obb_mins.y, obb_mins.z },
+                        { obb_mins.x, obb_maxs.y, obb_mins.z },
+                        { obb_maxs.x, obb_maxs.y, obb_mins.z },
+                        { obb_maxs.x, obb_mins.y, obb_mins.z },
+                        { obb_maxs.x, obb_maxs.y, obb_maxs.z },
+                        { obb_mins.x, obb_maxs.y, obb_maxs.z },
+                        { obb_mins.x, obb_mins.y, obb_maxs.z },
+                        { obb_maxs.x, obb_mins.y, obb_maxs.z } };
 
-    OUTLINED_BOX(x0, y0, x1, y1, col, out_col);
+    for (int i = 0; i < 8; i++) {
+        vec3_t t;
+        vec_transform(points[i], trans, &t);
+
+        vec2_t s;
+        if (!world_to_screen(t, &s))
+            return false;
+
+        points[i].x = s.x;
+        points[i].y = s.y;
+    }
+
+    float left   = points[0].x;
+    float bottom = points[0].y;
+    float right  = points[0].x;
+    float top    = points[0].y;
+
+    for (int i = 0; i < 8; i++) {
+        if (left > points[i].x)
+            left = points[i].x;
+        if (bottom < points[i].y)
+            bottom = points[i].y;
+        if (right < points[i].x)
+            right = points[i].x;
+        if (top > points[i].y)
+            top = points[i].y;
+    }
+
+    *x = (int)(left);
+    *y = (int)(top);
+    *w = (int)(right - left);
+    *h = (int)(bottom - top);
 
     return true;
 }
@@ -42,6 +72,9 @@ static bool draw2dbox(vec3_t o, int bh, bool teammate) {
 void player_esp(void) {
     if (!localplayer)
         return;
+
+    /* For bounding box */
+    int x, y, w, h;
 
     /* Iterate all entities */
     for (int i = 1; i <= 32; i++) {
@@ -56,12 +89,17 @@ void player_esp(void) {
         if (!net || METHOD(net, IsDormant))
             continue;
 
-        bool teammate = IsTeammate(ent);
+        if (!get_bbox(ent, &x, &y, &w, &h))
+            continue;
 
+        const bool teammate = IsTeammate(ent);
         if ((teammate && settings.box_esp & FRIENDLY) ||
-            (!teammate && settings.box_esp & ENEMY))
-            if (!draw2dbox(*METHOD(ent, GetAbsOrigin), 70, teammate))
-                continue;
+            (!teammate && settings.box_esp & ENEMY)) {
+            const rgba_t col = teammate ? (rgba_t){ 10, 240, 10, 255 }
+                                        : (rgba_t){ 240, 10, 10, 255 };
+
+            OUTLINED_BOX(x, y, w, h, col);
+        }
 
         /* TODO: Name esp, etc. */
     }

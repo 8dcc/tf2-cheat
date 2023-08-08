@@ -83,6 +83,12 @@ void vec_norm(vec3_t* v) {
     v->z = 0.0f;
 }
 
+void vec_transform(vec3_t v, matrix3x4_t* mat, vec3_t* out) {
+    out->x = dot_product(v, *(vec3_t*)mat->m[0]) + mat->m[0][3];
+    out->y = dot_product(v, *(vec3_t*)mat->m[1]) + mat->m[1][3];
+    out->z = dot_product(v, *(vec3_t*)mat->m[2]) + mat->m[2][3];
+}
+
 vec3_t vec_to_ang(vec3_t v) {
     return (vec3_t){
         .x = RAD2DEG(atan2(-v.z, hypot(v.x, v.y))),
