@@ -91,7 +91,7 @@ static void set_style(struct nk_context* ctx) {
 void menu_render(void) {
     set_style(ctx);
 
-    if (nk_begin(ctx, "tf2-cheat", nk_rect(MENU_X, MENU_Y, MENU_W, MENU_H),
+    if (nk_begin(ctx, "Enoc", nk_rect(MENU_X, MENU_Y, MENU_W, MENU_H),
                  MENU_FLAGS)) {
         nk_layout_row_dynamic(ctx, 20, 1);
 

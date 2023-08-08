@@ -1,4 +1,4 @@
-#+title: TF2 Cheat
+#+title: Enoc
 #+options: toc:nil
 #+startup: showeverything
 #+author: 8dcc
@@ -25,5 +25,5 @@ $ ./injector.sh
 
 ...
 
-tf2-cheat loaded!
+Enoc loaded!
 #+end_src

@@ -10,7 +10,7 @@ static bool loaded = false;
 
 __attribute__((constructor)) /* Entry point when injected */
 void load(void) {
-    printf("tf2-cheat injected!\n");
+    printf("Enoc injected!\n");
 
     if (!globals_init()) {
         fprintf(stderr, "load: error loading globals, aborting\n");
@@ -40,11 +40,11 @@ void unload() {
         self_unload();
     }
 
-    printf("tf2-cheat unloaded.\n\n");
+    printf("Enoc unloaded.\n\n");
 }
 
 void self_unload(void) {
-    void* self = dlopen("libtf2cheat.so", RTLD_LAZY | RTLD_NOLOAD);
+    void* self = dlopen("libenoc.so", RTLD_LAZY | RTLD_NOLOAD);
     dlclose(self); /* Close the call we just made to dlopen() */
     dlclose(self); /* Close the call our injector made */
 }

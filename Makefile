@@ -4,7 +4,7 @@ CFLAGS=-Wall -Wextra -m32 -fPIC
 LDFLAGS=-lm -lSDL2 -lGLEW
 
 OBJS=obj/main.c.o obj/globals.c.o obj/hooks.c.o obj/util.c.o obj/settings.c.o obj/menu.c.o obj/features/movement.c.o
-BIN=libtf2cheat.so
+BIN=libenoc.so
 
 .PHONY: clean all inject
 
