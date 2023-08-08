@@ -36,10 +36,14 @@ vec3_t vec_sub(vec3_t a, vec3_t b);
 bool vec_cmp(vec3_t a, vec3_t b);
 bool vec_is_zero(vec3_t v);
 float vec_len2d(vec3_t v);
-void vec_clamp(vec3_t v);
-void vec_norm(vec3_t v);
+void vec_clamp(vec3_t* v);
+void vec_norm(vec3_t* v);
 vec3_t vec_to_ang(vec3_t v);
+vec3_t ang_to_vec(vec3_t a);
 float angle_delta_rad(float a, float b);
+static inline float dot_product(vec3_t a, vec3_t b) {
+    return (a.x * b.x + a.y * b.y + a.z * b.z);
+}
 
 bool world_to_screen(vec3_t vec, vec2_t* screen);
 
