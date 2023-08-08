@@ -55,7 +55,7 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
 void h_Paint(EngineVGui* thisptr, uint32_t mode) {
     ORIGINAL(Paint, thisptr, mode);
 
-    /* TODO: esp */
+    player_esp();
 }
 
 /*----------------------------------------------------------------------------*/

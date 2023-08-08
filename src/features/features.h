@@ -7,4 +7,7 @@
 /* src/features/movement.c */
 void bhop(usercmd_t* cmd);
 
+/* src/features/esp.c */
+void player_esp(void);
+
 #endif /* FEATURES_H_ */
