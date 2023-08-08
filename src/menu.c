@@ -24,6 +24,9 @@ struct nk_font_atlas* nk_atlas = NULL;
 SDL_GLContext orig_gl_ctx, gl_ctx;
 bool menu_open = false;
 
+/* Static globals */
+static int cur_tab = 0;
+
 /*----------------------------------------------------------------------------*/
 
 bool menu_init(SDL_Window* window) {
@@ -53,9 +56,9 @@ bool menu_init(SDL_Window* window) {
 
 /*----------------------------------------------------------------------------*/
 
-static void set_style(struct nk_context* ctx) {
+static void set_style(void) {
+    /* Colors */
     struct nk_color table[NK_COLOR_COUNT];
-
     table[NK_COLOR_TEXT]                    = nk_rgba(175, 175, 175, 255);
     table[NK_COLOR_WINDOW]                  = nk_rgba(45, 45, 45, 255);
     table[NK_COLOR_HEADER]                  = nk_rgba(40, 40, 40, 255);
@@ -65,7 +68,7 @@ static void set_style(struct nk_context* ctx) {
     table[NK_COLOR_BUTTON_ACTIVE]           = nk_rgba(35, 35, 35, 255);
     table[NK_COLOR_TOGGLE]                  = nk_rgba(70, 70, 70, 255);
     table[NK_COLOR_TOGGLE_HOVER]            = nk_rgba(80, 80, 80, 255);
-    table[NK_COLOR_TOGGLE_CURSOR]           = nk_rgba(107, 118, 255, 255);
+    table[NK_COLOR_TOGGLE_CURSOR]           = nk_rgba(127, 154, 176, 255); /**/
     table[NK_COLOR_SELECT]                  = nk_rgba(45, 45, 45, 255);
     table[NK_COLOR_SELECT_ACTIVE]           = nk_rgba(35, 35, 35, 255);
     table[NK_COLOR_SLIDER]                  = nk_rgba(38, 38, 38, 255);
@@ -84,25 +87,54 @@ static void set_style(struct nk_context* ctx) {
     table[NK_COLOR_SCROLLBAR_CURSOR_HOVER]  = nk_rgba(120, 120, 120, 255);
     table[NK_COLOR_SCROLLBAR_CURSOR_ACTIVE] = nk_rgba(150, 150, 150, 255);
     table[NK_COLOR_TAB_HEADER]              = nk_rgba(40, 40, 40, 255);
-
     nk_style_from_table(ctx, table);
+
+    /* Misc */
+    ctx->style.button.rounding         = 0.f;
+    ctx->style.checkbox.padding.x      = 2.f;
+    ctx->style.checkbox.padding.y      = 2.f;
+    ctx->style.combo.rounding          = 0.f;
+    ctx->style.combo.content_padding.x = 7.f;
+    ctx->style.combo.content_padding.y = 7.f;
+}
+
+static inline void tab_movement(void) {
+    nk_layout_row_dynamic(ctx, 20, 1);
+    nk_checkbox_label(ctx, "Bhop", &settings.bhop);
+
+    nk_layout_row_dynamic(ctx, 20, 2);
+    static const char* autostrafe_opts[] = { "Off", "Legit", "Rage" };
+    struct nk_vec2 size                  = { 70, 100 };
+    nk_label(ctx, "Autostrafe", NK_TEXT_LEFT);
+    nk_combobox(ctx, autostrafe_opts, 3, &settings.autostrafe, 15, size);
+}
+
+static inline void tab_esp(void) {
+    nk_layout_row_dynamic(ctx, 20, 1);
+    nk_label(ctx, "WIP", NK_TEXT_CENTERED);
 }
 
 void menu_render(void) {
-    set_style(ctx);
+    set_style();
 
     if (nk_begin(ctx, "Enoc", nk_rect(MENU_X, MENU_Y, MENU_W, MENU_H),
                  MENU_FLAGS)) {
-        nk_layout_row_dynamic(ctx, 20, 1);
-
-        nk_checkbox_label(ctx, "Bhop", &settings.bhop);
-
         nk_layout_row_dynamic(ctx, 20, 2);
 
-        static const char* autostrafe_opts[] = { "Off", "Legit", "Rage" };
-        struct nk_vec2 size                  = { 70, 100 };
-        nk_label(ctx, "Autostrafe", NK_TEXT_LEFT);
-        nk_combobox(ctx, autostrafe_opts, 3, &settings.autostrafe, 15, size);
+        if (nk_button_label(ctx, "Movement"))
+            cur_tab = 0;
+        else if (nk_button_label(ctx, "Esp"))
+            cur_tab = 1;
+
+        switch (cur_tab) {
+            default:
+            case 0:
+                tab_movement();
+                break;
+            case 1:
+                tab_esp();
+                break;
+        }
 
         nk_end(ctx);
     }
