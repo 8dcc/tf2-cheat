@@ -73,6 +73,13 @@ void h_SwapWindow(SDL_Window* window) {
     if (nk_input_is_key_released(&ctx->input, MENU_KEY)) {
         menu_open = !menu_open;
         METHOD_ARGS(i_surface, SetCursorAlwaysVisible, menu_open);
+
+        /* Move cursor to middle when opening menu */
+        if (menu_open) {
+            int w, h;
+            SDL_GetWindowSize(window, &w, &h);
+            SDL_WarpMouseInWindow(window, w / 2, h / 2);
+        }
     }
 
     /* Render the menu */
