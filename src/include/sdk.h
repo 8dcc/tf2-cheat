@@ -49,6 +49,8 @@ typedef rgba_t Color;
 typedef struct BaseClient BaseClient;
 typedef struct EngineClient EngineClient;
 typedef struct EntityList EntityList;
+typedef struct EngineVGui EngineVGui;
+typedef struct MatSurface MatSurface;
 typedef struct ClientMode ClientMode;
 
 typedef struct {
@@ -83,6 +85,31 @@ typedef struct {
 
 struct EntityList {
     VMT_EntityList* vmt;
+};
+
+typedef struct {
+    PAD(4 * 15);
+    void (*Paint)(EngineVGui*, uint32_t mode); /* 15 */
+} VMT_EngineVGui;
+
+struct EngineVGui {
+    VMT_EngineVGui* vmt;
+};
+
+typedef struct {
+    PAD(4 * 10);
+    void (*SetColor)(MatSurface*, int r, int g, int b, int a); /* 10 */
+    PAD(4 * 1);
+    void (*DrawFilledRect)(MatSurface*, int x0, int y0, int x1, int y1);
+    PAD(4 * 1);
+    void (*DrawRect)(MatSurface*, int x0, int y0, int x1, int y1); /* 14 */
+    void (*DrawLine)(MatSurface*, int x0, int y0, int x1, int y1); /* 15 */
+    PAD(4 * 35);
+    void (*SetCursorAlwaysVisible)(MatSurface*, bool visible); /* 51 */
+} VMT_MatSurface;
+
+struct MatSurface {
+    VMT_MatSurface* vmt;
 };
 
 typedef struct {
