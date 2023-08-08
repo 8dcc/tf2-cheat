@@ -8,6 +8,7 @@
 #include "features/features.h"
 
 DECL_HOOK(CreateMove);
+DECL_HOOK(Paint);
 
 SwapWindow_t ho_SwapWindow = NULL;
 PollEvent_t ho_PollEvent   = NULL;
@@ -16,6 +17,7 @@ PollEvent_t ho_PollEvent   = NULL;
 
 bool hooks_init(void) {
     HOOK(i_clientmode->vmt, CreateMove);
+    HOOK(i_enginevgui->vmt, Paint);
 
     HOOK_SDL(SwapWindow);
     HOOK_SDL(PollEvent);
@@ -46,6 +48,14 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
     bhop(cmd);
 
     return ret;
+}
+
+/*----------------------------------------------------------------------------*/
+
+void h_Paint(EngineVGui* thisptr, uint32_t mode) {
+    ORIGINAL(Paint, thisptr, mode);
+
+    /* TODO: esp */
 }
 
 /*----------------------------------------------------------------------------*/

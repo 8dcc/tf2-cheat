@@ -2,6 +2,7 @@
 #define HOOKS_H_
 
 #include <stdbool.h>
+#include <stdint.h>
 #include <SDL2/SDL.h>
 #include "sdk.h"
 #include "globals.h"
@@ -32,6 +33,7 @@ bool hooks_init(void);
 bool hooks_restore(void);
 
 DECL_HOOK_EXTERN(bool, CreateMove, ClientMode*, float, usercmd_t*);
+DECL_HOOK_EXTERN(void, Paint, EngineVGui*, uint32_t);
 
 extern SwapWindow_t ho_SwapWindow;
 extern PollEvent_t ho_PollEvent;
