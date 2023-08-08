@@ -71,9 +71,8 @@ void h_SwapWindow(SDL_Window* window) {
 
     /* Toggle menu and cursor */
     if (nk_input_is_key_released(&ctx->input, MENU_KEY)) {
-        menu_open                 = !menu_open;
-        ctx->style.cursor_visible = menu_open;
-        SDL_ShowCursor(!menu_open);
+        menu_open = !menu_open;
+        METHOD_ARGS(i_surface, SetCursorAlwaysVisible, menu_open);
     }
 
     /* Render the menu */

@@ -8,11 +8,6 @@
 #include "include/menu.h"
 #include "include/settings.h"
 
-#define MENU_X 100
-#define MENU_Y 100
-#define MENU_W 300
-#define MENU_H 250
-
 #define MENU_FLAGS                                           \
     NK_WINDOW_BORDER | NK_WINDOW_TITLE | NK_WINDOW_MOVABLE | \
       NK_WINDOW_NO_SCROLLBAR
@@ -47,9 +42,6 @@ bool menu_init(SDL_Window* window) {
     /* Initialize the font */
     nk_sdl_font_stash_begin(&nk_atlas);
     nk_sdl_font_stash_end();
-
-    /* Use our own cursors for menu */
-    nk_style_load_all_cursors(ctx, nk_atlas->cursors);
 
     return true;
 }

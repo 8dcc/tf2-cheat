@@ -104,7 +104,7 @@ typedef struct {
     PAD(4 * 1);
     void (*DrawRect)(MatSurface*, int x0, int y0, int x1, int y1); /* 14 */
     void (*DrawLine)(MatSurface*, int x0, int y0, int x1, int y1); /* 15 */
-    PAD(4 * 35);
+    PAD(4 * 36);
     void (*SetCursorAlwaysVisible)(MatSurface*, bool visible); /* 51 */
 } VMT_MatSurface;
 
