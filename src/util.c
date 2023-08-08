@@ -1,5 +1,6 @@
 
 #include <stdio.h>
+#include <math.h>
 #include <dlfcn.h>    /* dlsym */
 #include <unistd.h>   /* getpagesize */
 #include <sys/mman.h> /* mprotect */
@@ -43,23 +44,19 @@ size_t vmt_size(void* vmt) {
 /*----------------------------------------------------------------------------*/
 
 vec3_t vec_add(vec3_t a, vec3_t b) {
-    vec3_t ret;
-
-    ret.x = a.x + b.x;
-    ret.y = a.y + b.y;
-    ret.z = a.z + b.z;
-
-    return ret;
+    return (vec3_t){
+        .x = a.x + b.x,
+        .y = a.y + b.y,
+        .z = a.z + b.z,
+    };
 }
 
 vec3_t vec_sub(vec3_t a, vec3_t b) {
-    vec3_t ret;
-
-    ret.x = a.x - b.x;
-    ret.y = a.y - b.y;
-    ret.z = a.z - b.z;
-
-    return ret;
+    return (vec3_t){
+        .x = a.x - b.x,
+        .y = a.y - b.y,
+        .z = a.z - b.z,
+    };
 }
 
 bool vec_cmp(vec3_t a, vec3_t b) {
@@ -74,26 +71,38 @@ float vec_len2d(vec3_t v) {
     return sqrtf(v.x * v.x + v.y * v.y);
 }
 
-void vec_clamp(vec3_t v) {
-    v.x = CLAMP(v.x, -89.0f, 89.0f);
-    v.y = CLAMP(remainderf(v.y, 360.0f), -180.0f, 180.0f);
-    v.z = CLAMP(v.z, -50.0f, 50.0f);
+void vec_clamp(vec3_t* v) {
+    v->x = CLAMP(v->x, -89.0f, 89.0f);
+    v->y = CLAMP(remainderf(v->y, 360.0f), -180.0f, 180.0f);
+    v->z = CLAMP(v->z, -50.0f, 50.0f);
 }
 
-void vec_norm(vec3_t v) {
-    v.x = isfinite(v.x) ? remainder(v.x, 360) : 0;
-    v.y = isfinite(v.y) ? remainder(v.y, 360) : 0;
-    v.z = 0.0f;
+void vec_norm(vec3_t* v) {
+    v->x = isfinite(v->x) ? remainder(v->x, 360) : 0;
+    v->y = isfinite(v->y) ? remainder(v->y, 360) : 0;
+    v->z = 0.0f;
 }
 
 vec3_t vec_to_ang(vec3_t v) {
-    vec3_t ret;
+    return (vec3_t){
+        .x = RAD2DEG(atan2(-v.z, hypot(v.x, v.y))),
+        .y = RAD2DEG(atan2(v.y, v.x)),
+        .z = 0.0f,
+    };
+}
 
-    ret.x = RAD2DEG(atan2(-v.z, hypot(v.x, v.y)));
-    ret.y = RAD2DEG(atan2(v.y, v.x));
-    ret.z = 0.0f;
+vec3_t ang_to_vec(vec3_t a) {
+    float sy = sin(a.y / 180.f * (float)(M_PI));
+    float cy = cos(a.y / 180.f * (float)(M_PI));
 
-    return ret;
+    float sp = sin(a.x / 180.f * (float)(M_PI));
+    float cp = cos(a.x / 180.f * (float)(M_PI));
+
+    return (vec3_t){
+        .x = cp * cy,
+        .y = cp * sy,
+        .z = -sp,
+    };
 }
 
 float angle_delta_rad(float a, float b) {
@@ -105,6 +114,38 @@ float angle_delta_rad(float a, float b) {
         delta += M_PI * 2;
 
     return delta;
+}
+
+/*----------------------------------------------------------------------------*/
+
+bool IsBehindAndFacingTarget(Entity* target) {
+    if (!localplayer)
+        return false;
+
+    /* Get a vector from owner origin to target origin */
+    vec3_t vecToTarget;
+    vecToTarget   = vec_sub(*METHOD(target, WorldSpaceCenter),
+                            *METHOD(localplayer, WorldSpaceCenter));
+    vecToTarget.z = 0.0f;
+    vec_norm(&vecToTarget);
+
+    /* Get owner forward view vector */
+    vec3_t vecOwnerForward = ang_to_vec(METHOD(localplayer, EyeAngles));
+    vecOwnerForward.z      = 0.0f;
+    vec_norm(&vecOwnerForward);
+
+    /* Get target forward view vector */
+    vec3_t vecTargetForward = ang_to_vec(METHOD(target, EyeAngles));
+    vecTargetForward.z      = 0.0f;
+    vec_norm(&vecTargetForward);
+
+    /* Make sure owner is behind, facing and aiming at target's back */
+    float flPosVsTargetViewDot = dot_product(vecToTarget, vecTargetForward);
+    float flPosVsOwnerViewDot  = dot_product(vecToTarget, vecOwnerForward);
+    float flViewAnglesDot      = dot_product(vecTargetForward, vecOwnerForward);
+
+    return (flPosVsTargetViewDot > 0.f && flPosVsOwnerViewDot > 0.5 &&
+            flViewAnglesDot > -0.3f);
 }
 
 /*----------------------------------------------------------------------------*/
