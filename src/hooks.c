@@ -52,7 +52,7 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
 
 void h_SwapWindow(SDL_Window* window) {
     /* Initialize once */
-    if (!nk_ctx)
+    if (!ctx)
         if (!menu_init(window))
             return ORIGINAL(SwapWindow, window);
 
@@ -60,9 +60,9 @@ void h_SwapWindow(SDL_Window* window) {
     SDL_GL_MakeCurrent(window, gl_ctx);
 
     /* Toggle menu and cursor */
-    if (nk_input_is_key_released(&nk_ctx->input, MENU_KEY)) {
-        menu_open                    = !menu_open;
-        nk_ctx->style.cursor_visible = menu_open;
+    if (nk_input_is_key_released(&ctx->input, MENU_KEY)) {
+        menu_open                 = !menu_open;
+        ctx->style.cursor_visible = menu_open;
         SDL_ShowCursor(!menu_open);
     }
 
@@ -77,9 +77,9 @@ void h_SwapWindow(SDL_Window* window) {
     SDL_GL_MakeCurrent(window, orig_gl_ctx);
 
     /* Call original */
-    nk_input_begin(nk_ctx);
+    nk_input_begin(ctx);
     ORIGINAL(SwapWindow, window);
-    nk_input_end(nk_ctx);
+    nk_input_end(ctx);
 }
 
 int h_PollEvent(SDL_Event* event) {

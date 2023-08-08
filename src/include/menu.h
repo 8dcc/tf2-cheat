@@ -26,7 +26,7 @@
 
 /*----------------------------------------------------------------------------*/
 
-extern struct nk_context* nk_ctx;
+extern struct nk_context* ctx;
 extern struct nk_font_atlas* nk_atlas;
 extern SDL_GLContext orig_gl_ctx, gl_ctx;
 extern bool menu_open;
