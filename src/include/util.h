@@ -38,6 +38,7 @@ bool vec_is_zero(vec3_t v);
 float vec_len2d(vec3_t v);
 void vec_clamp(vec3_t* v);
 void vec_norm(vec3_t* v);
+void vec_transform(vec3_t v, matrix3x4_t* mat, vec3_t* out);
 vec3_t vec_to_ang(vec3_t v);
 vec3_t ang_to_vec(vec3_t a);
 float angle_delta_rad(float a, float b);
