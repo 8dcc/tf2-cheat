@@ -39,6 +39,7 @@ enum entity_flags {
 
 typedef struct Collideable Collideable;
 typedef struct Networkable Networkable;
+typedef struct Renderable Renderable;
 typedef struct Entity Entity;
 typedef struct Weapon Weapon;
 extern Entity* localplayer;
@@ -64,6 +65,15 @@ typedef struct {
 
 struct Networkable {
     VMT_Networkable* vmt;
+};
+
+typedef struct {
+    PAD(4 * 34);
+    matrix3x4_t* (*RenderableToWorldTransform)(Renderable*); /* 34 */
+} VMT_Renderable;
+
+struct Renderable {
+    VMT_Renderable* vmt;
 };
 
 typedef struct {
@@ -105,17 +115,15 @@ struct Entity {
     int flags; /* 0x36C */
 };
 
-static inline void* GetRendereable(Entity* ent) {
-    /* TODO: Rendereable struct */
-    return (Networkable*)((void*)ent + 0x4);
+#define IsLocalplayer(ent) \
+    (METHOD(ent, GetIndex) == METHOD(i_engine, GetLocalPlayer))
+
+static inline Renderable* GetRenderable(Entity* ent) {
+    return (Renderable*)((void*)ent + 0x4);
 }
 
 static inline Networkable* GetNetworkable(Entity* ent) {
     return (Networkable*)((void*)ent + 0x8);
-}
-
-static inline bool IsLocalplayer(Entity* ent) {
-    return METHOD(localplayer, GetIndex) == METHOD(i_engine, GetLocalPlayer);
 }
 
 static inline bool IsTeammate(Entity* ent) {
