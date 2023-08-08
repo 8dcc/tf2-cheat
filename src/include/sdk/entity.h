@@ -68,7 +68,9 @@ struct Networkable {
 };
 
 typedef struct {
-    PAD(4 * 11);
+    PAD(4 * 4);
+    Collideable* (*GetCollideable)(Entity*); /* 4 */
+    PAD(4 * 6);
     vec3_t* (*GetAbsOrigin)(Entity*); /* 11 */
     vec3_t* (*GetAbsAngles)(Entity*); /* 12 */
     PAD(4 * 66);
