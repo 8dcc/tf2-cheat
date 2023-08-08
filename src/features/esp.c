@@ -10,11 +10,13 @@
     METHOD_ARGS(i_surface, SetColor, c.r, c.g, c.b, c.a);             \
     METHOD_ARGS(i_surface, DrawRect, x0, y0, x1, y1);
 
-static bool draw2dbox(vec3_t o, int bh, rgba_t col) {
-    static const rgba_t out_col = { 0, 0, 0, 255 }; /* Outline */
-
+static bool draw2dbox(vec3_t o, int bh, bool teammate) {
     if (vec_is_zero(o))
         return false;
+
+    static const rgba_t out_col = { 0, 0, 0, 255 }; /* Outline */
+    const rgba_t col            = teammate ? (rgba_t){ 10, 240, 10, 255 }
+                                           : (rgba_t){ 240, 10, 10, 255 };
 
     /* Get top and bottom of player from origin with box height */
     const vec3_t bot = { o.x, o.y, o.z };
@@ -50,11 +52,12 @@ void player_esp(void) {
             IsLocalplayer(ent))
             continue;
 
-        rgba_t col = IsTeammate(ent) ? (rgba_t){ 10, 240, 10, 255 }
-                                     : (rgba_t){ 240, 10, 10, 255 };
+        bool teammate = IsTeammate(ent);
 
-        if (!draw2dbox(*METHOD(ent, GetAbsOrigin), 70, col))
-            continue;
+        if ((teammate && settings.box_esp & FRIENDLY) ||
+            (!teammate && settings.box_esp & ENEMY))
+            if (!draw2dbox(*METHOD(ent, GetAbsOrigin), 70, teammate))
+                continue;
 
         /* TODO: Name esp, etc. */
     }

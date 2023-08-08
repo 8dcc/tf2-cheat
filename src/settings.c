@@ -5,6 +5,7 @@
 Settings settings = {
     .bhop       = false,
     .autostrafe = OFF,
+    .box_esp    = OFF,
 };
 
 /*----------------------------------------------------------------------------*/

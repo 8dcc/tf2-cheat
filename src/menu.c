@@ -116,8 +116,12 @@ static inline void tab_movement(void) {
 }
 
 static inline void tab_esp(void) {
-    nk_layout_row_dynamic(ctx, 20, 1);
-    nk_label(ctx, "WIP", NK_TEXT_CENTERED);
+    nk_layout_row_dynamic(ctx, 20, 2);
+    static const char* autostrafe_opts[] = { "Off", "Friendly", "Enemies",
+                                             "All" };
+    struct nk_vec2 size                  = { 70, 100 };
+    nk_label(ctx, "Box ESP", NK_TEXT_LEFT);
+    nk_combobox(ctx, autostrafe_opts, 4, &settings.box_esp, 15, size);
 }
 
 static inline void tab_misc(void) {
