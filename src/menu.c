@@ -12,6 +12,20 @@
     NK_WINDOW_BORDER | NK_WINDOW_TITLE | NK_WINDOW_MOVABLE | \
       NK_WINDOW_NO_SCROLLBAR
 
+#define CHECK_TAB_COLOR(idx)                                            \
+    if (idx == cur_tab) {                                               \
+        ctx->style.button.normal.data.color = nk_rgba(35, 35, 35, 255); \
+        ctx->style.button.hover.data.color  = nk_rgba(35, 35, 35, 255); \
+    } else {                                                            \
+        ctx->style.button.normal.data.color = nk_rgba(50, 50, 50, 255); \
+        ctx->style.button.hover.data.color  = nk_rgba(40, 40, 40, 255); \
+    }
+
+#define ADD_TAB(idx, str)          \
+    CHECK_TAB_COLOR(idx);          \
+    if (nk_button_label(ctx, str)) \
+        cur_tab = idx;
+
 /*----------------------------------------------------------------------------*/
 
 struct nk_context* ctx         = NULL;
@@ -106,17 +120,21 @@ static inline void tab_esp(void) {
     nk_label(ctx, "WIP", NK_TEXT_CENTERED);
 }
 
+static inline void tab_misc(void) {
+    nk_layout_row_dynamic(ctx, 20, 1);
+    nk_label(ctx, "WIP", NK_TEXT_CENTERED);
+}
+
 void menu_render(void) {
     set_style();
 
     if (nk_begin(ctx, "Enoc", nk_rect(MENU_X, MENU_Y, MENU_W, MENU_H),
                  MENU_FLAGS)) {
-        nk_layout_row_dynamic(ctx, 20, 2);
+        nk_layout_row_dynamic(ctx, 20, 3);
 
-        if (nk_button_label(ctx, "Movement"))
-            cur_tab = 0;
-        else if (nk_button_label(ctx, "Esp"))
-            cur_tab = 1;
+        ADD_TAB(0, "Movement");
+        ADD_TAB(1, "ESP");
+        ADD_TAB(2, "Misc");
 
         switch (cur_tab) {
             default:
@@ -125,6 +143,9 @@ void menu_render(void) {
                 break;
             case 1:
                 tab_esp();
+                break;
+            case 2:
+                tab_misc();
                 break;
         }
 
