@@ -27,6 +27,18 @@ if [ "$1" == "unload" ]; then
          -ex "quit"
 
     exit 0
+elif [ "$1" == "debug" ]; then
+   echo "Launching in debug mode."
+   sudo gdb -n -q                                          \
+        -ex "attach $pid"                                  \
+        -ex "set \$dlopen = (void* (*)(char*, int))dlopen" \
+        -ex "set \$dlclose = (int (*)(void*))dlclose"      \
+        -ex "set \$dlerror =  (char* (*)(void))dlerror"    \
+        -ex "call \$dlopen(\"$libpath\", 2)"               \
+        -ex "call \$dlerror()"                             \
+        -ex "continue" # Comment this line for manual debug
+
+    exit 0
 fi
 
 if grep -q "$libpath" "/proc/$pid/maps"; then
