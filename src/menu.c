@@ -126,6 +126,7 @@ static inline void tab_esp(void) {
 
 static inline void tab_misc(void) {
     nk_layout_row_dynamic(ctx, 20, 1);
+    nk_checkbox_label(ctx, "Autobackstab", &settings.autostab);
     nk_checkbox_label(ctx, "Slide walk", &settings.slide_walk);
 }
 
