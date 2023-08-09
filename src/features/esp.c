@@ -85,30 +85,42 @@ void player_esp(void) {
         if (i == METHOD(i_engine, GetLocalPlayer))
             continue;
 
-        Entity* ent = METHOD_ARGS(i_entitylist, GetClientEntity, i);
-        if (!ent || !METHOD(ent, IsAlive))
-            continue;
-
+        Entity* ent      = METHOD_ARGS(i_entitylist, GetClientEntity, i);
         Networkable* net = GetNetworkable(ent);
-        if (!net || METHOD(net, IsDormant))
+        if (!ent || METHOD(net, IsDormant))
             continue;
 
-        if (!get_bbox(ent, &x, &y, &w, &h))
+        ClientClass* ent_class = METHOD(net, GetClientClass);
+        if (!ent_class)
             continue;
 
-        const bool teammate = IsTeammate(ent);
-        if ((teammate && settings.box_esp & FRIENDLY) ||
-            (!teammate && settings.box_esp & ENEMY)) {
-            const rgba_t col = teammate ? (rgba_t){ 10, 240, 10, 255 }
-                                        : (rgba_t){ 240, 10, 10, 255 };
+        switch (ent_class->class_id) {
+            case CClass_CTFPlayer: {
+                if (!get_bbox(ent, &x, &y, &w, &h))
+                    continue;
 
-            OUTLINED_BOX(x, y, w, h, col);
+                if (!METHOD(ent, IsAlive))
+                    continue;
+
+                const bool teammate = IsTeammate(ent);
+                if ((teammate && settings.box_esp & FRIENDLY) ||
+                    (!teammate && settings.box_esp & ENEMY)) {
+                    const rgba_t col = teammate ? (rgba_t){ 10, 240, 10, 255 }
+                                                : (rgba_t){ 240, 10, 10, 255 };
+
+                    OUTLINED_BOX(x, y, w, h, col);
+                }
+
+                /* TODO: Name esp, etc. */
+                /* Weapon* weapon = METHOD(ent, GetWeapon); */
+
+                /* player_info_t pinfo; */
+                /* METHOD_ARGS(i_engine, GetPlayerInfo, i, &pinfo); */
+
+                break;
+            }
+            default:
+                break;
         }
-
-        /* TODO: Name esp, etc. */
-        /* Weapon* weapon = METHOD(ent, GetWeapon); */
-
-        /* player_info_t pinfo; */
-        /* METHOD_ARGS(i_engine, GetPlayerInfo, i, &pinfo); */
     }
 }
