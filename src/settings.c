@@ -7,6 +7,7 @@ Settings settings = {
     .bhop       = false,
     .autostrafe = OFF,
     .box_esp    = OFF,
+    .autostab   = false,
     .slide_walk = false,
 };
 

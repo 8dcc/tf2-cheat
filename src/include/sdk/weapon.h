@@ -10,8 +10,8 @@ typedef struct {
 
 struct Weapon {
     VMT_Weapon* vmt;
-    /* PAD(0xC3C); */
-    /* bool ready_to_backstab; /\* 0xC40 *\/ */
+    PAD(0xC3C);
+    bool ready_to_backstab; /* 0xC40 */
     /* uint16_t item_definition_index; /\* 0x928 *\/ */
 };
 

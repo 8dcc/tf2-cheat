@@ -10,4 +10,7 @@ void bhop(usercmd_t* cmd);
 /* src/features/esp.c */
 void player_esp(void);
 
+/* src/features/misc.c */
+void autobackstab(usercmd_t* cmd);
+
 #endif /* FEATURES_H_ */

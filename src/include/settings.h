@@ -18,6 +18,7 @@ typedef struct {
     int bhop;
     int autostrafe;
     int box_esp;
+    int autostab;
     int slide_walk;
 } Settings;
 
