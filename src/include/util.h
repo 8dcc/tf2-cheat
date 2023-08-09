@@ -9,8 +9,11 @@
 
 #define PRINT_BYTES(ptr, n)                        \
     {                                              \
-        for (size_t i = 0; i < n; i++)             \
+        for (size_t i = 0; i < n; i++) {           \
+            if (*((uint8_t*)(ptr) + i) < 0x10)     \
+                putchar('0');                      \
             printf("%X ", *((uint8_t*)(ptr) + i)); \
+        }                                          \
         putchar('\n');                             \
     }
 
