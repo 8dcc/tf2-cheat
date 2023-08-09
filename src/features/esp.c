@@ -5,8 +5,8 @@
 
 #define OUTLINED_BOX(x, y, w, h, c)                                       \
     METHOD_ARGS(i_surface, SetColor, 0, 0, 0, 255);                       \
-    METHOD_ARGS(i_surface, DrawRect, x - 1, y - 1, x + w + 2, y + h + 2); \
-    METHOD_ARGS(i_surface, DrawRect, x + 1, y + 1, x + w - 2, y + h - 2); \
+    METHOD_ARGS(i_surface, DrawRect, x - 1, y - 1, x + w + 1, y + h + 1); \
+    METHOD_ARGS(i_surface, DrawRect, x + 1, y + 1, x + w - 1, y + h - 1); \
     METHOD_ARGS(i_surface, SetColor, c.r, c.g, c.b, c.a);                 \
     METHOD_ARGS(i_surface, DrawRect, x, y, x + w, y + h);
 
