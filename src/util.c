@@ -42,7 +42,7 @@ size_t vmt_size(void* vmt) {
     return i * sizeof(void*);
 }
 
-void* find_sig(const char* module, const char* pattern) {
+void* find_sig(const char* module, const byte* pattern) {
     struct our_link_map {
         /* Base from link.h */
         ElfW(Addr) l_addr;
@@ -66,13 +66,13 @@ void* find_sig(const char* module, const char* pattern) {
         return NULL;
     }
 
-    uint8_t* start = (uint8_t*)link->l_addr;
-    uint8_t* end   = start + link->phdr[0].p_memsz;
+    byte* start = (byte*)link->l_addr;
+    byte* end   = start + link->phdr[0].p_memsz;
 
     dlclose(link);
 
-    const uint8_t* memPos = start;
-    const char* patPos    = pattern;
+    const byte* memPos = start;
+    const byte* patPos = pattern;
 
     /* Iterate memory area until *patPos is '\0' (we found pattern).
      * If we start a pattern match, keep checking all pattern positions until we

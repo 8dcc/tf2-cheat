@@ -30,7 +30,7 @@
 
 void* get_interface(void* handle, const char* name);
 size_t vmt_size(void* vmt);
-void* find_sig(const char* module, const char* pattern);
+void* find_sig(const char* module, const byte* pattern);
 
 vec3_t vec_add(vec3_t a, vec3_t b);
 vec3_t vec_sub(vec3_t a, vec3_t b);

@@ -15,6 +15,8 @@
 /*----------------------------------------------------------------------------*/
 /* Data structures and enums */
 
+typedef char byte;
+
 typedef struct {
     float x, y;
 } vec2_t;
