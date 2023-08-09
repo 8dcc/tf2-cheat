@@ -58,8 +58,13 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
 void h_Paint(EngineVGui* thisptr, uint32_t mode) {
     ORIGINAL(Paint, thisptr, mode);
 
-    if (mode & PAINT_UIPANELS)
+    if (mode & PAINT_UIPANELS) {
+        StartDrawing(i_surface);
+
         player_esp();
+
+        FinishDrawing(i_surface);
+    }
 }
 
 /*----------------------------------------------------------------------------*/
