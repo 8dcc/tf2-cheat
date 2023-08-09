@@ -3,11 +3,6 @@
 #include <dlfcn.h>
 #include "include/globals.h"
 
-#define CLIENT_SO     "./tf/bin/client.so"
-#define ENGINE_SO     "./bin/engine.so"
-#define MATSURFACE_SO "./bin/vguimatsurface.so"
-#define SDL_SO        "./bin/libSDL2-2.0.so.0"
-
 /* See wiki */
 #define SWAPWINDOW_OFFSET 0xFD648
 #define POLLEVENT_OFFSET  0xFCF64
@@ -88,6 +83,7 @@ bool globals_init(void) {
 
     dlclose(h_client);
     dlclose(h_engine);
+    dlclose(h_matsurface);
     dlclose(h_sdl2);
 
     return true;

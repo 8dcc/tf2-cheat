@@ -8,6 +8,16 @@
 #include "util.h"
 #include "sdk.h"
 
+/* Module names for handlers */
+#define CLIENT_SO     "./tf/bin/client.so"
+#define ENGINE_SO     "./bin/engine.so"
+#define MATSURFACE_SO "./bin/vguimatsurface.so"
+#define SDL_SO        "./bin/libSDL2-2.0.so.0"
+
+/* Signatures */
+#define SIG_StartDrawing \
+    "\xB8????\x0F\x44\xD8\x89\x34\x24\xE8????\x8B\x55\x0C\x8B\x06\x89\x34\x24"
+
 /*
  * NOTE: For commented version, see:
  *   https://github.com/8dcc/hl-cheat/blob/main/src/include/hooks.h
