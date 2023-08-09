@@ -70,7 +70,7 @@ static bool get_bbox(Entity* ent, int* x, int* y, int* w, int* h) {
 }
 
 void player_esp(void) {
-    if (!localplayer)
+    if (!localplayer || !METHOD(i_engine, IsInGame))
         return;
 
     /* For bounding box */
