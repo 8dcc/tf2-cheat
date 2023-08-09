@@ -4,7 +4,8 @@
 typedef struct Weapon Weapon;
 
 typedef struct {
-    void* TODO;
+    PAD(4 * 400);
+    const char* (*GetName)(Weapon*);
 } VMT_Weapon;
 
 struct Weapon {
