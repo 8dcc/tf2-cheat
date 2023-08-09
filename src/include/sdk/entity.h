@@ -45,7 +45,6 @@ typedef struct Weapon Weapon;
 extern Entity* localplayer;
 
 typedef struct {
-    /* REVIEW: Prescalled or normal */
     PAD(4 * 1);
     vec3_t* (*ObbMinsPreScaled)(Collideable*); /* 1 */
     vec3_t* (*ObbMaxsPreScaled)(Collideable*); /* 2 */
@@ -100,11 +99,12 @@ typedef struct {
     PAD(4 * 2);
     bool (*IsNPC)(Entity*); /* 187 */
     PAD(4 * 2);
-    bool (*IsWeapon)(Entity*);     /* 190 */
-    Weapon* (*GetWeapon)(Entity*); /* 191 */
-    PAD(4 * 2);
+    bool (*IsWeapon)(Entity*); /* 190 */
+    PAD(4 * 3);
     vec3_t (*EyePosition)(Entity*); /* 194 */
     vec3_t (*EyeAngles)(Entity*);   /* 195 */
+    PAD(4 * 95);
+    Weapon* (*GetWeapon)(Entity*); /* 291 */
 } VMT_Entity;
 
 struct Entity {
