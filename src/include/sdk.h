@@ -41,6 +41,13 @@ typedef struct {
 
 typedef rgba_t Color;
 
+/* "mode" argument of EngineVGui::Paint */
+enum paint_modes {
+    PAINT_UIPANELS     = (1 << 0),
+    PAINT_INGAMEPANELS = (1 << 1),
+    PAINT_CURSOR       = (1 << 2),
+};
+
 /*----------------------------------------------------------------------------*/
 /* Classes */
 
@@ -75,7 +82,11 @@ typedef struct {
     PAD(4 * 6);
     void (*GetViewAngles)(EngineClient*, vec3_t* v); /* 19 */
     void (*SetViewAngles)(EngineClient*, vec3_t* v); /* 20 */
-    PAD(4 * 15);
+    int (*GetMaxClients)(EngineClient*);             /* 21 */
+    PAD(4 * 4);
+    bool (*IsInGame)(EngineClient*);    /* 26 */
+    bool (*IsConnected)(EngineClient*); /* 27 */
+    PAD(4 * 8);
     VMatrix* (*WorldToScreenMatrix)(EngineClient*); /* 36 */
 } VMT_EngineClient;
 
