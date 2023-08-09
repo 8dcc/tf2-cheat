@@ -79,7 +79,9 @@ struct BaseClient {
 typedef struct {
     PAD(4 * 5);
     void (*GetScreenSize)(EngineClient*, int* w, int* h); /* 5 */
-    PAD(4 * 6);
+    PAD(4 * 2);
+    bool (*GetPlayerInfo)(EngineClient*, int entId, player_info_t* i); /* 8 */
+    PAD(4 * 3);
     int (*GetLocalPlayer)(EngineClient*); /* 12 */
     PAD(4 * 6);
     void (*GetViewAngles)(EngineClient*, vec3_t* v); /* 19 */
