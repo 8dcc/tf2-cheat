@@ -126,7 +126,7 @@ static inline void tab_esp(void) {
 
 static inline void tab_misc(void) {
     nk_layout_row_dynamic(ctx, 20, 1);
-    nk_label(ctx, "WIP", NK_TEXT_CENTERED);
+    nk_checkbox_label(ctx, "Slide walk", &settings.slide_walk);
 }
 
 void menu_render(void) {

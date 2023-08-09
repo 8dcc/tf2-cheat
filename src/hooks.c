@@ -47,6 +47,9 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
 
     bhop(cmd);
 
+    if (settings.slide_walk)
+        cmd->buttons ^= IN_FORWARD | IN_BACK | IN_MOVELEFT | IN_MOVERIGHT;
+
     return ret;
 }
 

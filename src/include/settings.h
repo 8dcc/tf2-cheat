@@ -1,8 +1,6 @@
 #ifndef SETTINGS_H_
 #define SETTINGS_H_
 
-#include <stdbool.h>
-
 #define OFF 0
 
 enum settings_rage {
@@ -20,6 +18,7 @@ typedef struct {
     int bhop;
     int autostrafe;
     int box_esp;
+    int slide_walk;
 } Settings;
 
 extern Settings settings;
