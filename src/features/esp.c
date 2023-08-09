@@ -70,7 +70,8 @@ static bool get_bbox(Entity* ent, int* x, int* y, int* w, int* h) {
 }
 
 void player_esp(void) {
-    if (!localplayer || !METHOD(i_engine, IsInGame))
+    if (!localplayer || !METHOD(i_engine, IsInGame) ||
+        !METHOD(i_engine, IsConnected))
         return;
 
     /* For bounding box */
@@ -102,5 +103,6 @@ void player_esp(void) {
         }
 
         /* TODO: Name esp, etc. */
+        /* Weapon* weapon = METHOD(ent, GetWeapon); */
     }
 }
