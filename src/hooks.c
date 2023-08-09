@@ -62,7 +62,7 @@ void h_Paint(EngineVGui* thisptr, uint32_t mode) {
     if (mode & PAINT_UIPANELS) {
         StartDrawing(i_surface);
 
-        player_esp();
+        esp();
 
         FinishDrawing(i_surface);
     }

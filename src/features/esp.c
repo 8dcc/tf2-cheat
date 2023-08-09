@@ -69,7 +69,7 @@ static bool get_bbox(Entity* ent, int* x, int* y, int* w, int* h) {
     return true;
 }
 
-void player_esp(void) {
+void esp(void) {
     if (settings.box_esp == OFF)
         return;
 

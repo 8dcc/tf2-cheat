@@ -8,7 +8,7 @@
 void bhop(usercmd_t* cmd);
 
 /* src/features/esp.c */
-void player_esp(void);
+void esp(void);
 
 /* src/features/misc.c */
 void autobackstab(usercmd_t* cmd);
