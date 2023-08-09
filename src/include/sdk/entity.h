@@ -118,16 +118,15 @@ struct Entity {
 #define IsLocalplayer(ent) \
     (METHOD(ent, GetIndex) == METHOD(i_engine, GetLocalPlayer))
 
+#define IsTeammate(ent) \
+    (METHOD(localplayer, GetTeamNumber) == METHOD(ent, GetTeamNumber));
+
 static inline Renderable* GetRenderable(Entity* ent) {
     return (Renderable*)((void*)ent + 0x4);
 }
 
 static inline Networkable* GetNetworkable(Entity* ent) {
     return (Networkable*)((void*)ent + 0x8);
-}
-
-static inline bool IsTeammate(Entity* ent) {
-    return METHOD(localplayer, GetTeamNumber) == METHOD(ent, GetTeamNumber);
 }
 
 #endif /* ENTITY_H_ */
