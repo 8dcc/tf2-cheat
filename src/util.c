@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <dlfcn.h>    /* dlsym */
+#include <link.h>     /* link_map */
 #include <unistd.h>   /* getpagesize */
 #include <sys/mman.h> /* mprotect */
 
@@ -39,6 +40,60 @@ size_t vmt_size(void* vmt) {
 
     /* Return bytes, not number of function pointers */
     return i * sizeof(void*);
+}
+
+void* find_sig(const char* module, const char* pattern) {
+    struct our_link_map {
+        /* Base from link.h */
+        ElfW(Addr) l_addr;
+        const char* l_name;
+        ElfW(Dyn) * l_ld;
+        struct our_link_map* l_next;
+        struct our_link_map* l_prev;
+
+        /* Added */
+        struct our_link_map* real;
+        long int ns;
+        struct libname_list* moduleName;
+        ElfW(Dyn) * info[DT_NUM + DT_VERSIONTAGNUM + DT_EXTRANUM + DT_VALNUM +
+                         DT_ADDRNUM];
+        const ElfW(Phdr) * phdr;
+    };
+
+    struct our_link_map* link = dlopen(module, RTLD_NOLOAD | RTLD_NOW);
+    if (!link) {
+        fprintf(stderr, "find_sig: can't open module \"%s\"\n", module);
+        return NULL;
+    }
+
+    uint8_t* start = (uint8_t*)link->l_addr;
+    uint8_t* end   = start + link->phdr[0].p_memsz;
+
+    dlclose(link);
+
+    const uint8_t* memPos = start;
+    const char* patPos    = pattern;
+
+    /* Iterate memory area until *patPos is '\0' (we found pattern).
+     * If we start a pattern match, keep checking all pattern positions until we
+     * are done or until mismatch. If we find mismatch, reset pattern position
+     * and continue checking at the memory location where we started +1 */
+    while (memPos < end && *patPos != '\0') {
+        if (*memPos == *patPos || *patPos == '?') {
+            memPos++;
+            patPos++;
+        } else {
+            start++;
+            memPos = start;
+            patPos = pattern;
+        }
+    }
+
+    /* We reached end of pattern, we found it */
+    if (*patPos == '\0')
+        return start;
+
+    return NULL;
 }
 
 /*----------------------------------------------------------------------------*/
