@@ -15,8 +15,12 @@
 #define SDL_SO        "./bin/libSDL2-2.0.so.0"
 
 /* Signatures */
-#define SIG_StartDrawing \
-    "\xB8????\x0F\x44\xD8\x89\x34\x24\xE8????\x8B\x55\x0C\x8B\x06\x89\x34\x24"
+#define SIG_StartDrawing                                                    \
+    "\xF3\x0F\x2A\xC0\xF3\x0F\x59\x45?\xF3\x0F\x2C\xC0\x89\x85????\xE8????" \
+    "\x8D\x4D\xE4"
+
+#define SIG_FinishDrawing \
+    "\x89\x04\x24\xFF\x92????\x89\x34\x24\xE8????\x80\x7D\x97?\x0F\x85????"
 
 /*
  * NOTE: For commented version, see:
@@ -67,6 +71,11 @@ extern void* h_matsurface;
 extern void* h_sdl2;
 
 extern Entity* localplayer;
+
+typedef void (*StartDrawing_t)(MatSurface*);
+extern StartDrawing_t StartDrawing;
+typedef void (*FinishDrawing_t)(MatSurface*);
+extern FinishDrawing_t FinishDrawing;
 
 DECL_SDL_FUNC(void, SwapWindow, SDL_Window* window);
 DECL_SDL_FUNC(int, PollEvent, SDL_Event* event);

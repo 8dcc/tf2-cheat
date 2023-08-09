@@ -21,6 +21,13 @@
         return false;                                           \
     }
 
+#define GET_PATTERN(VAR, MODULE, SIG)                                      \
+    void* VAR = find_sig(MODULE, SIG);                                     \
+    if (!VAR) {                                                            \
+        fprintf(stderr, "get_sigs: coundn't find pattern for " #SIG "\n"); \
+        return false;                                                      \
+    }
+
 /*----------------------------------------------------------------------------*/
 
 void* h_client     = NULL;
@@ -29,6 +36,9 @@ void* h_matsurface = NULL;
 void* h_sdl2       = NULL;
 
 Entity* localplayer = NULL;
+
+StartDrawing_t StartDrawing   = NULL;
+FinishDrawing_t FinishDrawing = NULL;
 
 SwapWindow_t* SwapWindowPtr = NULL;
 PollEvent_t* PollEventPtr   = NULL;
@@ -51,6 +61,16 @@ static inline ClientMode* get_clientmode(void) {
     ClientMode* ret     = *(ClientMode**)g_pClientMode;
 
     return ret;
+}
+
+static inline bool get_sigs(void) {
+    GET_PATTERN(pat_StartDrawing, MATSURFACE_SO, SIG_StartDrawing);
+    StartDrawing = RELATIVE2ABSOLUTE(pat_StartDrawing + 20);
+
+    GET_PATTERN(pat_FinishDrawing, MATSURFACE_SO, SIG_FinishDrawing);
+    FinishDrawing = RELATIVE2ABSOLUTE(pat_FinishDrawing + 13);
+
+    return true;
 }
 
 bool globals_init(void) {
@@ -85,6 +105,9 @@ bool globals_init(void) {
     dlclose(h_engine);
     dlclose(h_matsurface);
     dlclose(h_sdl2);
+
+    if (!get_sigs())
+        return false;
 
     return true;
 }
