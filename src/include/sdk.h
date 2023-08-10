@@ -45,6 +45,14 @@ typedef struct {
 typedef rgba_t Color;
 typedef uint32_t HFont;
 
+enum DefaultFonts {
+    FONT_TF2        = 3,
+    FONT_NORMAL     = 8,
+    FONT_TINY       = 27,
+    FONT_MONOSPACE  = 16,
+    FONT_MONO_SMALL = 18,
+};
+
 /* "drawType" argument in ISurface::DrawPrintText */
 typedef enum {
     FONT_DRAW_DEFAULT = 0,
