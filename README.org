@@ -1,4 +1,4 @@
-#+title: Enoc
+#+title: Enoch
 #+options: toc:nil
 #+startup: showeverything
 #+author: 8dcc
@@ -25,5 +25,5 @@ $ ./injector.sh
 
 ...
 
-Enoc loaded!
+Enoch loaded!
 #+end_src

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 pid=$(pidof "hl2_linux")
-libpath=$(realpath "libenoc.so")
+libpath=$(realpath "libenoch.so")
 
 if [ "$pid" == "" ]; then
    echo "inject.sh: process not running."
@@ -42,7 +42,7 @@ elif [ "$1" == "debug" ]; then
 fi
 
 if grep -q "$libpath" "/proc/$pid/maps"; then
-    echo -e "Enoc already loaded. Reloading...\n";
+    echo -e "Enoch already loaded. Reloading...\n";
 
     # 0x2 -> RTLD_NOW
     # 0x6 -> RTLD_LAZY | RTLD_NOLOAD

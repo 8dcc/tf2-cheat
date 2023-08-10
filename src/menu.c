@@ -138,7 +138,7 @@ static inline void tab_misc(void) {
 void menu_render(void) {
     set_style();
 
-    if (nk_begin(ctx, "Enoc", nk_rect(MENU_X, MENU_Y, MENU_W, MENU_H),
+    if (nk_begin(ctx, "Enoch", nk_rect(MENU_X, MENU_Y, MENU_W, MENU_H),
                  MENU_FLAGS)) {
         nk_layout_row_dynamic(ctx, 20, 3);
 
