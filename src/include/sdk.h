@@ -169,9 +169,9 @@ typedef struct {
     void (*GetTextPos)(MatSurface*, int* x, int* y); /* 21 */
     void (*PrintText)(MatSurface*, const wchar_t* text, int len,
                       FontDrawType_t drawType); /* 22 */
-    PAD(4 * 28);
-    void (*SetCursorAlwaysVisible)(MatSurface*, bool visible); /* 51 */
-    PAD(4 * 23);
+    PAD(4 * 29);
+    void (*SetCursorAlwaysVisible)(MatSurface*, bool visible); /* 52 */
+    PAD(4 * 22);
     void (*GetTextSize)(MatSurface*, HFont font, const wchar_t* str, int* w,
                         int* h); /* 75 */
 } VMT_MatSurface;
