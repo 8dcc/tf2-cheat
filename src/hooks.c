@@ -7,6 +7,9 @@
 #include "include/menu.h"
 #include "features/features.h"
 
+DECL_HOOK(LevelShutdown);
+DECL_HOOK(LevelInitPostEntity);
+DECL_HOOK(FrameStageNotify);
 DECL_HOOK(CreateMove);
 DECL_HOOK(Paint);
 
@@ -16,6 +19,9 @@ PollEvent_t ho_PollEvent   = NULL;
 /*----------------------------------------------------------------------------*/
 
 bool hooks_init(void) {
+    HOOK(i_baseclient->vmt, LevelShutdown);
+    HOOK(i_baseclient->vmt, LevelInitPostEntity);
+    HOOK(i_baseclient->vmt, FrameStageNotify);
     HOOK(i_clientmode->vmt, CreateMove);
     HOOK(i_enginevgui->vmt, Paint);
 
@@ -27,11 +33,45 @@ bool hooks_init(void) {
 
 bool hooks_restore(void) {
     /* We don't worry about VMT hooks since we restore the whole VMT.
-     * Restore SDL pointers */
+     * Here we restore SDL pointers */
     *SwapWindowPtr = ho_SwapWindow;
     *PollEventPtr  = ho_PollEvent;
 
     return true;
+}
+
+/*----------------------------------------------------------------------------*/
+
+void h_LevelShutdown(BaseClient* thisptr) {
+    ORIGINAL(LevelShutdown, thisptr);
+
+    /* Reset all on LevelShutdown */
+    g.localplayer = -1;
+    cache_reset();
+}
+
+void h_LevelInitPostEntity(BaseClient* thisptr) {
+    ORIGINAL(LevelInitPostEntity, thisptr);
+
+    /* Get once on LevelInit */
+    g.localplayer = METHOD(i_engine, GetLocalPlayer);
+}
+
+void h_FrameStageNotify(BaseClient* thisptr, ClientFrameStage_t curStage) {
+    ORIGINAL(FrameStageNotify, thisptr, curStage);
+
+    switch (curStage) {
+        case FRAME_NET_UPDATE_START:
+            /* Reset because we don't want to cache a removed pointer */
+            cache_reset();
+            break;
+        case FRAME_NET_UPDATE_END:
+            /* Cache information for the rest of the cheat */
+            cache_update();
+            break;
+        default:
+            break;
+    }
 }
 
 /*----------------------------------------------------------------------------*/
