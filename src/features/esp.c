@@ -3,12 +3,16 @@
 #include "../include/sdk.h"
 #include "../include/globals.h"
 
-#define OUTLINED_BOX(x, y, w, h, c)                                       \
-    METHOD_ARGS(i_surface, SetColor, 0, 0, 0, 255);                       \
-    METHOD_ARGS(i_surface, DrawRect, x - 1, y - 1, x + w + 1, y + h + 1); \
-    METHOD_ARGS(i_surface, DrawRect, x + 1, y + 1, x + w - 1, y + h - 1); \
-    METHOD_ARGS(i_surface, SetColor, c.r, c.g, c.b, c.a);                 \
-    METHOD_ARGS(i_surface, DrawRect, x, y, x + w, y + h);
+#define INFOPOS_LINE_H 12
+
+#define OUTLINED_BOX(x, y, w, h, c)                                           \
+    {                                                                         \
+        METHOD_ARGS(i_surface, SetColor, 0, 0, 0, 255);                       \
+        METHOD_ARGS(i_surface, DrawRect, x - 1, y - 1, x + w + 1, y + h + 1); \
+        METHOD_ARGS(i_surface, DrawRect, x + 1, y + 1, x + w - 1, y + h - 1); \
+        METHOD_ARGS(i_surface, SetColor, c.r, c.g, c.b, c.a);                 \
+        METHOD_ARGS(i_surface, DrawRect, x, y, x + w, y + h);                 \
+    }
 
 static bool get_bbox(Entity* ent, int* x, int* y, int* w, int* h) {
     Collideable* collideable = METHOD(ent, GetCollideable);
@@ -70,7 +74,7 @@ static bool get_bbox(Entity* ent, int* x, int* y, int* w, int* h) {
 }
 
 void esp(void) {
-    if (settings.box_esp == OFF)
+    if (settings.enable_esp == OFF)
         return;
 
     if (!localplayer || !g.IsConnected)
@@ -95,26 +99,61 @@ void esp(void) {
 
         switch (ent_class->class_id) {
             case CClass_CTFPlayer: {
-                if (!get_bbox(ent, &x, &y, &w, &h))
-                    continue;
-
                 if (!METHOD(ent, IsAlive))
                     continue;
 
                 const bool teammate = IsTeammate(ent);
-                if ((teammate && settings.box_esp & FRIENDLY) ||
-                    (!teammate && settings.box_esp & ENEMY)) {
-                    const rgba_t col = teammate ? (rgba_t){ 10, 240, 10, 255 }
-                                                : (rgba_t){ 240, 10, 10, 255 };
 
+                /* Should we render this player's team? */
+                if (settings.enable_esp != ALL &&
+                    ((teammate && settings.enable_esp == ENEMY) ||
+                     (!teammate && settings.enable_esp == FRIENDLY)))
+                    continue;
+
+                if (!get_bbox(ent, &x, &y, &w, &h))
+                    continue;
+
+                const rgba_t col = teammate ? (rgba_t){ 10, 240, 10, 255 }
+                                            : (rgba_t){ 240, 10, 10, 255 };
+
+                /*------------------------------------------------------------*/
+                /* Player box ESP */
+                if (settings.box_esp)
                     OUTLINED_BOX(x, y, w, h, col);
+
+                /*------------------------------------------------------------*/
+                /* Player name ESP */
+
+                int infopos_x = x + w + 2;
+                int infopos_y = y - 2;
+
+                if (settings.name_esp) {
+                    player_info_t pinfo;
+                    METHOD_ARGS(i_engine, GetPlayerInfo, i, &pinfo);
+
+                    DrawText(infopos_x, infopos_y, false, FONT_MONOSPACE, col,
+                             pinfo.name);
+
+                    infopos_y += INFOPOS_LINE_H;
                 }
 
-                /* TODO: Name esp, etc. */
-                /* Weapon* weapon = METHOD(ent, GetWeapon); */
+                /*------------------------------------------------------------*/
+                /* Player weapon ESP */
 
-                /* player_info_t pinfo; */
-                /* METHOD_ARGS(i_engine, GetPlayerInfo, i, &pinfo); */
+                if (settings.weapon_esp) {
+                    Weapon* weapon = METHOD(ent, GetWeapon);
+
+                    if (weapon) {
+                        const char* wname = METHOD(weapon, GetName);
+                        if (!strncmp(wname, "tf_weapon_", 10))
+                            wname += 10;
+
+                        DrawText(infopos_x, infopos_y, false, FONT_MONOSPACE,
+                                 col, wname);
+
+                        infopos_y += INFOPOS_LINE_H;
+                    }
+                }
 
                 break;
             }
