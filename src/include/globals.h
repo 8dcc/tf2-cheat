@@ -76,6 +76,19 @@ typedef struct {
     int MaxEntities;
 } global_cache_t;
 
+typedef struct {
+    const char* name; /* System name (From "fc-list" command) */
+    int tall;
+    int weight;
+    int flags; /* EFontFlags */
+    HFont id;  /* From ISurface::CreateFont() */
+} font_t;
+
+typedef struct {
+    font_t main;
+    font_t small;
+} font_list_t;
+
 /*----------------------------------------------------------------------------*/
 /* Global variables */
 
@@ -85,6 +98,7 @@ extern void* h_matsurface;
 extern void* h_sdl2;
 
 extern global_cache_t g;
+extern font_list_t g_fonts;
 
 /* TODO: Remove once we have entity*[] cache in global_cache_t */
 extern Entity* localplayer;
@@ -109,6 +123,7 @@ DECL_INTF_EXTERN(ClientMode, clientmode);
 
 bool globals_init(void);
 bool resore_vtables(void);
+void fonts_init(void);
 void cache_reset(void);
 void cache_update(void);
 

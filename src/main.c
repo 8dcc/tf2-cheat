@@ -17,6 +17,8 @@ void load(void) {
         self_unload();
     }
 
+    fonts_init();
+
     if (!hooks_init()) {
         fprintf(stderr, "load: error loading hooks, aborting\n");
         self_unload();

@@ -36,6 +36,7 @@ void* h_matsurface = NULL;
 void* h_sdl2       = NULL;
 
 global_cache_t g;
+font_list_t g_fonts;
 
 Entity* localplayer = NULL;
 
@@ -129,6 +130,40 @@ bool resore_vtables(void) {
     RESTORE_VMT(EngineVGui, i_enginevgui);
 
     return true;
+}
+
+/*----------------------------------------------------------------------------*/
+
+#define CREATE_FONT(FONT)                                                 \
+    if (!METHOD_ARGS(i_surface, SetFontGlyphSet, FONT.id, FONT.name,      \
+                     FONT.tall, FONT.weight, 0, 0, FONT.flags, 0, 0)) {   \
+        fprintf(stderr,                                                   \
+                "WARNING: fonts_init: couldn't create font \"%s\" using " \
+                "default monospace.\n",                                   \
+                FONT.name);                                               \
+        FONT.id = 16;                                                     \
+    }
+
+void fonts_init(void) {
+    /* Initialize font_t structs */
+    g_fonts.main = (font_t){
+        .name   = "CozetteVector",
+        .tall   = 15,
+        .weight = 700,
+        .flags  = FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS,
+        .id     = METHOD(i_surface, CreateFont),
+    };
+    g_fonts.small = (font_t){
+        .name   = "CozetteVector",
+        .tall   = 13,
+        .weight = 700,
+        .flags  = FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS,
+        .id     = METHOD(i_surface, CreateFont),
+    };
+
+    /* Create fonts with the data */
+    CREATE_FONT(g_fonts.main);
+    CREATE_FONT(g_fonts.small);
 }
 
 /*----------------------------------------------------------------------------*/

@@ -131,7 +131,7 @@ void esp(void) {
                     player_info_t pinfo;
                     METHOD_ARGS(i_engine, GetPlayerInfo, i, &pinfo);
 
-                    DrawText(infopos_x, infopos_y, false, FONT_MONOSPACE, col,
+                    DrawText(infopos_x, infopos_y, false, g_fonts.main.id, col,
                              pinfo.name);
 
                     infopos_y += INFOPOS_LINE_H;
@@ -148,7 +148,7 @@ void esp(void) {
                         if (!strncmp(wname, "tf_weapon_", 10))
                             wname += 10;
 
-                        DrawText(infopos_x, infopos_y, false, FONT_MONOSPACE,
+                        DrawText(infopos_x, infopos_y, false, g_fonts.main.id,
                                  col, wname);
 
                         infopos_y += INFOPOS_LINE_H;
