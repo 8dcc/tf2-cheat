@@ -408,6 +408,18 @@ enum ETFClientClass {
     CClass_CBaseCombatWeapon                     = 5
 };
 
+enum ObsModes {
+    OBS_MODE_NONE = 0,
+    OBS_MODE_DEATHCAM,
+    OBS_MODE_FREEZECAM,
+    OBS_MODE_FIXED,
+    OBS_MODE_IN_EYE,
+    OBS_MODE_CHASE,
+    OBS_MODE_POI,
+    OBS_MODE_ROAMING,
+    NUM_OBSERVER_MODES
+};
+
 #define MAX_PLAYER_NAME_LENGTH 32
 #define SIGNED_GUID_LEN        32
 #define MAX_CUSTOM_FILES       4
@@ -431,7 +443,6 @@ typedef struct Networkable Networkable;
 typedef struct Renderable Renderable;
 typedef struct Entity Entity;
 typedef struct Weapon Weapon;
-extern Entity* localplayer;
 
 typedef struct {
     PAD(4 * 1);
@@ -501,6 +512,9 @@ typedef struct {
     vec3_t (*EyeAngles)(Entity*);   /* 195 */
     PAD(4 * 95);
     Weapon* (*GetWeapon)(Entity*); /* 291 */
+    PAD(4 * 17);
+    int (*GetObserverMode)(Entity*);       /* 309 */
+    Entity* (*GetObserverTarget)(Entity*); /* 310 */
 } VMT_Entity;
 
 struct Entity {
