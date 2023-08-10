@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <wchar.h>
 
 #define STR(a, b) a##b
 #define PADSTR(n) STR(pad, n)
@@ -42,6 +43,15 @@ typedef struct {
 } rgba_t;
 
 typedef rgba_t Color;
+typedef uint32_t HFont;
+
+/* "drawType" argument in ISurface::DrawPrintText */
+typedef enum {
+    FONT_DRAW_DEFAULT = 0,
+    FONT_DRAW_NONADDITIVE,
+    FONT_DRAW_ADDITIVE,
+    FONT_DRAW_TYPE_COUNT = 2,
+} FontDrawType_t;
 
 /* "curStage" argument for IBaseClientDLL::FrameStageNotify */
 typedef enum {
@@ -143,8 +153,19 @@ typedef struct {
     PAD(4 * 1);
     void (*DrawRect)(MatSurface*, int x0, int y0, int x1, int y1); /* 14 */
     void (*DrawLine)(MatSurface*, int x0, int y0, int x1, int y1); /* 15 */
-    PAD(4 * 36);
+    PAD(4 * 1);
+    void (*SetTextFont)(MatSurface*, HFont font);                  /* 17 */
+    void (*SetTextColor)(MatSurface*, int r, int g, int b, int a); /* 18 */
+    PAD(4 * 1);
+    void (*SetTextPos)(MatSurface*, int x, int y);   /* 20 */
+    void (*GetTextPos)(MatSurface*, int* x, int* y); /* 21 */
+    void (*PrintText)(MatSurface*, const wchar_t* text, int len,
+                      FontDrawType_t drawType); /* 22 */
+    PAD(4 * 28);
     void (*SetCursorAlwaysVisible)(MatSurface*, bool visible); /* 51 */
+    PAD(4 * 23);
+    void (*GetTextSize)(MatSurface*, HFont font, const wchar_t* str, int* w,
+                        int* h); /* 75 */
 } VMT_MatSurface;
 
 struct MatSurface {
