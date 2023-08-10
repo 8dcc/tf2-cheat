@@ -73,16 +73,15 @@ void esp(void) {
     if (settings.box_esp == OFF)
         return;
 
-    if (!localplayer || !METHOD(i_engine, IsInGame) ||
-        !METHOD(i_engine, IsConnected))
+    if (!localplayer || !g.IsConnected)
         return;
 
     /* For bounding box */
     int x, y, w, h;
 
     /* Iterate all entities */
-    for (int i = 1; i <= 32; i++) {
-        if (i == METHOD(i_engine, GetLocalPlayer))
+    for (int i = 1; i <= g.MaxClients; i++) {
+        if (i == g.localplayer)
             continue;
 
         Entity* ent      = METHOD_ARGS(i_entitylist, GetClientEntity, i);

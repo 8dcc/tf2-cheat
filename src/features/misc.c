@@ -4,7 +4,8 @@
 #include "../include/globals.h"
 
 void autobackstab(usercmd_t* cmd) {
-    if (!settings.autostab || !localplayer || !METHOD(localplayer, IsAlive))
+    if (!settings.autostab || !g.IsInGame || !localplayer ||
+        !METHOD(localplayer, IsAlive))
         return;
 
     Weapon* weapon = METHOD(localplayer, GetWeapon);

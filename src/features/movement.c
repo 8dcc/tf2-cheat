@@ -53,7 +53,8 @@ static void autostrafe_rage(usercmd_t* cmd) {
 }
 
 void bhop(usercmd_t* cmd) {
-    if (!settings.bhop || !localplayer || !METHOD(localplayer, IsAlive))
+    if (!settings.bhop || !g.IsInGame || !localplayer ||
+        !METHOD(localplayer, IsAlive))
         return;
 
     const bool is_jumping = (cmd->buttons & IN_JUMP) != 0;
