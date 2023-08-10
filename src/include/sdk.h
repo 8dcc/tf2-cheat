@@ -43,6 +43,18 @@ typedef struct {
 
 typedef rgba_t Color;
 
+/* "curStage" argument for IBaseClientDLL::FrameStageNotify */
+typedef enum {
+    FRAME_UNDEFINED = -1,
+    FRAME_START,
+    FRAME_NET_UPDATE_START,
+    FRAME_NET_UPDATE_POSTDATAUPDATE_START,
+    FRAME_NET_UPDATE_POSTDATAUPDATE_END,
+    FRAME_NET_UPDATE_END,
+    FRAME_RENDER_START,
+    FRAME_RENDER_END,
+} ClientFrameStage_t;
+
 /* "mode" argument of EngineVGui::Paint */
 enum paint_modes {
     PAINT_UIPANELS     = (1 << 0),
@@ -68,8 +80,13 @@ typedef struct MatSurface MatSurface;
 typedef struct ClientMode ClientMode;
 
 typedef struct {
-    PAD(4 * 10);
+    PAD(4 * 6);
+    void (*LevelInitPostEntity)(BaseClient*); /* 6 */
+    void (*LevelShutdown)(BaseClient*);       /* 7 */
+    PAD(4 * 2);
     void (*HudProcessInput)(BaseClient*, bool bActive); /* 10 */
+    PAD(4 * 24);
+    void (*FrameStageNotify)(BaseClient*, ClientFrameStage_t curStage); /* 35 */
 } VMT_BaseClient;
 
 struct BaseClient {
@@ -101,6 +118,8 @@ struct EngineClient {
 typedef struct {
     PAD(4 * 3);
     Entity* (*GetClientEntity)(EntityList*, int entnum); /* 4 */
+    PAD(4 * 4);
+    int (*GetMaxEntities)(EntityList*);
 } VMT_EntityList;
 
 struct EntityList {
