@@ -45,12 +45,20 @@ typedef struct {
 typedef rgba_t Color;
 typedef uint32_t HFont;
 
-enum DefaultFonts {
-    FONT_TF2        = 3,
-    FONT_NORMAL     = 8,
-    FONT_TINY       = 27,
-    FONT_MONOSPACE  = 16,
-    FONT_MONO_SMALL = 18,
+enum EFontFlags {
+    FONTFLAG_NONE         = 0x000,
+    FONTFLAG_ITALIC       = 0x001,
+    FONTFLAG_UNDERLINE    = 0x002,
+    FONTFLAG_STRIKEOUT    = 0x004,
+    FONTFLAG_SYMBOL       = 0x008,
+    FONTFLAG_ANTIALIAS    = 0x010,
+    FONTFLAG_GAUSSIANBLUR = 0x020,
+    FONTFLAG_ROTARY       = 0x040,
+    FONTFLAG_DROPSHADOW   = 0x080,
+    FONTFLAG_ADDITIVE     = 0x100,
+    FONTFLAG_OUTLINE      = 0x200,
+    FONTFLAG_CUSTOM       = 0x400,
+    FONTFLAG_BITMAP       = 0x800,
 };
 
 /* "drawType" argument in ISurface::DrawPrintText */
@@ -171,7 +179,12 @@ typedef struct {
                       FontDrawType_t drawType); /* 22 */
     PAD(4 * 29);
     void (*SetCursorAlwaysVisible)(MatSurface*, bool visible); /* 52 */
-    PAD(4 * 22);
+    PAD(4 * 13);
+    HFont (*CreateFont)(MatSurface*); /* 66 */
+    bool (*SetFontGlyphSet)(MatSurface*, HFont font, const char* sysfontname,
+                            int tall, int weight, int blur, int scanlines,
+                            int flags, int nRangeMin, int nRangeMax); /* 67 */
+    PAD(4 * 7);
     void (*GetTextSize)(MatSurface*, HFont font, const wchar_t* str, int* w,
                         int* h); /* 75 */
 } VMT_MatSurface;
