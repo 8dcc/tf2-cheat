@@ -130,6 +130,9 @@ void h_SwapWindow(SDL_Window* window) {
         if (settings.watermark)
             watermark_render();
 
+        if (settings.speclist)
+            spectator_list();
+
         if (menu_open)
             menu_render();
 

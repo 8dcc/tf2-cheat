@@ -13,6 +13,7 @@ Settings settings = {
     .weapon_esp = false,
 
     .watermark  = true,
+    .speclist   = true,
     .autostab   = false,
     .slide_walk = false,
 };

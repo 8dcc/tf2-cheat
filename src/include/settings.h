@@ -27,6 +27,7 @@ typedef struct {
 
     /* Misc */
     int watermark;
+    int speclist;
     int autostab;
     int slide_walk;
 } Settings;

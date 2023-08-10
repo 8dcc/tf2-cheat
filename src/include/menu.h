@@ -32,6 +32,9 @@
 #define WATERMARK_W 115
 #define WATERMARK_H 20
 
+#define SPECLIST_W 150
+#define SPECLIST_X 5
+
 #define MENU_KEY NK_KEY_INSERT
 
 /*----------------------------------------------------------------------------*/
@@ -46,5 +49,6 @@ extern bool menu_open;
 bool menu_init(SDL_Window* window);
 void menu_render(void);
 void watermark_render(void);
+void spectator_list(void);
 
 #endif /* MENU_H_ */
