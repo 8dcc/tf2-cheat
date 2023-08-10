@@ -1,4 +1,5 @@
 
+#include <wchar.h>
 #include <stdio.h>
 #include <math.h>
 #include <dlfcn.h>    /* dlsym */
@@ -9,6 +10,7 @@
 #include "include/sdk.h"
 #include "include/util.h"
 #include "include/globals.h"
+#include "include/settings.h"
 
 void* get_interface(void* handle, const char* name) {
     if (!handle) {
@@ -207,6 +209,28 @@ bool IsBehindAndFacingTarget(Entity* target) {
 
     return (flPosVsTargetViewDot > 0.f && flPosVsOwnerViewDot > 0.5 &&
             flViewAnglesDot > -0.3f);
+}
+
+/*----------------------------------------------------------------------------*/
+
+void DrawText(int x, int y, rgba_t c, bool center, char* str) {
+    static wchar_t wstr[1024] = { '\0' };
+    swprintf(wstr, 1023, L"%hs", str);
+
+    /* TODO */
+    const HFont font = settings.font;
+
+    if (center) {
+        int w = 0, h = 0;
+        METHOD_ARGS(i_surface, GetTextSize, font, wstr, &w, &h);
+
+        x -= (w / 2);
+    }
+
+    METHOD_ARGS(i_surface, SetTextPos, x, y);
+    METHOD_ARGS(i_surface, SetTextFont, font);
+    METHOD_ARGS(i_surface, SetTextColor, c.r, c.g, c.b, c.a);
+    METHOD_ARGS(i_surface, PrintText, wstr, wcslen(wstr), FONT_DRAW_DEFAULT);
 }
 
 /*----------------------------------------------------------------------------*/
