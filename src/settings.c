@@ -6,7 +6,12 @@
 Settings settings = {
     .bhop       = false,
     .autostrafe = OFF,
-    .box_esp    = OFF,
+
+    .enable_esp = OFF,
+    .box_esp    = false,
+    .name_esp   = false,
+    .weapon_esp = false,
+
     .autostab   = false,
     .slide_walk = false,
 };

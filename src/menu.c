@@ -120,8 +120,13 @@ static inline void tab_esp(void) {
     static const char* autostrafe_opts[] = { "Off", "Friendly", "Enemies",
                                              "All" };
     struct nk_vec2 size                  = { 70, 100 };
-    nk_label(ctx, "Box ESP", NK_TEXT_LEFT);
-    nk_combobox(ctx, autostrafe_opts, 4, &settings.box_esp, 15, size);
+    nk_label(ctx, "Enable ESP", NK_TEXT_LEFT);
+    nk_combobox(ctx, autostrafe_opts, 4, &settings.enable_esp, 15, size);
+
+    nk_layout_row_dynamic(ctx, 20, 1);
+    nk_checkbox_label(ctx, "Box ESP", &settings.box_esp);
+    nk_checkbox_label(ctx, "Name ESP", &settings.name_esp);
+    nk_checkbox_label(ctx, "Weapon ESP", &settings.weapon_esp);
 }
 
 static inline void tab_misc(void) {

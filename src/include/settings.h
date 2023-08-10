@@ -15,9 +15,17 @@ enum settings_friendly {
 };
 
 typedef struct {
+    /* Movement */
     int bhop;
     int autostrafe;
+
+    /* ESP */
+    int enable_esp;
     int box_esp;
+    int name_esp;
+    int weapon_esp;
+
+    /* Misc */
     int autostab;
     int slide_walk;
 } Settings;
