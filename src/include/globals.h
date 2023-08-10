@@ -63,6 +63,20 @@
     free(nVMT##name);
 
 /*----------------------------------------------------------------------------*/
+/* Structs */
+
+typedef struct {
+    /* Index updated in LevelInitPostEntity */
+    int localplayer;
+
+    /* Updated in FrameStageNotify(FRAME_NET_UPDATE_END) */
+    bool IsInGame;
+    bool IsConnected;
+    int MaxClients;
+    int MaxEntities;
+} global_cache_t;
+
+/*----------------------------------------------------------------------------*/
 /* Global variables */
 
 extern void* h_client;
@@ -70,6 +84,9 @@ extern void* h_engine;
 extern void* h_matsurface;
 extern void* h_sdl2;
 
+extern global_cache_t g;
+
+/* TODO: Remove once we have entity*[] cache in global_cache_t */
 extern Entity* localplayer;
 
 typedef void (*StartDrawing_t)(MatSurface*);
@@ -92,5 +109,7 @@ DECL_INTF_EXTERN(ClientMode, clientmode);
 
 bool globals_init(void);
 bool resore_vtables(void);
+void cache_reset(void);
+void cache_update(void);
 
 #endif /* GLOBALS_H_ */

@@ -35,6 +35,8 @@ void* h_engine     = NULL;
 void* h_matsurface = NULL;
 void* h_sdl2       = NULL;
 
+global_cache_t g;
+
 Entity* localplayer = NULL;
 
 StartDrawing_t StartDrawing   = NULL;
@@ -98,6 +100,8 @@ bool globals_init(void) {
         return false;
     }
 
+    /* Needed for write permission on the VMTs */
+    CLONE_VMT(BaseClient, i_baseclient);
     CLONE_VMT(ClientMode, i_clientmode);
     CLONE_VMT(EngineVGui, i_enginevgui);
 
@@ -106,15 +110,42 @@ bool globals_init(void) {
     dlclose(h_matsurface);
     dlclose(h_sdl2);
 
+    /* Individual functions/globals from signatures */
     if (!get_sigs())
         return false;
+
+    /* Initialize global cache */
+    cache_reset();
+    cache_update();
+    if (g.IsInGame)
+        g.localplayer = METHOD(i_engine, GetLocalPlayer);
 
     return true;
 }
 
 bool resore_vtables(void) {
+    RESTORE_VMT(BaseClient, i_baseclient);
     RESTORE_VMT(ClientMode, i_clientmode);
     RESTORE_VMT(EngineVGui, i_enginevgui);
 
     return true;
+}
+
+/*----------------------------------------------------------------------------*/
+
+void cache_reset(void) {
+    g.IsInGame    = false;
+    g.IsConnected = false;
+    g.MaxClients  = -1;
+    g.MaxEntities = -1;
+}
+
+void cache_update(void) {
+    g.IsInGame    = METHOD(i_engine, IsInGame);
+    g.IsConnected = METHOD(i_engine, IsConnected);
+
+    if (g.IsInGame) {
+        g.MaxClients  = METHOD(i_engine, GetMaxClients);
+        g.MaxEntities = METHOD(i_entitylist, GetMaxEntities);
+    }
 }
