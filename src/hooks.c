@@ -125,9 +125,14 @@ void h_SwapWindow(SDL_Window* window) {
         METHOD_ARGS(i_surface, SetCursorAlwaysVisible, menu_open);
     }
 
-    /* Render the menu */
-    if (menu_open) {
-        menu_render();
+    /* Render the watermark and menu */
+    if (settings.watermark || menu_open) {
+        if (settings.watermark)
+            watermark_render();
+
+        if (menu_open)
+            menu_render();
+
         nk_sdl_render(NK_ANTI_ALIASING_ON, MAX_VERTEX_MEMORY,
                       MAX_ELEMENT_MEMORY);
     }

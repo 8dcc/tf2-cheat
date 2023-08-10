@@ -12,6 +12,8 @@
     NK_WINDOW_BORDER | NK_WINDOW_TITLE | NK_WINDOW_MOVABLE | \
       NK_WINDOW_NO_SCROLLBAR
 
+#define WATERMARK_FLAGS NK_WINDOW_BORDER | NK_WINDOW_NO_SCROLLBAR
+
 #define CHECK_TAB_COLOR(idx)                                            \
     if (idx == cur_tab) {                                               \
         ctx->style.button.normal.data.color = nk_rgba(35, 35, 35, 255); \
@@ -131,6 +133,7 @@ static inline void tab_esp(void) {
 
 static inline void tab_misc(void) {
     nk_layout_row_dynamic(ctx, 20, 1);
+    nk_checkbox_label(ctx, "Watermark", &settings.watermark);
     nk_checkbox_label(ctx, "Autobackstab", &settings.autostab);
     nk_checkbox_label(ctx, "Slide walk", &settings.slide_walk);
 }
@@ -158,6 +161,19 @@ void menu_render(void) {
                 tab_misc();
                 break;
         }
+
+        nk_end(ctx);
+    }
+}
+
+void watermark_render(void) {
+    set_style();
+
+    if (nk_begin(ctx, "Watermark",
+                 nk_rect(WATERMARK_X, WATERMARK_Y, WATERMARK_W, WATERMARK_H),
+                 WATERMARK_FLAGS)) {
+        nk_layout_row_dynamic(ctx, 10, 1);
+        nk_label(ctx, "8dcc/tf2-cheat", NK_TEXT_CENTERED);
 
         nk_end(ctx);
     }

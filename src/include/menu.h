@@ -27,6 +27,11 @@
 #define MENU_W 300
 #define MENU_H 250
 
+#define WATERMARK_X 5
+#define WATERMARK_Y 5
+#define WATERMARK_W 115
+#define WATERMARK_H 20
+
 #define MENU_KEY NK_KEY_INSERT
 
 /*----------------------------------------------------------------------------*/
@@ -40,5 +45,6 @@ extern bool menu_open;
 
 bool menu_init(SDL_Window* window);
 void menu_render(void);
+void watermark_render(void);
 
 #endif /* MENU_H_ */

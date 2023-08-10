@@ -26,6 +26,7 @@ typedef struct {
     int weapon_esp;
 
     /* Misc */
+    int watermark;
     int autostab;
     int slide_walk;
 } Settings;
