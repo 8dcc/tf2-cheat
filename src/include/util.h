@@ -52,7 +52,7 @@ static inline float dot_product(vec3_t a, vec3_t b) {
 
 bool IsBehindAndFacingTarget(Entity* target);
 
-void DrawText(int x, int y, rgba_t c, bool center, char* str);
+void DrawText(int x, int y, bool center, HFont f, rgba_t c, const char* str);
 
 bool world_to_screen(vec3_t vec, vec2_t* screen);
 

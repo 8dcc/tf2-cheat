@@ -10,7 +10,6 @@
 #include "include/sdk.h"
 #include "include/util.h"
 #include "include/globals.h"
-#include "include/settings.h"
 
 void* get_interface(void* handle, const char* name) {
     if (!handle) {
@@ -213,22 +212,19 @@ bool IsBehindAndFacingTarget(Entity* target) {
 
 /*----------------------------------------------------------------------------*/
 
-void DrawText(int x, int y, rgba_t c, bool center, char* str) {
+void DrawText(int x, int y, bool center, HFont f, rgba_t c, const char* str) {
     static wchar_t wstr[1024] = { '\0' };
-    swprintf(wstr, 1023, L"%hs", str);
-
-    /* TODO */
-    const HFont font = settings.font;
+    swprintf(wstr, 1023, L"%hs", (char*)str);
 
     if (center) {
         int w = 0, h = 0;
-        METHOD_ARGS(i_surface, GetTextSize, font, wstr, &w, &h);
+        METHOD_ARGS(i_surface, GetTextSize, f, wstr, &w, &h);
 
         x -= (w / 2);
     }
 
     METHOD_ARGS(i_surface, SetTextPos, x, y);
-    METHOD_ARGS(i_surface, SetTextFont, font);
+    METHOD_ARGS(i_surface, SetTextFont, f);
     METHOD_ARGS(i_surface, SetTextColor, c.r, c.g, c.b, c.a);
     METHOD_ARGS(i_surface, PrintText, wstr, wcslen(wstr), FONT_DRAW_DEFAULT);
 }
