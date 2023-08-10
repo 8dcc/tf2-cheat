@@ -24,6 +24,8 @@
 #define GET_OFFSET(HANDLER, OFFSET) \
     ((void*)(((struct link_map*)HANDLER)->l_addr) + OFFSET)
 
+#define MAX(a, b)  ((a) < (b) ? b : a)
+#define MIN(a, b)  ((a) > (b) ? b : a)
 #define DEG2RAD(n) ((n)*M_PI / 180.0f)
 #define RAD2DEG(n) ((n)*180.0f / M_PI)
 #define CLAMP(val, min, max) \
@@ -46,9 +48,7 @@ void vec_transform(vec3_t v, matrix3x4_t* mat, vec3_t* out);
 vec3_t vec_to_ang(vec3_t v);
 vec3_t ang_to_vec(vec3_t a);
 float angle_delta_rad(float a, float b);
-static inline float dot_product(vec3_t a, vec3_t b) {
-    return (a.x * b.x + a.y * b.y + a.z * b.z);
-}
+#define dot_product(a, b) ((a).x * (b).x + (a).y * (b).y + (a).z * (b).z)
 
 bool IsBehindAndFacingTarget(Entity* target);
 
