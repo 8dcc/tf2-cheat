@@ -3,7 +3,7 @@
 #include "../include/sdk.h"
 #include "../include/globals.h"
 
-#define INFOPOS_LINE_H 12
+#define INFOPOS_LINE_H 11
 
 #define OUTLINED_BOX(x, y, w, h, c)                                           \
     {                                                                         \
@@ -124,14 +124,14 @@ void esp(void) {
                 /*------------------------------------------------------------*/
                 /* Player name ESP */
 
-                int infopos_x = x + w + 2;
-                int infopos_y = y - 2;
+                int infopos_x = x + w / 2;
+                int infopos_y = y + h + 2;
 
                 if (settings.name_esp) {
                     player_info_t pinfo;
                     METHOD_ARGS(i_engine, GetPlayerInfo, i, &pinfo);
 
-                    DrawText(infopos_x, infopos_y, false, g_fonts.main.id, col,
+                    DrawText(infopos_x, infopos_y, true, g_fonts.main.id, col,
                              pinfo.name);
 
                     infopos_y += INFOPOS_LINE_H;
@@ -148,7 +148,7 @@ void esp(void) {
                         if (!strncmp(wname, "tf_weapon_", 10))
                             wname += 10;
 
-                        DrawText(infopos_x, infopos_y, false, g_fonts.main.id,
+                        DrawText(infopos_x, infopos_y, true, g_fonts.main.id,
                                  col, wname);
 
                         infopos_y += INFOPOS_LINE_H;
