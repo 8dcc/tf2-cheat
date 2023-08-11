@@ -67,13 +67,16 @@
 
 typedef struct {
     /* Index updated in LevelInitPostEntity */
-    int localplayer;
+    int localidx;
 
     /* Updated in FrameStageNotify(FRAME_NET_UPDATE_END) */
+    bool IsAlive;
     bool IsInGame;
     bool IsConnected;
     int MaxClients;
     int MaxEntities;
+    Entity* ents[2048];
+    Entity* localplayer;
 } global_cache_t;
 
 typedef struct {
@@ -99,9 +102,6 @@ extern void* h_sdl2;
 
 extern global_cache_t g;
 extern font_list_t g_fonts;
-
-/* TODO: Remove once we have entity*[] cache in global_cache_t */
-extern Entity* localplayer;
 
 typedef void (*StartDrawing_t)(MatSurface*);
 extern StartDrawing_t StartDrawing;

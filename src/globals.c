@@ -38,8 +38,6 @@ void* h_sdl2       = NULL;
 global_cache_t g;
 font_list_t g_fonts;
 
-Entity* localplayer = NULL;
-
 StartDrawing_t StartDrawing   = NULL;
 FinishDrawing_t FinishDrawing = NULL;
 
@@ -119,7 +117,7 @@ bool globals_init(void) {
     cache_reset();
     cache_update();
     if (g.IsInGame)
-        g.localplayer = METHOD(i_engine, GetLocalPlayer);
+        g.localidx = METHOD(i_engine, GetLocalPlayer);
 
     return true;
 }
@@ -171,8 +169,11 @@ void fonts_init(void) {
 void cache_reset(void) {
     g.IsInGame    = false;
     g.IsConnected = false;
-    g.MaxClients  = -1;
-    g.MaxEntities = -1;
+    g.MaxClients  = 0;
+    g.MaxEntities = 0;
+
+    for (int i = 0; i < (int)LENGTH(g.ents); i++)
+        g.ents[i] = NULL;
 }
 
 void cache_update(void) {
@@ -180,7 +181,25 @@ void cache_update(void) {
     g.IsConnected = METHOD(i_engine, IsConnected);
 
     if (g.IsInGame) {
+        g.localplayer = METHOD_ARGS(i_entitylist, GetClientEntity, g.localidx);
+        if (g.localplayer)
+            g.IsAlive = METHOD(g.localplayer, IsAlive);
+
         g.MaxClients  = METHOD(i_engine, GetMaxClients);
         g.MaxEntities = METHOD(i_entitylist, GetMaxEntities);
+
+        /* Update entity cache with valid entities */
+        for (int i = 1; i < MIN((int)LENGTH(g.ents), g.MaxEntities); i++) {
+            Entity* ent      = METHOD_ARGS(i_entitylist, GetClientEntity, i);
+            Networkable* net = GetNetworkable(ent);
+
+            if (!ent || METHOD(net, IsDormant))
+                continue;
+
+            if (METHOD(ent, IsPlayer) && !METHOD(ent, IsAlive))
+                continue;
+
+            g.ents[i] = ent;
+        }
     }
 }
