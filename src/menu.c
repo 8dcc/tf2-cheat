@@ -108,26 +108,15 @@ static void set_style(void) {
     ctx->style.combo.content_padding.y = 7.f;
 }
 
-static inline void tab_movement(void) {
-    nk_layout_row_dynamic(ctx, 20, 1);
-    nk_checkbox_label(ctx, "Bhop", &settings.bhop);
-
-    nk_layout_row_dynamic(ctx, 20, 2);
-    static const char* autostrafe_opts[] = { "Off", "Legit", "Rage" };
-    struct nk_vec2 size                  = { 70, 100 };
-    nk_label(ctx, "Autostrafe", NK_TEXT_LEFT);
-    nk_combobox(ctx, autostrafe_opts, 3, &settings.autostrafe, 15, size);
-}
-
 static inline void tab_esp(void) {
-    nk_layout_row_dynamic(ctx, 20, 2);
+    nk_layout_row_dynamic(ctx, 18, 2);
     static const char* autostrafe_opts[] = { "Off", "Friendly", "Enemies",
                                              "All" };
     struct nk_vec2 size                  = { 70, 100 };
     nk_label(ctx, "Enable ESP", NK_TEXT_LEFT);
     nk_combobox(ctx, autostrafe_opts, 4, &settings.enable_esp, 15, size);
 
-    nk_layout_row_dynamic(ctx, 20, 1);
+    nk_layout_row_dynamic(ctx, 15, 1);
     nk_checkbox_label(ctx, "Box ESP", &settings.box_esp);
     nk_checkbox_label(ctx, "Health ESP", &settings.health_esp);
     nk_checkbox_label(ctx, "Name ESP", &settings.name_esp);
@@ -135,11 +124,33 @@ static inline void tab_esp(void) {
     nk_checkbox_label(ctx, "Weapon ESP", &settings.weapon_esp);
 }
 
+static inline void tab_movement(void) {
+    nk_layout_row_dynamic(ctx, 15, 1);
+    nk_checkbox_label(ctx, "Bhop", &settings.bhop);
+
+    nk_layout_row_dynamic(ctx, 18, 2);
+    static const char* autostrafe_opts[] = { "Off", "Legit", "Rage" };
+    struct nk_vec2 size                  = { 70, 100 };
+    nk_label(ctx, "Autostrafe", NK_TEXT_LEFT);
+    nk_combobox(ctx, autostrafe_opts, 3, &settings.autostrafe, 15, size);
+}
+
 static inline void tab_misc(void) {
-    nk_layout_row_dynamic(ctx, 20, 1);
+    nk_layout_row_dynamic(ctx, 15, 1);
     nk_checkbox_label(ctx, "Watermark", &settings.watermark);
     nk_checkbox_label(ctx, "Spectator list", &settings.speclist);
     nk_checkbox_label(ctx, "Autobackstab", &settings.autostab);
+}
+
+static inline void tab_colors(void) {
+    nk_layout_row_dynamic(ctx, 15, 2);
+    nk_label(ctx, "Friendly color", NK_TEXT_CENTERED);
+    nk_label(ctx, "Enemy color", NK_TEXT_CENTERED);
+    nk_layout_row_dynamic(ctx, 100, 2);
+    settings.col_friend_esp =
+      nk_color_picker(ctx, settings.col_friend_esp, NK_RGB);
+    settings.col_enemy_esp =
+      nk_color_picker(ctx, settings.col_enemy_esp, NK_RGB);
 }
 
 void menu_render(void) {
@@ -147,22 +158,26 @@ void menu_render(void) {
 
     if (nk_begin(ctx, "Enoch", nk_rect(MENU_X, MENU_Y, MENU_W, MENU_H),
                  MENU_FLAGS)) {
-        nk_layout_row_dynamic(ctx, 20, 3);
+        nk_layout_row_dynamic(ctx, 20, 4);
 
-        ADD_TAB(0, "Movement");
-        ADD_TAB(1, "ESP");
+        ADD_TAB(0, "ESP");
+        ADD_TAB(1, "Movement");
         ADD_TAB(2, "Misc");
+        ADD_TAB(3, "Colors");
 
         switch (cur_tab) {
             default:
             case 0:
-                tab_movement();
+                tab_esp();
                 break;
             case 1:
-                tab_esp();
+                tab_movement();
                 break;
             case 2:
                 tab_misc();
+                break;
+            case 3:
+                tab_colors();
                 break;
         }
     }
