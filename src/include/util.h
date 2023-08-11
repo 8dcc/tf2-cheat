@@ -52,7 +52,8 @@ float angle_delta_rad(float a, float b);
 
 bool IsBehindAndFacingTarget(Entity* target);
 
-void DrawText(int x, int y, bool center, HFont f, rgba_t c, const char* str);
+rgba_t col_scale(rgba_t c, float factor);
+void draw_text(int x, int y, bool center, HFont f, rgba_t c, const char* str);
 
 bool world_to_screen(vec3_t vec, vec2_t* screen);
 

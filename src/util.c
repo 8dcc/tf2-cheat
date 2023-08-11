@@ -212,7 +212,26 @@ bool IsBehindAndFacingTarget(Entity* target) {
 
 /*----------------------------------------------------------------------------*/
 
-void DrawText(int x, int y, bool center, HFont f, rgba_t c, const char* str) {
+rgba_t col_scale(rgba_t c, float factor) {
+    if (factor < 1.0f)
+        return (rgba_t){
+            .r = (int)MIN(255, (float)c.r * factor),
+            .g = (int)MIN(255, (float)c.g * factor),
+            .b = (int)MIN(255, (float)c.b * factor),
+            .a = c.a,
+        };
+    else if (factor > 1.0f)
+        return (rgba_t){
+            .r = (int)MIN(255, c.r + (float)(255 - c.r) * (factor - 1.f)),
+            .g = (int)MIN(255, c.g + (float)(255 - c.g) * (factor - 1.f)),
+            .b = (int)MIN(255, c.b + (float)(255 - c.b) * (factor - 1.f)),
+            .a = c.a,
+        };
+    else
+        return c;
+}
+
+void draw_text(int x, int y, bool center, HFont f, rgba_t c, const char* str) {
     static wchar_t wstr[1024] = { '\0' };
     swprintf(wstr, 1023, L"%hs", (char*)str);
 
