@@ -16,7 +16,9 @@ The cheat currently has the following features:
 - ESP
   - Toggle friends only/enemies only/all
   - Box
+  - Health
   - Name
+  - Player class
   - Weapon
 - Spectator list
 - Spy autostab
