@@ -10,6 +10,7 @@ Settings settings = {
     .enable_esp = OFF,
     .box_esp    = false,
     .name_esp   = false,
+    .class_esp  = false,
     .weapon_esp = false,
 
     .watermark = true,

@@ -138,6 +138,16 @@ void esp(void) {
                 }
 
                 /*------------------------------------------------------------*/
+                /* Player class ESP */
+
+                if (settings.class_esp) {
+                    draw_text(infopos_x, infopos_y, true, g_fonts.main.id,
+                              col_scale(col, 1.40f), GetClassName(ent));
+
+                    infopos_y += INFOPOS_LINE_H;
+                }
+
+                /*------------------------------------------------------------*/
                 /* Player weapon ESP */
 
                 if (settings.weapon_esp) {
@@ -149,7 +159,7 @@ void esp(void) {
                             wname += 10;
 
                         draw_text(infopos_x, infopos_y, true, g_fonts.main.id,
-                                  col_scale(col, 1.50f), wname);
+                                  col_scale(col, 1.60f), wname);
 
                         infopos_y += INFOPOS_LINE_H;
                     }

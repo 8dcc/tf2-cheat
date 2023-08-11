@@ -23,6 +23,7 @@ typedef struct {
     int enable_esp;
     int box_esp;
     int name_esp;
+    int class_esp;
     int weapon_esp;
 
     /* Misc */
