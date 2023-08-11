@@ -1,6 +1,8 @@
 #ifndef SETTINGS_H_
 #define SETTINGS_H_
 
+#include "menu.h"
+
 #define OFF 0
 
 enum settings_rage {
@@ -21,6 +23,8 @@ typedef struct {
 
     /* ESP */
     int enable_esp;
+    struct nk_colorf col_friend_esp;
+    struct nk_colorf col_enemy_esp;
     int box_esp;
     int health_esp;
     int name_esp;
