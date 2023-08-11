@@ -32,6 +32,11 @@
 #define CLAMP(val, min, max) \
     (((val) > (max)) ? (max) : (((val) < (min)) ? (min) : (val)))
 
+/* nk_colorf -> rgba_t */
+#define NK2COL(COLORF)                                               \
+    ((rgba_t){ (COLORF).r * 255, (COLORF).g * 255, (COLORF).b * 255, \
+               (COLORF).a * 255 })
+
 /*----------------------------------------------------------------------------*/
 
 void* get_interface(void* handle, const char* name);
