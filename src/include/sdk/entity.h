@@ -408,6 +408,19 @@ enum ETFClientClass {
     CClass_CBaseCombatWeapon                     = 5
 };
 
+enum ETFClass {
+    CLASS_NONE = 0,
+    CLASS_SCOUT,
+    CLASS_SNIPER,
+    CLASS_SOLDIER,
+    CLASS_DEMOMAN,
+    CLASS_MEDIC,
+    CLASS_HEAVY,
+    CLASS_PYRO,
+    CLASS_SPY,
+    CLASS_ENGINEER
+};
+
 enum ObsModes {
     OBS_MODE_NONE = 0,
     OBS_MODE_DEATHCAM,
@@ -523,6 +536,8 @@ struct Entity {
     vec3_t velocity; /* 0x110 */
     PAD(0x250);
     int flags; /* 0x36C */
+    PAD(0x12C0);
+    int player_class; /* 0x1630 (ETFClass) */
 };
 
 #define IsLocalplayer(ent) \
@@ -537,6 +552,31 @@ static inline Renderable* GetRenderable(Entity* ent) {
 
 static inline Networkable* GetNetworkable(Entity* ent) {
     return (Networkable*)((void*)ent + 0x8);
+}
+
+static inline const char* GetClassName(Entity* ent) {
+    switch (ent->player_class) {
+        case CLASS_SCOUT:
+            return "Scout";
+        case CLASS_DEMOMAN:
+            return "Demoman";
+        case CLASS_ENGINEER:
+            return "Engineer";
+        case CLASS_HEAVY:
+            return "Heavy";
+        case CLASS_MEDIC:
+            return "Medic";
+        case CLASS_PYRO:
+            return "Pyro";
+        case CLASS_SNIPER:
+            return "Sniper";
+        case CLASS_SOLDIER:
+            return "Soldier";
+        case CLASS_SPY:
+            return "Spy";
+        default:
+            return "Unknown class";
+    }
 }
 
 #endif /* ENTITY_H_ */
