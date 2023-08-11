@@ -7,6 +7,36 @@
 
 #+TOC: headlines 2
 
+* Features
+The cheat currently has the following features:
+- BunnyHop
+- Autostrafe
+  - Legit
+  - Rage
+- ESP
+  - Toggle friends only/enemies only/all
+  - Box
+  - Name
+  - Weapon
+- Spectator list
+- Spy autostab
+
+* Dependencies
+The cheat uses the [[https://github.com/slavfox/Cozette][Cozette Vector]] font for rendering using =ISurface=. You can
+install it with with the following command.
+
+Arch ([[https://aur.archlinux.org/packages/cozette-ttf][AUR]]):
+#+begin_src console
+$ yay -S cozette-ttf  # Has to be ttf
+#+end_src
+
+Without AUR helper:
+#+begin_src console
+$ git clone https://aur.archlinux.org/cozette-ttf.git
+$ cd cozette-ttf
+$ makepkg -si
+#+end_src
+
 * Building
 
 #+begin_src console
