@@ -118,8 +118,39 @@ void esp(void) {
 
                 /*------------------------------------------------------------*/
                 /* Player box ESP */
+
                 if (settings.box_esp)
                     OUTLINED_BOX(x, y, w, h, col);
+
+                /*------------------------------------------------------------*/
+                /* Player health ESP */
+
+                if (settings.health_esp) {
+                    const int hp     = METHOD(ent, GetHealth);
+                    const int max_hp = METHOD(ent, GetMaxHealth);
+
+                    const int hpx = x - 5;
+                    const int hpy = y;
+                    const int hpw = 2;
+                    const int hph = h;
+
+                    /* Background (red) */
+                    METHOD_ARGS(i_surface, SetColor, 0, 0, 0, 255);
+                    METHOD_ARGS(i_surface, DrawRect, hpx - 1, hpy - 1,
+                                hpx + hpw + 1, hpy + h + 1);
+                    METHOD_ARGS(i_surface, DrawRect, hpx + 1, hpy + 1,
+                                hpx + hpw - 1, hpy + h - 1);
+                    METHOD_ARGS(i_surface, SetColor, 170, 29, 29, 255);
+                    METHOD_ARGS(i_surface, DrawFilledRect, hpx, hpy, hpx + hpw,
+                                hpy + hph);
+
+                    /* Health bar (green) */
+                    const int hpbar_h = (hph * MIN(hp, max_hp) / max_hp);
+                    const int hpbar_y = hpy + (hph - hpbar_h);
+                    METHOD_ARGS(i_surface, SetColor, 67, 160, 71, 255);
+                    METHOD_ARGS(i_surface, DrawFilledRect, hpx, hpbar_y,
+                                hpx + hpw, hpbar_y + hpbar_h);
+                }
 
                 /*------------------------------------------------------------*/
                 /* Player name ESP */

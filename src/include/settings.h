@@ -22,6 +22,7 @@ typedef struct {
     /* ESP */
     int enable_esp;
     int box_esp;
+    int health_esp;
     int name_esp;
     int class_esp;
     int weapon_esp;

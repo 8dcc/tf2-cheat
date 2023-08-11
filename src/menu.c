@@ -129,6 +129,7 @@ static inline void tab_esp(void) {
 
     nk_layout_row_dynamic(ctx, 20, 1);
     nk_checkbox_label(ctx, "Box ESP", &settings.box_esp);
+    nk_checkbox_label(ctx, "Health ESP", &settings.health_esp);
     nk_checkbox_label(ctx, "Name ESP", &settings.name_esp);
     nk_checkbox_label(ctx, "Class ESP", &settings.class_esp);
     nk_checkbox_label(ctx, "Weapon ESP", &settings.weapon_esp);
