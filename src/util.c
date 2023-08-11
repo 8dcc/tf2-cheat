@@ -181,18 +181,18 @@ float angle_delta_rad(float a, float b) {
 /*----------------------------------------------------------------------------*/
 
 bool IsBehindAndFacingTarget(Entity* target) {
-    if (!localplayer)
+    if (!g.IsAlive)
         return false;
 
     /* Get a vector from owner origin to target origin */
     vec3_t vecToTarget;
     vecToTarget   = vec_sub(*METHOD(target, WorldSpaceCenter),
-                            *METHOD(localplayer, WorldSpaceCenter));
+                            *METHOD(g.localplayer, WorldSpaceCenter));
     vecToTarget.z = 0.0f;
     vec_norm(&vecToTarget);
 
     /* Get owner forward view vector */
-    vec3_t vecOwnerForward = ang_to_vec(METHOD(localplayer, EyeAngles));
+    vec3_t vecOwnerForward = ang_to_vec(METHOD(g.localplayer, EyeAngles));
     vecOwnerForward.z      = 0.0f;
     vec_norm(&vecOwnerForward);
 

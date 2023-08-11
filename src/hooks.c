@@ -46,7 +46,7 @@ void h_LevelShutdown(BaseClient* thisptr) {
     ORIGINAL(LevelShutdown, thisptr);
 
     /* Reset all on LevelShutdown */
-    g.localplayer = -1;
+    g.localidx = 0;
     cache_reset();
 }
 
@@ -54,7 +54,7 @@ void h_LevelInitPostEntity(BaseClient* thisptr) {
     ORIGINAL(LevelInitPostEntity, thisptr);
 
     /* Get once on LevelInit */
-    g.localplayer = METHOD(i_engine, GetLocalPlayer);
+    g.localidx = METHOD(i_engine, GetLocalPlayer);
 }
 
 void h_FrameStageNotify(BaseClient* thisptr, ClientFrameStage_t curStage) {
@@ -79,8 +79,6 @@ void h_FrameStageNotify(BaseClient* thisptr, ClientFrameStage_t curStage) {
 bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
                   usercmd_t* cmd) {
     bool ret = ORIGINAL(CreateMove, thisptr, flInputSampleTime, cmd);
-
-    localplayer = METHOD_ARGS(i_entitylist, GetClientEntity, g.localplayer);
 
     bhop(cmd);
     autobackstab(cmd);

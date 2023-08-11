@@ -180,13 +180,12 @@ void watermark_render(void) {
 }
 
 void spectator_list(void) {
-    if (!localplayer || !g.IsInGame)
+    if (!g.localplayer || !g.IsInGame)
         return;
 
     /* If we are dead, display spectator list for the dead guy */
-    Entity* local = METHOD(localplayer, IsAlive)
-                      ? localplayer
-                      : METHOD(localplayer, GetObserverTarget);
+    Entity* local = !g.IsAlive ? g.localplayer
+                               : METHOD(g.localplayer, GetObserverTarget);
     if (!local)
         return;
 
@@ -194,12 +193,12 @@ void spectator_list(void) {
     const char* names[64];
 
     for (int i = 1; i <= MIN(64, g.MaxClients); i++) {
-        if (i == g.localplayer)
+        if (i == g.localidx)
             continue;
 
         Entity* ent      = METHOD_ARGS(i_entitylist, GetClientEntity, i);
         Networkable* net = GetNetworkable(ent);
-        if (!ent || ent == localplayer || ent == local ||
+        if (!ent || ent == g.localplayer || ent == local ||
             METHOD(net, IsDormant) || METHOD(ent, IsAlive))
             continue;
 

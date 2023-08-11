@@ -79,7 +79,7 @@ void esp(void) {
     if (settings.enable_esp == OFF)
         return;
 
-    if (!localplayer || !g.IsConnected)
+    if (!g.localplayer || !g.IsConnected)
         return;
 
     /* For bounding box */
@@ -87,12 +87,12 @@ void esp(void) {
 
     /* Iterate all entities */
     for (int i = 1; i <= g.MaxClients; i++) {
-        if (i == g.localplayer)
+        if (i == g.localidx)
             continue;
 
-        Entity* ent      = METHOD_ARGS(i_entitylist, GetClientEntity, i);
+        Entity* ent      = g.ents[i];
         Networkable* net = GetNetworkable(ent);
-        if (!ent || METHOD(net, IsDormant))
+        if (!ent)
             continue;
 
         ClientClass* ent_class = METHOD(net, GetClientClass);
@@ -101,9 +101,6 @@ void esp(void) {
 
         switch (ent_class->class_id) {
             case CClass_CTFPlayer: {
-                if (!METHOD(ent, IsAlive))
-                    continue;
-
                 const bool teammate = IsTeammate(ent);
 
                 /* Should we render this player's team? */

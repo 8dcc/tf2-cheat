@@ -21,7 +21,7 @@ static void autostrafe_rage(usercmd_t* cmd) {
     static const float cl_forwardspeed  = 450.0f;
     static const float cl_sidespeed     = 450.0f;
 
-    const vec3_t velocity = localplayer->velocity;
+    const vec3_t velocity = g.localplayer->velocity;
     const float speed     = vec_len2d(velocity);
 
     /* If low speed, start forward */
@@ -53,13 +53,12 @@ static void autostrafe_rage(usercmd_t* cmd) {
 }
 
 void bhop(usercmd_t* cmd) {
-    if (!settings.bhop || !g.IsInGame || !localplayer ||
-        !METHOD(localplayer, IsAlive))
+    if (!settings.bhop || !g.IsAlive || !g.localplayer)
         return;
 
     const bool is_jumping = (cmd->buttons & IN_JUMP) != 0;
 
-    if (!(localplayer->flags & FL_ONGROUND))
+    if (!(g.localplayer->flags & FL_ONGROUND))
         cmd->buttons &= ~IN_JUMP;
 
     if (is_jumping) {
