@@ -8,7 +8,15 @@ if [ "$pid" == "" ]; then
    exit 1
 fi
 
-# Used to echo the command. For debugging.
+# Check for needed fonts. Delete these lines if you are sure all the needed
+# fonts are installed.
+cozettevector=$(fc-list | grep "CozetteVector" | wc -l)
+if [ $cozettevector -lt 1 ]; then
+    echo "ERROR: inject.sh: font \"CozetteVector\" not found."
+    exit 1
+fi
+
+# Used to echo each command. For debugging.
 #set -x
 
 if [ "$1" == "unload" ]; then
