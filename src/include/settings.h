@@ -29,7 +29,6 @@ typedef struct {
     int watermark;
     int speclist;
     int autostab;
-    int slide_walk;
 } Settings;
 
 extern Settings settings;

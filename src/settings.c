@@ -12,10 +12,9 @@ Settings settings = {
     .name_esp   = false,
     .weapon_esp = false,
 
-    .watermark  = true,
-    .speclist   = true,
-    .autostab   = false,
-    .slide_walk = false,
+    .watermark = true,
+    .speclist  = true,
+    .autostab  = false,
 };
 
 /*----------------------------------------------------------------------------*/

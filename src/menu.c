@@ -138,7 +138,6 @@ static inline void tab_misc(void) {
     nk_checkbox_label(ctx, "Watermark", &settings.watermark);
     nk_checkbox_label(ctx, "Spectator list", &settings.speclist);
     nk_checkbox_label(ctx, "Autobackstab", &settings.autostab);
-    nk_checkbox_label(ctx, "Slide walk", &settings.slide_walk);
 }
 
 void menu_render(void) {
