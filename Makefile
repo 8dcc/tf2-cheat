@@ -20,11 +20,11 @@ clean:
 inject: $(BIN)
 	bash ./inject.sh $(INJECTOR_FLAGS)
 
-debug_flags:
+debug-flags:
 	$(eval CFLAGS += -g)
 	$(eval INJECTOR_FLAGS += debug)
 
-debug: debug_flags all
+debug: debug-flags all
 
 # -------------------------------------------
 
