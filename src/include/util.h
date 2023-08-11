@@ -24,10 +24,11 @@
 #define GET_OFFSET(HANDLER, OFFSET) \
     ((void*)(((struct link_map*)HANDLER)->l_addr) + OFFSET)
 
-#define MAX(a, b)  ((a) < (b) ? b : a)
-#define MIN(a, b)  ((a) > (b) ? b : a)
-#define DEG2RAD(n) ((n)*M_PI / 180.0f)
-#define RAD2DEG(n) ((n)*180.0f / M_PI)
+#define LENGTH(arr) (sizeof(arr) / sizeof(arr[0]))
+#define MAX(a, b)   ((a) < (b) ? b : a)
+#define MIN(a, b)   ((a) > (b) ? b : a)
+#define DEG2RAD(n)  ((n)*M_PI / 180.0f)
+#define RAD2DEG(n)  ((n)*180.0f / M_PI)
 #define CLAMP(val, min, max) \
     (((val) > (max)) ? (max) : (((val) < (min)) ? (min) : (val)))
 
