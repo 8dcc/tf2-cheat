@@ -112,8 +112,8 @@ void esp(void) {
                 if (!get_bbox(ent, &x, &y, &w, &h))
                     continue;
 
-                const rgba_t col = teammate ? (rgba_t){ 10, 240, 10, 255 }
-                                            : (rgba_t){ 240, 10, 10, 255 };
+                const rgba_t col = teammate ? (rgba_t){ 13, 120, 243, 255 }
+                                            : (rgba_t){ 244, 27, 24, 255 };
 
                 /*------------------------------------------------------------*/
                 /* Player box ESP */
@@ -172,7 +172,7 @@ void esp(void) {
 
                 if (settings.class_esp) {
                     draw_text(infopos_x, infopos_y, true, g_fonts.main.id,
-                              col_scale(col, 1.40f), GetClassName(ent));
+                              col_scale(col, 1.30f), GetClassName(ent));
 
                     infopos_y += INFOPOS_LINE_H;
                 }
@@ -189,7 +189,7 @@ void esp(void) {
                             wname += 10;
 
                         draw_text(infopos_x, infopos_y, true, g_fonts.main.id,
-                                  col_scale(col, 1.60f), wname);
+                                  col_scale(col, 1.50f), wname);
 
                         infopos_y += INFOPOS_LINE_H;
                     }
