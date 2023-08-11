@@ -80,10 +80,7 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
                   usercmd_t* cmd) {
     bool ret = ORIGINAL(CreateMove, thisptr, flInputSampleTime, cmd);
 
-    localplayer = METHOD_ARGS(i_entitylist, GetClientEntity,
-                              METHOD(i_engine, GetLocalPlayer));
-    if (!localplayer)
-        return ret;
+    localplayer = METHOD_ARGS(i_entitylist, GetClientEntity, g.localplayer);
 
     bhop(cmd);
     autobackstab(cmd);
