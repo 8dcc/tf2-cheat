@@ -3,7 +3,8 @@
 #include "../include/sdk.h"
 #include "../include/globals.h"
 
-#define INFOPOS_LINE_H 11
+#define INFOPOS_LINE_H 11    /* Spacing between ESP lines */
+#define COL_SCALE      1.25f /* Color scale per ESP text item */
 
 #define OUTLINED_BOX(x, y, w, h, c)                                           \
     {                                                                         \
@@ -82,6 +83,9 @@ void esp(void) {
     if (!g.localplayer || !g.IsConnected)
         return;
 
+    rgba_t player_friend_col = NK2COL(settings.col_friend_esp);
+    rgba_t player_enemy_col  = NK2COL(settings.col_enemy_esp);
+
     /* For bounding box */
     int x, y, w, h;
 
@@ -112,8 +116,7 @@ void esp(void) {
                 if (!get_bbox(ent, &x, &y, &w, &h))
                     continue;
 
-                const rgba_t col = teammate ? (rgba_t){ 13, 120, 243, 255 }
-                                            : (rgba_t){ 244, 27, 24, 255 };
+                rgba_t col = teammate ? player_friend_col : player_enemy_col;
 
                 /*------------------------------------------------------------*/
                 /* Player box ESP */
@@ -164,6 +167,7 @@ void esp(void) {
                     draw_text(infopos_x, infopos_y, true, g_fonts.main.id, col,
                               pinfo.name);
 
+                    col = col_scale(col, COL_SCALE);
                     infopos_y += INFOPOS_LINE_H;
                 }
 
@@ -171,9 +175,10 @@ void esp(void) {
                 /* Player class ESP */
 
                 if (settings.class_esp) {
-                    draw_text(infopos_x, infopos_y, true, g_fonts.main.id,
-                              col_scale(col, 1.30f), GetClassName(ent));
+                    draw_text(infopos_x, infopos_y, true, g_fonts.main.id, col,
+                              GetClassName(ent));
 
+                    col = col_scale(col, COL_SCALE);
                     infopos_y += INFOPOS_LINE_H;
                 }
 
@@ -189,8 +194,9 @@ void esp(void) {
                             wname += 10;
 
                         draw_text(infopos_x, infopos_y, true, g_fonts.main.id,
-                                  col_scale(col, 1.50f), wname);
+                                  col, wname);
 
+                        col = col_scale(col, COL_SCALE);
                         infopos_y += INFOPOS_LINE_H;
                     }
                 }
