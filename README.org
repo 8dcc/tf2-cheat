@@ -14,13 +14,15 @@ The cheat currently has the following features:
   - Legit
   - Rage
 - ESP
-  - Toggle friends only/enemies only/all
-  - Box
-  - Health
-  - Name
-  - Player class
-  - Weapon
-- Spectator list
+  - Player ESP
+    - Toggle friends only/enemies only/all
+    - Box
+    - Health
+    - Name
+    - Player class
+    - Weapon
+  - Custom colors
+- Spectator list (/Working partially/)
 - Spy autostab
 
 * Dependencies
