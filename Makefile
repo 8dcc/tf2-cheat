@@ -1,6 +1,6 @@
 
 CC=gcc
-CFLAGS=-Wall -Wextra -m32 -fPIC
+CFLAGS=-Wall -Wextra -Ofast -m32 -fPIC
 LDFLAGS=-lm -lSDL2 -lGLEW
 INJECTOR_FLAGS=
 
