@@ -27,6 +27,8 @@ static bool get_bbox(Entity* ent, int* x, int* y, int* w, int* h) {
         return false;
 
     matrix3x4_t* trans = METHOD(renderable, RenderableToWorldTransform);
+    if (!trans)
+        return false;
 
     vec3_t points[] = { { obb_mins.x, obb_mins.y, obb_mins.z },
                         { obb_mins.x, obb_maxs.y, obb_mins.z },
