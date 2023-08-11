@@ -264,6 +264,8 @@ bool world_to_screen(vec3_t vec, vec2_t* screen) {
 
     /* Get viewmatrix */
     const VMatrix* matrix = METHOD(i_engine, WorldToScreenMatrix);
+    if (!matrix)
+        return false;
 
     float w = MUL_ROW(matrix, 3, vec);
     if (w < 0.01f)
