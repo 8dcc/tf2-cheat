@@ -540,11 +540,8 @@ struct Entity {
     int player_class; /* 0x1630 (ETFClass) */
 };
 
-#define IsLocalplayer(ent) \
-    (METHOD(ent, GetIndex) == METHOD(i_engine, GetLocalPlayer))
-
 #define IsTeammate(ent) \
-    (METHOD(localplayer, GetTeamNumber) == METHOD(ent, GetTeamNumber));
+    (METHOD(g.localplayer, GetTeamNumber) == METHOD(ent, GetTeamNumber));
 
 static inline Renderable* GetRenderable(Entity* ent) {
     return (Renderable*)((void*)ent + 0x4);
