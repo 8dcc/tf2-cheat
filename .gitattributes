@@ -1,0 +1,2 @@
+# Don't detect nuklear lib in language detection
+/src/include/nuklear/*.h linguist-detectable=false
