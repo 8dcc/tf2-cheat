@@ -5,13 +5,14 @@
 /* Global settings */
 Settings settings = {
     /* ESP */
-    .player_esp = OFF,
-    .box_esp    = false,
-    .health_esp = false,
-    .name_esp   = false,
-    .class_esp  = false,
-    .weapon_esp = false,
-    .ammo_esp   = false,
+    .player_esp   = OFF,
+    .box_esp      = false,
+    .skeleton_esp = false,
+    .health_esp   = false,
+    .name_esp     = false,
+    .class_esp    = false,
+    .weapon_esp   = false,
+    .ammo_esp     = false,
 
     /* Movement */
     .bhop       = false,

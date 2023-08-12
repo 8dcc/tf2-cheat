@@ -75,7 +75,7 @@ static inline bool get_bbox(Entity* ent, int* x, int* y, int* w, int* h) {
 
 static inline void skeleton_esp(Renderable* rend, matrix3x4_t* bones,
                                 rgba_t col) {
-    if (!true)
+    if (!settings.skeleton_esp)
         return;
 
     if (!METHOD_ARGS(rend, SetupBones, bones, MAXSTUDIOBONES,
