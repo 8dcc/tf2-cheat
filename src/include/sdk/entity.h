@@ -221,7 +221,7 @@ enum ETFClientClass {
     CClass_CTFTeam                               = 318,
     CClass_CTFTauntProp                          = 317,
     CClass_CTFPlayerResource                     = 249,
-    CClass_CTFPlayer                             = 247, /* ok */
+    CClass_CTFPlayer                             = 247, /* !!! */
     CClass_CTFRagdoll                            = 283,
     CClass_CTEPlayerAnimEvent                    = 165,
     CClass_CTFPasstimeLogic                      = 240,
@@ -230,7 +230,7 @@ enum ETFClientClass {
     CClass_CTFGlow                               = 214,
     CClass_CTEFireBullets                        = 152,
     CClass_CTFBuffBanner                         = 0,
-    CClass_CTFAmmoPack                           = 181, /* ok */
+    CClass_CTFAmmoPack                           = 181, /* !!! */
     CClass_CObjectTeleporter                     = 89,  /* !!! */
     CClass_CObjectSentrygun                      = 88,  /* !!! */
     CClass_CTFProjectile_SentryRocket            = 265,
@@ -243,7 +243,7 @@ enum ETFClientClass {
     CClass_CFuncPasstimeGoal                     = 61,
     CClass_CFuncForceField                       = 57,
     CClass_CCaptureZone                          = 28,
-    CClass_CCurrencyPack                         = 31,
+    CClass_CCurrencyPack                         = 31, /* !!! */
     CClass_CBaseObject                           = 10,
     CClass_CTestTraceline                        = 176,
     CClass_CTEWorldDecal                         = 180,
@@ -487,7 +487,9 @@ struct Collideable {
 };
 
 typedef struct {
-    PAD(0x14);    /* 5 ptrs, no vmt */
+    PAD(0x8);
+    const char* network_name;
+    PAD(0x8);
     int class_id; /* enum ETFClientClass */
 } ClientClass;
 
@@ -556,7 +558,9 @@ typedef struct {
 
 struct Entity {
     VMT_Entity* vmt;
-    PAD(0x10C);
+    PAD(0x7C);
+    int model_idx; /* 0x80 */
+    PAD(0x8C);
     vec3_t velocity; /* 0x110 */
     PAD(0x250);
     int flags; /* 0x36C */
