@@ -75,7 +75,7 @@ typedef struct {
     bool IsConnected;
     int MaxClients;
     int MaxEntities;
-    Entity* ents[2048];
+    Entity* ents[2049];
     Entity* localplayer;
 } global_cache_t;
 

@@ -188,17 +188,27 @@ void cache_update(void) {
         g.MaxClients  = METHOD(i_engine, GetMaxClients);
         g.MaxEntities = METHOD(i_entitylist, GetMaxEntities);
 
-        /* Update entity cache with valid entities */
-        for (int i = 1; i < MIN((int)LENGTH(g.ents), g.MaxEntities); i++) {
+        /* First iterate players */
+        for (int i = 1; i <= g.MaxClients; i++) {
+            Entity* ent      = METHOD_ARGS(i_entitylist, GetClientEntity, i);
+            Networkable* net = GetNetworkable(ent);
+
+            if (!ent || METHOD(net, IsDormant) || !METHOD(ent, IsAlive))
+                continue;
+
+            g.ents[i] = ent;
+        }
+
+        /* Then other entities */
+        const int last_entity = MIN((int)LENGTH(g.ents) - 1, g.MaxEntities);
+        for (int i = g.MaxClients + 1; i < last_entity; i++) {
             Entity* ent      = METHOD_ARGS(i_entitylist, GetClientEntity, i);
             Networkable* net = GetNetworkable(ent);
 
             if (!ent || METHOD(net, IsDormant))
                 continue;
 
-            if (METHOD(ent, IsPlayer) && !METHOD(ent, IsAlive))
-                continue;
-
+            /* TODO: Only store the kinds of entities that we use */
             g.ents[i] = ent;
         }
     }
