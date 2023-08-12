@@ -144,7 +144,7 @@ enum ETFClientClass {
     CClass_CTFBat_Fish                           = 187,
     CClass_CTFBat                                = 186,
     CClass_CTFProjectile_EnergyRing              = 256,
-    CClass_CTFDroppedWeapon                      = 203,
+    CClass_CTFDroppedWeapon                      = 203, /* !!! */
     CClass_CTFWeaponSapper                       = 335,
     CClass_CTFWeaponBuilder                      = 326,
     CClass_C_TFWeaponBuilder                     = 0,
@@ -221,7 +221,7 @@ enum ETFClientClass {
     CClass_CTFTeam                               = 318,
     CClass_CTFTauntProp                          = 317,
     CClass_CTFPlayerResource                     = 249,
-    CClass_CTFPlayer                             = 247,
+    CClass_CTFPlayer                             = 247, /* ok */
     CClass_CTFRagdoll                            = 283,
     CClass_CTEPlayerAnimEvent                    = 165,
     CClass_CTFPasstimeLogic                      = 240,
@@ -230,13 +230,13 @@ enum ETFClientClass {
     CClass_CTFGlow                               = 214,
     CClass_CTEFireBullets                        = 152,
     CClass_CTFBuffBanner                         = 0,
-    CClass_CTFAmmoPack                           = 181,
-    CClass_CObjectTeleporter                     = 89,
-    CClass_CObjectSentrygun                      = 88,
+    CClass_CTFAmmoPack                           = 181, /* ok */
+    CClass_CObjectTeleporter                     = 89,  /* !!! */
+    CClass_CObjectSentrygun                      = 88,  /* !!! */
     CClass_CTFProjectile_SentryRocket            = 265,
     CClass_CObjectSapper                         = 87,
     CClass_CObjectCartDispenser                  = 85,
-    CClass_CObjectDispenser                      = 86,
+    CClass_CObjectDispenser                      = 86, /* !!! */
     CClass_CMonsterResource                      = 84,
     CClass_CFuncRespawnRoomVisualizer            = 64,
     CClass_CFuncRespawnRoom                      = 63,
@@ -397,7 +397,7 @@ enum ETFClientClass {
     CClass_CBaseCombatCharacter                  = 4,
     CClass_CBaseAnimatingOverlay                 = 2,
     CClass_CBoneFollower                         = 20,
-    CClass_CBaseAnimating                        = 1,
+    CClass_CBaseAnimating                        = 1, /* !!! */
     CClass_CInfoLightingRelative                 = 76,
     CClass_CAI_BaseNPC                           = 0,
     CClass_CBeam                                 = 19,
