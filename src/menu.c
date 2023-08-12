@@ -112,9 +112,9 @@ static inline void tab_esp(void) {
     nk_layout_row_dynamic(ctx, 18, 2);
     static const char* autostrafe_opts[] = { "Off", "Friendly", "Enemies",
                                              "All" };
-    struct nk_vec2 size                  = { 70, 100 };
-    nk_label(ctx, "Enable ESP", NK_TEXT_LEFT);
-    nk_combobox(ctx, autostrafe_opts, 4, &settings.enable_esp, 15, size);
+    struct nk_vec2 size                  = { 141, 200 };
+    nk_label(ctx, "Player ESP", NK_TEXT_LEFT);
+    nk_combobox(ctx, autostrafe_opts, 4, &settings.player_esp, 15, size);
 
     nk_layout_row_dynamic(ctx, 15, 1);
     nk_checkbox_label(ctx, "Box ESP", &settings.box_esp);
@@ -122,6 +122,8 @@ static inline void tab_esp(void) {
     nk_checkbox_label(ctx, "Name ESP", &settings.name_esp);
     nk_checkbox_label(ctx, "Class ESP", &settings.class_esp);
     nk_checkbox_label(ctx, "Weapon ESP", &settings.weapon_esp);
+
+    nk_checkbox_label(ctx, "Ammo ESP", &settings.ammo_esp);
 }
 
 static inline void tab_movement(void) {
@@ -130,7 +132,7 @@ static inline void tab_movement(void) {
 
     nk_layout_row_dynamic(ctx, 18, 2);
     static const char* autostrafe_opts[] = { "Off", "Legit", "Rage" };
-    struct nk_vec2 size                  = { 70, 100 };
+    struct nk_vec2 size                  = { 141, 200 };
     nk_label(ctx, "Autostrafe", NK_TEXT_LEFT);
     nk_combobox(ctx, autostrafe_opts, 3, &settings.autostrafe, 15, size);
 }
@@ -148,17 +150,17 @@ static inline void tab_colors(void) {
     nk_label(ctx, "Enemy color", NK_TEXT_CENTERED);
     nk_layout_row_dynamic(ctx, 100, 2);
     settings.col_friend_esp =
-      nk_color_picker(ctx, settings.col_friend_esp, NK_RGB);
+      nk_color_picker(ctx, settings.col_friend_esp, NK_RGBA);
     settings.col_enemy_esp =
-      nk_color_picker(ctx, settings.col_enemy_esp, NK_RGB);
+      nk_color_picker(ctx, settings.col_enemy_esp, NK_RGBA);
     nk_layout_row_dynamic(ctx, 15, 2);
     nk_label(ctx, "Ammo color", NK_TEXT_CENTERED);
     nk_label(ctx, "Health color", NK_TEXT_CENTERED);
     nk_layout_row_dynamic(ctx, 100, 2);
-    settings.col_friend_esp =
-      nk_color_picker(ctx, settings.col_ammo_esp, NK_RGB);
-    settings.col_enemy_esp =
-      nk_color_picker(ctx, settings.col_health_esp, NK_RGB);
+    settings.col_ammo_esp =
+      nk_color_picker(ctx, settings.col_ammo_esp, NK_RGBA);
+    settings.col_health_esp =
+      nk_color_picker(ctx, settings.col_health_esp, NK_RGBA);
 }
 
 void menu_render(void) {
