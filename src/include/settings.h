@@ -21,11 +21,12 @@ typedef struct {
     int player_esp;
     int box_esp;
     int skeleton_esp;
-    int health_esp;
+    int player_health_esp;
     int name_esp;
     int class_esp;
     int weapon_esp;
-    int ammo_esp;
+    int ammobox_esp;
+    int healthpack_esp;
 
     /* Movement */
     int bhop;
@@ -39,8 +40,8 @@ typedef struct {
     /* Colors */
     struct nk_colorf col_friend_esp;
     struct nk_colorf col_enemy_esp;
-    struct nk_colorf col_ammo_esp;
-    struct nk_colorf col_health_esp;
+    struct nk_colorf col_ammobox_esp;
+    struct nk_colorf col_healthpack_esp;
 } Settings;
 
 extern Settings settings;

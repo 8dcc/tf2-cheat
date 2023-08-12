@@ -117,14 +117,15 @@ static inline void tab_esp(void) {
     nk_combobox(ctx, autostrafe_opts, 4, &settings.player_esp, 15, size);
 
     nk_layout_row_dynamic(ctx, 15, 1);
-    nk_checkbox_label(ctx, "Box ESP", &settings.box_esp);
-    nk_checkbox_label(ctx, "Skeleton ESP", &settings.skeleton_esp);
-    nk_checkbox_label(ctx, "Health ESP", &settings.health_esp);
-    nk_checkbox_label(ctx, "Name ESP", &settings.name_esp);
-    nk_checkbox_label(ctx, "Class ESP", &settings.class_esp);
-    nk_checkbox_label(ctx, "Weapon ESP", &settings.weapon_esp);
+    nk_checkbox_label(ctx, "Player box ESP", &settings.box_esp);
+    nk_checkbox_label(ctx, "Player skeleton ESP", &settings.skeleton_esp);
+    nk_checkbox_label(ctx, "Player health ESP", &settings.player_health_esp);
+    nk_checkbox_label(ctx, "Player name ESP", &settings.name_esp);
+    nk_checkbox_label(ctx, "Player class ESP", &settings.class_esp);
+    nk_checkbox_label(ctx, "Player weapon ESP", &settings.weapon_esp);
 
-    nk_checkbox_label(ctx, "Ammo ESP", &settings.ammo_esp);
+    nk_checkbox_label(ctx, "Ammo ESP", &settings.ammobox_esp);
+    nk_checkbox_label(ctx, "Health ESP", &settings.healthpack_esp);
 }
 
 static inline void tab_movement(void) {
@@ -158,10 +159,10 @@ static inline void tab_colors(void) {
     nk_label(ctx, "Ammo color", NK_TEXT_CENTERED);
     nk_label(ctx, "Health color", NK_TEXT_CENTERED);
     nk_layout_row_dynamic(ctx, 100, 2);
-    settings.col_ammo_esp =
-      nk_color_picker(ctx, settings.col_ammo_esp, NK_RGBA);
-    settings.col_health_esp =
-      nk_color_picker(ctx, settings.col_health_esp, NK_RGBA);
+    settings.col_ammobox_esp =
+      nk_color_picker(ctx, settings.col_ammobox_esp, NK_RGBA);
+    settings.col_healthpack_esp =
+      nk_color_picker(ctx, settings.col_healthpack_esp, NK_RGBA);
 }
 
 void menu_render(void) {
