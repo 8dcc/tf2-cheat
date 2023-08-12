@@ -27,6 +27,10 @@ typedef struct {
 } vec3_t;
 
 typedef struct {
+    float x, y, z, w;
+} vec4_t;
+
+typedef struct {
     float m[4][4];
 } VMatrix;
 
@@ -44,6 +48,53 @@ typedef struct {
 
 typedef rgba_t Color;
 typedef uint32_t HFont;
+
+typedef struct {
+    int sznameindex;
+    int parent;
+    int bonecontroller[6];
+    vec3_t pos;
+    vec4_t quat;
+    vec3_t rot; /* RadianEuler */
+    vec3_t posscale;
+    vec3_t rotscale;
+    matrix3x4_t poseToBone;
+    vec4_t qAlignment;
+    int flags;
+    int proctype;
+    int procindex;
+    int physicsbone;
+    int surfacepropidx;
+    int contents;
+    int unused[8];
+} studiobone_t;
+
+typedef struct {
+    int id;
+    int version;
+    int checksum;
+    /* pszName() */
+    char name[64];
+    int length;
+    vec3_t eyeposition;
+    vec3_t illumposition;
+    vec3_t hull_min;
+    vec3_t hull_max;
+    vec3_t view_bbmin;
+    vec3_t view_bbmax;
+    int flags;
+    int numbones;
+    int boneindex;
+    /* pBone(int i) */
+    /* ... */
+} studiohdr_t;
+
+static inline studiobone_t* studiohdr_pBone(studiohdr_t* thisptr, const int i) {
+    if ((i < 0) || (i > (thisptr->numbones - 1)))
+        return NULL;
+
+    return (studiobone_t*)(((void*)thisptr) + thisptr->boneindex) + i;
+}
 
 enum EFontFlags {
     FONTFLAG_NONE         = 0x000,
@@ -103,6 +154,7 @@ typedef struct EngineClient EngineClient;
 typedef struct EntityList EntityList;
 typedef struct EngineVGui EngineVGui;
 typedef struct MatSurface MatSurface;
+typedef struct IVModelInfo IVModelInfo;
 typedef struct ClientMode ClientMode;
 
 typedef struct {
@@ -145,7 +197,7 @@ typedef struct {
     PAD(4 * 3);
     Entity* (*GetClientEntity)(EntityList*, int entnum); /* 4 */
     PAD(4 * 4);
-    int (*GetMaxEntities)(EntityList*);
+    int (*GetMaxEntities)(EntityList*); /* 9 */
 } VMT_EntityList;
 
 struct EntityList {
@@ -191,6 +243,15 @@ typedef struct {
 
 struct MatSurface {
     VMT_MatSurface* vmt;
+};
+
+typedef struct {
+    PAD(4 * 29);
+    studiohdr_t* (*GetStudioModel)(IVModelInfo*, const model_t* mod); /* 29 */
+} VMT_IVModelInfo;
+
+struct IVModelInfo {
+    VMT_IVModelInfo* vmt;
 };
 
 typedef struct {
