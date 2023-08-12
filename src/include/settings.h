@@ -17,26 +17,29 @@ enum settings_friendly {
 };
 
 typedef struct {
-    /* Movement */
-    int bhop;
-    int autostrafe;
-
     /* ESP */
-    int enable_esp;
+    int player_esp;
     int box_esp;
     int health_esp;
     int name_esp;
     int class_esp;
     int weapon_esp;
-    struct nk_colorf col_friend_esp;
-    struct nk_colorf col_enemy_esp;
-    struct nk_colorf col_ammo_esp;
-    struct nk_colorf col_health_esp;
+    int ammo_esp;
+
+    /* Movement */
+    int bhop;
+    int autostrafe;
 
     /* Misc */
     int watermark;
     int speclist;
     int autostab;
+
+    /* Colors */
+    struct nk_colorf col_friend_esp;
+    struct nk_colorf col_enemy_esp;
+    struct nk_colorf col_ammo_esp;
+    struct nk_colorf col_health_esp;
 } Settings;
 
 extern Settings settings;
