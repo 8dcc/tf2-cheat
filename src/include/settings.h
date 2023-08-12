@@ -23,13 +23,15 @@ typedef struct {
 
     /* ESP */
     int enable_esp;
-    struct nk_colorf col_friend_esp;
-    struct nk_colorf col_enemy_esp;
     int box_esp;
     int health_esp;
     int name_esp;
     int class_esp;
     int weapon_esp;
+    struct nk_colorf col_friend_esp;
+    struct nk_colorf col_enemy_esp;
+    struct nk_colorf col_ammo_esp;
+    struct nk_colorf col_health_esp;
 
     /* Misc */
     int watermark;

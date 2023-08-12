@@ -151,6 +151,14 @@ static inline void tab_colors(void) {
       nk_color_picker(ctx, settings.col_friend_esp, NK_RGB);
     settings.col_enemy_esp =
       nk_color_picker(ctx, settings.col_enemy_esp, NK_RGB);
+    nk_layout_row_dynamic(ctx, 15, 2);
+    nk_label(ctx, "Ammo color", NK_TEXT_CENTERED);
+    nk_label(ctx, "Health color", NK_TEXT_CENTERED);
+    nk_layout_row_dynamic(ctx, 100, 2);
+    settings.col_friend_esp =
+      nk_color_picker(ctx, settings.col_ammo_esp, NK_RGB);
+    settings.col_enemy_esp =
+      nk_color_picker(ctx, settings.col_health_esp, NK_RGB);
 }
 
 void menu_render(void) {
