@@ -126,7 +126,8 @@ static inline void skeleton_esp(Renderable* rend, matrix3x4_t* bones,
     draw_text(x + w / 2, y + w / 2, true, g_fonts.small.id, col, name);
 
 void esp(void) {
-    if (settings.player_esp == OFF && !settings.ammo_esp)
+    if (settings.player_esp == OFF && !settings.ammobox_esp &&
+        !settings.healthpack_esp)
         return;
 
     if (!g.localplayer || !g.IsConnected)
@@ -134,8 +135,8 @@ void esp(void) {
 
     rgba_t player_friend_col = NK2COL(settings.col_friend_esp);
     rgba_t player_enemy_col  = NK2COL(settings.col_enemy_esp);
-    rgba_t ammo_col          = NK2COL(settings.col_ammo_esp);
-    rgba_t health_col        = NK2COL(settings.col_health_esp);
+    rgba_t ammobox_col       = NK2COL(settings.col_ammobox_esp);
+    rgba_t healthpack_col    = NK2COL(settings.col_healthpack_esp);
 
     /* For bounding box */
     int x, y, w, h;
@@ -198,7 +199,7 @@ void esp(void) {
                 /*------------------------------------------------------------*/
                 /* Player health ESP */
 
-                if (settings.health_esp) {
+                if (settings.player_health_esp) {
                     const int hp     = METHOD(ent, GetHealth);
                     const int max_hp = METHOD(ent, GetMaxHealth);
 
@@ -272,16 +273,57 @@ void esp(void) {
                     }
                 }
 
+                /* end: case CClass_CTFPlayer */
                 break;
             }
+
             case CClass_CTFAmmoPack:
-                if (settings.ammo_esp) {
-                    GENERIC_ENT_NAME(ent, "Ammo", ammo_col);
+                /* Dropped ammo, not the normal ammo boxes */
+                if (settings.ammobox_esp) {
+                    GENERIC_ENT_NAME(ent, "Ammo", ammobox_col);
+                }
+                break;
+
+            case CClass_CCurrencyPack:
+                /* I am not adding another option/color for this shit */
+                if (settings.ammobox_esp) {
+                    GENERIC_ENT_NAME(ent, "Currency", ammobox_col);
+                }
+                break;
+
+            case CClass_CBaseAnimating: {
+                bool drawn = false;
+
+                if (!drawn && settings.healthpack_esp) {
+                    /* Check that this model is in the healthpack range */
+                    for (int j = MDLIDX_MEDKIT_SMALL;
+                         j <= MDLIDX_MUSHROOM_LARGE; j++) {
+                        if (ent->model_idx == g.mdl_idx[j]) {
+                            GENERIC_ENT_NAME(ent, "Health", healthpack_col);
+                            drawn = true;
+                            break;
+                        }
+                    }
                 }
 
+                if (!drawn && settings.ammobox_esp) {
+                    /* Check that this model is in the healthpack range */
+                    for (int j = MDLIDX_AMMOPACK_SMALL;
+                         j <= MDLIDX_AMMOPACK_SMALL_BDAY; j++) {
+                        if (ent->model_idx == g.mdl_idx[j]) {
+                            GENERIC_ENT_NAME(ent, "Ammo", ammobox_col);
+                            drawn = true;
+                            break;
+                        }
+                    }
+                }
+
+                /* end: case CClass_CBaseAnimating */
                 break;
+            }
+
             default:
                 break;
-        }
-    }
-}
+        } /* end: Entity class switch */
+    }     /* end: Entity for loop */
+} /* end: esp() */
