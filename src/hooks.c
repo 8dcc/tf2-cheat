@@ -45,9 +45,13 @@ bool hooks_restore(void) {
 void h_LevelShutdown(BaseClient* thisptr) {
     ORIGINAL(LevelShutdown, thisptr);
 
-    /* Reset all on LevelShutdown */
+    /* Reset localplayer idx, FrameStageNotify cache and model index cache on
+     * LevelShutdown */
     g.localidx = 0;
     cache_reset();
+
+    for (int i = 0; i < MDLIDX_ARR_SZ; i++)
+        g.mdl_idx[i] = -1;
 }
 
 void h_LevelInitPostEntity(BaseClient* thisptr) {
@@ -55,6 +59,9 @@ void h_LevelInitPostEntity(BaseClient* thisptr) {
 
     /* Get once on LevelInit */
     g.localidx = METHOD(i_engine, GetLocalPlayer);
+
+    /* Get model indexes that we might need in the game (e.g. for entity esp) */
+    cache_get_model_idx();
 }
 
 void h_FrameStageNotify(BaseClient* thisptr, ClientFrameStage_t curStage) {
