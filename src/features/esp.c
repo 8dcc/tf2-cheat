@@ -20,12 +20,9 @@ static inline bool get_bbox(Entity* ent, int* x, int* y, int* w, int* h) {
     if (!collideable)
         return false;
 
-    vec3_t obb_mins = *METHOD(collideable, ObbMins);
-    vec3_t obb_maxs = *METHOD(collideable, ObbMaxs);
-
+    vec3_t obb_mins        = *METHOD(collideable, ObbMins);
+    vec3_t obb_maxs        = *METHOD(collideable, ObbMaxs);
     Renderable* renderable = GetRenderable(ent);
-    if (!renderable)
-        return false;
 
     matrix3x4_t* trans = METHOD(renderable, RenderableToWorldTransform);
     if (!trans)
@@ -123,8 +120,13 @@ static inline void skeleton_esp(Renderable* rend, matrix3x4_t* bones,
     }
 }
 
+#define GENERIC_ENT_NAME(ent, name, col) \
+    if (!get_bbox(ent, &x, &y, &w, &h))  \
+        continue;                        \
+    draw_text(x + w / 2, y + w / 2, true, g_fonts.small.id, col, name);
+
 void esp(void) {
-    if (settings.enable_esp == OFF)
+    if (settings.player_esp == OFF && !settings.ammo_esp)
         return;
 
     if (!g.localplayer || !g.IsConnected)
@@ -132,6 +134,8 @@ void esp(void) {
 
     rgba_t player_friend_col = NK2COL(settings.col_friend_esp);
     rgba_t player_enemy_col  = NK2COL(settings.col_enemy_esp);
+    rgba_t ammo_col          = NK2COL(settings.col_ammo_esp);
+    rgba_t health_col        = NK2COL(settings.col_health_esp);
 
     /* For bounding box */
     int x, y, w, h;
@@ -140,7 +144,7 @@ void esp(void) {
     static matrix3x4_t bones[MAXSTUDIOBONES];
 
     /* Iterate all entities */
-    for (int i = 1; i <= g.MaxClients; i++) {
+    for (int i = 1; i < g.MaxEntities; i++) {
         if (i == g.localidx)
             continue;
 
@@ -159,10 +163,21 @@ void esp(void) {
                 const bool teammate = IsTeammate(ent);
 
                 /* Should we render this player's team? */
-                if (settings.enable_esp != ALL &&
-                    ((teammate && settings.enable_esp == ENEMY) ||
-                     (!teammate && settings.enable_esp == FRIENDLY)))
-                    continue;
+                switch (settings.player_esp) {
+                    case ENEMY:
+                        if (teammate)
+                            continue;
+                        break;
+                    case FRIENDLY:
+                        if (!teammate)
+                            continue;
+                        break;
+                    case ALL:
+                        break;
+                    default:
+                    case OFF:
+                        continue;
+                }
 
                 if (!get_bbox(ent, &x, &y, &w, &h))
                     continue;
@@ -259,6 +274,12 @@ void esp(void) {
 
                 break;
             }
+            case CClass_CTFAmmoPack:
+                if (settings.ammo_esp) {
+                    GENERIC_ENT_NAME(ent, "Ammo", ammo_col);
+                }
+
+                break;
             default:
                 break;
         }
