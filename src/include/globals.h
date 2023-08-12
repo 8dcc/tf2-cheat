@@ -119,6 +119,7 @@ typedef struct {
 typedef struct {
     font_t main;
     font_t small;
+    font_t tiny;
 } font_list_t;
 
 /*----------------------------------------------------------------------------*/

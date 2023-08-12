@@ -157,7 +157,14 @@ void fonts_init(void) {
     };
     g_fonts.small = (font_t){
         .name   = "CozetteVector",
-        .tall   = 13,
+        .tall   = 14,
+        .weight = 700,
+        .flags  = FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS,
+        .id     = METHOD(i_surface, CreateFont),
+    };
+    g_fonts.tiny = (font_t){
+        .name   = "CozetteVector",
+        .tall   = 13, /* Digits are a bit weird */
         .weight = 700,
         .flags  = FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS,
         .id     = METHOD(i_surface, CreateFont),
@@ -166,6 +173,7 @@ void fonts_init(void) {
     /* Create fonts with the data */
     CREATE_FONT(g_fonts.main);
     CREATE_FONT(g_fonts.small);
+    CREATE_FONT(g_fonts.tiny);
 }
 
 /*----------------------------------------------------------------------------*/
