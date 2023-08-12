@@ -6,7 +6,7 @@
 Settings settings = {
     /* ESP */
     .player_esp        = OFF,
-    .box_esp           = false,
+    .player_box_esp    = false,
     .skeleton_esp      = false,
     .player_health_esp = false,
     .name_esp          = false,

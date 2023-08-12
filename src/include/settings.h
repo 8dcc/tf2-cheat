@@ -19,7 +19,7 @@ enum settings_friendly {
 typedef struct {
     /* ESP */
     int player_esp;
-    int box_esp;
+    int player_box_esp;
     int skeleton_esp;
     int player_health_esp;
     int name_esp;

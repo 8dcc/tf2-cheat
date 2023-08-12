@@ -193,7 +193,7 @@ void esp(void) {
                 /*------------------------------------------------------------*/
                 /* Player box ESP */
 
-                if (settings.box_esp)
+                if (settings.player_box_esp)
                     OUTLINED_BOX(x, y, w, h, col);
 
                 /*------------------------------------------------------------*/
@@ -226,10 +226,11 @@ void esp(void) {
                                 hpx + hpw, hpbar_y + hpbar_h);
 
                     /* Health text */
-                    const int hpbar_x = (settings.box_esp) ? hpx - 2 : hpx;
+                    const int hpbar_x = (settings.player_box_esp) ? hpx - 2
+                                                                  : hpx;
                     static char hp_txt[5];
                     sprintf(hp_txt, "%d", hp);
-                    draw_text(hpbar_x, hpy - 13, !settings.box_esp,
+                    draw_text(hpbar_x, hpy - 13, !settings.player_box_esp,
                               g_fonts.small.id, (rgba_t){ 34, 193, 41, col.a },
                               hp_txt);
                 }

@@ -117,7 +117,7 @@ static inline void tab_esp(void) {
     nk_combobox(ctx, autostrafe_opts, 4, &settings.player_esp, 15, size);
 
     nk_layout_row_dynamic(ctx, 15, 1);
-    nk_checkbox_label(ctx, "Player box ESP", &settings.box_esp);
+    nk_checkbox_label(ctx, "Player box ESP", &settings.player_box_esp);
     nk_checkbox_label(ctx, "Player skeleton ESP", &settings.skeleton_esp);
     nk_checkbox_label(ctx, "Player health ESP", &settings.player_health_esp);
     nk_checkbox_label(ctx, "Player name ESP", &settings.name_esp);
@@ -128,7 +128,7 @@ static inline void tab_esp(void) {
     nk_checkbox_label(ctx, "Health ESP", &settings.healthpack_esp);
 }
 
-static inline void tab_movement(void) {
+static inline void tab_misc(void) {
     nk_layout_row_dynamic(ctx, 15, 1);
     nk_checkbox_label(ctx, "Bhop", &settings.bhop);
 
@@ -137,13 +137,11 @@ static inline void tab_movement(void) {
     struct nk_vec2 size                  = { 141, 200 };
     nk_label(ctx, "Autostrafe", NK_TEXT_LEFT);
     nk_combobox(ctx, autostrafe_opts, 3, &settings.autostrafe, 15, size);
-}
 
-static inline void tab_misc(void) {
     nk_layout_row_dynamic(ctx, 15, 1);
+    nk_checkbox_label(ctx, "Autobackstab", &settings.autostab);
     nk_checkbox_label(ctx, "Watermark", &settings.watermark);
     nk_checkbox_label(ctx, "Spectator list", &settings.speclist);
-    nk_checkbox_label(ctx, "Autobackstab", &settings.autostab);
 }
 
 static inline void tab_colors(void) {
@@ -170,12 +168,11 @@ void menu_render(void) {
 
     if (nk_begin(ctx, "Enoch", nk_rect(MENU_X, MENU_Y, MENU_W, MENU_H),
                  MENU_FLAGS)) {
-        nk_layout_row_dynamic(ctx, 20, 4);
+        nk_layout_row_dynamic(ctx, 20, 3);
 
         ADD_TAB(0, "ESP");
-        ADD_TAB(1, "Movement");
-        ADD_TAB(2, "Misc");
-        ADD_TAB(3, "Colors");
+        ADD_TAB(1, "Misc");
+        ADD_TAB(2, "Colors");
 
         switch (cur_tab) {
             default:
@@ -183,18 +180,17 @@ void menu_render(void) {
                 tab_esp();
                 break;
             case 1:
-                tab_movement();
-                break;
-            case 2:
                 tab_misc();
                 break;
-            case 3:
+            case 2:
                 tab_colors();
                 break;
         }
     }
     nk_end(ctx);
 }
+
+/*----------------------------------------------------------------------------*/
 
 void watermark_render(void) {
     if (nk_begin(ctx, "Watermark",
