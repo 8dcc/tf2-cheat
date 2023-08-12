@@ -118,8 +118,10 @@ bool globals_init(void) {
     /* Initialize global cache */
     cache_reset();
     cache_update();
-    if (g.IsInGame)
+    if (g.IsInGame) {
+        cache_get_model_idx();
         g.localidx = METHOD(i_engine, GetLocalPlayer);
+    }
 
     return true;
 }
@@ -168,12 +170,44 @@ void fonts_init(void) {
 
 /*----------------------------------------------------------------------------*/
 
+#define STORE_MDL(arr_idx, mdl_str) \
+    g.mdl_idx[MDLIDX_##arr_idx] =   \
+      METHOD_ARGS(i_modelinfo, GetModelIndex, mdl_str);
+
+void cache_get_model_idx(void) {
+    /* Health */
+    STORE_MDL(MEDKIT_SMALL, "models/items/medkit_small.mdl");
+    STORE_MDL(MEDKIT_MEDIUM, "models/items/medkit_medium.mdl");
+    STORE_MDL(MEDKIT_LARGE, "models/items/medkit_large.mdl");
+    STORE_MDL(MEDKIT_SMALL_BDAY, "models/items/medkit_small_bday.mdl");
+    STORE_MDL(MEDKIT_MEDIUM_BDAY, "models/items/medkit_medium_bday.mdl");
+    STORE_MDL(MEDKIT_LARGE_BDAY, "models/items/medkit_large_bday.mdl");
+    STORE_MDL(PLATE, "models/items/plate.mdl");
+    STORE_MDL(PLATE_STEAK, "models/items/plate_steak.mdl");
+    STORE_MDL(HALLOWEEN_MEDKIT_SMALL, "models/props_halloween/"
+                                      "halloween_medkit_small.mdl");
+    STORE_MDL(HALLOWEEN_MEDKIT_MEDIUM, "models/props_halloween/"
+                                       "halloween_medkit_medium.mdl");
+    STORE_MDL(HALLOWEEN_MEDKIT_LARGE, "models/props_halloween/"
+                                      "halloween_medkit_large.mdl");
+    STORE_MDL(MUSHROOM_LARGE, "models/items/ld1/mushroom_large.mdl");
+
+    /* Ammo */
+    STORE_MDL(AMMOPACK_SMALL, "models/items/ammopack_small.mdl");
+    STORE_MDL(AMMOPACK_MEDIUM, "models/items/ammopack_medium.mdl");
+    STORE_MDL(AMMOPACK_LARGE, "models/items/ammopack_large.mdl");
+    STORE_MDL(AMMOPACK_LARGE_BDAY, "models/items/ammopack_large_bday.mdl");
+    STORE_MDL(AMMOPACK_MEDIUM_BDAY, "models/items/ammopack_medium_bday.mdl");
+    STORE_MDL(AMMOPACK_SMALL_BDAY, "models/items/ammopack_small_bday.mdl");
+}
+
 void cache_reset(void) {
     g.IsInGame    = false;
     g.IsConnected = false;
     g.MaxClients  = 0;
     g.MaxEntities = 0;
 
+    g.localplayer = NULL;
     for (int i = 0; i < (int)LENGTH(g.ents); i++)
         g.ents[i] = NULL;
 }

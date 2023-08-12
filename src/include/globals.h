@@ -65,9 +65,38 @@
 /*----------------------------------------------------------------------------*/
 /* Structs */
 
+/* Indexes for each model in the g.model_index[] array */
+enum model_indexes {
+    /* Health */
+    MDLIDX_MEDKIT_SMALL = 0,
+    MDLIDX_MEDKIT_MEDIUM,
+    MDLIDX_MEDKIT_LARGE,
+    MDLIDX_MEDKIT_SMALL_BDAY,
+    MDLIDX_MEDKIT_MEDIUM_BDAY,
+    MDLIDX_MEDKIT_LARGE_BDAY,
+    MDLIDX_PLATE,
+    MDLIDX_PLATE_STEAK,
+    MDLIDX_HALLOWEEN_MEDKIT_SMALL,
+    MDLIDX_HALLOWEEN_MEDKIT_MEDIUM,
+    MDLIDX_HALLOWEEN_MEDKIT_LARGE,
+    MDLIDX_MUSHROOM_LARGE,
+
+    /* Ammo */
+    MDLIDX_AMMOPACK_SMALL,
+    MDLIDX_AMMOPACK_MEDIUM,
+    MDLIDX_AMMOPACK_LARGE,
+    MDLIDX_AMMOPACK_LARGE_BDAY,
+    MDLIDX_AMMOPACK_MEDIUM_BDAY,
+    MDLIDX_AMMOPACK_SMALL_BDAY,
+
+    /* Array size */
+    MDLIDX_ARR_SZ,
+};
+
 typedef struct {
     /* Index updated in LevelInitPostEntity */
     int localidx;
+    int mdl_idx[MDLIDX_ARR_SZ];
 
     /* Updated in FrameStageNotify(FRAME_NET_UPDATE_END) */
     bool IsAlive;
@@ -125,6 +154,8 @@ DECL_INTF_EXTERN(ClientMode, clientmode);
 bool globals_init(void);
 bool resore_vtables(void);
 void fonts_init(void);
+
+void cache_get_model_idx(void);
 void cache_reset(void);
 void cache_update(void);
 
