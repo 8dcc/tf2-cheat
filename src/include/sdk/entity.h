@@ -421,6 +421,23 @@ enum ETFClass {
     CLASS_ENGINEER
 };
 
+enum BoneMasks {
+    BONE_USED_MASK           = 0x0007FF00,
+    BONE_USED_BY_ANYTHING    = 0x0007FF00,
+    BONE_USED_BY_HITBOX      = 0x00000100,
+    BONE_USED_BY_ATTACHMENT  = 0x00000200,
+    BONE_USED_BY_VERTEX_MASK = 0x0003FC00,
+    BONE_USED_BY_VERTEX_LOD0 = 0x00000400,
+    BONE_USED_BY_VERTEX_LOD1 = 0x00000800,
+    BONE_USED_BY_VERTEX_LOD2 = 0x00001000,
+    BONE_USED_BY_VERTEX_LOD3 = 0x00002000,
+    BONE_USED_BY_VERTEX_LOD4 = 0x00004000,
+    BONE_USED_BY_VERTEX_LOD5 = 0x00008000,
+    BONE_USED_BY_VERTEX_LOD6 = 0x00010000,
+    BONE_USED_BY_VERTEX_LOD7 = 0x00020000,
+    BONE_USED_BY_BONE_MERGE  = 0x00040000,
+};
+
 enum ObsModes {
     OBS_MODE_NONE = 0,
     OBS_MODE_DEATHCAM,
@@ -486,8 +503,15 @@ struct Networkable {
     VMT_Networkable* vmt;
 };
 
+#define MAXSTUDIOBONES 128 /* Size of "bones" array */
+typedef void model_t;
 typedef struct {
-    PAD(4 * 34);
+    PAD(4 * 9);
+    const model_t* (*GetModel)(Renderable*); /* 9 */
+    PAD(4 * 6);
+    bool (*SetupBones)(Renderable*, matrix3x4_t* bones, int maxBones,
+                       int boneMask, float currentTime); /* 16 */
+    PAD(4 * 17);
     matrix3x4_t* (*RenderableToWorldTransform)(Renderable*); /* 34 */
 } VMT_Renderable;
 
