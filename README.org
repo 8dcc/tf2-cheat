@@ -17,10 +17,12 @@ The cheat currently has the following features:
   - Player ESP
     - Toggle friends only/enemies only/all
     - Box
+    - Skeleton
     - Health
     - Name
     - Player class
     - Weapon
+  - Ammo ESP
   - Custom colors
 - Spectator list (/Working partially/)
 - Spy autostab
