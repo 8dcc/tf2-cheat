@@ -226,10 +226,12 @@ void esp(void) {
                                 hpx + hpw, hpbar_y + hpbar_h);
 
                     /* Health text */
+                    const int hpbar_x = (settings.box_esp) ? hpx - 2 : hpx;
                     static char hp_txt[5];
                     sprintf(hp_txt, "%d", hp);
-                    draw_text(hpx - 1, hpy - 12, false, g_fonts.small.id,
-                              (rgba_t){ 34, 193, 41, col.a }, hp_txt);
+                    draw_text(hpbar_x, hpy - 13, !settings.box_esp,
+                              g_fonts.small.id, (rgba_t){ 34, 193, 41, col.a },
+                              hp_txt);
                 }
 
                 /*------------------------------------------------------------*/
