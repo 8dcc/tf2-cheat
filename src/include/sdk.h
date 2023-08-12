@@ -246,7 +246,9 @@ struct MatSurface {
 };
 
 typedef struct {
-    PAD(4 * 29);
+    PAD(4 * 3);
+    int (*GetModelIndex)(IVModelInfo*, const char* name); /* 3 */
+    PAD(4 * 25);
     studiohdr_t* (*GetStudioModel)(IVModelInfo*, const model_t* mod); /* 29 */
 } VMT_IVModelInfo;
 
