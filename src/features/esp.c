@@ -8,7 +8,7 @@
 
 #define OUTLINED_BOX(x, y, w, h, c)                                           \
     {                                                                         \
-        METHOD_ARGS(i_surface, SetColor, 0, 0, 0, 255);                       \
+        METHOD_ARGS(i_surface, SetColor, 0, 0, 0, c.a);                       \
         METHOD_ARGS(i_surface, DrawRect, x - 1, y - 1, x + w + 1, y + h + 1); \
         METHOD_ARGS(i_surface, DrawRect, x + 1, y + 1, x + w - 1, y + h - 1); \
         METHOD_ARGS(i_surface, SetColor, c.r, c.g, c.b, c.a);                 \
@@ -209,21 +209,27 @@ void esp(void) {
                     const int hph = h;
 
                     /* Background (red) */
-                    METHOD_ARGS(i_surface, SetColor, 0, 0, 0, 255);
+                    METHOD_ARGS(i_surface, SetColor, 0, 0, 0, col.a);
                     METHOD_ARGS(i_surface, DrawRect, hpx - 1, hpy - 1,
                                 hpx + hpw + 1, hpy + h + 1);
                     METHOD_ARGS(i_surface, DrawRect, hpx + 1, hpy + 1,
                                 hpx + hpw - 1, hpy + h - 1);
-                    METHOD_ARGS(i_surface, SetColor, 170, 29, 29, 255);
+                    METHOD_ARGS(i_surface, SetColor, 170, 29, 29, col.a);
                     METHOD_ARGS(i_surface, DrawFilledRect, hpx, hpy, hpx + hpw,
                                 hpy + hph);
 
                     /* Health bar (green) */
                     const int hpbar_h = (hph * MIN(hp, max_hp) / max_hp);
                     const int hpbar_y = hpy + (hph - hpbar_h);
-                    METHOD_ARGS(i_surface, SetColor, 67, 160, 71, 255);
+                    METHOD_ARGS(i_surface, SetColor, 67, 160, 71, col.a);
                     METHOD_ARGS(i_surface, DrawFilledRect, hpx, hpbar_y,
                                 hpx + hpw, hpbar_y + hpbar_h);
+
+                    /* Health text */
+                    static char hp_txt[5];
+                    sprintf(hp_txt, "%d", hp);
+                    draw_text(hpx - 1, hpy - 12, false, g_fonts.small.id,
+                              (rgba_t){ 34, 193, 41, col.a }, hp_txt);
                 }
 
                 /*------------------------------------------------------------*/
