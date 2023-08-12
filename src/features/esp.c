@@ -15,7 +15,7 @@
         METHOD_ARGS(i_surface, DrawRect, x, y, x + w, y + h);                 \
     }
 
-static bool get_bbox(Entity* ent, int* x, int* y, int* w, int* h) {
+static inline bool get_bbox(Entity* ent, int* x, int* y, int* w, int* h) {
     Collideable* collideable = METHOD(ent, GetCollideable);
     if (!collideable)
         return false;
@@ -76,6 +76,53 @@ static bool get_bbox(Entity* ent, int* x, int* y, int* w, int* h) {
     return true;
 }
 
+static inline void skeleton_esp(Renderable* rend, matrix3x4_t* bones,
+                                rgba_t col) {
+    if (!true)
+        return;
+
+    if (!METHOD_ARGS(rend, SetupBones, bones, MAXSTUDIOBONES,
+                     BONE_USED_BY_HITBOX, 0))
+        return;
+
+    const model_t* model = METHOD(rend, GetModel);
+    if (!model)
+        return;
+
+    studiohdr_t* hdr = METHOD_ARGS(i_modelinfo, GetStudioModel, model);
+    if (!hdr)
+        return;
+
+    for (int i = 0; i < hdr->numbones; i++) {
+        studiobone_t* bone = studiohdr_pBone(hdr, i);
+        if (!bone || bone->parent < 0 || bone->parent >= MAXSTUDIOBONES ||
+            !(bone->flags & BONE_USED_BY_HITBOX))
+            continue;
+
+        /* bones ==> (matrix3x4_t)[MAXSTUDIOBONES].m[3][4] */
+        const vec3_t child = (vec3_t){
+            bones[i].m[0][3],
+            bones[i].m[1][3],
+            bones[i].m[2][3],
+        };
+
+        const vec3_t parent = (vec3_t){
+            bones[bone->parent].m[0][3],
+            bones[bone->parent].m[1][3],
+            bones[bone->parent].m[2][3],
+        };
+
+        vec2_t s_child, s_parent;
+        if (!world_to_screen(child, &s_child) ||
+            !world_to_screen(parent, &s_parent))
+            continue;
+
+        METHOD_ARGS(i_surface, SetColor, col.r, col.g, col.b, col.a);
+        METHOD_ARGS(i_surface, DrawLine, s_child.x, s_child.y, s_parent.x,
+                    s_parent.y);
+    }
+}
+
 void esp(void) {
     if (settings.enable_esp == OFF)
         return;
@@ -89,6 +136,9 @@ void esp(void) {
     /* For bounding box */
     int x, y, w, h;
 
+    /* For skeleton ESP */
+    static matrix3x4_t bones[MAXSTUDIOBONES];
+
     /* Iterate all entities */
     for (int i = 1; i <= g.MaxClients; i++) {
         if (i == g.localidx)
@@ -96,6 +146,7 @@ void esp(void) {
 
         Entity* ent      = g.ents[i];
         Networkable* net = GetNetworkable(ent);
+        Renderable* rend = GetRenderable(ent);
         if (!ent)
             continue;
 
@@ -117,6 +168,11 @@ void esp(void) {
                     continue;
 
                 rgba_t col = teammate ? player_friend_col : player_enemy_col;
+
+                /*------------------------------------------------------------*/
+                /* Player skeleton ESP */
+
+                skeleton_esp(rend, bones, col);
 
                 /*------------------------------------------------------------*/
                 /* Player box ESP */
