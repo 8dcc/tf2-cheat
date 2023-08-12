@@ -49,6 +49,7 @@ DECL_INTF(EngineClient, engine);
 DECL_INTF(EntityList, entitylist);
 DECL_INTF(EngineVGui, enginevgui);
 DECL_INTF(MatSurface, surface);
+DECL_INTF(IVModelInfo, modelinfo);
 DECL_INTF(ClientMode, clientmode);
 
 /*----------------------------------------------------------------------------*/
@@ -91,6 +92,7 @@ bool globals_init(void) {
     GET_INTERFACE(EntityList*, i_entitylist, h_client, "VClientEntityList003");
     GET_INTERFACE(EngineVGui*, i_enginevgui, h_engine, "VEngineVGui002");
     GET_INTERFACE(MatSurface*, i_surface, h_matsurface, "VGUI_Surface030");
+    GET_INTERFACE(IVModelInfo*, i_modelinfo, h_engine, "VModelInfoClient006");
 
     /* Other interfaces */
     i_clientmode = get_clientmode();
