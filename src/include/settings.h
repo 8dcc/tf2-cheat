@@ -42,14 +42,12 @@ typedef struct {
     int ammobox_esp;
     int healthpack_esp;
 
-    /* Movement */
+    /* Misc */
     int bhop;
     int autostrafe;
-
-    /* Misc */
+    int autostab;
     int watermark;
     int speclist;
-    int autostab;
 
     /* Colors */
     struct nk_colorf col_friend_esp;
@@ -61,5 +59,10 @@ typedef struct {
 } Settings;
 
 extern Settings settings;
+
+/*----------------------------------------------------------------------------*/
+
+void save_config(const char* filename);
+void load_config(const char* filename);
 
 #endif /* SETTINGS_H_ */

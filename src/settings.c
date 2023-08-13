@@ -1,6 +1,14 @@
 
 #include <stdbool.h>
+#include <stdio.h>
+#include <sys/stat.h>  /* mkdir */
+#include <sys/types.h> /* mkdir*/
+#include <cjson/cJSON.h>
 #include "include/settings.h"
+
+#define CONFIG_FOLDER "enoch-configs/"
+
+/*----------------------------------------------------------------------------*/
 
 /* Global settings */
 Settings settings = {
@@ -22,14 +30,12 @@ Settings settings = {
     .ammobox_esp    = false,
     .healthpack_esp = false,
 
-    /* Movement */
+    /* Misc */
     .bhop       = false,
     .autostrafe = OFF,
-
-    /* Misc */
-    .watermark = true,
-    .speclist  = true,
-    .autostab  = false,
+    .autostab   = false,
+    .watermark  = true,
+    .speclist   = true,
 
     /* Colors */
     .col_friend_esp     = (struct nk_colorf){ 0.05f, 0.47f, 0.95f, 1.f },
@@ -42,4 +48,110 @@ Settings settings = {
 
 /*----------------------------------------------------------------------------*/
 
-/* TODO: Json setting system */
+#define SAVE_ABORT(...)               \
+    {                                 \
+        fprintf(stderr, __VA_ARGS__); \
+        cJSON_Delete(json_cfg);       \
+        return;                       \
+    }
+
+#define JSON_ADD_INT_FROM_SETTINGS(PARENT, ITEM)                \
+    if (!cJSON_AddNumberToObject(PARENT, #ITEM, settings.ITEM)) \
+        SAVE_ABORT("save_config: error saving \"settings.%s\"\n", #ITEM);
+
+/* Create json_ITEM object with rbga float values, add that object to PARENT */
+#define JSON_ADD_COL_FROM_SETTINGS(PARENT, ITEM)                     \
+    cJSON* json_##ITEM = cJSON_CreateObject();                       \
+    if (!cJSON_AddNumberToObject(json_##ITEM, "r", settings.ITEM.r)) \
+        SAVE_ABORT("save_config: error saving red value for "        \
+                   "\"settings.%s\"\n",                              \
+                   #ITEM);                                           \
+    if (!cJSON_AddNumberToObject(json_##ITEM, "g", settings.ITEM.g)) \
+        SAVE_ABORT("save_config: error saving red value for "        \
+                   "\"settings.%s\"\n",                              \
+                   #ITEM);                                           \
+    if (!cJSON_AddNumberToObject(json_##ITEM, "b", settings.ITEM.b)) \
+        SAVE_ABORT("save_config: error saving red value for "        \
+                   "\"settings.%s\"\n",                              \
+                   #ITEM);                                           \
+    if (!cJSON_AddNumberToObject(json_##ITEM, "a", settings.ITEM.a)) \
+        SAVE_ABORT("save_config: error saving red value for "        \
+                   "\"settings.%s\"\n",                              \
+                   #ITEM);                                           \
+    if (!cJSON_AddItemToObject(PARENT, #ITEM, json_##ITEM))          \
+        SAVE_ABORT("save_config: error adding rgba object for "      \
+                   "\"settings.%s\"\n",                              \
+                   #ITEM);
+
+void save_config(const char* filename) {
+    cJSON* json_cfg = cJSON_CreateObject();
+    if (!json_cfg)
+        SAVE_ABORT("save_config: error creating main json object\n");
+
+    JSON_ADD_INT_FROM_SETTINGS(json_cfg, player_esp);
+    JSON_ADD_INT_FROM_SETTINGS(json_cfg, player_box_esp);
+    JSON_ADD_INT_FROM_SETTINGS(json_cfg, skeleton_esp);
+    JSON_ADD_INT_FROM_SETTINGS(json_cfg, player_health_esp);
+    JSON_ADD_INT_FROM_SETTINGS(json_cfg, player_name_esp);
+    JSON_ADD_INT_FROM_SETTINGS(json_cfg, player_class_esp);
+    JSON_ADD_INT_FROM_SETTINGS(json_cfg, player_weapon_esp);
+    JSON_ADD_INT_FROM_SETTINGS(json_cfg, building_esp);
+    JSON_ADD_INT_FROM_SETTINGS(json_cfg, building_esp_type);
+    JSON_ADD_INT_FROM_SETTINGS(json_cfg, building_box_esp);
+    JSON_ADD_INT_FROM_SETTINGS(json_cfg, building_hp_esp);
+    JSON_ADD_INT_FROM_SETTINGS(json_cfg, building_name_esp);
+    JSON_ADD_INT_FROM_SETTINGS(json_cfg, ammobox_esp);
+    JSON_ADD_INT_FROM_SETTINGS(json_cfg, healthpack_esp);
+
+    JSON_ADD_INT_FROM_SETTINGS(json_cfg, bhop);
+    JSON_ADD_INT_FROM_SETTINGS(json_cfg, autostrafe);
+    JSON_ADD_INT_FROM_SETTINGS(json_cfg, autostab);
+    JSON_ADD_INT_FROM_SETTINGS(json_cfg, watermark);
+    JSON_ADD_INT_FROM_SETTINGS(json_cfg, speclist);
+
+    JSON_ADD_COL_FROM_SETTINGS(json_cfg, col_friend_esp);
+    JSON_ADD_COL_FROM_SETTINGS(json_cfg, col_enemy_esp);
+    JSON_ADD_COL_FROM_SETTINGS(json_cfg, col_friend_build);
+    JSON_ADD_COL_FROM_SETTINGS(json_cfg, col_enemy_build);
+    JSON_ADD_COL_FROM_SETTINGS(json_cfg, col_ammobox_esp);
+    JSON_ADD_COL_FROM_SETTINGS(json_cfg, col_healthpack_esp);
+
+    /* Convert filled json object to string */
+    char* json_cfg_str = cJSON_Print(json_cfg);
+    if (!json_cfg_str)
+        SAVE_ABORT("save_config: error converting main json object to "
+                   "string\n");
+
+    /* Create the config folder */
+    if (mkdir(CONFIG_FOLDER, 0755) != 0)
+        SAVE_ABORT("save_config: couldn't create " CONFIG_FOLDER " folder\n");
+
+    /* Get path of filename inside CONFIG_FOLDER */
+    char* filepath =
+      calloc(strlen(filename) + sizeof(CONFIG_FOLDER), sizeof(char));
+    strcpy(&filepath[0], CONFIG_FOLDER);
+    strcpy(&filepath[sizeof(CONFIG_FOLDER) - 1], filename);
+
+    FILE* fd = fopen(filepath, "w+");
+    if (!fd)
+        SAVE_ABORT("save_config: error opening \"%s\"\n", filename);
+
+    fprintf(fd, "%s\n", json_cfg_str);
+    fclose(fd);
+
+    free(json_cfg_str);
+    cJSON_Delete(json_cfg);
+}
+
+/*----------------------------------------------------------------------------*/
+
+#define LOAD_ABORT()                                               \
+    {                                                              \
+        fprintf(stderr, "load_config: %s\n", cJSON_GetErrorPtr()); \
+        cJSON_Delete(json_cfg);                                    \
+        return;                                                    \
+    }
+
+void load_config(const char* filename) {
+    /* TODO */
+}
