@@ -15,8 +15,8 @@
 #define NK_INCLUDE_VERTEX_BUFFER_OUTPUT
 #define NK_INCLUDE_FONT_BAKING
 #define NK_INCLUDE_DEFAULT_FONT
-#include "nuklear/nuklear.h"
-#include "nuklear/nuklear_sdl_gl3.h"
+#include "../dependencies/nuklear/nuklear.h"
+#include "../dependencies/nuklear/nuklear_sdl_gl3.h"
 
 /* For nk_sdl_render() */
 #define MAX_VERTEX_MEMORY  512 * 1024
