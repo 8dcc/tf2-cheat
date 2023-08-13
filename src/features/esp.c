@@ -192,8 +192,8 @@ static inline void building_esp(Entity* ent, const char* str, rgba_t friend_col,
                   g_fonts.small.id, (rgba_t){ 34, 193, 41, col.a }, hp_txt);
     }
 
-    /* Building type ESP (string function parameter) */
-    if (settings.building_type_esp)
+    /* Building type ESP (string function parameter passed from esp) */
+    if (settings.building_name_esp)
         draw_text(x + w / 2, y + h + 1, true, g_fonts.main.id, col, str);
 }
 
@@ -362,22 +362,29 @@ void esp(void) {
                 break;
             }
 
-            case CClass_CObjectTeleporter: {
-                building_esp(ent, "Teleporter", build_friend_col,
-                             build_enemy_col);
-                break;
-            }
+            case CClass_CObjectSentrygun:
+                if (settings.building_esp_type == BTYPE_ALL ||
+                    settings.building_esp_type == BTYPE_SENTRY)
+                    building_esp(ent, "Sentry", build_friend_col,
+                                 build_enemy_col);
 
-            case CClass_CObjectSentrygun: {
-                building_esp(ent, "Sentry", build_friend_col, build_enemy_col);
                 break;
-            }
 
-            case CClass_CObjectDispenser: {
-                building_esp(ent, "Dispenser", build_friend_col,
-                             build_enemy_col);
+            case CClass_CObjectDispenser:
+                if (settings.building_esp_type == BTYPE_ALL ||
+                    settings.building_esp_type == BTYPE_DISPENSER)
+                    building_esp(ent, "Dispenser", build_friend_col,
+                                 build_enemy_col);
+
                 break;
-            }
+
+            case CClass_CObjectTeleporter:
+                if (settings.building_esp_type == BTYPE_ALL ||
+                    settings.building_esp_type == BTYPE_TELEPORTER)
+                    building_esp(ent, "Teleporter", build_friend_col,
+                                 build_enemy_col);
+
+                break;
 
             case CClass_CTFAmmoPack:
                 /* Dropped ammo, not the normal ammo boxes */
@@ -394,6 +401,9 @@ void esp(void) {
                 break;
 
             case CClass_CBaseAnimating: {
+                /* Ammo boxes and healing items are all CBaseAnimating, so we
+                 * need to check the model */
+
                 bool drawn = false;
 
                 if (!drawn && settings.healthpack_esp) {
