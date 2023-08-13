@@ -84,6 +84,11 @@ Settings settings = {
                    #ITEM);
 
 void save_config(const char* filename) {
+    if (!filename || *filename == '\0') {
+        fprintf(stderr, "load_config: invalid or empty config name\n");
+        return;
+    }
+
     cJSON* json_cfg = cJSON_CreateObject();
     if (!json_cfg)
         SAVE_ABORT("save_config: error creating main json object\n");
@@ -205,6 +210,11 @@ void save_config(const char* filename) {
     settings.ITEM.a = json_##ITEM##_a->valuedouble;
 
 void load_config(const char* filename) {
+    if (!filename || *filename == '\0') {
+        fprintf(stderr, "load_config: invalid or empty config name\n");
+        return;
+    }
+
     char* filepath =
       calloc(strlen(filename) + sizeof(CONFIG_FOLDER), sizeof(char));
     strcpy(&filepath[0], CONFIG_FOLDER);
