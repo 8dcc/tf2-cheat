@@ -9,10 +9,7 @@
 
 #include "include/settings.h"
 
-#define MENU_FLAGS                                           \
-    NK_WINDOW_BORDER | NK_WINDOW_TITLE | NK_WINDOW_MOVABLE | \
-      NK_WINDOW_NO_SCROLLBAR
-
+#define MENU_FLAGS      NK_WINDOW_BORDER | NK_WINDOW_TITLE | NK_WINDOW_MOVABLE
 #define WATERMARK_FLAGS NK_WINDOW_BORDER | NK_WINDOW_NO_SCROLLBAR
 
 #define CHECK_TAB_COLOR(idx)                                            \
@@ -107,21 +104,32 @@ static void set_style(void) {
     ctx->style.combo.content_padding.y = 7.f;
 }
 
+/* TODO: Remove "* ESP" from opt names */
 static inline void tab_esp(void) {
     nk_layout_row_dynamic(ctx, 18, 2);
-    static const char* autostrafe_opts[] = { "Off", "Friendly", "Enemies",
-                                             "All" };
-    struct nk_vec2 size                  = { 141, 200 };
+    static const char* opts0[] = { "Off", "Friendly", "Enemies", "All" };
+    struct nk_vec2 size0       = { 141, 200 };
     nk_label(ctx, "Player ESP", NK_TEXT_LEFT);
-    nk_combobox(ctx, autostrafe_opts, 4, &settings.player_esp, 15, size);
+    nk_combobox(ctx, opts0, 4, &settings.player_esp, 15, size0);
 
     nk_layout_row_dynamic(ctx, 15, 1);
     nk_checkbox_label(ctx, "Player box ESP", &settings.player_box_esp);
     nk_checkbox_label(ctx, "Player skeleton ESP", &settings.skeleton_esp);
     nk_checkbox_label(ctx, "Player health ESP", &settings.player_health_esp);
-    nk_checkbox_label(ctx, "Player name ESP", &settings.name_esp);
-    nk_checkbox_label(ctx, "Player class ESP", &settings.class_esp);
-    nk_checkbox_label(ctx, "Player weapon ESP", &settings.weapon_esp);
+    nk_checkbox_label(ctx, "Player name ESP", &settings.player_name_esp);
+    nk_checkbox_label(ctx, "Player class ESP", &settings.player_class_esp);
+    nk_checkbox_label(ctx, "Player weapon ESP", &settings.player_weapon_esp);
+
+    nk_layout_row_dynamic(ctx, 18, 2);
+    static const char* opts1[] = { "Off", "Friendly", "Enemies", "All" };
+    struct nk_vec2 size1       = { 141, 200 };
+    nk_label(ctx, "Building ESP", NK_TEXT_LEFT);
+    nk_combobox(ctx, opts1, 4, &settings.building_esp, 15, size1);
+
+    nk_layout_row_dynamic(ctx, 15, 1);
+    nk_checkbox_label(ctx, "Building box ESP", &settings.building_box_esp);
+    nk_checkbox_label(ctx, "Building health ESP", &settings.building_hp_esp);
+    nk_checkbox_label(ctx, "Building type ESP", &settings.building_type_esp);
 
     nk_checkbox_label(ctx, "Ammo ESP", &settings.ammobox_esp);
     nk_checkbox_label(ctx, "Health ESP", &settings.healthpack_esp);
@@ -132,10 +140,10 @@ static inline void tab_misc(void) {
     nk_checkbox_label(ctx, "Bhop", &settings.bhop);
 
     nk_layout_row_dynamic(ctx, 18, 2);
-    static const char* autostrafe_opts[] = { "Off", "Legit", "Rage" };
-    struct nk_vec2 size                  = { 141, 200 };
+    static const char* opts0[] = { "Off", "Legit", "Rage" };
+    struct nk_vec2 size0       = { 141, 200 };
     nk_label(ctx, "Autostrafe", NK_TEXT_LEFT);
-    nk_combobox(ctx, autostrafe_opts, 3, &settings.autostrafe, 15, size);
+    nk_combobox(ctx, opts0, 3, &settings.autostrafe, 15, size0);
 
     nk_layout_row_dynamic(ctx, 15, 1);
     nk_checkbox_label(ctx, "Autobackstab", &settings.autostab);
@@ -143,15 +151,26 @@ static inline void tab_misc(void) {
     nk_checkbox_label(ctx, "Spectator list", &settings.speclist);
 }
 
+/* TODO: Remove "* color" from opt names */
 static inline void tab_colors(void) {
     nk_layout_row_dynamic(ctx, 15, 2);
-    nk_label(ctx, "Friendly color", NK_TEXT_CENTERED);
-    nk_label(ctx, "Enemy color", NK_TEXT_CENTERED);
+    nk_label(ctx, "Friendly player color", NK_TEXT_CENTERED);
+    nk_label(ctx, "Enemy player color", NK_TEXT_CENTERED);
     nk_layout_row_dynamic(ctx, 100, 2);
     settings.col_friend_esp =
       nk_color_picker(ctx, settings.col_friend_esp, NK_RGBA);
     settings.col_enemy_esp =
       nk_color_picker(ctx, settings.col_enemy_esp, NK_RGBA);
+
+    nk_layout_row_dynamic(ctx, 15, 2);
+    nk_label(ctx, "Friendly building color", NK_TEXT_CENTERED);
+    nk_label(ctx, "Enemy building color", NK_TEXT_CENTERED);
+    nk_layout_row_dynamic(ctx, 100, 2);
+    settings.col_friend_build =
+      nk_color_picker(ctx, settings.col_friend_build, NK_RGBA);
+    settings.col_enemy_build =
+      nk_color_picker(ctx, settings.col_enemy_build, NK_RGBA);
+
     nk_layout_row_dynamic(ctx, 15, 2);
     nk_label(ctx, "Ammo color", NK_TEXT_CENTERED);
     nk_label(ctx, "Health color", NK_TEXT_CENTERED);
