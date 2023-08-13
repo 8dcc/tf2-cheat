@@ -1,5 +1,5 @@
-
 #include <stdbool.h>
+#include <dirent.h>
 #include <GL/glew.h>
 
 /* We implement nuklear in this file */
@@ -12,19 +12,23 @@
 #define MENU_FLAGS      NK_WINDOW_BORDER | NK_WINDOW_TITLE | NK_WINDOW_MOVABLE
 #define WATERMARK_FLAGS NK_WINDOW_BORDER | NK_WINDOW_NO_SCROLLBAR
 
+#define RESET_BUTTON_COLOR()                                        \
+    ctx->style.button.normal.data.color = nk_rgba(50, 50, 50, 255); \
+    ctx->style.button.hover.data.color  = nk_rgba(40, 40, 40, 255);
+
 #define CHECK_TAB_COLOR(idx)                                            \
     if (idx == cur_tab) {                                               \
         ctx->style.button.normal.data.color = nk_rgba(35, 35, 35, 255); \
         ctx->style.button.hover.data.color  = nk_rgba(35, 35, 35, 255); \
     } else {                                                            \
-        ctx->style.button.normal.data.color = nk_rgba(50, 50, 50, 255); \
-        ctx->style.button.hover.data.color  = nk_rgba(40, 40, 40, 255); \
+        RESET_BUTTON_COLOR();                                           \
     }
 
 #define ADD_TAB(idx, str)          \
     CHECK_TAB_COLOR(idx);          \
     if (nk_button_label(ctx, str)) \
-        cur_tab = idx;
+        cur_tab = idx;             \
+    RESET_BUTTON_COLOR();
 
 /*----------------------------------------------------------------------------*/
 
@@ -104,10 +108,14 @@ static void set_style(void) {
     ctx->style.combo.content_padding.y = 7.f;
 }
 
+/*----------------------------------------------------------------------------*/
+
+#define COMBO_DROP_W 161
+
 static inline void tab_esp(void) {
     nk_layout_row_dynamic(ctx, 18, 2);
     static const char* opts0[] = { "Off", "Friendly", "Enemies", "All" };
-    struct nk_vec2 size0       = { 141, 200 };
+    struct nk_vec2 size0       = { COMBO_DROP_W, 200 };
     nk_label(ctx, "Player ESP", NK_TEXT_LEFT);
     nk_combobox(ctx, opts0, 4, &settings.player_esp, 15, size0);
 
@@ -124,13 +132,13 @@ static inline void tab_esp(void) {
     nk_layout_row_dynamic(ctx, 18, 2);
 
     static const char* opts1[] = { "Off", "Friendly", "Enemies", "All" };
-    struct nk_vec2 size1       = { 141, 200 };
+    struct nk_vec2 size1       = { COMBO_DROP_W, 200 };
     nk_label(ctx, "Building ESP", NK_TEXT_LEFT);
     nk_combobox(ctx, opts1, 4, &settings.building_esp, 15, size1);
 
     static const char* opts2[] = { "All", "Sentries", "Dispensers",
                                    "Teleporters" };
-    struct nk_vec2 size2       = { 141, 200 };
+    struct nk_vec2 size2       = { COMBO_DROP_W, 200 };
     nk_label(ctx, "Building types", NK_TEXT_LEFT);
     nk_combobox(ctx, opts2, 4, &settings.building_esp_type, 15, size2);
 
@@ -153,7 +161,7 @@ static inline void tab_misc(void) {
 
     nk_layout_row_dynamic(ctx, 18, 2);
     static const char* opts0[] = { "Off", "Legit", "Rage" };
-    struct nk_vec2 size0       = { 141, 200 };
+    struct nk_vec2 size0       = { COMBO_DROP_W, 200 };
     nk_label(ctx, "Autostrafe", NK_TEXT_LEFT);
     nk_combobox(ctx, opts0, 3, &settings.autostrafe, 15, size0);
 
@@ -197,16 +205,90 @@ static inline void tab_colors(void) {
       nk_color_picker(ctx, settings.col_healthpack_esp, NK_RGBA);
 }
 
+#define MAX_CFGS 30
+
+static inline int fill_configs(char* config_list[MAX_CFGS]) {
+    DIR* d = opendir(CONFIG_FOLDER);
+    if (!d)
+        return 0;
+
+    int i = 0;
+    struct dirent* dir;
+    while (i < MAX_CFGS && (dir = readdir(d)) != NULL) {
+        if (dir->d_type == DT_REG) {
+            config_list[i] = calloc(strlen(dir->d_name), sizeof(char));
+            strcpy(config_list[i], dir->d_name);
+            i++;
+        }
+    }
+
+    closedir(d);
+
+    return i >= MAX_CFGS ? i - 1 : i;
+}
+
+static inline void free_configs(char* config_list[MAX_CFGS], int config_num) {
+    for (int i = 0; i < config_num; i++)
+        free(config_list[i]);
+}
+
+#define MAX_CFG_NAME 100
+
+static inline void tab_config(void) {
+    static char cfg_name[MAX_CFG_NAME] = { '\0' };
+    static char* config_list[MAX_CFGS];
+    static int selected_config = 0;
+
+    nk_layout_row_dynamic(ctx, 15, 1);
+    nk_label(ctx, "New config:", NK_TEXT_LEFT);
+
+    nk_layout_row_dynamic(ctx, 25, 1);
+    nk_edit_string_zero_terminated(ctx, NK_EDIT_BOX, cfg_name, sizeof(cfg_name),
+                                   nk_filter_ascii);
+
+    nk_layout_row_dynamic(ctx, 22, 1);
+    if (nk_button_label(ctx, "Create and save"))
+        save_config(cfg_name);
+
+    nk_layout_row_dynamic(ctx, 8, 1);
+    nk_spacing(ctx, 0); /* ----------------------------  */
+
+    /* Get config list from dir and display them */
+    int config_num = fill_configs(config_list);
+    if (config_num == 0)
+        return;
+
+    nk_layout_row_dynamic(ctx, 15, 1);
+    nk_label(ctx, "Existing config:", NK_TEXT_LEFT);
+
+    nk_layout_row_dynamic(ctx, 22, 1);
+    struct nk_vec2 combo_size = { MENU_W - 23, 200 };
+    nk_combobox(ctx, (const char**)config_list, config_num, &selected_config,
+                15, combo_size);
+
+    nk_layout_row_dynamic(ctx, 22, 2);
+    if (nk_button_label(ctx, "Save"))
+        save_config(config_list[selected_config]);
+    if (nk_button_label(ctx, "Load"))
+        load_config(config_list[selected_config]);
+
+    free_configs(config_list, config_num);
+}
+
 void menu_render(void) {
     set_style();
 
     if (nk_begin(ctx, "Enoch", nk_rect(MENU_X, MENU_Y, MENU_W, MENU_H),
                  MENU_FLAGS)) {
-        nk_layout_row_dynamic(ctx, 20, 3);
+        nk_layout_row_dynamic(ctx, 20, 4);
 
         ADD_TAB(0, "ESP");
         ADD_TAB(1, "Misc");
         ADD_TAB(2, "Colors");
+        ADD_TAB(3, "Config");
+
+        nk_layout_row_dynamic(ctx, 5, 1);
+        nk_spacing(ctx, 0); /* ----------------------------  */
 
         switch (cur_tab) {
             default:
@@ -218,6 +300,9 @@ void menu_render(void) {
                 break;
             case 2:
                 tab_colors();
+                break;
+            case 3:
+                tab_config();
                 break;
         }
     }
