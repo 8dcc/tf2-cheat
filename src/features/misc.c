@@ -39,7 +39,7 @@ void spectator_list(void) {
     int spec_x = 0, spec_y = 0;
     METHOD_ARGS(i_engine, GetScreenSize, &spec_x, &spec_y);
 
-    spec_y = spec_y / 2 - 50;
+    spec_y = spec_y / 2 + 10;
     spec_x = 5;
 
     bool first_spectator = true;
@@ -86,8 +86,8 @@ void spectator_list(void) {
                 j += sizeof("[1st] ") - 1;
                 break;
             case OBS_MODE_CHASE:
-                strcpy(converted, "[3st] ");
-                j += sizeof("[3st] ") - 1;
+                strcpy(converted, "[3rd] ");
+                j += sizeof("[3rd] ") - 1;
                 break;
             case OBS_MODE_ROAMING:
                 strcpy(converted, "[Free] ");
