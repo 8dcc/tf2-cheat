@@ -126,10 +126,16 @@ static inline void tab_esp(void) {
     nk_label(ctx, "Building ESP", NK_TEXT_LEFT);
     nk_combobox(ctx, opts1, 4, &settings.building_esp, 15, size1);
 
+    static const char* opts2[] = { "All", "Sentries", "Dispensers",
+                                   "Teleporters" };
+    struct nk_vec2 size2       = { 141, 200 };
+    nk_label(ctx, "Building types", NK_TEXT_LEFT);
+    nk_combobox(ctx, opts2, 4, &settings.building_esp_type, 15, size2);
+
     nk_layout_row_dynamic(ctx, 15, 1);
     nk_checkbox_label(ctx, "Building box", &settings.building_box_esp);
     nk_checkbox_label(ctx, "Building health", &settings.building_hp_esp);
-    nk_checkbox_label(ctx, "Building type", &settings.building_type_esp);
+    nk_checkbox_label(ctx, "Building name", &settings.building_name_esp);
 
     nk_checkbox_label(ctx, "Ammo box ESP", &settings.ammobox_esp);
     nk_checkbox_label(ctx, "Healing items ESP", &settings.healthpack_esp);
