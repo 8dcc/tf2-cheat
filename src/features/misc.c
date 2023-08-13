@@ -56,7 +56,8 @@ void spectator_list(void) {
             continue;
 
         /* Not spectating us */
-        if (METHOD(ent, GetObserverMode) == OBS_MODE_NONE ||
+        const int obs_mode = METHOD(ent, GetObserverMode);
+        if (obs_mode == OBS_MODE_NONE ||
             METHOD(ent, GetObserverTarget) != local)
             continue;
 
@@ -70,18 +71,54 @@ void spectator_list(void) {
 
         /* Add name to list */
         player_info_t pinfo;
-        if (METHOD_ARGS(i_engine, GetPlayerInfo, i, &pinfo)) {
-            static char converted_name[32];
-            int j = 0;
-            do {
-                uint32_t c        = pinfo.name[j];
-                converted_name[j] = c <= 0x7F ? c : '?';
-            } while (pinfo.name[j++] != '\0');
+        if (!METHOD_ARGS(i_engine, GetPlayerInfo, i, &pinfo))
+            continue;
 
-            draw_text(spec_x, spec_y, false, g_fonts.main.id,
-                      (rgba_t){ 200, 200, 200, 255 }, converted_name);
+        static char converted[sizeof("[Freeze] ") + MAX_PLAYER_NAME_LENGTH];
 
-            spec_y += SPEC_LINE_H;
+        /* j will track position inside converted[], k inside pinfo.name[] */
+        int j = 0, k = 0;
+
+        switch (obs_mode) {
+            default:
+            case OBS_MODE_IN_EYE:
+                strcpy(converted, "[1st] ");
+                j += sizeof("[1st] ") - 1;
+                break;
+            case OBS_MODE_CHASE:
+                strcpy(converted, "[3st] ");
+                j += sizeof("[3st] ") - 1;
+                break;
+            case OBS_MODE_ROAMING:
+                strcpy(converted, "[Free] ");
+                j += sizeof("[Free] ") - 1;
+                break;
+            case OBS_MODE_FREEZECAM:
+                strcpy(converted, "[Freeze] ");
+                j += sizeof("[Freeze] ") - 1;
+                break;
+            case OBS_MODE_DEATHCAM:
+                strcpy(converted, "[Death] ");
+                j += sizeof("[Death] ") - 1;
+                break;
+            case OBS_MODE_FIXED:
+                strcpy(converted, "[Fixed] ");
+                j += sizeof("[Fixed] ") - 1;
+                break;
+            case OBS_MODE_POI: /* Point of interest (game objective, etc.) */
+                strcpy(converted, "[Poi] ");
+                j += sizeof("[Poi] ") - 1;
+                break;
         }
+
+        do {
+            uint32_t c     = pinfo.name[k];
+            converted[j++] = c <= 0x7F ? c : '?';
+        } while (pinfo.name[k++] != '\0');
+
+        draw_text(spec_x, spec_y, false, g_fonts.main.id,
+                  (rgba_t){ 200, 200, 200, 255 }, converted);
+
+        spec_y += SPEC_LINE_H;
     }
 }
