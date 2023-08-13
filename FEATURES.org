@@ -1,0 +1,29 @@
+#+title: Enoch
+#+options: toc:nil
+#+startup: showeverything
+#+author: 8dcc
+
+The cheat currently has the following features:
+- BunnyHop
+- Autostrafe
+  - Legit
+  - Rage
+- ESP
+  - Player ESP
+    - Toggle friends only/enemies only/all
+    - Box
+    - Skeleton
+    - Health
+    - Name
+    - Player class
+    - Weapon
+  - Building ESP
+    - Toggle friends only/enemies only/all
+    - Toggle building types
+    - Building box
+    - Building health
+    - Building name (type of building)
+  - Ammo ESP
+  - Custom colors
+- Spectator list
+- Spy autostab

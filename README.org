@@ -8,30 +8,7 @@
 #+TOC: headlines 2
 
 * Features
-The cheat currently has the following features:
-- BunnyHop
-- Autostrafe
-  - Legit
-  - Rage
-- ESP
-  - Player ESP
-    - Toggle friends only/enemies only/all
-    - Box
-    - Skeleton
-    - Health
-    - Name
-    - Player class
-    - Weapon
-  - Building ESP
-    - Toggle friends only/enemies only/all
-    - Toggle building types
-    - Building box
-    - Building health
-    - Building name (type of building)
-  - Ammo ESP
-  - Custom colors
-- Spectator list
-- Spy autostab
+You can see a full list of features in [[./FEATURES.org][FEATURES.org]].
 
 * Dependencies
 The cheat uses the [[https://github.com/slavfox/Cozette][Cozette Vector]] font for rendering using =ISurface=. You can
