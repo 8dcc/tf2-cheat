@@ -132,25 +132,142 @@ void save_config(const char* filename) {
     strcpy(&filepath[sizeof(CONFIG_FOLDER) - 1], filename);
 
     FILE* fd = fopen(filepath, "w+");
-    if (!fd)
+    if (!fd) {
+        free(json_cfg_str);
         SAVE_ABORT("save_config: error opening \"%s\"\n", filename);
+    }
 
     fprintf(fd, "%s\n", json_cfg_str);
     fclose(fd);
 
     free(json_cfg_str);
     cJSON_Delete(json_cfg);
+
+    printf("[Enoch] Saved config %s\n", filename);
 }
 
 /*----------------------------------------------------------------------------*/
 
-#define LOAD_ABORT()                                               \
+#define LOAD_PRINT_ERROR()                                         \
     {                                                              \
         fprintf(stderr, "load_config: %s\n", cJSON_GetErrorPtr()); \
+        free(json_cfg_str);                                        \
         cJSON_Delete(json_cfg);                                    \
         return;                                                    \
     }
 
+#define LOAD_ABORT(...)               \
+    {                                 \
+        fprintf(stderr, __VA_ARGS__); \
+        free(json_cfg_str);           \
+        cJSON_Delete(json_cfg);       \
+        return;                       \
+    }
+
+#define JSON_LOAD_INT_TO_SETTINGS(PARENT, ITEM)                             \
+    cJSON* json_##ITEM = cJSON_GetObjectItemCaseSensitive(PARENT, #ITEM);   \
+    if (!cJSON_IsNumber(json_##ITEM))                                       \
+        LOAD_ABORT("load_config: setting \"%s\" is not a number\n", #ITEM); \
+    settings.ITEM = json_##ITEM->valueint;
+
+#define JSON_LOAD_COL_TO_SETTINGS(PARENT, ITEM)                                \
+    cJSON* json_##ITEM = cJSON_GetObjectItemCaseSensitive(PARENT, #ITEM);      \
+    if (!cJSON_IsObject(json_##ITEM))                                          \
+        LOAD_ABORT("load_config: setting \"%s\" is not a rgba color object\n", \
+                   #ITEM);                                                     \
+    cJSON* json_##ITEM##_r =                                                   \
+      cJSON_GetObjectItemCaseSensitive(json_##ITEM, "r");                      \
+    if (!cJSON_IsNumber(json_##ITEM##_r))                                      \
+        LOAD_ABORT("load_config: red field of setting \"%s\" is not a "        \
+                   "number\n",                                                 \
+                   #ITEM);                                                     \
+    cJSON* json_##ITEM##_g =                                                   \
+      cJSON_GetObjectItemCaseSensitive(json_##ITEM, "g");                      \
+    if (!cJSON_IsNumber(json_##ITEM##_g))                                      \
+        LOAD_ABORT("load_config: green field of setting \"%s\" is not a "      \
+                   "number\n",                                                 \
+                   #ITEM);                                                     \
+    cJSON* json_##ITEM##_b =                                                   \
+      cJSON_GetObjectItemCaseSensitive(json_##ITEM, "b");                      \
+    if (!cJSON_IsNumber(json_##ITEM##_b))                                      \
+        LOAD_ABORT("load_config: blue field of setting \"%s\" is not a "       \
+                   "number\n",                                                 \
+                   #ITEM);                                                     \
+    cJSON* json_##ITEM##_a =                                                   \
+      cJSON_GetObjectItemCaseSensitive(json_##ITEM, "a");                      \
+    if (!cJSON_IsNumber(json_##ITEM##_a))                                      \
+        LOAD_ABORT("load_config: alpha field of setting \"%s\" is not a "      \
+                   "number\n",                                                 \
+                   #ITEM);                                                     \
+    settings.ITEM.r = json_##ITEM##_r->valuedouble;                            \
+    settings.ITEM.g = json_##ITEM##_g->valuedouble;                            \
+    settings.ITEM.b = json_##ITEM##_b->valuedouble;                            \
+    settings.ITEM.a = json_##ITEM##_a->valuedouble;
+
 void load_config(const char* filename) {
-    /* TODO */
+    char* filepath =
+      calloc(strlen(filename) + sizeof(CONFIG_FOLDER), sizeof(char));
+    strcpy(&filepath[0], CONFIG_FOLDER);
+    strcpy(&filepath[sizeof(CONFIG_FOLDER) - 1], filename);
+
+    FILE* fd = fopen(filepath, "r");
+    if (!fd) {
+        fprintf(stderr, "load_config: %s\n", cJSON_GetErrorPtr());
+        return;
+    }
+
+    /* Get file size for allocating (without EOF) */
+    fseek(fd, 0, SEEK_END);
+    int file_sz = ftell(fd);
+    fseek(fd, 0, SEEK_SET);
+
+    /* Allocate string for contents. Add 1 to length for '\0' */
+    char* json_cfg_str = malloc(file_sz + 1);
+
+    /* Read contents of config file */
+    char c;
+    int i = 0;
+    while ((c = fgetc(fd)) != EOF)
+        json_cfg_str[i++] = c;
+    json_cfg_str[i] = '\0';
+
+    fclose(fd);
+
+    /* Parse json */
+    cJSON* json_cfg = cJSON_Parse(json_cfg_str);
+    if (!json_cfg)
+        LOAD_PRINT_ERROR();
+
+    JSON_LOAD_INT_TO_SETTINGS(json_cfg, player_esp);
+    JSON_LOAD_INT_TO_SETTINGS(json_cfg, player_box_esp);
+    JSON_LOAD_INT_TO_SETTINGS(json_cfg, skeleton_esp);
+    JSON_LOAD_INT_TO_SETTINGS(json_cfg, player_health_esp);
+    JSON_LOAD_INT_TO_SETTINGS(json_cfg, player_name_esp);
+    JSON_LOAD_INT_TO_SETTINGS(json_cfg, player_class_esp);
+    JSON_LOAD_INT_TO_SETTINGS(json_cfg, player_weapon_esp);
+    JSON_LOAD_INT_TO_SETTINGS(json_cfg, building_esp);
+    JSON_LOAD_INT_TO_SETTINGS(json_cfg, building_esp_type);
+    JSON_LOAD_INT_TO_SETTINGS(json_cfg, building_box_esp);
+    JSON_LOAD_INT_TO_SETTINGS(json_cfg, building_hp_esp);
+    JSON_LOAD_INT_TO_SETTINGS(json_cfg, building_name_esp);
+    JSON_LOAD_INT_TO_SETTINGS(json_cfg, ammobox_esp);
+    JSON_LOAD_INT_TO_SETTINGS(json_cfg, healthpack_esp);
+
+    JSON_LOAD_INT_TO_SETTINGS(json_cfg, bhop);
+    JSON_LOAD_INT_TO_SETTINGS(json_cfg, autostrafe);
+    JSON_LOAD_INT_TO_SETTINGS(json_cfg, autostab);
+    JSON_LOAD_INT_TO_SETTINGS(json_cfg, watermark);
+    JSON_LOAD_INT_TO_SETTINGS(json_cfg, speclist);
+
+    JSON_LOAD_COL_TO_SETTINGS(json_cfg, col_friend_esp);
+    JSON_LOAD_COL_TO_SETTINGS(json_cfg, col_enemy_esp);
+    JSON_LOAD_COL_TO_SETTINGS(json_cfg, col_friend_build);
+    JSON_LOAD_COL_TO_SETTINGS(json_cfg, col_enemy_build);
+    JSON_LOAD_COL_TO_SETTINGS(json_cfg, col_ammobox_esp);
+    JSON_LOAD_COL_TO_SETTINGS(json_cfg, col_healthpack_esp);
+
+    free(json_cfg_str);
+    cJSON_Delete(json_cfg);
+
+    printf("[Enoch] Loaded config %s\n", filename);
 }
