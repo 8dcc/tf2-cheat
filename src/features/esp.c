@@ -169,14 +169,8 @@ static inline void building_esp(Entity* ent, const char* str, rgba_t friend_col,
         const int hph = 2;
 
         /* Background (red) */
-        /* TODO: Outline box */
-        METHOD_ARGS(i_surface, SetColor, 0, 0, 0, col.a);
-        METHOD_ARGS(i_surface, DrawRect, hpx - 1, hpy - 1, hpx + hpw + 1,
-                    hpy + hph + 1);
-        METHOD_ARGS(i_surface, DrawRect, hpx + 1, hpy + 1, hpx + hpw - 1,
-                    hpy + hph - 1);
-        METHOD_ARGS(i_surface, SetColor, 170, 29, 29, col.a);
-        METHOD_ARGS(i_surface, DrawFilledRect, hpx, hpy, hpx + hpw, hpy + hph);
+        rgba_t redhp = (rgba_t){ 170, 29, 29, col.a };
+        OUTLINED_BOX(hpx, hpy, hpw, hph, redhp);
 
         /* Health bar (green) */
         const int hpbar_w = (hpw * MIN(hp, max_hp) / max_hp);
@@ -290,14 +284,8 @@ void esp(void) {
                     const int hph = h;
 
                     /* Background (red) */
-                    METHOD_ARGS(i_surface, SetColor, 0, 0, 0, col.a);
-                    METHOD_ARGS(i_surface, DrawRect, hpx - 1, hpy - 1,
-                                hpx + hpw + 1, hpy + hph + 1);
-                    METHOD_ARGS(i_surface, DrawRect, hpx + 1, hpy + 1,
-                                hpx + hpw - 1, hpy + hph - 1);
-                    METHOD_ARGS(i_surface, SetColor, 170, 29, 29, col.a);
-                    METHOD_ARGS(i_surface, DrawFilledRect, hpx, hpy, hpx + hpw,
-                                hpy + hph);
+                    rgba_t redhp = (rgba_t){ 170, 29, 29, col.a };
+                    OUTLINED_BOX(hpx, hpy, hpw, hph, redhp);
 
                     /* Health bar (green) */
                     const int hpbar_h = (hph * MIN(hp, max_hp) / max_hp);
