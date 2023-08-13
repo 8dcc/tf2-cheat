@@ -1,4 +1,4 @@
-#+title: Enoch
+#+title: Features
 #+options: toc:nil
 #+startup: showeverything
 #+author: 8dcc
