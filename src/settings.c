@@ -123,8 +123,7 @@ void save_config(const char* filename) {
                    "string\n");
 
     /* Create the config folder */
-    if (mkdir(CONFIG_FOLDER, 0755) != 0)
-        SAVE_ABORT("save_config: couldn't create " CONFIG_FOLDER " folder\n");
+    mkdir(CONFIG_FOLDER, 0755);
 
     /* Get path of filename inside CONFIG_FOLDER */
     char* filepath =
