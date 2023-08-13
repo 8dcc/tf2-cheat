@@ -12,12 +12,15 @@ Settings settings = {
     .player_name_esp   = false,
     .player_class_esp  = false,
     .player_weapon_esp = false,
+
     .building_esp      = OFF,
+    .building_esp_type = BTYPE_ALL,
     .building_box_esp  = false,
     .building_hp_esp   = false,
-    .building_type_esp = false,
-    .ammobox_esp       = false,
-    .healthpack_esp    = false,
+    .building_name_esp = false,
+
+    .ammobox_esp    = false,
+    .healthpack_esp = false,
 
     /* Movement */
     .bhop       = false,

@@ -16,6 +16,13 @@ enum settings_friendly {
     ALL      = 3,
 };
 
+enum settings_building_type {
+    BTYPE_ALL        = 0,
+    BTYPE_SENTRY     = 1,
+    BTYPE_DISPENSER  = 2,
+    BTYPE_TELEPORTER = 3,
+};
+
 typedef struct {
     /* ESP */
     int player_esp;
@@ -25,10 +32,13 @@ typedef struct {
     int player_name_esp;
     int player_class_esp;
     int player_weapon_esp;
+
     int building_esp;
+    int building_esp_type;
     int building_box_esp;
     int building_hp_esp;
-    int building_type_esp;
+    int building_name_esp;
+
     int ammobox_esp;
     int healthpack_esp;
 
