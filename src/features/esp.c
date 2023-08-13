@@ -163,33 +163,38 @@ static inline void building_esp(Entity* ent, const char* str, rgba_t friend_col,
         const int hp     = METHOD(ent, GetHealth);
         const int max_hp = METHOD(ent, GetMaxHealth);
 
-        const int hpx = x - 5;
-        const int hpy = y;
-        const int hpw = 2;
-        const int hph = h;
+        const int hpx = x;
+        const int hpy = y + h + 3;
+        const int hpw = w;
+        const int hph = 2;
 
         /* Background (red) */
+        /* TODO: Outline box */
         METHOD_ARGS(i_surface, SetColor, 0, 0, 0, col.a);
         METHOD_ARGS(i_surface, DrawRect, hpx - 1, hpy - 1, hpx + hpw + 1,
-                    hpy + h + 1);
+                    hpy + hph + 1);
         METHOD_ARGS(i_surface, DrawRect, hpx + 1, hpy + 1, hpx + hpw - 1,
-                    hpy + h - 1);
+                    hpy + hph - 1);
         METHOD_ARGS(i_surface, SetColor, 170, 29, 29, col.a);
         METHOD_ARGS(i_surface, DrawFilledRect, hpx, hpy, hpx + hpw, hpy + hph);
 
         /* Health bar (green) */
-        const int hpbar_h = (hph * MIN(hp, max_hp) / max_hp);
-        const int hpbar_y = hpy + (hph - hpbar_h);
+        const int hpbar_w = (hpw * MIN(hp, max_hp) / max_hp);
         METHOD_ARGS(i_surface, SetColor, 67, 160, 71, col.a);
-        METHOD_ARGS(i_surface, DrawFilledRect, hpx, hpbar_y, hpx + hpw,
-                    hpbar_y + hpbar_h);
+        METHOD_ARGS(i_surface, DrawFilledRect, hpx, hpy, hpx + hpbar_w,
+                    hpy + hph);
 
         /* Health text */
-        const int hpbar_x = (settings.building_box_esp) ? hpx - 2 : hpx;
         static char hp_txt[5];
         sprintf(hp_txt, "%d", hp);
-        draw_text(hpbar_x, hpy - 13, !settings.building_box_esp,
-                  g_fonts.small.id, (rgba_t){ 34, 193, 41, col.a }, hp_txt);
+
+        int textw, texth;
+        get_text_size(g_fonts.small.id, hp_txt, &textw, &texth);
+
+        draw_text(hpx - textw - 4, hpy - texth / 2 + 2, false, g_fonts.small.id,
+                  (rgba_t){ 34, 193, 41, col.a }, hp_txt);
+
+        y += 6;
     }
 
     /* Building type ESP (string function parameter passed from esp) */
@@ -287,9 +292,9 @@ void esp(void) {
                     /* Background (red) */
                     METHOD_ARGS(i_surface, SetColor, 0, 0, 0, col.a);
                     METHOD_ARGS(i_surface, DrawRect, hpx - 1, hpy - 1,
-                                hpx + hpw + 1, hpy + h + 1);
+                                hpx + hpw + 1, hpy + hph + 1);
                     METHOD_ARGS(i_surface, DrawRect, hpx + 1, hpy + 1,
-                                hpx + hpw - 1, hpy + h - 1);
+                                hpx + hpw - 1, hpy + hph - 1);
                     METHOD_ARGS(i_surface, SetColor, 170, 29, 29, col.a);
                     METHOD_ARGS(i_surface, DrawFilledRect, hpx, hpy, hpx + hpw,
                                 hpy + hph);
