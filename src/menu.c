@@ -104,7 +104,6 @@ static void set_style(void) {
     ctx->style.combo.content_padding.y = 7.f;
 }
 
-/* TODO: Remove "* ESP" from opt names */
 static inline void tab_esp(void) {
     nk_layout_row_dynamic(ctx, 18, 2);
     static const char* opts0[] = { "Off", "Friendly", "Enemies", "All" };
@@ -120,7 +119,10 @@ static inline void tab_esp(void) {
     nk_checkbox_label(ctx, "Player class", &settings.player_class_esp);
     nk_checkbox_label(ctx, "Player weapon", &settings.player_weapon_esp);
 
+    nk_layout_row_dynamic(ctx, 8, 1);
+    nk_spacing(ctx, 0); /* ----------------------------  */
     nk_layout_row_dynamic(ctx, 18, 2);
+
     static const char* opts1[] = { "Off", "Friendly", "Enemies", "All" };
     struct nk_vec2 size1       = { 141, 200 };
     nk_label(ctx, "Building ESP", NK_TEXT_LEFT);
@@ -136,6 +138,10 @@ static inline void tab_esp(void) {
     nk_checkbox_label(ctx, "Building box", &settings.building_box_esp);
     nk_checkbox_label(ctx, "Building health", &settings.building_hp_esp);
     nk_checkbox_label(ctx, "Building name", &settings.building_name_esp);
+
+    nk_layout_row_dynamic(ctx, 8, 1);
+    nk_spacing(ctx, 0); /* ----------------------------  */
+    nk_layout_row_dynamic(ctx, 15, 1);
 
     nk_checkbox_label(ctx, "Ammo box ESP", &settings.ammobox_esp);
     nk_checkbox_label(ctx, "Healing items ESP", &settings.healthpack_esp);
@@ -153,6 +159,11 @@ static inline void tab_misc(void) {
 
     nk_layout_row_dynamic(ctx, 15, 1);
     nk_checkbox_label(ctx, "Autobackstab", &settings.autostab);
+
+    nk_layout_row_dynamic(ctx, 8, 1);
+    nk_spacing(ctx, 0); /* ----------------------------  */
+    nk_layout_row_dynamic(ctx, 15, 1);
+
     nk_checkbox_label(ctx, "Watermark", &settings.watermark);
     nk_checkbox_label(ctx, "Spectator list", &settings.speclist);
 }
