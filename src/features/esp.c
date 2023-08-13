@@ -15,6 +15,13 @@
         METHOD_ARGS(i_surface, DrawRect, x, y, x + w, y + h);                 \
     }
 
+#define GENERIC_ENT_NAME(ent, name, col) \
+    if (!get_bbox(ent, &x, &y, &w, &h))  \
+        continue;                        \
+    draw_text(x + w / 2, y + w / 2, true, g_fonts.small.id, col, name);
+
+/*----------------------------------------------------------------------------*/
+
 static inline bool get_bbox(Entity* ent, int* x, int* y, int* w, int* h) {
     Collideable* collideable = METHOD(ent, GetCollideable);
     if (!collideable)
@@ -120,14 +127,81 @@ static inline void skeleton_esp(Renderable* rend, matrix3x4_t* bones,
     }
 }
 
-#define GENERIC_ENT_NAME(ent, name, col) \
-    if (!get_bbox(ent, &x, &y, &w, &h))  \
-        continue;                        \
-    draw_text(x + w / 2, y + w / 2, true, g_fonts.small.id, col, name);
+static inline void building_esp(Entity* ent, const char* str, rgba_t friend_col,
+                                rgba_t enemy_col) {
+    const bool teammate = IsTeammate(ent);
+
+    /* Should we render this turret's team? */
+    switch (settings.building_esp) {
+        case ENEMY:
+            if (teammate)
+                return;
+            break;
+        case FRIENDLY:
+            if (!teammate)
+                return;
+            break;
+        case ALL:
+            break;
+        default:
+        case OFF:
+            return;
+    }
+
+    static int x, y, w, h;
+    if (!get_bbox(ent, &x, &y, &w, &h))
+        return;
+
+    rgba_t col = teammate ? friend_col : enemy_col;
+
+    /* Building box ESP */
+    if (settings.building_box_esp)
+        OUTLINED_BOX(x, y, w, h, col);
+
+    /* Building health ESP */
+    if (settings.building_hp_esp) {
+        const int hp     = METHOD(ent, GetHealth);
+        const int max_hp = METHOD(ent, GetMaxHealth);
+
+        const int hpx = x - 5;
+        const int hpy = y;
+        const int hpw = 2;
+        const int hph = h;
+
+        /* Background (red) */
+        METHOD_ARGS(i_surface, SetColor, 0, 0, 0, col.a);
+        METHOD_ARGS(i_surface, DrawRect, hpx - 1, hpy - 1, hpx + hpw + 1,
+                    hpy + h + 1);
+        METHOD_ARGS(i_surface, DrawRect, hpx + 1, hpy + 1, hpx + hpw - 1,
+                    hpy + h - 1);
+        METHOD_ARGS(i_surface, SetColor, 170, 29, 29, col.a);
+        METHOD_ARGS(i_surface, DrawFilledRect, hpx, hpy, hpx + hpw, hpy + hph);
+
+        /* Health bar (green) */
+        const int hpbar_h = (hph * MIN(hp, max_hp) / max_hp);
+        const int hpbar_y = hpy + (hph - hpbar_h);
+        METHOD_ARGS(i_surface, SetColor, 67, 160, 71, col.a);
+        METHOD_ARGS(i_surface, DrawFilledRect, hpx, hpbar_y, hpx + hpw,
+                    hpbar_y + hpbar_h);
+
+        /* Health text */
+        const int hpbar_x = (settings.building_box_esp) ? hpx - 2 : hpx;
+        static char hp_txt[5];
+        sprintf(hp_txt, "%d", hp);
+        draw_text(hpbar_x, hpy - 13, !settings.building_box_esp,
+                  g_fonts.small.id, (rgba_t){ 34, 193, 41, col.a }, hp_txt);
+    }
+
+    /* Building type ESP (string function parameter) */
+    if (settings.building_type_esp)
+        draw_text(x + w / 2, y + h + 1, true, g_fonts.main.id, col, str);
+}
+
+/*----------------------------------------------------------------------------*/
 
 void esp(void) {
-    if (settings.player_esp == OFF && !settings.ammobox_esp &&
-        !settings.healthpack_esp)
+    if (settings.player_esp == OFF && settings.building_esp == OFF &&
+        !settings.ammobox_esp && !settings.healthpack_esp)
         return;
 
     if (!g.localplayer || !g.IsConnected)
@@ -135,11 +209,13 @@ void esp(void) {
 
     rgba_t player_friend_col = NK2COL(settings.col_friend_esp);
     rgba_t player_enemy_col  = NK2COL(settings.col_enemy_esp);
+    rgba_t build_friend_col  = NK2COL(settings.col_friend_build);
+    rgba_t build_enemy_col   = NK2COL(settings.col_enemy_build);
     rgba_t ammobox_col       = NK2COL(settings.col_ammobox_esp);
     rgba_t healthpack_col    = NK2COL(settings.col_healthpack_esp);
 
     /* For bounding box */
-    int x, y, w, h;
+    static int x, y, w, h;
 
     /* For skeleton ESP */
     static matrix3x4_t bones[MAXSTUDIOBONES];
@@ -241,7 +317,7 @@ void esp(void) {
                 int infopos_x = x + w / 2;
                 int infopos_y = y + h + 2;
 
-                if (settings.name_esp) {
+                if (settings.player_name_esp) {
                     player_info_t pinfo;
                     METHOD_ARGS(i_engine, GetPlayerInfo, i, &pinfo);
 
@@ -255,7 +331,7 @@ void esp(void) {
                 /*------------------------------------------------------------*/
                 /* Player class ESP */
 
-                if (settings.class_esp) {
+                if (settings.player_class_esp) {
                     draw_text(infopos_x, infopos_y, true, g_fonts.main.id, col,
                               GetClassName(ent));
 
@@ -266,7 +342,7 @@ void esp(void) {
                 /*------------------------------------------------------------*/
                 /* Player weapon ESP */
 
-                if (settings.weapon_esp) {
+                if (settings.player_weapon_esp) {
                     Weapon* weapon = METHOD(ent, GetWeapon);
 
                     if (weapon) {
@@ -283,6 +359,23 @@ void esp(void) {
                 }
 
                 /* end: case CClass_CTFPlayer */
+                break;
+            }
+
+            case CClass_CObjectTeleporter: {
+                building_esp(ent, "Teleporter", build_friend_col,
+                             build_enemy_col);
+                break;
+            }
+
+            case CClass_CObjectSentrygun: {
+                building_esp(ent, "Sentry", build_friend_col, build_enemy_col);
+                break;
+            }
+
+            case CClass_CObjectDispenser: {
+                building_esp(ent, "Dispenser", build_friend_col,
+                             build_enemy_col);
                 break;
             }
 
