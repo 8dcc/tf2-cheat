@@ -3,19 +3,18 @@
 
 #include "menu.h"
 
-#define OFF 0
+#define CONFIG_FOLDER "enoch-configs/"
 
 enum settings_rage {
+    OFF   = 0,
     LEGIT = 1,
     RAGE  = 2,
 };
-
 enum settings_friendly {
     FRIENDLY = 1,
     ENEMY    = 2,
     ALL      = 3,
 };
-
 enum settings_building_type {
     BTYPE_ALL        = 0,
     BTYPE_SENTRY     = 1,

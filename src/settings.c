@@ -6,8 +6,6 @@
 #include <cjson/cJSON.h>
 #include "include/settings.h"
 
-#define CONFIG_FOLDER "enoch-configs/"
-
 /*----------------------------------------------------------------------------*/
 
 /* Global settings */
