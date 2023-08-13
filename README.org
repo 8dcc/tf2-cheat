@@ -22,6 +22,12 @@ The cheat currently has the following features:
     - Name
     - Player class
     - Weapon
+  - Building ESP
+    - Toggle friends only/enemies only/all
+    - Toggle building types
+    - Building box
+    - Building health
+    - Building name (type of building)
   - Ammo ESP
   - Custom colors
 - Spectator list
