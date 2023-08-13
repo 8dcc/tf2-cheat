@@ -203,7 +203,7 @@ void esp(void) {
         !settings.ammobox_esp && !settings.healthpack_esp)
         return;
 
-    if (!g.localplayer || !g.IsConnected)
+    if (!g.localplayer)
         return;
 
     rgba_t player_friend_col = NK2COL(settings.col_friend_esp);

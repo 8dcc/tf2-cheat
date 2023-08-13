@@ -119,8 +119,8 @@ bool globals_init(void) {
     cache_reset();
     cache_update();
     if (g.IsInGame) {
-        cache_get_model_idx();
         g.localidx = METHOD(i_engine, GetLocalPlayer);
+        cache_get_model_idx();
     }
 
     return true;
