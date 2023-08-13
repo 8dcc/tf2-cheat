@@ -60,6 +60,7 @@ bool IsBehindAndFacingTarget(Entity* target);
 
 rgba_t col_scale(rgba_t c, float factor);
 void draw_text(int x, int y, bool center, HFont f, rgba_t c, const char* str);
+void get_text_size(HFont f, const char* str, int* w, int* h);
 
 bool world_to_screen(vec3_t vec, vec2_t* screen);
 

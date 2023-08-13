@@ -232,8 +232,8 @@ rgba_t col_scale(rgba_t c, float factor) {
 }
 
 void draw_text(int x, int y, bool center, HFont f, rgba_t c, const char* str) {
-    static wchar_t wstr[1024] = { '\0' };
-    swprintf(wstr, 1023, L"%hs", (char*)str);
+    static wchar_t wstr[512] = { '\0' };
+    swprintf(wstr, 511, L"%hs", (char*)str);
 
     if (center) {
         int w = 0, h = 0;
@@ -246,6 +246,13 @@ void draw_text(int x, int y, bool center, HFont f, rgba_t c, const char* str) {
     METHOD_ARGS(i_surface, SetTextFont, f);
     METHOD_ARGS(i_surface, SetTextColor, c.r, c.g, c.b, c.a);
     METHOD_ARGS(i_surface, PrintText, wstr, wcslen(wstr), FONT_DRAW_DEFAULT);
+}
+
+void get_text_size(HFont f, const char* str, int* w, int* h) {
+    static wchar_t wstr[512] = { '\0' };
+    swprintf(wstr, 511, L"%hs", (char*)str);
+
+    METHOD_ARGS(i_surface, GetTextSize, f, wstr, w, h);
 }
 
 /*----------------------------------------------------------------------------*/
