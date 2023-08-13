@@ -8,7 +8,6 @@
 #include "include/menu.h"
 
 #include "include/settings.h"
-#include "include/globals.h"
 
 #define MENU_FLAGS                                           \
     NK_WINDOW_BORDER | NK_WINDOW_TITLE | NK_WINDOW_MOVABLE | \
@@ -198,58 +197,6 @@ void watermark_render(void) {
                  WATERMARK_FLAGS)) {
         nk_layout_row_dynamic(ctx, 10, 1);
         nk_label(ctx, "8dcc/tf2-cheat", NK_TEXT_CENTERED);
-    }
-    nk_end(ctx);
-}
-
-void spectator_list(void) {
-    if (!g.localplayer || !g.IsInGame)
-        return;
-
-    /* If we are dead, display spectator list for the dead guy */
-    Entity* local = !g.IsAlive ? g.localplayer
-                               : METHOD(g.localplayer, GetObserverTarget);
-    if (!local)
-        return;
-
-    int namesp = 0;
-    const char* names[64];
-
-    for (int i = 1; i <= MIN(64, g.MaxClients); i++) {
-        if (i == g.localidx)
-            continue;
-
-        Entity* ent      = METHOD_ARGS(i_entitylist, GetClientEntity, i);
-        Networkable* net = GetNetworkable(ent);
-        if (!ent || ent == g.localplayer || ent == local ||
-            METHOD(net, IsDormant) || METHOD(ent, IsAlive))
-            continue;
-
-        /* Not spectating us */
-        if (METHOD(ent, GetObserverMode) == OBS_MODE_NONE ||
-            METHOD(ent, GetObserverTarget) != local)
-            continue;
-
-        /* Add name to list */
-        player_info_t pinfo;
-        if (METHOD_ARGS(i_engine, GetPlayerInfo, i, &pinfo))
-            names[namesp++] = pinfo.name;
-    }
-
-    /* Create nuklear window the first time */
-    if (namesp == 0)
-        return;
-
-    int scr_w = 0, scr_h = 0;
-    METHOD_ARGS(i_engine, GetScreenSize, &scr_w, &scr_h);
-
-    if (nk_begin(
-          ctx, "Spectators",
-          nk_rect(SPECLIST_X, scr_h / 2 - 50, SPECLIST_W, 45 + namesp * 15),
-          MENU_FLAGS)) {
-        nk_layout_row_dynamic(ctx, 15, 1);
-        for (int i = 0; i < namesp; i++)
-            nk_label(ctx, names[i], NK_TEXT_LEFT);
     }
     nk_end(ctx);
 }

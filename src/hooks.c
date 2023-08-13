@@ -102,6 +102,7 @@ void h_Paint(EngineVGui* thisptr, uint32_t mode) {
         StartDrawing(i_surface);
 
         esp();
+        spectator_list();
 
         FinishDrawing(i_surface);
     }
@@ -128,9 +129,6 @@ void h_SwapWindow(SDL_Window* window) {
     if (settings.watermark || menu_open) {
         if (settings.watermark)
             watermark_render();
-
-        if (settings.speclist)
-            spectator_list();
 
         if (menu_open)
             menu_render();

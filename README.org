@@ -24,7 +24,7 @@ The cheat currently has the following features:
     - Weapon
   - Ammo ESP
   - Custom colors
-- Spectator list (/Working partially/)
+- Spectator list
 - Spy autostab
 
 * Dependencies
