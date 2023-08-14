@@ -564,12 +564,14 @@ struct Entity {
     vec3_t velocity; /* 0x110 */
     PAD(0x250);
     int flags; /* 0x36C */
-    PAD(0x12C0);
+    PAD(0xAFC);
+    vec3_t vecPunchAngle; /* 0xE6C */
+    PAD(0x7B8);
     int player_class; /* 0x1630 (ETFClass) */
 };
 
 #define IsTeammate(ent) \
-    (METHOD(g.localplayer, GetTeamNumber) == METHOD(ent, GetTeamNumber));
+    (METHOD(g.localplayer, GetTeamNumber) == METHOD(ent, GetTeamNumber))
 
 static inline Renderable* GetRenderable(Entity* ent) {
     return (Renderable*)((void*)ent + 0x4);
