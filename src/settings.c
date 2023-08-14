@@ -58,15 +58,15 @@ Settings settings = {
         return;                       \
     }
 
-#define JSON_ADD_INT_FROM_SETTINGS(PARENT, ITEM)                \
+#define JSON_SETTINGS_WRITE_INT(PARENT, ITEM)                   \
     if (!cJSON_AddNumberToObject(PARENT, #ITEM, settings.ITEM)) \
         SAVE_ABORT("save_config: error saving \"settings.%s\"\n", #ITEM);
 
-#define JSON_ADD_FLOAT_FROM_SETTINGS(PARENT, ITEM) \
-    JSON_ADD_INT_FROM_SETTINGS(PARENT, ITEM)
+#define JSON_SETTINGS_WRITE_FLOAT(PARENT, ITEM) \
+    JSON_SETTINGS_WRITE_INT(PARENT, ITEM)
 
 /* Create json_ITEM object with rbga float values, add that object to PARENT */
-#define JSON_ADD_COL_FROM_SETTINGS(PARENT, ITEM)                     \
+#define JSON_SETTINGS_WRITE_COL(PARENT, ITEM)                        \
     cJSON* json_##ITEM = cJSON_CreateObject();                       \
     if (!cJSON_AddNumberToObject(json_##ITEM, "r", settings.ITEM.r)) \
         SAVE_ABORT("save_config: error saving red value for "        \
@@ -99,37 +99,37 @@ void save_config(const char* filename) {
     if (!json_cfg)
         SAVE_ABORT("save_config: error creating main json object\n");
 
-    JSON_ADD_INT_FROM_SETTINGS(json_cfg, player_esp);
-    JSON_ADD_INT_FROM_SETTINGS(json_cfg, player_box_esp);
-    JSON_ADD_INT_FROM_SETTINGS(json_cfg, skeleton_esp);
-    JSON_ADD_INT_FROM_SETTINGS(json_cfg, player_health_esp);
-    JSON_ADD_INT_FROM_SETTINGS(json_cfg, player_name_esp);
-    JSON_ADD_INT_FROM_SETTINGS(json_cfg, player_class_esp);
-    JSON_ADD_INT_FROM_SETTINGS(json_cfg, player_weapon_esp);
-    JSON_ADD_INT_FROM_SETTINGS(json_cfg, building_esp);
-    JSON_ADD_INT_FROM_SETTINGS(json_cfg, building_esp_type);
-    JSON_ADD_INT_FROM_SETTINGS(json_cfg, building_box_esp);
-    JSON_ADD_INT_FROM_SETTINGS(json_cfg, building_hp_esp);
-    JSON_ADD_INT_FROM_SETTINGS(json_cfg, building_name_esp);
-    JSON_ADD_INT_FROM_SETTINGS(json_cfg, ammobox_esp);
-    JSON_ADD_INT_FROM_SETTINGS(json_cfg, healthpack_esp);
+    JSON_SETTINGS_WRITE_INT(json_cfg, player_esp);
+    JSON_SETTINGS_WRITE_INT(json_cfg, player_box_esp);
+    JSON_SETTINGS_WRITE_INT(json_cfg, skeleton_esp);
+    JSON_SETTINGS_WRITE_INT(json_cfg, player_health_esp);
+    JSON_SETTINGS_WRITE_INT(json_cfg, player_name_esp);
+    JSON_SETTINGS_WRITE_INT(json_cfg, player_class_esp);
+    JSON_SETTINGS_WRITE_INT(json_cfg, player_weapon_esp);
+    JSON_SETTINGS_WRITE_INT(json_cfg, building_esp);
+    JSON_SETTINGS_WRITE_INT(json_cfg, building_esp_type);
+    JSON_SETTINGS_WRITE_INT(json_cfg, building_box_esp);
+    JSON_SETTINGS_WRITE_INT(json_cfg, building_hp_esp);
+    JSON_SETTINGS_WRITE_INT(json_cfg, building_name_esp);
+    JSON_SETTINGS_WRITE_INT(json_cfg, ammobox_esp);
+    JSON_SETTINGS_WRITE_INT(json_cfg, healthpack_esp);
 
-    JSON_ADD_INT_FROM_SETTINGS(json_cfg, aimbot);
-    JSON_ADD_FLOAT_FROM_SETTINGS(json_cfg, aim_fov);
-    JSON_ADD_INT_FROM_SETTINGS(json_cfg, aim_silent);
+    JSON_SETTINGS_WRITE_INT(json_cfg, aimbot);
+    JSON_SETTINGS_WRITE_FLOAT(json_cfg, aim_fov);
+    JSON_SETTINGS_WRITE_INT(json_cfg, aim_silent);
 
-    JSON_ADD_INT_FROM_SETTINGS(json_cfg, bhop);
-    JSON_ADD_INT_FROM_SETTINGS(json_cfg, autostrafe);
-    JSON_ADD_INT_FROM_SETTINGS(json_cfg, autostab);
-    JSON_ADD_INT_FROM_SETTINGS(json_cfg, watermark);
-    JSON_ADD_INT_FROM_SETTINGS(json_cfg, speclist);
+    JSON_SETTINGS_WRITE_INT(json_cfg, bhop);
+    JSON_SETTINGS_WRITE_INT(json_cfg, autostrafe);
+    JSON_SETTINGS_WRITE_INT(json_cfg, autostab);
+    JSON_SETTINGS_WRITE_INT(json_cfg, watermark);
+    JSON_SETTINGS_WRITE_INT(json_cfg, speclist);
 
-    JSON_ADD_COL_FROM_SETTINGS(json_cfg, col_friend_esp);
-    JSON_ADD_COL_FROM_SETTINGS(json_cfg, col_enemy_esp);
-    JSON_ADD_COL_FROM_SETTINGS(json_cfg, col_friend_build);
-    JSON_ADD_COL_FROM_SETTINGS(json_cfg, col_enemy_build);
-    JSON_ADD_COL_FROM_SETTINGS(json_cfg, col_ammobox_esp);
-    JSON_ADD_COL_FROM_SETTINGS(json_cfg, col_healthpack_esp);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_friend_esp);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_enemy_esp);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_friend_build);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_enemy_build);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_ammobox_esp);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_healthpack_esp);
 
     /* Convert filled json object to string */
     char* json_cfg_str = cJSON_Print(json_cfg);
@@ -179,51 +179,69 @@ void save_config(const char* filename) {
         return;                       \
     }
 
-#define JSON_LOAD_INT_TO_SETTINGS(PARENT, ITEM)                             \
-    cJSON* json_##ITEM = cJSON_GetObjectItemCaseSensitive(PARENT, #ITEM);   \
-    if (!cJSON_IsNumber(json_##ITEM))                                       \
-        LOAD_ABORT("load_config: setting \"%s\" is not a number\n", #ITEM); \
-    settings.ITEM = json_##ITEM->valueint;
+#define JSON_SETTINGS_READ_INT(PARENT, ITEM)                                  \
+    do {                                                                      \
+        cJSON* json_##ITEM = cJSON_GetObjectItemCaseSensitive(PARENT, #ITEM); \
+        if (!cJSON_IsNumber(json_##ITEM)) {                                   \
+            fprintf(stderr, "WARNING: setting \"%s\" (number) not found\n",   \
+                    #ITEM);                                                   \
+            break;                                                            \
+        }                                                                     \
+        settings.ITEM = json_##ITEM->valueint;                                \
+    } while (0);
 
-#define JSON_LOAD_FLOAT_TO_SETTINGS(PARENT, ITEM)                           \
-    cJSON* json_##ITEM = cJSON_GetObjectItemCaseSensitive(PARENT, #ITEM);   \
-    if (!cJSON_IsNumber(json_##ITEM))                                       \
-        LOAD_ABORT("load_config: setting \"%s\" is not a number\n", #ITEM); \
-    settings.ITEM = json_##ITEM->valuedouble;
+#define JSON_SETTINGS_READ_FLOAT(PARENT, ITEM)                                \
+    do {                                                                      \
+        cJSON* json_##ITEM = cJSON_GetObjectItemCaseSensitive(PARENT, #ITEM); \
+        if (!cJSON_IsNumber(json_##ITEM)) {                                   \
+            fprintf(stderr, "WARNING: setting \"%s\" (float) not found\n",    \
+                    #ITEM);                                                   \
+            break;                                                            \
+        }                                                                     \
+        settings.ITEM = json_##ITEM->valuedouble;                             \
+    } while (0);
 
-#define JSON_LOAD_COL_TO_SETTINGS(PARENT, ITEM)                                \
-    cJSON* json_##ITEM = cJSON_GetObjectItemCaseSensitive(PARENT, #ITEM);      \
-    if (!cJSON_IsObject(json_##ITEM))                                          \
-        LOAD_ABORT("load_config: setting \"%s\" is not a rgba color object\n", \
-                   #ITEM);                                                     \
-    cJSON* json_##ITEM##_r =                                                   \
-      cJSON_GetObjectItemCaseSensitive(json_##ITEM, "r");                      \
-    if (!cJSON_IsNumber(json_##ITEM##_r))                                      \
-        LOAD_ABORT("load_config: red field of setting \"%s\" is not a "        \
-                   "number\n",                                                 \
-                   #ITEM);                                                     \
-    cJSON* json_##ITEM##_g =                                                   \
-      cJSON_GetObjectItemCaseSensitive(json_##ITEM, "g");                      \
-    if (!cJSON_IsNumber(json_##ITEM##_g))                                      \
-        LOAD_ABORT("load_config: green field of setting \"%s\" is not a "      \
-                   "number\n",                                                 \
-                   #ITEM);                                                     \
-    cJSON* json_##ITEM##_b =                                                   \
-      cJSON_GetObjectItemCaseSensitive(json_##ITEM, "b");                      \
-    if (!cJSON_IsNumber(json_##ITEM##_b))                                      \
-        LOAD_ABORT("load_config: blue field of setting \"%s\" is not a "       \
-                   "number\n",                                                 \
-                   #ITEM);                                                     \
-    cJSON* json_##ITEM##_a =                                                   \
-      cJSON_GetObjectItemCaseSensitive(json_##ITEM, "a");                      \
-    if (!cJSON_IsNumber(json_##ITEM##_a))                                      \
-        LOAD_ABORT("load_config: alpha field of setting \"%s\" is not a "      \
-                   "number\n",                                                 \
-                   #ITEM);                                                     \
-    settings.ITEM.r = json_##ITEM##_r->valuedouble;                            \
-    settings.ITEM.g = json_##ITEM##_g->valuedouble;                            \
-    settings.ITEM.b = json_##ITEM##_b->valuedouble;                            \
-    settings.ITEM.a = json_##ITEM##_a->valuedouble;
+#define JSON_SETTINGS_READ_COL(PARENT, ITEM)                                  \
+    do {                                                                      \
+        cJSON* json_##ITEM = cJSON_GetObjectItemCaseSensitive(PARENT, #ITEM); \
+        if (!cJSON_IsObject(json_##ITEM)) {                                   \
+            fprintf(stderr, "WARNING: setting \"%s\" (rgba obj) not found\n", \
+                    #ITEM);                                                   \
+            break;                                                            \
+        }                                                                     \
+        cJSON* json_##ITEM##_r =                                              \
+          cJSON_GetObjectItemCaseSensitive(json_##ITEM, "r");                 \
+        if (!cJSON_IsNumber(json_##ITEM##_r)) {                               \
+            fprintf(stderr, "WARNING: setting \"%s\" (rgba.r) not found\n",   \
+                    #ITEM);                                                   \
+            break;                                                            \
+        }                                                                     \
+        cJSON* json_##ITEM##_g =                                              \
+          cJSON_GetObjectItemCaseSensitive(json_##ITEM, "g");                 \
+        if (!cJSON_IsNumber(json_##ITEM##_g)) {                               \
+            fprintf(stderr, "WARNING: setting \"%s\" (rgba.g) not found\n",   \
+                    #ITEM);                                                   \
+            break;                                                            \
+        }                                                                     \
+        cJSON* json_##ITEM##_b =                                              \
+          cJSON_GetObjectItemCaseSensitive(json_##ITEM, "b");                 \
+        if (!cJSON_IsNumber(json_##ITEM##_b)) {                               \
+            fprintf(stderr, "WARNING: setting \"%s\" (rgba.b) not found\n",   \
+                    #ITEM);                                                   \
+            break;                                                            \
+        }                                                                     \
+        cJSON* json_##ITEM##_a =                                              \
+          cJSON_GetObjectItemCaseSensitive(json_##ITEM, "a");                 \
+        if (!cJSON_IsNumber(json_##ITEM##_a)) {                               \
+            fprintf(stderr, "WARNING: setting \"%s\" (rgba.a) not found\n",   \
+                    #ITEM);                                                   \
+            break;                                                            \
+        }                                                                     \
+        settings.ITEM.r = json_##ITEM##_r->valuedouble;                       \
+        settings.ITEM.g = json_##ITEM##_g->valuedouble;                       \
+        settings.ITEM.b = json_##ITEM##_b->valuedouble;                       \
+        settings.ITEM.a = json_##ITEM##_a->valuedouble;                       \
+    } while (0);
 
 void load_config(const char* filename) {
     if (!filename || *filename == '\0') {
@@ -264,37 +282,37 @@ void load_config(const char* filename) {
     if (!json_cfg)
         LOAD_PRINT_ERROR();
 
-    JSON_LOAD_INT_TO_SETTINGS(json_cfg, player_esp);
-    JSON_LOAD_INT_TO_SETTINGS(json_cfg, player_box_esp);
-    JSON_LOAD_INT_TO_SETTINGS(json_cfg, skeleton_esp);
-    JSON_LOAD_INT_TO_SETTINGS(json_cfg, player_health_esp);
-    JSON_LOAD_INT_TO_SETTINGS(json_cfg, player_name_esp);
-    JSON_LOAD_INT_TO_SETTINGS(json_cfg, player_class_esp);
-    JSON_LOAD_INT_TO_SETTINGS(json_cfg, player_weapon_esp);
-    JSON_LOAD_INT_TO_SETTINGS(json_cfg, building_esp);
-    JSON_LOAD_INT_TO_SETTINGS(json_cfg, building_esp_type);
-    JSON_LOAD_INT_TO_SETTINGS(json_cfg, building_box_esp);
-    JSON_LOAD_INT_TO_SETTINGS(json_cfg, building_hp_esp);
-    JSON_LOAD_INT_TO_SETTINGS(json_cfg, building_name_esp);
-    JSON_LOAD_INT_TO_SETTINGS(json_cfg, ammobox_esp);
-    JSON_LOAD_INT_TO_SETTINGS(json_cfg, healthpack_esp);
+    JSON_SETTINGS_READ_INT(json_cfg, player_esp);
+    JSON_SETTINGS_READ_INT(json_cfg, player_box_esp);
+    JSON_SETTINGS_READ_INT(json_cfg, skeleton_esp);
+    JSON_SETTINGS_READ_INT(json_cfg, player_health_esp);
+    JSON_SETTINGS_READ_INT(json_cfg, player_name_esp);
+    JSON_SETTINGS_READ_INT(json_cfg, player_class_esp);
+    JSON_SETTINGS_READ_INT(json_cfg, player_weapon_esp);
+    JSON_SETTINGS_READ_INT(json_cfg, building_esp);
+    JSON_SETTINGS_READ_INT(json_cfg, building_esp_type);
+    JSON_SETTINGS_READ_INT(json_cfg, building_box_esp);
+    JSON_SETTINGS_READ_INT(json_cfg, building_hp_esp);
+    JSON_SETTINGS_READ_INT(json_cfg, building_name_esp);
+    JSON_SETTINGS_READ_INT(json_cfg, ammobox_esp);
+    JSON_SETTINGS_READ_INT(json_cfg, healthpack_esp);
 
-    JSON_LOAD_INT_TO_SETTINGS(json_cfg, aimbot);
-    JSON_LOAD_FLOAT_TO_SETTINGS(json_cfg, aim_fov);
-    JSON_LOAD_INT_TO_SETTINGS(json_cfg, aim_silent);
+    JSON_SETTINGS_READ_INT(json_cfg, aimbot);
+    JSON_SETTINGS_READ_FLOAT(json_cfg, aim_fov);
+    JSON_SETTINGS_READ_INT(json_cfg, aim_silent);
 
-    JSON_LOAD_INT_TO_SETTINGS(json_cfg, bhop);
-    JSON_LOAD_INT_TO_SETTINGS(json_cfg, autostrafe);
-    JSON_LOAD_INT_TO_SETTINGS(json_cfg, autostab);
-    JSON_LOAD_INT_TO_SETTINGS(json_cfg, watermark);
-    JSON_LOAD_INT_TO_SETTINGS(json_cfg, speclist);
+    JSON_SETTINGS_READ_INT(json_cfg, bhop);
+    JSON_SETTINGS_READ_INT(json_cfg, autostrafe);
+    JSON_SETTINGS_READ_INT(json_cfg, autostab);
+    JSON_SETTINGS_READ_INT(json_cfg, watermark);
+    JSON_SETTINGS_READ_INT(json_cfg, speclist);
 
-    JSON_LOAD_COL_TO_SETTINGS(json_cfg, col_friend_esp);
-    JSON_LOAD_COL_TO_SETTINGS(json_cfg, col_enemy_esp);
-    JSON_LOAD_COL_TO_SETTINGS(json_cfg, col_friend_build);
-    JSON_LOAD_COL_TO_SETTINGS(json_cfg, col_enemy_build);
-    JSON_LOAD_COL_TO_SETTINGS(json_cfg, col_ammobox_esp);
-    JSON_LOAD_COL_TO_SETTINGS(json_cfg, col_healthpack_esp);
+    JSON_SETTINGS_READ_COL(json_cfg, col_friend_esp);
+    JSON_SETTINGS_READ_COL(json_cfg, col_enemy_esp);
+    JSON_SETTINGS_READ_COL(json_cfg, col_friend_build);
+    JSON_SETTINGS_READ_COL(json_cfg, col_enemy_build);
+    JSON_SETTINGS_READ_COL(json_cfg, col_ammobox_esp);
+    JSON_SETTINGS_READ_COL(json_cfg, col_healthpack_esp);
 
     free(json_cfg_str);
     cJSON_Delete(json_cfg);
