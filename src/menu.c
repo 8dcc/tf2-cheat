@@ -44,6 +44,16 @@ static inline void free_configs(char* config_list[MAX_CFGS], int config_num);
         cur_tab = idx;             \
     RESET_BUTTON_COLOR();
 
+#define FLOAT_SLIDER(STRING, MIN, SETTING, MAX, STEP)                \
+    do {                                                             \
+        char* tmpPtr = malloc(strlen(STRING) + sizeof(" (999999)")); \
+        sprintf(tmpPtr, "%s (%.0f)", STRING, SETTING);               \
+        nk_layout_row_dynamic(ctx, 15, 2);                           \
+        nk_label(ctx, tmpPtr, NK_TEXT_LEFT);                         \
+        nk_slider_float(ctx, MIN, &SETTING, MAX, STEP);              \
+        free(tmpPtr);                                                \
+    } while (0);
+
 /*----------------------------------------------------------------------------*/
 
 struct nk_context* ctx         = NULL;
@@ -169,6 +179,16 @@ static inline void tab_esp(void) {
     nk_checkbox_label(ctx, "Healing items ESP", &settings.healthpack_esp);
 }
 
+static inline void tab_aim(void) {
+    nk_layout_row_dynamic(ctx, 15, 1);
+    nk_checkbox_label(ctx, "Aimbot", &settings.aimbot);
+
+    FLOAT_SLIDER("Aimbot FOV", 0.f, settings.aim_fov, 180.f, 0.5f);
+
+    nk_layout_row_dynamic(ctx, 15, 1);
+    nk_checkbox_label(ctx, "Silent", &settings.aim_silent);
+}
+
 static inline void tab_misc(void) {
     nk_layout_row_dynamic(ctx, 15, 1);
     nk_checkbox_label(ctx, "Bhop", &settings.bhop);
@@ -273,12 +293,13 @@ void menu_render(void) {
 
     if (nk_begin(ctx, "Enoch", nk_rect(MENU_X, MENU_Y, MENU_W, MENU_H),
                  MENU_FLAGS)) {
-        nk_layout_row_dynamic(ctx, 20, 4);
+        nk_layout_row_dynamic(ctx, 20, 5);
 
         ADD_TAB(0, "ESP");
-        ADD_TAB(1, "Misc");
-        ADD_TAB(2, "Colors");
-        ADD_TAB(3, "Config");
+        ADD_TAB(1, "Aim");
+        ADD_TAB(2, "Misc");
+        ADD_TAB(3, "Colors");
+        ADD_TAB(4, "Config");
 
         nk_layout_row_dynamic(ctx, 5, 1);
         nk_spacing(ctx, 0); /* ----------------------------  */
@@ -289,12 +310,15 @@ void menu_render(void) {
                 tab_esp();
                 break;
             case 1:
-                tab_misc();
+                tab_aim();
                 break;
             case 2:
-                tab_colors();
+                tab_misc();
                 break;
             case 3:
+                tab_colors();
+                break;
+            case 4:
                 tab_config();
                 break;
         }
