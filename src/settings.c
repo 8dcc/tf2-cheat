@@ -31,6 +31,7 @@ Settings settings = {
     /* Aim */
     .aimbot            = false,
     .aim_fov           = 0.f,
+    .aim_smooth        = 1.f,
     .aim_silent        = false,
     .aim_off_spectated = false,
 
@@ -117,6 +118,7 @@ void save_config(const char* filename) {
 
     JSON_SETTINGS_WRITE_INT(json_cfg, aimbot);
     JSON_SETTINGS_WRITE_FLOAT(json_cfg, aim_fov);
+    JSON_SETTINGS_WRITE_FLOAT(json_cfg, aim_smooth);
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_silent);
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_off_spectated);
 
@@ -301,6 +303,7 @@ void load_config(const char* filename) {
 
     JSON_SETTINGS_READ_INT(json_cfg, aimbot);
     JSON_SETTINGS_READ_FLOAT(json_cfg, aim_fov);
+    JSON_SETTINGS_READ_FLOAT(json_cfg, aim_smooth);
     JSON_SETTINGS_READ_INT(json_cfg, aim_silent);
     JSON_SETTINGS_READ_INT(json_cfg, aim_off_spectated);
 
