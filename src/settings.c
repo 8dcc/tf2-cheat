@@ -28,6 +28,11 @@ Settings settings = {
     .ammobox_esp    = false,
     .healthpack_esp = false,
 
+    /* Aim */
+    .aimbot     = false,
+    .aim_fov    = 0.f,
+    .aim_silent = false,
+
     /* Misc */
     .bhop       = false,
     .autostrafe = OFF,
@@ -56,6 +61,9 @@ Settings settings = {
 #define JSON_ADD_INT_FROM_SETTINGS(PARENT, ITEM)                \
     if (!cJSON_AddNumberToObject(PARENT, #ITEM, settings.ITEM)) \
         SAVE_ABORT("save_config: error saving \"settings.%s\"\n", #ITEM);
+
+#define JSON_ADD_FLOAT_FROM_SETTINGS(PARENT, ITEM) \
+    JSON_ADD_INT_FROM_SETTINGS(PARENT, ITEM)
 
 /* Create json_ITEM object with rbga float values, add that object to PARENT */
 #define JSON_ADD_COL_FROM_SETTINGS(PARENT, ITEM)                     \
@@ -105,6 +113,10 @@ void save_config(const char* filename) {
     JSON_ADD_INT_FROM_SETTINGS(json_cfg, building_name_esp);
     JSON_ADD_INT_FROM_SETTINGS(json_cfg, ammobox_esp);
     JSON_ADD_INT_FROM_SETTINGS(json_cfg, healthpack_esp);
+
+    JSON_ADD_INT_FROM_SETTINGS(json_cfg, aimbot);
+    JSON_ADD_FLOAT_FROM_SETTINGS(json_cfg, aim_fov);
+    JSON_ADD_INT_FROM_SETTINGS(json_cfg, aim_silent);
 
     JSON_ADD_INT_FROM_SETTINGS(json_cfg, bhop);
     JSON_ADD_INT_FROM_SETTINGS(json_cfg, autostrafe);
@@ -172,6 +184,12 @@ void save_config(const char* filename) {
     if (!cJSON_IsNumber(json_##ITEM))                                       \
         LOAD_ABORT("load_config: setting \"%s\" is not a number\n", #ITEM); \
     settings.ITEM = json_##ITEM->valueint;
+
+#define JSON_LOAD_FLOAT_TO_SETTINGS(PARENT, ITEM)                           \
+    cJSON* json_##ITEM = cJSON_GetObjectItemCaseSensitive(PARENT, #ITEM);   \
+    if (!cJSON_IsNumber(json_##ITEM))                                       \
+        LOAD_ABORT("load_config: setting \"%s\" is not a number\n", #ITEM); \
+    settings.ITEM = json_##ITEM->valuedouble;
 
 #define JSON_LOAD_COL_TO_SETTINGS(PARENT, ITEM)                                \
     cJSON* json_##ITEM = cJSON_GetObjectItemCaseSensitive(PARENT, #ITEM);      \
@@ -260,6 +278,10 @@ void load_config(const char* filename) {
     JSON_LOAD_INT_TO_SETTINGS(json_cfg, building_name_esp);
     JSON_LOAD_INT_TO_SETTINGS(json_cfg, ammobox_esp);
     JSON_LOAD_INT_TO_SETTINGS(json_cfg, healthpack_esp);
+
+    JSON_LOAD_INT_TO_SETTINGS(json_cfg, aimbot);
+    JSON_LOAD_FLOAT_TO_SETTINGS(json_cfg, aim_fov);
+    JSON_LOAD_INT_TO_SETTINGS(json_cfg, aim_silent);
 
     JSON_LOAD_INT_TO_SETTINGS(json_cfg, bhop);
     JSON_LOAD_INT_TO_SETTINGS(json_cfg, autostrafe);

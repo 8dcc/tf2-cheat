@@ -41,6 +41,11 @@ typedef struct {
     int ammobox_esp;
     int healthpack_esp;
 
+    /* Aim */
+    int aimbot;
+    float aim_fov;
+    int aim_silent;
+
     /* Misc */
     int bhop;
     int autostrafe;
