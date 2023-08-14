@@ -76,55 +76,43 @@ void spectator_list(void) {
 
         static char converted[sizeof("[Freeze] ") + MAX_PLAYER_NAME_LENGTH];
 
-        /* j will track position inside converted[], k inside pinfo.name[] */
-        int j = 0, k = 0;
+        /* Actual location of the player name inside converted[] */
+        char* name_pos = converted;
 
         switch (obs_mode) {
             default:
             case OBS_MODE_IN_EYE:
                 strcpy(converted, "[1st] ");
-                j += sizeof("[1st] ") - 1;
+                name_pos += sizeof("[1st] ") - 1;
                 break;
             case OBS_MODE_CHASE:
                 strcpy(converted, "[3rd] ");
-                j += sizeof("[3rd] ") - 1;
+                name_pos += sizeof("[3rd] ") - 1;
                 break;
             case OBS_MODE_ROAMING:
                 strcpy(converted, "[Free] ");
-                j += sizeof("[Free] ") - 1;
+                name_pos += sizeof("[Free] ") - 1;
                 break;
             case OBS_MODE_FREEZECAM:
                 strcpy(converted, "[Freeze] ");
-                j += sizeof("[Freeze] ") - 1;
+                name_pos += sizeof("[Freeze] ") - 1;
                 break;
             case OBS_MODE_DEATHCAM:
                 strcpy(converted, "[Death] ");
-                j += sizeof("[Death] ") - 1;
+                name_pos += sizeof("[Death] ") - 1;
                 break;
             case OBS_MODE_FIXED:
                 strcpy(converted, "[Fixed] ");
-                j += sizeof("[Fixed] ") - 1;
+                name_pos += sizeof("[Fixed] ") - 1;
                 break;
             case OBS_MODE_POI: /* Point of interest (game objective, etc.) */
                 strcpy(converted, "[Poi] ");
-                j += sizeof("[Poi] ") - 1;
+                name_pos += sizeof("[Poi] ") - 1;
                 break;
         }
 
-        do {
-            uint32_t c = pinfo.name[k];
-
-            if (c <= 0x7F) {
-                converted[j++] = c;
-            } else {
-                /* Multibyte char, print '?' and skip second byte.
-                 * TODO: Add multibyte char support for russian names, etc. */
-                converted[j++] = '?';
-
-                if (pinfo.name[k + 1] > 0x7F)
-                    k++;
-            }
-        } while (pinfo.name[k++] != '\0');
+        /* Replace multibyte chars with '?' */
+        convert_player_name(name_pos, pinfo.name);
 
         draw_text(spec_x, spec_y, false, g_fonts.main.id,
                   (rgba_t){ 200, 200, 200, 255 }, converted);

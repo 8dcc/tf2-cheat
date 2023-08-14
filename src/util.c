@@ -255,6 +255,25 @@ void get_text_size(HFont f, const char* str, int* w, int* h) {
     METHOD_ARGS(i_surface, GetTextSize, f, wstr, w, h);
 }
 
+void convert_player_name(char* dst, const char* src) {
+    int dst_p = 0, src_p = 0;
+
+    do {
+        uint32_t c = src[src_p];
+
+        if (c <= 0x7F) {
+            dst[dst_p++] = c;
+        } else {
+            /* Multibyte char, print '?' and skip second byte.
+             * TODO: Add multibyte char support for russian names, etc. */
+            dst[dst_p++] = '?';
+
+            if ((uint32_t)src[src_p + 1] > 0x7F)
+                src_p++;
+        }
+    } while (src[src_p++] != '\0'); /* Exit when we copy '\0' */
+}
+
 /*----------------------------------------------------------------------------*/
 
 /* clang-format off */
