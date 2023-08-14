@@ -112,8 +112,18 @@ void spectator_list(void) {
         }
 
         do {
-            uint32_t c     = pinfo.name[k];
-            converted[j++] = c <= 0x7F ? c : '?';
+            uint32_t c = pinfo.name[k];
+
+            if (c <= 0x7F) {
+                converted[j++] = c;
+            } else {
+                /* Multibyte char, print '?' and skip second byte.
+                 * TODO: Add multibyte char support for russian names, etc. */
+                converted[j++] = '?';
+
+                if (pinfo.name[k + 1] > 0x7F)
+                    k++;
+            }
         } while (pinfo.name[k++] != '\0');
 
         draw_text(spec_x, spec_y, false, g_fonts.main.id,
