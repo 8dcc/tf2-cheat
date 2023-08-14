@@ -27,6 +27,9 @@ void autobackstab(usercmd_t* cmd) {
 #define SPEC_LINE_H 14
 
 void spectator_list(void) {
+    /* Reset global even if spec list is disabled */
+    g.spectated_1st = false;
+
     if (!settings.speclist || !g.localplayer || !g.IsInGame)
         return;
 
@@ -84,6 +87,9 @@ void spectator_list(void) {
             case OBS_MODE_IN_EYE:
                 strcpy(converted, "[1st] ");
                 name_pos += sizeof("[1st] ") - 1;
+
+                /* Used by aimbot if settings.aim_off_spectated is enabled */
+                g.spectated_1st = true;
                 break;
             case OBS_MODE_CHASE:
                 strcpy(converted, "[3rd] ");

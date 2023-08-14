@@ -121,6 +121,9 @@ typedef struct {
     VMatrix w2s_vmatrix;
     Entity* ents[2049];
     Entity* localplayer;
+
+    /* Updated in EngineVGui::Paint() -> spectator_list() */
+    bool spectated_1st;
 } global_cache_t;
 
 /*----------------------------------------------------------------------------*/
