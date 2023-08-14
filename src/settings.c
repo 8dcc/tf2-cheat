@@ -29,9 +29,10 @@ Settings settings = {
     .healthpack_esp = false,
 
     /* Aim */
-    .aimbot     = false,
-    .aim_fov    = 0.f,
-    .aim_silent = false,
+    .aimbot            = false,
+    .aim_fov           = 0.f,
+    .aim_silent        = false,
+    .aim_off_spectated = false,
 
     /* Misc */
     .bhop       = false,
@@ -117,6 +118,7 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_INT(json_cfg, aimbot);
     JSON_SETTINGS_WRITE_FLOAT(json_cfg, aim_fov);
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_silent);
+    JSON_SETTINGS_WRITE_INT(json_cfg, aim_off_spectated);
 
     JSON_SETTINGS_WRITE_INT(json_cfg, bhop);
     JSON_SETTINGS_WRITE_INT(json_cfg, autostrafe);
@@ -300,6 +302,7 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_INT(json_cfg, aimbot);
     JSON_SETTINGS_READ_FLOAT(json_cfg, aim_fov);
     JSON_SETTINGS_READ_INT(json_cfg, aim_silent);
+    JSON_SETTINGS_READ_INT(json_cfg, aim_off_spectated);
 
     JSON_SETTINGS_READ_INT(json_cfg, bhop);
     JSON_SETTINGS_READ_INT(json_cfg, autostrafe);

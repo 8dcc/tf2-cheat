@@ -45,6 +45,7 @@ typedef struct {
     int aimbot;
     float aim_fov;
     int aim_silent;
+    int aim_off_spectated;
 
     /* Misc */
     int bhop;
