@@ -4,10 +4,6 @@
 #+author: 8dcc
 
 The cheat currently has the following features:
-- BunnyHop
-- Autostrafe
-  - Legit
-  - Rage
 - ESP
   - Player ESP
     - Toggle friends only/enemies only/all
@@ -25,5 +21,15 @@ The cheat currently has the following features:
     - Building name (type of building)
   - Ammo ESP
   - Custom colors
-- Spectator list
+- Aimbot
+  - Custom FOV
+  - Smoothing
+  - Silent
+  - Disable if spectated in 1st person
+- BunnyHop
+- Autostrafe
+  - Legit
+  - Rage
 - Spy autostab
+- Spectator list
+- Watermark
