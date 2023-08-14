@@ -235,7 +235,7 @@ static inline void tab_config(void) {
     if (nk_button_label(ctx, "Create and save"))
         save_config(cfg_name);
 
-    nk_layout_row_dynamic(ctx, 8, 1);
+    nk_layout_row_dynamic(ctx, 12, 1);
     nk_spacing(ctx, 0); /* ----------------------------  */
 
     /* Get config list from dir and display them */
