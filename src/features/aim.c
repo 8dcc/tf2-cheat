@@ -96,11 +96,12 @@ void aimbot(usercmd_t* cmd) {
     vec3_t best_delta = get_closest_delta(engine_viewangles);
 
     if (!vec_is_zero(best_delta)) {
-        /* NOTE: We can divide the best delta here to add smoothing */
-        /* TODO: Add smoothing */
-        cmd->viewangles.x = engine_viewangles.x + best_delta.x;
-        cmd->viewangles.y = engine_viewangles.y + best_delta.y;
-        cmd->viewangles.z = engine_viewangles.z + best_delta.z;
+        const float aim_smooth =
+          (settings.aim_smooth >= 1.f) ? settings.aim_smooth : 1.f;
+
+        cmd->viewangles.x = engine_viewangles.x + best_delta.x / aim_smooth;
+        cmd->viewangles.y = engine_viewangles.y + best_delta.y / aim_smooth;
+        cmd->viewangles.z = engine_viewangles.z + best_delta.z / aim_smooth;
     }
 
     if (!settings.aim_silent)
