@@ -278,20 +278,25 @@ void convert_player_name(char* dst, const char* src) {
 
 /* clang-format off */
 #define MUL_ROW(matrix, idx, vec) \
-    (matrix->m[idx][0] * vec.x +  \
-     matrix->m[idx][1] * vec.y +  \
-     matrix->m[idx][2] * vec.z +  \
-     matrix->m[idx][3])
+    (matrix.m[idx][0] * vec.x +   \
+     matrix.m[idx][1] * vec.y +   \
+     matrix.m[idx][2] * vec.z +   \
+     matrix.m[idx][3])
 /* clang-format on */
 
 bool world_to_screen(vec3_t vec, vec2_t* screen) {
     if (vec_is_zero(vec))
         return false;
 
-    /* Get viewmatrix */
-    const VMatrix* matrix = METHOD(i_engine, WorldToScreenMatrix);
-    if (!matrix)
+    /* Get player view and viewmatrix */
+    static ViewSetup player_view;
+    if (!METHOD_ARGS(i_baseclient, GetPlayerView, &player_view))
         return false;
+
+    VMatrix matrix;                 /* Used */
+    static VMatrix w2v, v2pr, w2px; /* Unused */
+    METHOD_ARGS(i_renderview, GetMatricesForView, &player_view, &w2v, &v2pr,
+                &matrix, &w2px);
 
     float w = MUL_ROW(matrix, 3, vec);
     if (w < 0.01f)
