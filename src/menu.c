@@ -18,9 +18,17 @@
 static inline int fill_configs(char* config_list[MAX_CFGS]);
 static inline void free_configs(char* config_list[MAX_CFGS], int config_num);
 
-#define RESET_BUTTON_COLOR()                                        \
-    ctx->style.button.normal.data.color = nk_rgba(50, 50, 50, 255); \
-    ctx->style.button.hover.data.color  = nk_rgba(40, 40, 40, 255);
+#define RESET_BUTTON_COLOR()                                           \
+    ctx->style.button.normal.data.color = nk_rgba(50, 50, 50, 255);    \
+    ctx->style.button.hover.data.color  = nk_rgba(40, 40, 40, 255);    \
+    ctx->style.button.text_normal       = nk_rgba(175, 175, 175, 255); \
+    ctx->style.button.text_hover        = nk_rgba(175, 175, 175, 255); \
+    ctx->style.button.text_active       = nk_rgba(175, 175, 175, 255);
+
+#define SET_BUTTON_TEXT_COLOR(col)       \
+    ctx->style.button.text_normal = col; \
+    ctx->style.button.text_hover  = col; \
+    ctx->style.button.text_active = col;
 
 #define CHECK_TAB_COLOR(idx)                                            \
     if (idx == cur_tab) {                                               \
@@ -243,9 +251,17 @@ static inline void tab_config(void) {
     nk_combobox(ctx, (const char**)config_list, config_num, &selected_config,
                 15, combo_size);
 
+    /* User selected last item, then deleted file, reset selected number */
+    if (selected_config >= config_num)
+        selected_config = 0;
+
     nk_layout_row_dynamic(ctx, 22, 2);
-    if (nk_button_label(ctx, "Save"))
+
+    SET_BUTTON_TEXT_COLOR(nk_rgba(185, 34, 34, 255));
+    if (nk_button_label(ctx, "Save (Overwrite)"))
         save_config(config_list[selected_config]);
+    RESET_BUTTON_COLOR();
+
     if (nk_button_label(ctx, "Load"))
         load_config(config_list[selected_config]);
 
