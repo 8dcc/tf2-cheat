@@ -84,6 +84,10 @@ void aimbot(usercmd_t* cmd) {
     if (!settings.aimbot || !(cmd->buttons & IN_ATTACK))
         return;
 
+    /* We are being spectated in 1st person and we want to hide it */
+    if (settings.aim_off_spectated && g.spectated_1st)
+        return;
+
     /* Calculate delta with the engine viewangles, not with the cmd ones */
     vec3_t engine_viewangles;
     METHOD_ARGS(i_engine, GetViewAngles, &engine_viewangles);

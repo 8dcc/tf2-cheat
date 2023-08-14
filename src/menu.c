@@ -187,6 +187,7 @@ static inline void tab_aim(void) {
 
     nk_layout_row_dynamic(ctx, 15, 1);
     nk_checkbox_label(ctx, "Silent", &settings.aim_silent);
+    nk_checkbox_label(ctx, "Disable if spectated", &settings.aim_off_spectated);
 }
 
 static inline void tab_misc(void) {
