@@ -96,6 +96,42 @@ static inline studiobone_t* studiohdr_pBone(studiohdr_t* thisptr, const int i) {
     return (studiobone_t*)(((void*)thisptr) + thisptr->boneindex) + i;
 }
 
+typedef struct {
+    int x;
+    int m_nUnscaledX;
+    int y;
+    int m_nUnscaledY;
+    int width;
+    int m_nUnscaledWidth;
+    int height;
+    int m_eStereoEye;
+    int m_nUnscaledHeight;
+    bool m_bOrtho;
+    float m_OrthoLeft;
+    float m_OrthoTop;
+    float m_OrthoRight;
+    float m_OrthoBottom;
+    float fov;
+    float fovViewmodel;
+    vec3_t origin;
+    vec3_t angles; /* QAngle */
+    float zNear;
+    float zFar;
+    float zNearViewmodel;
+    float zFarViewmodel;
+    bool m_bRenderToSubrectOfLargerScreen;
+    float m_flAspectRatio;
+    bool m_bOffCenter;
+    float m_flOffCenterTop;
+    float m_flOffCenterBottom;
+    float m_flOffCenterLeft;
+    float m_flOffCenterRight;
+    bool m_bDoBloomAndToneMapping;
+    bool m_bCacheFullSceneState;
+    bool m_bViewToProjectionOverride;
+    VMatrix m_ViewToProjection;
+} ViewSetup;
+
 enum EFontFlags {
     FONTFLAG_NONE         = 0x000,
     FONTFLAG_ITALIC       = 0x001,
@@ -155,6 +191,7 @@ typedef struct EntityList EntityList;
 typedef struct EngineVGui EngineVGui;
 typedef struct MatSurface MatSurface;
 typedef struct IVModelInfo IVModelInfo;
+typedef struct RenderView RenderView;
 typedef struct ClientMode ClientMode;
 
 typedef struct {
@@ -165,6 +202,8 @@ typedef struct {
     void (*HudProcessInput)(BaseClient*, bool bActive); /* 10 */
     PAD(4 * 24);
     void (*FrameStageNotify)(BaseClient*, ClientFrameStage_t curStage); /* 35 */
+    PAD(4 * 23);
+    bool (*GetPlayerView)(BaseClient*, ViewSetup* playerView); /* 59  */
 } VMT_BaseClient;
 
 struct BaseClient {
@@ -254,6 +293,19 @@ typedef struct {
 
 struct IVModelInfo {
     VMT_IVModelInfo* vmt;
+};
+
+typedef struct {
+    PAD(4 * 50);
+    void (*GetMatricesForView)(RenderView*, const ViewSetup* view,
+                               VMatrix* pWorldToView,
+                               VMatrix* pViewToProjection,
+                               VMatrix* pWorldToProjection,
+                               VMatrix* pWorldToPixels); /* 50 */
+} VMT_RenderView;
+
+struct RenderView {
+    VMT_RenderView* vmt;
 };
 
 typedef struct {
