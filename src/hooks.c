@@ -85,12 +85,19 @@ void h_FrameStageNotify(BaseClient* thisptr, ClientFrameStage_t curStage) {
 
 bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
                   usercmd_t* cmd) {
-    bool ret = ORIGINAL(CreateMove, thisptr, flInputSampleTime, cmd);
+    bool ret          = ORIGINAL(CreateMove, thisptr, flInputSampleTime, cmd);
+    vec3_t old_angles = cmd->viewangles;
+
+    /* If original returned true, update engine viewangles to cmd viewangles */
+    if (ret)
+        METHOD_ARGS(i_engine, SetViewAngles, &cmd->viewangles);
 
     bhop(cmd);
     autobackstab(cmd);
 
-    return ret;
+    correct_movement(cmd, old_angles);
+    vec_clamp(&cmd->viewangles);
+    return false;
 }
 
 /*----------------------------------------------------------------------------*/
