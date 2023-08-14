@@ -278,13 +278,13 @@ static inline void tab_config(void) {
 
     nk_layout_row_dynamic(ctx, 22, 2);
 
+    if (nk_button_label(ctx, "Load"))
+        load_config(config_list[selected_config]);
+
     SET_BUTTON_TEXT_COLOR(nk_rgba(185, 34, 34, 255));
     if (nk_button_label(ctx, "Save (Overwrite)"))
         save_config(config_list[selected_config]);
     RESET_BUTTON_COLOR();
-
-    if (nk_button_label(ctx, "Load"))
-        load_config(config_list[selected_config]);
 
     free_configs(config_list, config_num);
 }
