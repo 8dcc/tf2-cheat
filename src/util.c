@@ -288,25 +288,15 @@ bool world_to_screen(vec3_t vec, vec2_t* screen) {
     if (vec_is_zero(vec))
         return false;
 
-    /* Get player view and viewmatrix */
-    static ViewSetup player_view;
-    if (!METHOD_ARGS(i_baseclient, GetPlayerView, &player_view))
-        return false;
-
-    VMatrix matrix;                 /* Used */
-    static VMatrix w2v, v2pr, w2px; /* Unused */
-    METHOD_ARGS(i_renderview, GetMatricesForView, &player_view, &w2v, &v2pr,
-                &matrix, &w2px);
-
-    float w = MUL_ROW(matrix, 3, vec);
+    float w = MUL_ROW(g.w2s_vmatrix, 3, vec);
     if (w < 0.01f)
         return false;
 
     int scr_w, scr_h;
     METHOD_ARGS(i_engine, GetScreenSize, &scr_w, &scr_h);
 
-    screen->x = (scr_w / 2.0f) * (1.0f + MUL_ROW(matrix, 0, vec) / w);
-    screen->y = (scr_h / 2.0f) * (1.0f - MUL_ROW(matrix, 1, vec) / w);
+    screen->x = (scr_w / 2.0f) * (1.0f + MUL_ROW(g.w2s_vmatrix, 0, vec) / w);
+    screen->y = (scr_h / 2.0f) * (1.0f - MUL_ROW(g.w2s_vmatrix, 1, vec) / w);
 
     return true;
 }

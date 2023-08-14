@@ -94,21 +94,6 @@ enum model_indexes {
 };
 
 typedef struct {
-    /* Index updated in LevelInitPostEntity */
-    int localidx;
-    int mdl_idx[MDLIDX_ARR_SZ];
-
-    /* Updated in FrameStageNotify(FRAME_NET_UPDATE_END) */
-    bool IsAlive;
-    bool IsInGame;
-    bool IsConnected;
-    int MaxClients;
-    int MaxEntities;
-    Entity* ents[2049];
-    Entity* localplayer;
-} global_cache_t;
-
-typedef struct {
     const char* name; /* System name (From "fc-list" command) */
     int tall;
     int weight;
@@ -121,6 +106,22 @@ typedef struct {
     font_t small;
     font_t tiny;
 } font_list_t;
+
+typedef struct {
+    /* Index updated in LevelInitPostEntity */
+    int localidx;
+    int mdl_idx[MDLIDX_ARR_SZ];
+
+    /* Updated in FrameStageNotify(FRAME_NET_UPDATE_END) */
+    bool IsAlive;
+    bool IsInGame;
+    bool IsConnected;
+    int MaxClients;
+    int MaxEntities;
+    VMatrix w2s_vmatrix;
+    Entity* ents[2049];
+    Entity* localplayer;
+} global_cache_t;
 
 /*----------------------------------------------------------------------------*/
 /* Global variables */
@@ -160,5 +161,6 @@ void fonts_init(void);
 void cache_get_model_idx(void);
 void cache_reset(void);
 void cache_update(void);
+void update_w2s_viewmatrix(void);
 
 #endif /* GLOBALS_H_ */

@@ -101,6 +101,9 @@ void h_Paint(EngineVGui* thisptr, uint32_t mode) {
     if (mode & PAINT_UIPANELS) {
         StartDrawing(i_surface);
 
+        /* Update viewmatrix used by world_to_screen each frame */
+        update_w2s_viewmatrix();
+
         esp();
         spectator_list();
 

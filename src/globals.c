@@ -227,12 +227,13 @@ void cache_update(void) {
     g.IsConnected = METHOD(i_engine, IsConnected);
 
     if (g.IsInGame) {
+        g.MaxClients  = METHOD(i_engine, GetMaxClients);
+        g.MaxEntities = METHOD(i_entitylist, GetMaxEntities);
+
+        /* Store localplayer even if not alive */
         g.localplayer = METHOD_ARGS(i_entitylist, GetClientEntity, g.localidx);
         if (g.localplayer)
             g.IsAlive = METHOD(g.localplayer, IsAlive);
-
-        g.MaxClients  = METHOD(i_engine, GetMaxClients);
-        g.MaxEntities = METHOD(i_entitylist, GetMaxEntities);
 
         /* First iterate players */
         for (int i = 1; i <= g.MaxClients; i++) {
@@ -254,8 +255,19 @@ void cache_update(void) {
             if (!ent || METHOD(net, IsDormant))
                 continue;
 
-            /* TODO: Only store the kinds of entities that we use */
             g.ents[i] = ent;
         }
     }
+}
+
+/* Called in EngineVGui::Paint() before any ESP */
+void update_w2s_viewmatrix(void) {
+    /* Get player view and viewmatrix */
+    static ViewSetup player_view;
+    if (!METHOD_ARGS(i_baseclient, GetPlayerView, &player_view))
+        return;
+
+    static VMatrix w2v, v2pr, w2px; /* Unused */
+    METHOD_ARGS(i_renderview, GetMatricesForView, &player_view, &w2v, &v2pr,
+                &g.w2s_vmatrix, &w2px);
 }
