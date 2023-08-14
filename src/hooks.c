@@ -93,6 +93,7 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
         METHOD_ARGS(i_engine, SetViewAngles, &cmd->viewangles);
 
     bhop(cmd);
+    aimbot(cmd);
     autobackstab(cmd);
 
     correct_movement(cmd, old_angles);
