@@ -75,3 +75,20 @@ void bhop(usercmd_t* cmd) {
         }
     }
 }
+
+void correct_movement(usercmd_t* cmd, vec3_t old_angles) {
+    float old_y = old_angles.y + (old_angles.y < 0 ? 360 : 0);
+    float new_y = cmd->viewangles.y + (cmd->viewangles.y < 0 ? 360 : 0);
+    float delta = (new_y < old_y) ? fabsf(new_y - old_y)
+                                  : 360 - fabsf(new_y - old_y);
+
+    delta = 360 - delta;
+
+    float forward = cmd->forwardmove;
+    float side    = cmd->sidemove;
+
+    cmd->forwardmove =
+      cos(DEG2RAD(delta)) * forward + cos(DEG2RAD(delta + 90)) * side;
+    cmd->sidemove =
+      sin(DEG2RAD(delta)) * forward + sin(DEG2RAD(delta + 90)) * side;
+}
