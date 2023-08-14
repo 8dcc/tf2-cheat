@@ -45,9 +45,8 @@ static vec3_t get_closest_delta(vec3_t viewangles) {
     vec3_t local_eyes = METHOD(g.localplayer, EyePosition);
 
     /* These 2 vars are used to store the best target across iterations.
-     * NOTE: The default value of best_fov will be the aimbot fov
-     * TODO: Add FOV slider */
-    float best_fov    = 20;
+     * NOTE: The initial value of best_fov will be the aimbot fov */
+    float best_fov    = settings.aim_fov;
     vec3_t best_delta = { 0, 0, 0 };
 
     for (int i = 1; i <= g.MaxClients; i++) {
@@ -82,7 +81,7 @@ static vec3_t get_closest_delta(vec3_t viewangles) {
 
 void aimbot(usercmd_t* cmd) {
     /* TODO: Check if !can_shoot() */
-    if (!true || !(cmd->buttons & IN_ATTACK))
+    if (!settings.aimbot || !(cmd->buttons & IN_ATTACK))
         return;
 
     /* Calculate delta with the engine viewangles, not with the cmd ones */
@@ -100,6 +99,6 @@ void aimbot(usercmd_t* cmd) {
         cmd->viewangles.z = engine_viewangles.z + best_delta.z;
     }
 
-    /* TODO: Add check box for silent aim, if false run: */
-    /* METHOD_ARGS(i_engine, SetViewAngles, engine_viewangles); */
+    if (!settings.aim_silent)
+        METHOD_ARGS(i_engine, SetViewAngles, &cmd->viewangles);
 }
