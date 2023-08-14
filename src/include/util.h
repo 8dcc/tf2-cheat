@@ -32,6 +32,11 @@
 #define CLAMP(val, min, max) \
     (((val) > (max)) ? (max) : (((val) < (min)) ? (min) : (val)))
 
+#define VEC_COPY(dst, src) \
+    (dst).x = (src).x;     \
+    (dst).y = (src).y;     \
+    (dst).z = (src).z;
+
 /* nk_colorf -> rgba_t */
 #define NK2COL(COLORF)                                               \
     ((rgba_t){ (COLORF).r * 255, (COLORF).g * 255, (COLORF).b * 255, \
