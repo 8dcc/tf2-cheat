@@ -12,6 +12,12 @@
 #define MENU_FLAGS      NK_WINDOW_BORDER | NK_WINDOW_TITLE | NK_WINDOW_MOVABLE
 #define WATERMARK_FLAGS NK_WINDOW_BORDER | NK_WINDOW_NO_SCROLLBAR
 
+/* Defined at the bottom of this file */
+#define MAX_CFGS     30
+#define MAX_CFG_NAME 100
+static inline int fill_configs(char* config_list[MAX_CFGS]);
+static inline void free_configs(char* config_list[MAX_CFGS], int config_num);
+
 #define RESET_BUTTON_COLOR()                                        \
     ctx->style.button.normal.data.color = nk_rgba(50, 50, 50, 255); \
     ctx->style.button.hover.data.color  = nk_rgba(40, 40, 40, 255);
@@ -205,35 +211,6 @@ static inline void tab_colors(void) {
       nk_color_picker(ctx, settings.col_healthpack_esp, NK_RGBA);
 }
 
-#define MAX_CFGS 30
-
-static inline int fill_configs(char* config_list[MAX_CFGS]) {
-    DIR* d = opendir(CONFIG_FOLDER);
-    if (!d)
-        return 0;
-
-    int i = 0;
-    struct dirent* dir;
-    while (i < MAX_CFGS && (dir = readdir(d)) != NULL) {
-        if (dir->d_type == DT_REG) {
-            config_list[i] = calloc(strlen(dir->d_name), sizeof(char));
-            strcpy(config_list[i], dir->d_name);
-            i++;
-        }
-    }
-
-    closedir(d);
-
-    return i >= MAX_CFGS ? i - 1 : i;
-}
-
-static inline void free_configs(char* config_list[MAX_CFGS], int config_num) {
-    for (int i = 0; i < config_num; i++)
-        free(config_list[i]);
-}
-
-#define MAX_CFG_NAME 100
-
 static inline void tab_config(void) {
     static char cfg_name[MAX_CFG_NAME] = { '\0' };
     static char* config_list[MAX_CFGS];
@@ -319,4 +296,31 @@ void watermark_render(void) {
         nk_label(ctx, "8dcc/tf2-cheat", NK_TEXT_CENTERED);
     }
     nk_end(ctx);
+}
+
+/*----------------------------------------------------------------------------*/
+
+static inline int fill_configs(char* config_list[MAX_CFGS]) {
+    DIR* d = opendir(CONFIG_FOLDER);
+    if (!d)
+        return 0;
+
+    int i = 0;
+    struct dirent* dir;
+    while (i < MAX_CFGS && (dir = readdir(d)) != NULL) {
+        if (dir->d_type == DT_REG) {
+            config_list[i] = calloc(strlen(dir->d_name), sizeof(char));
+            strcpy(config_list[i], dir->d_name);
+            i++;
+        }
+    }
+
+    closedir(d);
+
+    return i >= MAX_CFGS ? i - 1 : i;
+}
+
+static inline void free_configs(char* config_list[MAX_CFGS], int config_num) {
+    for (int i = 0; i < config_num; i++)
+        free(config_list[i]);
 }
