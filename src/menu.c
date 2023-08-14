@@ -44,14 +44,14 @@ static inline void free_configs(char* config_list[MAX_CFGS], int config_num);
         cur_tab = idx;             \
     RESET_BUTTON_COLOR();
 
-#define FLOAT_SLIDER(STRING, MIN, SETTING, MAX, STEP)                \
-    do {                                                             \
-        char* tmpPtr = malloc(strlen(STRING) + sizeof(" (999999)")); \
-        sprintf(tmpPtr, "%s (%.0f)", STRING, SETTING);               \
-        nk_layout_row_dynamic(ctx, 15, 2);                           \
-        nk_label(ctx, tmpPtr, NK_TEXT_LEFT);                         \
-        nk_slider_float(ctx, MIN, &SETTING, MAX, STEP);              \
-        free(tmpPtr);                                                \
+#define FLOAT_SLIDER(STRING, MIN, SETTING, MAX, STEP)                   \
+    do {                                                                \
+        char* tmpPtr = malloc(strlen(STRING) + sizeof(" (999999.99)")); \
+        sprintf(tmpPtr, "%s (%.2f)", STRING, SETTING);                  \
+        nk_layout_row_dynamic(ctx, 15, 2);                              \
+        nk_label(ctx, tmpPtr, NK_TEXT_LEFT);                            \
+        nk_slider_float(ctx, MIN, &SETTING, MAX, STEP);                 \
+        free(tmpPtr);                                                   \
     } while (0);
 
 /*----------------------------------------------------------------------------*/
@@ -184,6 +184,7 @@ static inline void tab_aim(void) {
     nk_checkbox_label(ctx, "Aimbot", &settings.aimbot);
 
     FLOAT_SLIDER("Aimbot FOV", 0.f, settings.aim_fov, 180.f, 0.5f);
+    FLOAT_SLIDER("Aimbot smoothing", 1.f, settings.aim_smooth, 50.f, 0.5f);
 
     nk_layout_row_dynamic(ctx, 15, 1);
     nk_checkbox_label(ctx, "Silent", &settings.aim_silent);
