@@ -200,7 +200,8 @@ typedef struct {
     void (*LevelShutdown)(BaseClient*);       /* 7 */
     PAD(4 * 2);
     void (*HudProcessInput)(BaseClient*, bool bActive); /* 10 */
-    PAD(4 * 24);
+    void (*HudUpdate)(BaseClient*, bool bActive);       /* 11 */
+    PAD(4 * 23);
     void (*FrameStageNotify)(BaseClient*, ClientFrameStage_t curStage); /* 35 */
     PAD(4 * 23);
     bool (*GetPlayerView)(BaseClient*, ViewSetup* playerView); /* 59  */
@@ -316,5 +317,23 @@ typedef struct {
 struct ClientMode {
     VMT_ClientMode* vmt;
 };
+
+typedef struct {
+    float realtime;
+    int framecount;
+    float absoluteframetime;
+    float curtime;
+    float frametime;
+    int maxClients;
+    int tickcount;
+    float interval_per_tick;
+    float interpolation_amount;
+    int simTicksThisFrame;
+    int network_protocol;
+    void* pSaveData; /* CSaveRestoreData* */
+    bool m_bClient;
+    int nTimestampNetworkingBase;
+    int nTimestampRandomizeWindow;
+} CGlobalVars;
 
 #endif /* SDK_H_ */
