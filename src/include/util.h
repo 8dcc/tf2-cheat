@@ -62,6 +62,7 @@ float angle_delta_rad(float a, float b);
 #define dot_product(a, b) ((a).x * (b).x + (a).y * (b).y + (a).z * (b).z)
 
 bool IsBehindAndFacingTarget(Entity* target);
+bool can_shoot(Entity* ent);
 
 rgba_t col_scale(rgba_t c, float factor);
 void draw_text(int x, int y, bool center, HFont f, rgba_t c, const char* str);

@@ -210,6 +210,15 @@ bool IsBehindAndFacingTarget(Entity* target) {
             flViewAnglesDot > -0.3f);
 }
 
+bool can_shoot(Entity* ent) {
+    Weapon* weapon = METHOD(ent, GetWeapon);
+    if (!weapon)
+        return false;
+
+    return ent->flNextAttack <= c_globalvars->curtime &&
+           weapon->flNextPrimaryAttack <= c_globalvars->curtime;
+}
+
 /*----------------------------------------------------------------------------*/
 
 rgba_t col_scale(rgba_t c, float factor) {
