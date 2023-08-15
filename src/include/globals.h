@@ -44,6 +44,10 @@
     extern VMT_##type* oVMTi_##name; \
     extern VMT_##type* nVMTi_##name;
 
+#define DECL_CLASS(type, name) type* i_##name = NULL;
+
+#define DECL_CLASS_EXTERN(type, name) extern type* i_##name;
+
 #define DECL_SDL_FUNC(retType, name, ...)     \
     typedef retType (*name##_t)(__VA_ARGS__); \
     extern name##_t* name##Ptr;
