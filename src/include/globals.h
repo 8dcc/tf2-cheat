@@ -33,6 +33,7 @@
  * i_*     | interface ptr (global scope)
  * oVMTi_* | original vmt pointer (will be replaced with our own vmt)
  * nVMTi_* | new vmt pointer allocated by us
+ * c_*     | class ptr with no VMT
  */
 #define DECL_INTF(type, name)        \
     type* i_##name           = NULL; \
@@ -44,9 +45,9 @@
     extern VMT_##type* oVMTi_##name; \
     extern VMT_##type* nVMTi_##name;
 
-#define DECL_CLASS(type, name) type* i_##name = NULL;
+#define DECL_CLASS(type, name) type* c_##name = NULL;
 
-#define DECL_CLASS_EXTERN(type, name) extern type* i_##name;
+#define DECL_CLASS_EXTERN(type, name) extern type* c_##name;
 
 #define DECL_SDL_FUNC(retType, name, ...)     \
     typedef retType (*name##_t)(__VA_ARGS__); \
@@ -157,6 +158,7 @@ DECL_INTF_EXTERN(MatSurface, surface);
 DECL_INTF_EXTERN(IVModelInfo, modelinfo);
 DECL_INTF_EXTERN(RenderView, renderview);
 DECL_INTF_EXTERN(ClientMode, clientmode);
+DECL_CLASS_EXTERN(CGlobalVars, globalvars);
 
 /*----------------------------------------------------------------------------*/
 /* Functions from globals.c */

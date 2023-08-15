@@ -52,6 +52,7 @@ DECL_INTF(MatSurface, surface);
 DECL_INTF(IVModelInfo, modelinfo);
 DECL_INTF(RenderView, renderview);
 DECL_INTF(ClientMode, clientmode);
+DECL_CLASS(CGlobalVars, globalvars);
 
 /*----------------------------------------------------------------------------*/
 
@@ -62,6 +63,17 @@ static inline ClientMode* get_clientmode(void) {
     void* func_ptr      = i_baseclient->vmt->HudProcessInput;
     void* g_pClientMode = *(void**)(func_ptr + byte_offset); /* 60 1F 06 02 */
     ClientMode* ret     = *(ClientMode**)g_pClientMode;
+
+    return ret;
+}
+
+/* Same as clientmode but with a different function and offset */
+static inline CGlobalVars* get_globalvars(void) {
+    const int byte_offset = 9;
+
+    void* func_ptr   = i_baseclient->vmt->HudUpdate;
+    void* gpGlobals  = *(void**)(func_ptr + byte_offset); /* 70 33 F9 01 */
+    CGlobalVars* ret = *(CGlobalVars**)gpGlobals;
 
     return ret;
 }
@@ -100,6 +112,12 @@ bool globals_init(void) {
     i_clientmode = get_clientmode();
     if (!i_clientmode || !i_clientmode->vmt) {
         fprintf(stderr, "globals_init: couldn't load i_clientmodebms\n");
+        return false;
+    }
+
+    c_globalvars = get_globalvars();
+    if (!c_globalvars) {
+        fprintf(stderr, "globals_init: couldn't load c_globalvars\n");
         return false;
     }
 
