@@ -80,8 +80,8 @@ static vec3_t get_closest_delta(vec3_t viewangles) {
 }
 
 void aimbot(usercmd_t* cmd) {
-    /* TODO: Check if !can_shoot() */
-    if (!settings.aimbot || !(cmd->buttons & IN_ATTACK))
+    if (!settings.aimbot || !(cmd->buttons & IN_ATTACK) || !g.localplayer ||
+        !can_shoot(g.localplayer))
         return;
 
     /* We are being spectated in 1st person and we want to hide it */
