@@ -11,11 +11,14 @@
 You can see a full list of features in [[./FEATURES.org][FEATURES.org]].
 
 * Dependencies
+We need the 32 bit SDL2 and GLEW libraries for linking the final shared object.
+
 The cheat uses the [[https://github.com/slavfox/Cozette][Cozette Vector]] font for rendering using =ISurface=. You can
 install it with with the following command.
 
 Arch ([[https://aur.archlinux.org/packages/cozette-ttf][AUR]]):
 #+begin_src console
+$ sudo pacman -S lib32-sdl lib32-glew
 $ yay -S cozette-ttf  # Has to be ttf
 #+end_src
 
