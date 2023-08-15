@@ -564,7 +564,9 @@ struct Entity {
     vec3_t velocity; /* 0x110 */
     PAD(0x250);
     int flags; /* 0x36C */
-    PAD(0xAFC);
+    PAD(0x8E4);
+    float flNextAttack; /* 0xC54 */
+    PAD(0x214);
     vec3_t vecPunchAngle; /* 0xE6C */
     PAD(0x7B8);
     int player_class; /* 0x1630 (ETFClass) */
