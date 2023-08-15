@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <sys/stat.h>  /* mkdir */
 #include <sys/types.h> /* mkdir*/
-#include <cjson/cJSON.h>
+#include "dependencies/cJSON/cJSON.h"
 #include "include/settings.h"
 
 /*----------------------------------------------------------------------------*/
