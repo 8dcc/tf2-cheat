@@ -568,7 +568,9 @@ struct Entity {
     float flNextAttack; /* 0xC54 */
     PAD(0x214);
     vec3_t vecPunchAngle; /* 0xE6C */
-    PAD(0x7B8);
+    PAD(0x3BC);
+    int nTickBase; /* 0x1234 */
+    PAD(0x3F8);
     int player_class; /* 0x1630 (ETFClass) */
 };
 
