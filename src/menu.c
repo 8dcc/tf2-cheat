@@ -186,6 +186,12 @@ static inline void tab_aim(void) {
     FLOAT_SLIDER("Aimbot FOV", 0.f, settings.aim_fov, 180.f, 0.5f);
     FLOAT_SLIDER("Aimbot smoothing", 1.f, settings.aim_smooth, 50.f, 0.5f);
 
+    nk_layout_row_dynamic(ctx, 18, 2);
+    static const char* opts0[] = { "Head", "Torso", "Arms", "Legs" };
+    struct nk_vec2 size0       = { COMBO_DROP_W, 200 };
+    nk_label(ctx, "Aimbot hitboxes", NK_TEXT_LEFT);
+    nk_combobox(ctx, opts0, 4, &settings.aim_hitbox, 15, size0);
+
     nk_layout_row_dynamic(ctx, 15, 1);
     nk_checkbox_label(ctx, "Silent", &settings.aim_silent);
     nk_checkbox_label(ctx, "Disable if spectated", &settings.aim_off_spectated);
