@@ -194,6 +194,8 @@ static inline void tab_aim(void) {
 
     nk_layout_row_dynamic(ctx, 15, 1);
     nk_checkbox_label(ctx, "Silent", &settings.aim_silent);
+    nk_checkbox_label(ctx, "Shoot only if target",
+                      &settings.aim_shoot_if_target);
     nk_checkbox_label(ctx, "Disable if spectated", &settings.aim_off_spectated);
 }
 

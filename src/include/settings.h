@@ -54,6 +54,7 @@ typedef struct {
     float aim_smooth;
     int aim_hitbox;
     int aim_silent;
+    int aim_shoot_if_target;
     int aim_off_spectated;
 
     /* Misc */
