@@ -26,6 +26,8 @@ typedef struct {
     float x, y, z;
 } vec3_t;
 
+#define VEC_ZERO (vec3_t){ 0.f, 0.f, 0.f };
+
 typedef struct {
     float x, y, z, w;
 } vec4_t;
