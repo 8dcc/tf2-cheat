@@ -22,6 +22,13 @@ enum settings_building_type {
     BTYPE_TELEPORTER = 3,
 };
 
+enum settings_selected_hitbox {
+    SETTING_HITBOX_HEAD = 0,
+    SETTING_HITBOX_TORSO,
+    SETTING_HITBOX_ARMS,
+    SETTING_HITBOX_LEGS,
+};
+
 typedef struct {
     /* ESP */
     int player_esp;
@@ -45,6 +52,7 @@ typedef struct {
     int aimbot;
     float aim_fov;
     float aim_smooth;
+    int aim_hitbox;
     int aim_silent;
     int aim_off_spectated;
 
