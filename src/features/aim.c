@@ -130,6 +130,8 @@ void aimbot(usercmd_t* cmd) {
         cmd->viewangles.x = engine_viewangles.x + best_delta.x / aim_smooth;
         cmd->viewangles.y = engine_viewangles.y + best_delta.y / aim_smooth;
         cmd->viewangles.z = engine_viewangles.z + best_delta.z / aim_smooth;
+    } else if (settings.aim_shoot_if_target) {
+        cmd->buttons &= ~IN_ATTACK;
     }
 
     if (!settings.aim_silent)
