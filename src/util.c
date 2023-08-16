@@ -221,6 +221,23 @@ bool can_shoot(Entity* ent) {
     return ent->flNextAttack <= flTime && weapon->flNextPrimaryAttack <= flTime;
 }
 
+vec3_t center_of_hitbox(studiohdr_t* studio, matrix3x4_t* bonemat, int set,
+                        int idx) {
+    studiobbox_t* bbox = studiohdr_pHitbox(studio, set, idx);
+    if (!bbox)
+        return VEC_ZERO;
+
+    vec3_t min, max;
+    vec_transform(bbox->bbmin, &bonemat[bbox->bone], &min);
+    vec_transform(bbox->bbmax, &bonemat[bbox->bone], &max);
+
+    return (vec3_t){
+        (min.x + max.x) * 0.5f,
+        (min.y + max.y) * 0.5f,
+        (min.z + max.z) * 0.5f,
+    };
+}
+
 /*----------------------------------------------------------------------------*/
 
 rgba_t col_scale(rgba_t c, float factor) {

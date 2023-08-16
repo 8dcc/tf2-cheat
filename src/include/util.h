@@ -63,6 +63,8 @@ float angle_delta_rad(float a, float b);
 
 bool IsBehindAndFacingTarget(Entity* target);
 bool can_shoot(Entity* ent);
+vec3_t center_of_hitbox(studiohdr_t* studio, matrix3x4_t* bonemat, int set,
+                        int idx);
 
 rgba_t col_scale(rgba_t c, float factor);
 void draw_text(int x, int y, bool center, HFont f, rgba_t c, const char* str);
