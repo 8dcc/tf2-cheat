@@ -5,9 +5,6 @@
 #include "../include/globals.h"
 #include "../include/settings.h"
 
-#define VEC_ZERO      (vec3_t){ 0.f, 0.f, 0.f };
-#define HEAD_BONE_IDX 6
-
 static bool is_visible(vec3_t start, vec3_t end) {
     /* TODO: Trace ray from start to end, check if visible, etc.
      * TODO: Add ignore visible checkbox? */
@@ -17,8 +14,8 @@ static bool is_visible(vec3_t start, vec3_t end) {
     return true;
 }
 
-static vec3_t get_bone_pos(Entity* ent, int bone_idx) {
-    /* For storing the bone positions */
+#define HITBOX_SET 0
+static vec3_t get_hitbox_pos(Entity* ent, int hitbox_idx) {
     static matrix3x4_t bones[MAXSTUDIOBONES];
 
     Renderable* rend = GetRenderable(ent);
@@ -27,13 +24,15 @@ static vec3_t get_bone_pos(Entity* ent, int bone_idx) {
                      BONE_USED_BY_HITBOX, 0))
         return VEC_ZERO;
 
-    const vec3_t bone_pos = (vec3_t){
-        bones[bone_idx].m[0][3],
-        bones[bone_idx].m[1][3],
-        bones[bone_idx].m[2][3],
-    };
+    const model_t* model = METHOD(rend, GetModel);
+    if (!model)
+        return VEC_ZERO;
 
-    return bone_pos;
+    studiohdr_t* hdr = METHOD_ARGS(i_modelinfo, GetStudioModel, model);
+    if (!hdr)
+        return VEC_ZERO;
+
+    return center_of_hitbox(hdr, bones, HITBOX_SET, hitbox_idx);
 }
 
 static vec3_t get_closest_delta(vec3_t viewangles) {
@@ -56,8 +55,7 @@ static vec3_t get_closest_delta(vec3_t viewangles) {
         if (!ent || IsTeammate(ent))
             continue;
 
-        /* TODO: Get hitbox pos instead of bone */
-        vec3_t target_head = get_bone_pos(ent, HEAD_BONE_IDX);
+        vec3_t target_head = get_hitbox_pos(ent, 0);
         if (vec_is_zero(target_head))
             continue;
 
