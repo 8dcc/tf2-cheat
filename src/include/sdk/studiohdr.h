@@ -1,6 +1,36 @@
 #ifndef STUDIOHDR_H_
 #define STUDIOHDR_H_
 
+enum ETFHitbox {
+    /* Head */
+    HITBOX_HEAD,
+
+    /* Torso */
+    HITBOX_PELVIS,
+    HITBOX_SPINE0,
+    HITBOX_SPINE1,
+    HITBOX_SPINE2,
+    HITBOX_SPINE3,
+
+    /* Arms */
+    HITBOX_LEFT_UPPER_ARM,
+    HITBOX_LEFT_LOWER_ARM,
+    HITBOX_LEFT_HAND,
+    HITBOX_RIGHT_UPPER_ARM,
+    HITBOX_RIGHT_LOWER_ARM,
+    HITBOX_RIGHT_HAND,
+
+    /* Legs */
+    HITBOX_LEFT_HIP,
+    HITBOX_LEFT_KNEE,
+    HITBOX_LEFT_FOOT,
+    HITBOX_RIGHT_HIP,
+    HITBOX_RIGHT_KNEE,
+    HITBOX_RIGHT_FOOT,
+
+    HITBOX_MAX,
+};
+
 typedef struct {
     int bone;
     int group;
