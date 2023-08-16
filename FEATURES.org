@@ -24,6 +24,7 @@ The cheat currently has the following features:
 - Aimbot
   - Custom FOV
   - Smoothing
+  - Choose hitboxes
   - Silent
   - Disable if spectated in 1st person
 - BunnyHop
