@@ -70,6 +70,28 @@ typedef struct {
 } studiobone_t;
 
 typedef struct {
+    int bone;
+    int group;
+    vec3_t bbmin;
+    vec3_t bbmax;
+    int szhitboxnameindex;
+    int unused[8];
+} studiobbox_t;
+
+typedef struct {
+    int sznameindex;
+    /* pszName */
+    int numhitboxes;
+    int hitboxindex;
+    /* pHitbox */
+} studiohitboxset_t;
+
+static inline studiobbox_t* studiohitboxset_pHitbox(studiohitboxset_t* thisptr,
+                                                    int i) {
+    return (studiobbox_t*)(((void*)this) + thisptr->hitboxindex) + i;
+};
+
+typedef struct {
     int id;
     int version;
     int checksum;
@@ -86,14 +108,35 @@ typedef struct {
     int numbones;
     int boneindex;
     /* pBone(int i) */
+    int numbonecontrollers;
+    int bonecontrollerindex;
+    int numhitboxsets;
+    int hitboxsetindex;
     /* ... */
 } studiohdr_t;
 
 static inline studiobone_t* studiohdr_pBone(studiohdr_t* thisptr, const int i) {
-    if ((i < 0) || (i > (thisptr->numbones - 1)))
+    if (i < 0 || i >= thisptr->numbones)
         return NULL;
 
     return (studiobone_t*)(((void*)thisptr) + thisptr->boneindex) + i;
+}
+
+static inline studiohitboxset_t* studiohdr_hitboxSet(studiohdr_t* thisptr,
+                                                     int i) {
+    if (i < 0 || i >= thisptr->numhitboxsets)
+        return NULL;
+
+    return (studiohitboxset_t*)(((void*)thisptr) + thisptr->hitboxsetindex) + i;
+}
+
+static inline studiobbox_t* studiohdr_pHitbox(studiohdr_t* thisptr, int set,
+                                              int idx) {
+    studiohitboxset_t* hitboxset = studiohdr_hitboxSet(thisptr, set);
+    if (!hitboxset)
+        return NULL;
+
+    return (studiobbox_t*)studiohitboxset_pHitbox(hitboxset, idx);
 }
 
 typedef struct {
