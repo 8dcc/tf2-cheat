@@ -5,6 +5,27 @@
 #include "../include/globals.h"
 #include "../include/settings.h"
 
+static inline void setting_to_hitboxes(int setting, int* min, int* max) {
+    switch (setting) {
+        case SETTING_HITBOX_HEAD:
+            *min = HITBOX_HEAD;
+            *max = HITBOX_HEAD;
+            break;
+        case SETTING_HITBOX_TORSO:
+            *min = HITBOX_PELVIS;
+            *max = HITBOX_SPINE3;
+            break;
+        case SETTING_HITBOX_ARMS:
+            *min = HITBOX_LEFT_UPPER_ARM;
+            *max = HITBOX_RIGHT_HAND;
+            break;
+        case SETTING_HITBOX_LEGS:
+            *min = HITBOX_LEFT_HIP;
+            *max = HITBOX_RIGHT_FOOT;
+            break;
+    }
+}
+
 static bool is_visible(vec3_t start, vec3_t end) {
     /* TODO: Trace ray from start to end, check if visible, etc.
      * TODO: Add ignore visible checkbox? */
@@ -51,31 +72,40 @@ static vec3_t get_closest_delta(vec3_t viewangles) {
     for (int i = 1; i <= g.MaxClients; i++) {
         Entity* ent = g.ents[i];
 
-        /* TODO: Aim friendly checkbox? */
         if (!ent || IsTeammate(ent))
             continue;
 
-        vec3_t target_head = get_hitbox_pos(ent, 0);
-        if (vec_is_zero(target_head))
-            continue;
+        int minhitbox = 0, maxhitbox = 0;
+        setting_to_hitboxes(settings.aim_hitbox, &minhitbox, &maxhitbox);
 
-        if (!is_visible(local_eyes, target_head)) /* We can't see player */
-            continue;
+        for (int j = minhitbox; j <= maxhitbox; j++) {
+            vec3_t target_pos = get_hitbox_pos(ent, j);
+            if (vec_is_zero(target_pos))
+                continue;
 
-        const vec3_t enemy_angle = vec_to_ang(vec_sub(target_head, local_eyes));
-        vec3_t delta             = vec_sub(enemy_angle, viewangles);
-        vec_norm(&delta);
-        vec_clamp(&delta);
+            /* We can't see current hitbox */
+            if (!is_visible(local_eyes, target_pos))
+                continue;
 
-        float fov = hypotf(delta.x, delta.y);
-        if (fov < best_fov) {
-            best_fov = fov;
-            VEC_COPY(best_delta, delta);
+            const vec3_t enemy_angle =
+              vec_to_ang(vec_sub(target_pos, local_eyes));
+
+            vec3_t delta = vec_sub(enemy_angle, viewangles);
+            vec_norm(&delta);
+            vec_clamp(&delta);
+
+            float fov = hypotf(delta.x, delta.y);
+            if (fov < best_fov) {
+                best_fov = fov;
+                VEC_COPY(best_delta, delta);
+            }
         }
     }
 
     return best_delta;
 }
+
+/*----------------------------------------------------------------------------*/
 
 void aimbot(usercmd_t* cmd) {
     if (!settings.aimbot || !(cmd->buttons & IN_ATTACK) || !g.localplayer ||
