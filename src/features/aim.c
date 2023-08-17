@@ -137,3 +137,46 @@ void aimbot(usercmd_t* cmd) {
     if (!settings.aim_silent)
         METHOD_ARGS(i_engine, SetViewAngles, &cmd->viewangles);
 }
+
+/*----------------------------------------------------------------------------*/
+
+static inline float scale_fov_by_width(float fov, float aspect_ratio) {
+    aspect_ratio *= 0.75f;
+
+    float half_angle_rad = fov * (0.5f * M_PI / 180.f);
+    float t              = tan(half_angle_rad) * aspect_ratio;
+    float retDegrees     = (180.f / M_PI) * atan(t);
+
+    return retDegrees * 2.0f;
+}
+
+void draw_aim_fov(void) {
+    if (!settings.aimbot || !settings.aim_draw_fov || !g.localplayer ||
+        !g.IsAlive)
+        return;
+
+    /* Circle won't fit on the screen */
+    if (settings.aim_fov > 90.0f)
+        return;
+
+    int sw = 0, sh = 0;
+    METHOD_ARGS(i_engine, GetScreenSize, &sw, &sh);
+
+    /* Get localplayer fov from ViewSetup */
+    static ViewSetup playerview;
+    if (!METHOD_ARGS(i_baseclient, GetPlayerView, &playerview))
+        return;
+
+    const float unscaled_fov = playerview.fov;
+
+    /* Calculate radius */
+    const float aspect_ratio = (float)sw / (float)sh;
+    const float screen_fov   = scale_fov_by_width(unscaled_fov, aspect_ratio);
+    const float x1           = tan(DEG2RAD(settings.aim_fov));
+    const float x2           = tan(DEG2RAD(screen_fov) / 2.f);
+    const float rad          = (x1 / x2) * (sw / 2);
+
+    const rgba_t col = NK2COL(settings.col_aim_fov);
+    METHOD_ARGS(i_surface, SetColor, col.r, col.g, col.b, col.a);
+    METHOD_ARGS(i_surface, DrawCircle, sw / 2, sh / 2, rad, 255);
+}

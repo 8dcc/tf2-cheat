@@ -9,6 +9,7 @@ void esp(void);
 
 /* src/features/aim.c */
 void aimbot(usercmd_t* cmd);
+void draw_aim_fov(void);
 
 /* src/features/movement.c */
 void bhop(usercmd_t* cmd);
