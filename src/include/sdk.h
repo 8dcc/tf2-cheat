@@ -235,6 +235,9 @@ typedef struct {
     PAD(4 * 7);
     void (*GetTextSize)(MatSurface*, HFont font, const wchar_t* str, int* w,
                         int* h); /* 75 */
+    PAD(4 * 23);
+    void (*DrawCircle)(MatSurface*, int x, int y, int radius,
+                       int segments); /* 99 */
 } VMT_MatSurface;
 
 struct MatSurface {
