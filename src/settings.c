@@ -35,6 +35,7 @@ Settings settings = {
     .aim_hitbox          = SETTING_HITBOX_HEAD,
     .aim_silent          = false,
     .aim_shoot_if_target = false,
+    .aim_draw_fov        = false,
     .aim_off_spectated   = false,
 
     /* Misc */
@@ -51,6 +52,7 @@ Settings settings = {
     .col_enemy_build    = (struct nk_colorf){ 0.90f, 0.31f, 0.00f, 1.f },
     .col_ammobox_esp    = (struct nk_colorf){ 0.55f, 0.43f, 0.38f, 1.f },
     .col_healthpack_esp = (struct nk_colorf){ 0.40f, 0.73f, 0.41f, 1.f },
+    .col_aim_fov        = (struct nk_colorf){ 0.80f, 0.80f, 0.80f, 0.30f },
 };
 
 /*----------------------------------------------------------------------------*/
@@ -89,6 +91,7 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_hitbox);
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_silent);
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_shoot_if_target);
+    JSON_SETTINGS_WRITE_INT(json_cfg, aim_draw_fov);
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_off_spectated);
 
     JSON_SETTINGS_WRITE_INT(json_cfg, bhop);
@@ -103,6 +106,7 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_COL(json_cfg, col_enemy_build);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_ammobox_esp);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_healthpack_esp);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_aim_fov);
 
     /* Convert filled json object to string */
     char* json_cfg_str = cJSON_Print(json_cfg);
@@ -196,6 +200,7 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_INT(json_cfg, aim_hitbox);
     JSON_SETTINGS_READ_INT(json_cfg, aim_silent);
     JSON_SETTINGS_READ_INT(json_cfg, aim_shoot_if_target);
+    JSON_SETTINGS_READ_INT(json_cfg, aim_draw_fov);
     JSON_SETTINGS_READ_INT(json_cfg, aim_off_spectated);
 
     JSON_SETTINGS_READ_INT(json_cfg, bhop);
@@ -210,6 +215,7 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_COL(json_cfg, col_enemy_build);
     JSON_SETTINGS_READ_COL(json_cfg, col_ammobox_esp);
     JSON_SETTINGS_READ_COL(json_cfg, col_healthpack_esp);
+    JSON_SETTINGS_READ_COL(json_cfg, col_aim_fov);
 
     free(json_cfg_str);
     cJSON_Delete(json_cfg);

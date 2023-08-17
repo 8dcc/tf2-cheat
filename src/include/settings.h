@@ -55,6 +55,7 @@ typedef struct {
     int aim_hitbox;
     int aim_silent;
     int aim_shoot_if_target;
+    int aim_draw_fov;
     int aim_off_spectated;
 
     /* Misc */
@@ -71,6 +72,7 @@ typedef struct {
     struct nk_colorf col_friend_build;
     struct nk_colorf col_ammobox_esp;
     struct nk_colorf col_healthpack_esp;
+    struct nk_colorf col_aim_fov;
 } Settings;
 
 extern Settings settings;
