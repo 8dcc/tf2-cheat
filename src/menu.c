@@ -196,6 +196,7 @@ static inline void tab_aim(void) {
     nk_checkbox_label(ctx, "Silent", &settings.aim_silent);
     nk_checkbox_label(ctx, "Shoot only if target",
                       &settings.aim_shoot_if_target);
+    nk_checkbox_label(ctx, "Draw FOV circle", &settings.aim_draw_fov);
     nk_checkbox_label(ctx, "Disable if spectated", &settings.aim_off_spectated);
 }
 
@@ -222,8 +223,8 @@ static inline void tab_misc(void) {
 
 static inline void tab_colors(void) {
     nk_layout_row_dynamic(ctx, 15, 2);
-    nk_label(ctx, "Friendly player", NK_TEXT_CENTERED);
-    nk_label(ctx, "Enemy player", NK_TEXT_CENTERED);
+    nk_label(ctx, "Friendly player ESP", NK_TEXT_CENTERED);
+    nk_label(ctx, "Enemy player ESP", NK_TEXT_CENTERED);
     nk_layout_row_dynamic(ctx, 100, 2);
     settings.col_friend_esp =
       nk_color_picker(ctx, settings.col_friend_esp, NK_RGBA);
@@ -231,8 +232,8 @@ static inline void tab_colors(void) {
       nk_color_picker(ctx, settings.col_enemy_esp, NK_RGBA);
 
     nk_layout_row_dynamic(ctx, 15, 2);
-    nk_label(ctx, "Friendly building", NK_TEXT_CENTERED);
-    nk_label(ctx, "Enemy building", NK_TEXT_CENTERED);
+    nk_label(ctx, "Friendly building ESP", NK_TEXT_CENTERED);
+    nk_label(ctx, "Enemy building ESP", NK_TEXT_CENTERED);
     nk_layout_row_dynamic(ctx, 100, 2);
     settings.col_friend_build =
       nk_color_picker(ctx, settings.col_friend_build, NK_RGBA);
@@ -240,13 +241,18 @@ static inline void tab_colors(void) {
       nk_color_picker(ctx, settings.col_enemy_build, NK_RGBA);
 
     nk_layout_row_dynamic(ctx, 15, 2);
-    nk_label(ctx, "Ammo boxes", NK_TEXT_CENTERED);
-    nk_label(ctx, "Healing items", NK_TEXT_CENTERED);
+    nk_label(ctx, "Ammo boxes ESP", NK_TEXT_CENTERED);
+    nk_label(ctx, "Healing items ESP", NK_TEXT_CENTERED);
     nk_layout_row_dynamic(ctx, 100, 2);
     settings.col_ammobox_esp =
       nk_color_picker(ctx, settings.col_ammobox_esp, NK_RGBA);
     settings.col_healthpack_esp =
       nk_color_picker(ctx, settings.col_healthpack_esp, NK_RGBA);
+
+    nk_layout_row_dynamic(ctx, 15, 2);
+    nk_label(ctx, "Aimbot FOV circle", NK_TEXT_CENTERED);
+    nk_layout_row_dynamic(ctx, 100, 2);
+    settings.col_aim_fov = nk_color_picker(ctx, settings.col_aim_fov, NK_RGBA);
 }
 
 static inline void tab_config(void) {
