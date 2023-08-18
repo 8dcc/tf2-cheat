@@ -347,7 +347,9 @@ struct ModelRender {
 };
 
 typedef struct {
-    PAD(4 * 50);
+    PAD(4 * 4);
+    void (*SetBlend)(RenderView*, float blend); /* 4 */
+    PAD(4 * 45);
     void (*GetMatricesForView)(RenderView*, const ViewSetup* view,
                                VMatrix* pWorldToView,
                                VMatrix* pViewToProjection,
