@@ -5,6 +5,17 @@
 #include "../include/globals.h"
 #include "../include/settings.h"
 
+static bool valid_weapon(void) {
+    Weapon* weapon = METHOD(g.localplayer, GetWeapon);
+    if (!weapon)
+        return false;
+
+    /* For now just check if the current weapon is in a valid slot.
+     * TODO: Add projectile aimbot depending on weapon->GetDamageType */
+    int slot = METHOD(weapon, GetSlot);
+    return slot == WPN_SLOT_PRIMARY || slot == WPN_SLOT_SECONDARY;
+}
+
 static inline void setting_to_hitboxes(int setting, int* min, int* max) {
     switch (setting) {
         case SETTING_HITBOX_HEAD:
@@ -122,6 +133,9 @@ void aimbot(usercmd_t* cmd) {
 
     /* We are being spectated in 1st person and we want to hide it */
     if (settings.aim_off_spectated && g.spectated_1st)
+        return;
+
+    if (!valid_weapon())
         return;
 
     /* Calculate delta with the engine viewangles, not with the cmd ones */
