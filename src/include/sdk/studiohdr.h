@@ -75,7 +75,7 @@ typedef struct {
     int unused[8];
 } studiobone_t;
 
-typedef struct {
+struct studiohdr_t {
     int id;
     int version;
     int checksum;
@@ -97,7 +97,7 @@ typedef struct {
     int numhitboxsets;
     int hitboxsetindex;
     /* ... */
-} studiohdr_t;
+};
 
 static inline studiobone_t* studiohdr_pBone(studiohdr_t* thisptr, const int i) {
     if (i < 0 || i >= thisptr->numbones)
