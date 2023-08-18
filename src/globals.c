@@ -130,6 +130,7 @@ bool globals_init(void) {
     CLONE_VMT(BaseClient, i_baseclient);
     CLONE_VMT(ClientMode, i_clientmode);
     CLONE_VMT(EngineVGui, i_enginevgui);
+    CLONE_VMT(ModelRender, i_modelrender);
 
     dlclose(h_client);
     dlclose(h_engine);
