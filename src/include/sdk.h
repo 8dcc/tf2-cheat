@@ -16,6 +16,8 @@
 /*----------------------------------------------------------------------------*/
 /* Data structures and enums */
 
+#include "sdk/enums.h"
+
 typedef char byte;
 
 typedef struct {
@@ -91,67 +93,6 @@ typedef struct {
     VMatrix m_ViewToProjection;
 } ViewSetup;
 
-/* clang-format off */
-enum {
-    CONTENTS_EMPTY                = 0x0,
-    CONTENTS_SOLID                = 0x1,
-    CONTENTS_WINDOW               = 0x2,
-    CONTENTS_AUX                  = 0x4,
-    CONTENTS_GRATE                = 0x8,
-    CONTENTS_SLIME                = 0x10,
-    CONTENTS_WATER                = 0x20,
-    CONTENTS_BLOCKLOS             = 0x40,
-    CONTENTS_OPAQUE               = 0x80,
-    LAST_VISIBLE_CONTENTS         = 0x80,
-    ALL_VISIBLE_CONTENTS          = (LAST_VISIBLE_CONTENTS | (LAST_VISIBLE_CONTENTS - 1)),
-    CONTENTS_TESTFOGVOLUME        = 0x100,
-    CONTENTS_UNUSED               = 0x200,
-    CONTENTS_UNUSED6              = 0x400,
-    CONTENTS_TEAM1                = 0x800,
-    CONTENTS_TEAM2                = 0x1000,
-    CONTENTS_IGNORE_NODRAW_OPAQUE = 0x2000,
-    CONTENTS_MOVEABLE             = 0x4000,
-    CONTENTS_AREAPORTAL           = 0x8000,
-    CONTENTS_PLAYERCLIP           = 0x10000,
-    CONTENTS_MONSTERCLIP          = 0x20000,
-    CONTENTS_CURRENT_0            = 0x40000,
-    CONTENTS_CURRENT_90           = 0x80000,
-    CONTENTS_CURRENT_180          = 0x100000,
-    CONTENTS_CURRENT_270          = 0x200000,
-    CONTENTS_CURRENT_UP           = 0x400000,
-    CONTENTS_CURRENT_DOWN         = 0x800000,
-    CONTENTS_ORIGIN               = 0x1000000,
-    CONTENTS_MONSTER              = 0x2000000,
-    CONTENTS_DEBRIS               = 0x4000000,
-    CONTENTS_DETAIL               = 0x8000000,
-    CONTENTS_TRANSLUCENT          = 0x10000000,
-    CONTENTS_LADDER               = 0x20000000,
-    CONTENTS_HITBOX               = 0x40000000,
-};
-
-#define MASK_ALL                   (0xFFFFFFFF)
-#define MASK_SOLID                 (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_WINDOW|CONTENTS_MONSTER|CONTENTS_GRATE)
-#define MASK_PLAYERSOLID           (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_PLAYERCLIP|CONTENTS_WINDOW|CONTENTS_MONSTER|CONTENTS_GRATE)
-#define MASK_NPCSOLID              (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_MONSTERCLIP|CONTENTS_WINDOW|CONTENTS_MONSTER|CONTENTS_GRATE)
-#define MASK_WATER                 (CONTENTS_WATER|CONTENTS_MOVEABLE|CONTENTS_SLIME)
-#define MASK_OPAQUE                (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_OPAQUE)
-#define MASK_OPAQUE_AND_NPCS       (MASK_OPAQUE|CONTENTS_MONSTER)
-#define MASK_BLOCKLOS              (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_BLOCKLOS)
-#define MASK_BLOCKLOS_AND_NPCS     (MASK_BLOCKLOS|CONTENTS_MONSTER)
-#define MASK_VISIBLE               (MASK_OPAQUE|CONTENTS_IGNORE_NODRAW_OPAQUE)
-#define MASK_VISIBLE_AND_NPCS      (MASK_OPAQUE_AND_NPCS|CONTENTS_IGNORE_NODRAW_OPAQUE)
-#define MASK_SHOT                  (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_MONSTER|CONTENTS_WINDOW|CONTENTS_DEBRIS|CONTENTS_HITBOX)
-#define MASK_SHOT_HULL             (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_MONSTER|CONTENTS_WINDOW|CONTENTS_DEBRIS|CONTENTS_GRATE)
-#define MASK_SHOT_PORTAL           (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_WINDOW|CONTENTS_MONSTER)
-#define MASK_SOLID_BRUSHONLY       (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_WINDOW|CONTENTS_GRATE)
-#define MASK_PLAYERSOLID_BRUSHONLY (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_WINDOW|CONTENTS_PLAYERCLIP|CONTENTS_GRATE)
-#define MASK_NPCSOLID_BRUSHONLY    (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_WINDOW|CONTENTS_MONSTERCLIP|CONTENTS_GRATE)
-#define MASK_NPCWORLDSTATIC        (CONTENTS_SOLID|CONTENTS_WINDOW|CONTENTS_MONSTERCLIP|CONTENTS_GRATE)
-#define MASK_SPLITAREAPORTAL       (CONTENTS_WATER|CONTENTS_SLIME)
-#define MASK_CURRENT               (CONTENTS_CURRENT_0|CONTENTS_CURRENT_90|CONTENTS_CURRENT_180|CONTENTS_CURRENT_270|CONTENTS_CURRENT_UP|CONTENTS_CURRENT_DOWN)
-#define MASK_DEADSOLID             (CONTENTS_SOLID|CONTENTS_PLAYERCLIP|CONTENTS_WINDOW|CONTENTS_GRATE)
-/* clang-format on */
-
 typedef struct {
     VectorAligned m_Start;
     VectorAligned m_Delta;
@@ -195,15 +136,9 @@ typedef struct {
     int hitbox;
 } Trace_t;
 
-enum TraceType {
-    TRACE_EVERYTHING = 0,
-    TRACE_WORLD_ONLY,
-    TRACE_ENTITIES_ONLY,
-    TRACE_EVERYTHING_FILTER_PROPS,
-};
-
 typedef struct TraceFilter TraceFilter;
 typedef struct Entity Entity;
+
 typedef struct {
     bool (*ShouldHitEntity)(TraceFilter*, Entity* ent, int mask); /* 0 */
     int (*GetTraceType)(TraceFilter*);                            /* 1 */
@@ -214,54 +149,28 @@ struct TraceFilter {
     const struct Entity* skip;
 };
 
-enum EFontFlags {
-    FONTFLAG_NONE         = 0x000,
-    FONTFLAG_ITALIC       = 0x001,
-    FONTFLAG_UNDERLINE    = 0x002,
-    FONTFLAG_STRIKEOUT    = 0x004,
-    FONTFLAG_SYMBOL       = 0x008,
-    FONTFLAG_ANTIALIAS    = 0x010,
-    FONTFLAG_GAUSSIANBLUR = 0x020,
-    FONTFLAG_ROTARY       = 0x040,
-    FONTFLAG_DROPSHADOW   = 0x080,
-    FONTFLAG_ADDITIVE     = 0x100,
-    FONTFLAG_OUTLINE      = 0x200,
-    FONTFLAG_CUSTOM       = 0x400,
-    FONTFLAG_BITMAP       = 0x800,
-};
-
-/* "drawType" argument in ISurface::DrawPrintText */
-typedef enum {
-    FONT_DRAW_DEFAULT = 0,
-    FONT_DRAW_NONADDITIVE,
-    FONT_DRAW_ADDITIVE,
-    FONT_DRAW_TYPE_COUNT = 2,
-} FontDrawType_t;
-
-/* "curStage" argument for IBaseClientDLL::FrameStageNotify */
-typedef enum {
-    FRAME_UNDEFINED = -1,
-    FRAME_START,
-    FRAME_NET_UPDATE_START,
-    FRAME_NET_UPDATE_POSTDATAUPDATE_START,
-    FRAME_NET_UPDATE_POSTDATAUPDATE_END,
-    FRAME_NET_UPDATE_END,
-    FRAME_RENDER_START,
-    FRAME_RENDER_END,
-} ClientFrameStage_t;
-
-/* "mode" argument of EngineVGui::Paint */
-enum paint_modes {
-    PAINT_UIPANELS     = (1 << 0),
-    PAINT_INGAMEPANELS = (1 << 1),
-    PAINT_CURSOR       = (1 << 2),
-};
+typedef struct {
+    void* vmt;
+    int command_number;
+    int tick_count;
+    vec3_t viewangles;
+    float forwardmove;
+    float sidemove;
+    float upmove;
+    int buttons;
+    uint8_t impulse;
+    int weaponselect;
+    int weaponsubtype;
+    int random_seed;
+    short mousedx;
+    short mousedy;
+    bool hasbeenpredicted;
+} usercmd_t;
 
 /*----------------------------------------------------------------------------*/
 /* Classes */
 
 #include "sdk/studiohdr.h"
-#include "sdk/usercmd_t.h"
 #include "sdk/entity.h"
 #include "sdk/weapon.h"
 
