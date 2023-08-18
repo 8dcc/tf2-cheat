@@ -26,13 +26,21 @@ static inline void setting_to_hitboxes(int setting, int* min, int* max) {
     }
 }
 
-static bool is_visible(vec3_t start, vec3_t end) {
-    /* TODO: Trace ray from start to end, check if visible, etc.
-     * TODO: Add ignore visible checkbox? */
-    (void)start;
-    (void)end;
+static bool is_visible(vec3_t start, vec3_t end, Entity* target) {
+    if (settings.aim_ignore_visible)
+        return true;
 
-    return true;
+    TraceFilter filter;
+    TraceFilterInit(&filter, g.localplayer);
+
+    Ray_t ray;
+    RayInit(&ray, start, end);
+
+    Trace_t trace;
+    METHOD_ARGS(i_enginetrace, TraceRay, &ray, MASK_SHOT | CONTENTS_GRATE,
+                &filter, &trace);
+
+    return trace.entity == target || trace.fraction > 0.97f;
 }
 
 #define HITBOX_SET 0
@@ -84,7 +92,7 @@ static vec3_t get_closest_delta(vec3_t viewangles) {
                 continue;
 
             /* We can't see current hitbox */
-            if (!is_visible(local_eyes, target_pos))
+            if (!is_visible(local_eyes, target_pos, ent))
                 continue;
 
             const vec3_t enemy_angle =
