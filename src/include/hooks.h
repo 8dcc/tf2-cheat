@@ -34,9 +34,11 @@ bool hooks_restore(void);
 
 DECL_HOOK_EXTERN(void, LevelShutdown, BaseClient*);
 DECL_HOOK_EXTERN(void, LevelInitPostEntity, BaseClient*);
-DECL_HOOK_EXTERN(void, FrameStageNotify, BaseClient*, ClientFrameStage_t cur);
+DECL_HOOK_EXTERN(void, FrameStageNotify, BaseClient*, ClientFrameStage_t);
 DECL_HOOK_EXTERN(bool, CreateMove, ClientMode*, float, usercmd_t*);
 DECL_HOOK_EXTERN(void, Paint, EngineVGui*, uint32_t);
+DECL_HOOK_EXTERN(void, DrawModelExecute, ModelRender*, const DrawModelState_t*,
+                 const ModelRenderInfo_t*, matrix3x4_t*);
 
 extern SwapWindow_t ho_SwapWindow;
 extern PollEvent_t ho_PollEvent;

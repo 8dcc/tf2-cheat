@@ -12,6 +12,7 @@ DECL_HOOK(LevelInitPostEntity);
 DECL_HOOK(FrameStageNotify);
 DECL_HOOK(CreateMove);
 DECL_HOOK(Paint);
+DECL_HOOK(DrawModelExecute);
 
 SwapWindow_t ho_SwapWindow = NULL;
 PollEvent_t ho_PollEvent   = NULL;
@@ -24,6 +25,7 @@ bool hooks_init(void) {
     HOOK(i_baseclient->vmt, FrameStageNotify);
     HOOK(i_clientmode->vmt, CreateMove);
     HOOK(i_enginevgui->vmt, Paint);
+    HOOK(i_modelrender->vmt, DrawModelExecute);
 
     HOOK_SDL(SwapWindow);
     HOOK_SDL(PollEvent);
@@ -118,6 +120,16 @@ void h_Paint(EngineVGui* thisptr, uint32_t mode) {
         }
         FinishDrawing(i_surface);
     }
+}
+
+/*----------------------------------------------------------------------------*/
+
+void h_DrawModelExecute(ModelRender* thisptr, const DrawModelState_t* state,
+                        const ModelRenderInfo_t* pInfo,
+                        matrix3x4_t* pCustomBoneToWorld) {
+    ORIGINAL(DrawModelExecute, thisptr, state, pInfo, pCustomBoneToWorld);
+
+    printf("%s\n", pInfo->pModel->name);
 }
 
 /*----------------------------------------------------------------------------*/
