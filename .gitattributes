@@ -1,2 +1,3 @@
 # Don't detect libs in language detection
-/src/dependencies linguist-detectable=false
+/src/dependencies/cJSON/* linguist-detectable=false
+/src/dependencies/nuklear/* linguist-detectable=false
