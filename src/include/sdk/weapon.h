@@ -6,8 +6,13 @@
 typedef struct Weapon Weapon;
 
 typedef struct {
-    PAD(4 * 400);
-    const char* (*GetName)(Weapon*);
+    PAD(4 * 398);
+    int (*GetSlot)(Weapon*); /* 398 */
+    PAD(4 * 1);
+    const char* (*GetName)(Weapon*); /* 400 */
+    PAD(4 * 48);
+    int (*GetWeaponId)(Weapon*);   /* 449 */
+    int (*GetDamageType)(Weapon*); /* 450 */
 } VMT_Weapon;
 
 struct Weapon {
