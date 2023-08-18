@@ -178,6 +178,45 @@ float angle_delta_rad(float a, float b) {
     return delta;
 }
 
+float vec_length_sqr(vec3_t v) {
+    return ((v.x * v.x) + (v.y * v.y) + (v.z + v.z));
+}
+
+/*----------------------------------------------------------------------------*/
+
+void RayInit(Ray_t* ray, vec3_t start, vec3_t end) {
+    const vec3_t delta = vec_sub(end, start);
+
+    ray->m_Start       = (VectorAligned){ start.x, start.y, start.z, 0.f };
+    ray->m_Delta       = (VectorAligned){ delta.x, delta.y, delta.z, 0.f };
+    ray->m_StartOffset = (VectorAligned){ 0.f, 0.f, 0.f, 0.f };
+    ray->m_Extents     = (VectorAligned){ 0.f, 0.f, 0.f, 0.f };
+
+    ray->m_IsRay   = true;
+    ray->m_IsSwept = delta.x || delta.y || delta.z;
+}
+
+static bool TraceFilterShouldHitEntity(TraceFilter* thisptr, Entity* ent,
+                                       int mask) {
+    (void)mask;
+    return ent != thisptr->skip;
+}
+
+static int TraceFilterGetTraceType(TraceFilter* thisptr) {
+    (void)thisptr;
+    return TRACE_EVERYTHING;
+}
+
+void TraceFilterInit(TraceFilter* filter, Entity* entity) {
+    static VMT_TraceFilter vmt = {
+        .ShouldHitEntity = TraceFilterShouldHitEntity,
+        .GetTraceType    = TraceFilterGetTraceType,
+    };
+
+    filter->vmt  = &vmt;
+    filter->skip = entity;
+}
+
 /*----------------------------------------------------------------------------*/
 
 bool IsBehindAndFacingTarget(Entity* target) {

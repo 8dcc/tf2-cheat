@@ -59,7 +59,11 @@ void vec_transform(vec3_t v, matrix3x4_t* mat, vec3_t* out);
 vec3_t vec_to_ang(vec3_t v);
 vec3_t ang_to_vec(vec3_t a);
 float angle_delta_rad(float a, float b);
+float vec_length_sqr(vec3_t v);
 #define dot_product(a, b) ((a).x * (b).x + (a).y * (b).y + (a).z * (b).z)
+
+void RayInit(Ray_t* ray, vec3_t start, vec3_t end);
+void TraceFilterInit(TraceFilter* filter, Entity* entity);
 
 bool IsBehindAndFacingTarget(Entity* target);
 bool can_shoot(Entity* ent);
