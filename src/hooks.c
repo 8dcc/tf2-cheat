@@ -127,9 +127,8 @@ void h_Paint(EngineVGui* thisptr, uint32_t mode) {
 void h_DrawModelExecute(ModelRender* thisptr, const DrawModelState_t* state,
                         const ModelRenderInfo_t* pInfo,
                         matrix3x4_t* pCustomBoneToWorld) {
-    ORIGINAL(DrawModelExecute, thisptr, state, pInfo, pCustomBoneToWorld);
-
-    printf("%s\n", pInfo->pModel->name);
+    if (!chams(state, pInfo, pCustomBoneToWorld))
+        ORIGINAL(DrawModelExecute, thisptr, state, pInfo, pCustomBoneToWorld);
 }
 
 /*----------------------------------------------------------------------------*/
