@@ -158,6 +158,7 @@ DECL_INTF_EXTERN(MatSurface, surface);
 DECL_INTF_EXTERN(IVModelInfo, modelinfo);
 DECL_INTF_EXTERN(RenderView, renderview);
 DECL_INTF_EXTERN(EngineTrace, enginetrace);
+DECL_INTF_EXTERN(ModelRender, modelrender);
 DECL_INTF_EXTERN(ClientMode, clientmode);
 DECL_CLASS_EXTERN(CGlobalVars, globalvars);
 

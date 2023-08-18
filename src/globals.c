@@ -52,6 +52,7 @@ DECL_INTF(MatSurface, surface);
 DECL_INTF(IVModelInfo, modelinfo);
 DECL_INTF(RenderView, renderview);
 DECL_INTF(EngineTrace, enginetrace);
+DECL_INTF(ModelRender, modelrender);
 DECL_INTF(ClientMode, clientmode);
 DECL_CLASS(CGlobalVars, globalvars);
 
@@ -110,6 +111,7 @@ bool globals_init(void) {
     GET_INTERFACE(RenderView*, i_renderview, h_engine, "VEngineRenderView014");
     GET_INTERFACE(EngineTrace*, i_enginetrace, h_engine,
                   "EngineTraceClient003");
+    GET_INTERFACE(ModelRender*, i_modelrender, h_engine, "VEngineModel016");
 
     /* Other interfaces */
     i_clientmode = get_clientmode();
