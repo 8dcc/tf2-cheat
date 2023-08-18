@@ -14,6 +14,21 @@
     instance->vmt->method(instance, __VA_ARGS__)
 
 /*----------------------------------------------------------------------------*/
+/* Forward declarations */
+
+typedef struct TraceFilter TraceFilter;
+typedef struct Entity Entity;
+typedef struct BaseClient BaseClient;
+typedef struct EngineClient EngineClient;
+typedef struct EntityList EntityList;
+typedef struct EngineVGui EngineVGui;
+typedef struct MatSurface MatSurface;
+typedef struct IVModelInfo IVModelInfo;
+typedef struct EngineTrace EngineTrace;
+typedef struct RenderView RenderView;
+typedef struct ClientMode ClientMode;
+
+/*----------------------------------------------------------------------------*/
 /* Data structures and enums */
 
 #include "sdk/enums.h"
@@ -136,9 +151,6 @@ typedef struct {
     int hitbox;
 } Trace_t;
 
-typedef struct TraceFilter TraceFilter;
-typedef struct Entity Entity;
-
 typedef struct {
     bool (*ShouldHitEntity)(TraceFilter*, Entity* ent, int mask); /* 0 */
     int (*GetTraceType)(TraceFilter*);                            /* 1 */
@@ -176,16 +188,6 @@ typedef struct {
 
 /*----------------------------------------------------------------------------*/
 /* Interfaces */
-
-typedef struct BaseClient BaseClient;
-typedef struct EngineClient EngineClient;
-typedef struct EntityList EntityList;
-typedef struct EngineVGui EngineVGui;
-typedef struct MatSurface MatSurface;
-typedef struct IVModelInfo IVModelInfo;
-typedef struct EngineTrace EngineTrace;
-typedef struct RenderView RenderView;
-typedef struct ClientMode ClientMode;
 
 typedef struct {
     PAD(4 * 6);
