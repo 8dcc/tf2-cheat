@@ -62,7 +62,6 @@ float angle_delta_rad(float a, float b);
 float vec_length_sqr(vec3_t v);
 #define dot_product(a, b) ((a).x * (b).x + (a).y * (b).y + (a).z * (b).z)
 
-bool IsBehindAndFacingTarget(Entity* target);
 bool can_shoot(Entity* ent);
 vec3_t center_of_hitbox(studiohdr_t* studio, matrix3x4_t* bonemat, int set,
                         int idx);

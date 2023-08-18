@@ -184,36 +184,6 @@ float vec_length_sqr(vec3_t v) {
 
 /*----------------------------------------------------------------------------*/
 
-bool IsBehindAndFacingTarget(Entity* target) {
-    if (!g.IsAlive)
-        return false;
-
-    /* Get a vector from owner origin to target origin */
-    vec3_t vecToTarget;
-    vecToTarget   = vec_sub(*METHOD(target, WorldSpaceCenter),
-                            *METHOD(g.localplayer, WorldSpaceCenter));
-    vecToTarget.z = 0.0f;
-    vec_norm(&vecToTarget);
-
-    /* Get owner forward view vector */
-    vec3_t vecOwnerForward = ang_to_vec(METHOD(g.localplayer, EyeAngles));
-    vecOwnerForward.z      = 0.0f;
-    vec_norm(&vecOwnerForward);
-
-    /* Get target forward view vector */
-    vec3_t vecTargetForward = ang_to_vec(METHOD(target, EyeAngles));
-    vecTargetForward.z      = 0.0f;
-    vec_norm(&vecTargetForward);
-
-    /* Make sure owner is behind, facing and aiming at target's back */
-    float flPosVsTargetViewDot = dot_product(vecToTarget, vecTargetForward);
-    float flPosVsOwnerViewDot  = dot_product(vecToTarget, vecOwnerForward);
-    float flViewAnglesDot      = dot_product(vecTargetForward, vecOwnerForward);
-
-    return (flPosVsTargetViewDot > 0.f && flPosVsOwnerViewDot > 0.5 &&
-            flViewAnglesDot > -0.3f);
-}
-
 bool can_shoot(Entity* ent) {
     /* Temporary until I add prediction */
     const float flTime = ent->nTickBase * c_globalvars->interval_per_tick;

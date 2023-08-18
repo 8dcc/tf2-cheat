@@ -117,8 +117,6 @@ typedef struct {
     bool m_IsSwept;
 } Ray_t;
 
-void RayInit(Ray_t* ray, vec3_t start, vec3_t end); /* sdk.c */
-
 typedef struct {
     vec3_t normal;
     float dist;
@@ -162,8 +160,6 @@ struct TraceFilter {
     VMT_TraceFilter* vmt;
     const struct Entity* skip;
 };
-
-void TraceFilterInit(TraceFilter* filter, Entity* entity); /* sdk.c */
 
 typedef struct {
     void* vmt;
@@ -347,5 +343,12 @@ typedef struct {
     int nTimestampNetworkingBase;
     int nTimestampRandomizeWindow;
 } CGlobalVars;
+
+/*----------------------------------------------------------------------------*/
+/* Functions from sdk.c */
+
+void RayInit(Ray_t* ray, vec3_t start, vec3_t end);
+void TraceFilterInit(TraceFilter* filter, Entity* entity);
+bool IsBehindAndFacingTarget(Entity* owner, Entity* target);
 
 #endif /* SDK_H_ */
