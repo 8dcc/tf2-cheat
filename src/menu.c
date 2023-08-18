@@ -196,6 +196,8 @@ static inline void tab_aim(void) {
     nk_checkbox_label(ctx, "Silent", &settings.aim_silent);
     nk_checkbox_label(ctx, "Shoot only if target",
                       &settings.aim_shoot_if_target);
+    nk_checkbox_label(ctx, "Ignore visible check",
+                      &settings.aim_ignore_visible);
     nk_checkbox_label(ctx, "Draw FOV circle", &settings.aim_draw_fov);
     nk_checkbox_label(ctx, "Disable if spectated", &settings.aim_off_spectated);
 }

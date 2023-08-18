@@ -35,6 +35,7 @@ Settings settings = {
     .aim_hitbox          = SETTING_HITBOX_HEAD,
     .aim_silent          = false,
     .aim_shoot_if_target = false,
+    .aim_ignore_visible  = false,
     .aim_draw_fov        = false,
     .aim_off_spectated   = false,
 
@@ -91,6 +92,7 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_hitbox);
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_silent);
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_shoot_if_target);
+    JSON_SETTINGS_WRITE_INT(json_cfg, aim_ignore_visible);
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_draw_fov);
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_off_spectated);
 
@@ -200,6 +202,7 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_INT(json_cfg, aim_hitbox);
     JSON_SETTINGS_READ_INT(json_cfg, aim_silent);
     JSON_SETTINGS_READ_INT(json_cfg, aim_shoot_if_target);
+    JSON_SETTINGS_WRITE_INT(json_cfg, aim_ignore_visible);
     JSON_SETTINGS_READ_INT(json_cfg, aim_draw_fov);
     JSON_SETTINGS_READ_INT(json_cfg, aim_off_spectated);
 

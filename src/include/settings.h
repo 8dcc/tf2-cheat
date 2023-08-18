@@ -55,6 +55,7 @@ typedef struct {
     int aim_hitbox;
     int aim_silent;
     int aim_shoot_if_target;
+    int aim_ignore_visible;
     int aim_draw_fov;
     int aim_off_spectated;
 
