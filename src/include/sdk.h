@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <limits.h>
 #include <wchar.h>
 
 #define STR(a, b) a##b
@@ -17,7 +18,11 @@
 /* Forward declarations */
 
 typedef struct TraceFilter TraceFilter;
+typedef struct studiohdr_t studiohdr_t;
+typedef struct model_t model_t;
+typedef struct Renderable Renderable;
 typedef struct Entity Entity;
+
 typedef struct BaseClient BaseClient;
 typedef struct EngineClient EngineClient;
 typedef struct EntityList EntityList;
@@ -25,6 +30,7 @@ typedef struct EngineVGui EngineVGui;
 typedef struct MatSurface MatSurface;
 typedef struct IVModelInfo IVModelInfo;
 typedef struct EngineTrace EngineTrace;
+typedef struct ModelRender ModelRender;
 typedef struct RenderView RenderView;
 typedef struct ClientMode ClientMode;
 
@@ -160,6 +166,32 @@ struct TraceFilter {
     VMT_TraceFilter* vmt;
     const struct Entity* skip;
 };
+
+typedef struct {
+    studiohdr_t* m_pStudioHdr;
+    void* m_pStudioHWData; /* studiohwdata_t */
+    Renderable* m_pRenderable;
+    const matrix3x4_t* m_pModelToWorld;
+    void* m_decals; /* StudioDecalHandle_t */
+    int m_drawFlags;
+    int m_lod;
+} DrawModelState_t;
+
+typedef struct {
+    vec3_t origin;
+    vec3_t angles; /* QAngle */
+    Renderable* pRenderable;
+    const model_t* pModel;
+    const matrix3x4_t* pModelToWorld;
+    const matrix3x4_t* pLightingOffset;
+    const vec3_t* pLightingOrigin;
+    int flags;
+    int entity_index;
+    int skin;
+    int body;
+    int hitboxset;
+    uint16_t instance; /* ModelInstanceHandle_t */
+} ModelRenderInfo_t;
 
 typedef struct {
     void* vmt;
@@ -302,6 +334,17 @@ typedef struct {
 
 struct EngineTrace {
     VMT_EngineTrace* vmt;
+};
+
+typedef struct {
+    PAD(4 * 19);
+    void (*DrawModelExecute)(const DrawModelState_t* state,
+                             const ModelRenderInfo_t* pInfo,
+                             matrix3x4_t* pCustomBoneToWorld);
+} VMT_ModelRender;
+
+struct ModelRender {
+    VMT_ModelRender* vmt;
 };
 
 typedef struct {
