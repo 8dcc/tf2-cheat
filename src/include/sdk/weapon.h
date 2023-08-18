@@ -1,5 +1,7 @@
-#ifndef WEAPON_H_
-#define WEAPON_H_
+#ifndef SDK_WEAPON_H_
+#define SDK_WEAPON_H_
+
+/* NOTE: This file is included from sdk.h and depends on its declarations */
 
 typedef struct Weapon Weapon;
 
@@ -16,4 +18,4 @@ struct Weapon {
     bool ready_to_backstab; /* 0xC40 */
 };
 
-#endif    // WEAPON_H_
+#endif /* SDK_WEAPON_H_ */

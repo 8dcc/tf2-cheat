@@ -1,5 +1,7 @@
-#ifndef STUDIOHDR_H_
-#define STUDIOHDR_H_
+#ifndef SDK_STUDIOHDR_H_
+#define SDK_STUDIOHDR_H_
+
+/* NOTE: This file is included from sdk.h and depends on its declarations */
 
 enum ETFHitbox {
     /* Head */
@@ -122,4 +124,4 @@ static inline studiobbox_t* studiohdr_pHitbox(studiohdr_t* thisptr, int set,
     return (studiobbox_t*)studiohitboxset_pHitbox(hitboxset, idx);
 }
 
-#endif /* STUDIOHDR_H_ */
+#endif /* SDK_STUDIOHDR_H_ */
