@@ -33,6 +33,10 @@ typedef struct {
 } vec4_t;
 
 typedef struct {
+    float x, y, z, w;
+} VectorAligned __attribute__((aligned(16)));
+
+typedef struct {
     float m[4][4];
 } VMatrix;
 
@@ -86,6 +90,129 @@ typedef struct {
     bool m_bViewToProjectionOverride;
     VMatrix m_ViewToProjection;
 } ViewSetup;
+
+/* clang-format off */
+enum {
+    CONTENTS_EMPTY                = 0x0,
+    CONTENTS_SOLID                = 0x1,
+    CONTENTS_WINDOW               = 0x2,
+    CONTENTS_AUX                  = 0x4,
+    CONTENTS_GRATE                = 0x8,
+    CONTENTS_SLIME                = 0x10,
+    CONTENTS_WATER                = 0x20,
+    CONTENTS_BLOCKLOS             = 0x40,
+    CONTENTS_OPAQUE               = 0x80,
+    LAST_VISIBLE_CONTENTS         = 0x80,
+    ALL_VISIBLE_CONTENTS          = (LAST_VISIBLE_CONTENTS | (LAST_VISIBLE_CONTENTS - 1)),
+    CONTENTS_TESTFOGVOLUME        = 0x100,
+    CONTENTS_UNUSED               = 0x200,
+    CONTENTS_UNUSED6              = 0x400,
+    CONTENTS_TEAM1                = 0x800,
+    CONTENTS_TEAM2                = 0x1000,
+    CONTENTS_IGNORE_NODRAW_OPAQUE = 0x2000,
+    CONTENTS_MOVEABLE             = 0x4000,
+    CONTENTS_AREAPORTAL           = 0x8000,
+    CONTENTS_PLAYERCLIP           = 0x10000,
+    CONTENTS_MONSTERCLIP          = 0x20000,
+    CONTENTS_CURRENT_0            = 0x40000,
+    CONTENTS_CURRENT_90           = 0x80000,
+    CONTENTS_CURRENT_180          = 0x100000,
+    CONTENTS_CURRENT_270          = 0x200000,
+    CONTENTS_CURRENT_UP           = 0x400000,
+    CONTENTS_CURRENT_DOWN         = 0x800000,
+    CONTENTS_ORIGIN               = 0x1000000,
+    CONTENTS_MONSTER              = 0x2000000,
+    CONTENTS_DEBRIS               = 0x4000000,
+    CONTENTS_DETAIL               = 0x8000000,
+    CONTENTS_TRANSLUCENT          = 0x10000000,
+    CONTENTS_LADDER               = 0x20000000,
+    CONTENTS_HITBOX               = 0x40000000,
+};
+
+#define MASK_ALL                   (0xFFFFFFFF)
+#define MASK_SOLID                 (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_WINDOW|CONTENTS_MONSTER|CONTENTS_GRATE)
+#define MASK_PLAYERSOLID           (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_PLAYERCLIP|CONTENTS_WINDOW|CONTENTS_MONSTER|CONTENTS_GRATE)
+#define MASK_NPCSOLID              (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_MONSTERCLIP|CONTENTS_WINDOW|CONTENTS_MONSTER|CONTENTS_GRATE)
+#define MASK_WATER                 (CONTENTS_WATER|CONTENTS_MOVEABLE|CONTENTS_SLIME)
+#define MASK_OPAQUE                (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_OPAQUE)
+#define MASK_OPAQUE_AND_NPCS       (MASK_OPAQUE|CONTENTS_MONSTER)
+#define MASK_BLOCKLOS              (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_BLOCKLOS)
+#define MASK_BLOCKLOS_AND_NPCS     (MASK_BLOCKLOS|CONTENTS_MONSTER)
+#define MASK_VISIBLE               (MASK_OPAQUE|CONTENTS_IGNORE_NODRAW_OPAQUE)
+#define MASK_VISIBLE_AND_NPCS      (MASK_OPAQUE_AND_NPCS|CONTENTS_IGNORE_NODRAW_OPAQUE)
+#define MASK_SHOT                  (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_MONSTER|CONTENTS_WINDOW|CONTENTS_DEBRIS|CONTENTS_HITBOX)
+#define MASK_SHOT_HULL             (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_MONSTER|CONTENTS_WINDOW|CONTENTS_DEBRIS|CONTENTS_GRATE)
+#define MASK_SHOT_PORTAL           (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_WINDOW|CONTENTS_MONSTER)
+#define MASK_SOLID_BRUSHONLY       (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_WINDOW|CONTENTS_GRATE)
+#define MASK_PLAYERSOLID_BRUSHONLY (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_WINDOW|CONTENTS_PLAYERCLIP|CONTENTS_GRATE)
+#define MASK_NPCSOLID_BRUSHONLY    (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_WINDOW|CONTENTS_MONSTERCLIP|CONTENTS_GRATE)
+#define MASK_NPCWORLDSTATIC        (CONTENTS_SOLID|CONTENTS_WINDOW|CONTENTS_MONSTERCLIP|CONTENTS_GRATE)
+#define MASK_SPLITAREAPORTAL       (CONTENTS_WATER|CONTENTS_SLIME)
+#define MASK_CURRENT               (CONTENTS_CURRENT_0|CONTENTS_CURRENT_90|CONTENTS_CURRENT_180|CONTENTS_CURRENT_270|CONTENTS_CURRENT_UP|CONTENTS_CURRENT_DOWN)
+#define MASK_DEADSOLID             (CONTENTS_SOLID|CONTENTS_PLAYERCLIP|CONTENTS_WINDOW|CONTENTS_GRATE)
+/* clang-format on */
+
+typedef struct {
+    VectorAligned m_Start;
+    VectorAligned m_Delta;
+    VectorAligned m_StartOffset;
+    VectorAligned m_Extents;
+    bool m_IsRay;
+    bool m_IsSwept;
+} Ray_t;
+
+typedef struct {
+    vec3_t normal;
+    float dist;
+    uint8_t type;
+    uint8_t signbits;
+    uint8_t pad[2];
+} cplane_t;
+
+typedef struct {
+    const char* name;
+    int16_t surfaceProps;
+    uint16_t flags;
+} csurface_t;
+
+typedef struct {
+    /* CBaseTrace */
+    vec3_t startpos;
+    vec3_t endpos;
+    cplane_t plane;
+    float fraction;
+    int contents;
+    uint16_t dispFlags;
+    bool allsolid;
+    bool startsolid;
+
+    /* CGameTrace */
+    float fractionLeftSolid;
+    csurface_t surface;
+    int hit_group;
+    int16_t physicsBone;
+    struct Entity* entity;
+    int hitbox;
+} Trace_t;
+
+enum TraceType {
+    TRACE_EVERYTHING = 0,
+    TRACE_WORLD_ONLY,
+    TRACE_ENTITIES_ONLY,
+    TRACE_EVERYTHING_FILTER_PROPS,
+};
+
+typedef struct TraceFilter TraceFilter;
+typedef struct Entity Entity;
+typedef struct {
+    bool (*ShouldHitEntity)(TraceFilter*, Entity* ent, int mask); /* 0 */
+    int (*GetTraceType)(TraceFilter*);                            /* 1 */
+} VMT_TraceFilter;
+
+struct TraceFilter {
+    VMT_TraceFilter* vmt;
+    const struct Entity* skip;
+};
 
 enum EFontFlags {
     FONTFLAG_NONE         = 0x000,
@@ -147,6 +274,7 @@ typedef struct EntityList EntityList;
 typedef struct EngineVGui EngineVGui;
 typedef struct MatSurface MatSurface;
 typedef struct IVModelInfo IVModelInfo;
+typedef struct EngineTrace EngineTrace;
 typedef struct RenderView RenderView;
 typedef struct ClientMode ClientMode;
 
@@ -253,6 +381,16 @@ typedef struct {
 
 struct IVModelInfo {
     VMT_IVModelInfo* vmt;
+};
+
+typedef struct {
+    PAD(4 * 4);
+    void (*TraceRay)(EngineTrace*, const Ray_t* ray, unsigned int fMask,
+                     TraceFilter* pTraceFilter, Trace_t* pTrace); /* 4 */
+} VMT_EngineTrace;
+
+struct EngineTrace {
+    VMT_EngineTrace* vmt;
 };
 
 typedef struct {
