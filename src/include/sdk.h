@@ -3,7 +3,6 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include <limits.h>
 #include <wchar.h>
 
 #define STR(a, b) a##b

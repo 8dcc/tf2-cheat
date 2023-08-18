@@ -58,12 +58,16 @@ struct Networkable {
     VMT_Networkable* vmt;
 };
 
-#define MAXSTUDIONAME 128
-#define MAX_PATH      PATH_MAX /* limits.h */
 struct model_t {
-    char name[MAXSTUDIONAME];
-    char filename[MAX_PATH];
-    /* ... */
+    void* handle;
+    char* name;
+    int load_flags;
+    int server_count;
+    int type;
+    int flags;
+    vec3_t vec_mins;
+    vec3_t vec_maxs;
+    float radius;
 };
 
 #define MAXSTUDIOBONES 128 /* Size of "bones" array */
