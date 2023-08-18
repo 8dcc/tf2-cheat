@@ -15,7 +15,7 @@ struct Weapon {
     PAD(0xA48);
     float flNextPrimaryAttack; /* 0xA4C */
     PAD(0x1F0);
-    bool ready_to_backstab; /* 0xC40 */
+    bool bReadyToBackstab; /* 0xC40 */
 };
 
 #endif /* SDK_WEAPON_H_ */

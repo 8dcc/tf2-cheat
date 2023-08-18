@@ -18,7 +18,7 @@ void autobackstab(usercmd_t* cmd) {
 
     /* TODO: Fix and use IsBehindAndFacingTarget
      * https://www.unknowncheats.me/forum/2897712-post287.html */
-    if (weapon->ready_to_backstab)
+    if (weapon->bReadyToBackstab)
         cmd->buttons |= IN_ATTACK;
 }
 
