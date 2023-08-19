@@ -41,6 +41,7 @@ typedef struct ClientMode ClientMode;
 #include "sdk/enums.h"
 
 typedef char byte;
+typedef uint32_t CBaseHandle;
 
 typedef struct {
     float x, y;

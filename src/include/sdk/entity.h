@@ -27,6 +27,14 @@ typedef struct Renderable Renderable;
 typedef struct Entity Entity;
 typedef struct Weapon Weapon;
 
+static inline int CBaseHandle_IsValid(CBaseHandle h) {
+    return h != INVALID_EHANDLE_INDEX;
+}
+
+static inline int CBaseHandle_GetEntryIndex(CBaseHandle h) {
+    return h & ENT_ENTRY_MASK;
+}
+
 typedef struct {
     PAD(4 * 1);
     vec3_t* (*ObbMinsPreScaled)(Collideable*); /* 1 */
