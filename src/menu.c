@@ -177,6 +177,19 @@ static inline void tab_esp(void) {
 
     nk_checkbox_label(ctx, "Ammo box ESP", &settings.ammobox_esp);
     nk_checkbox_label(ctx, "Healing items ESP", &settings.healthpack_esp);
+
+    nk_layout_row_dynamic(ctx, 8, 1);
+    nk_spacing(ctx, 0); /* ----------------------------  */
+    nk_layout_row_dynamic(ctx, 18, 2);
+
+    static const char* opts3[] = { "Off", "Friendly", "Enemies", "All" };
+    struct nk_vec2 size3       = { COMBO_DROP_W, 200 };
+    nk_label(ctx, "Player chams", NK_TEXT_LEFT);
+    nk_combobox(ctx, opts3, 4, &settings.player_chams, 15, size3);
+
+    nk_layout_row_dynamic(ctx, 15, 1);
+    nk_checkbox_label(ctx, "Weapon chams", &settings.weapon_chams);
+    nk_checkbox_label(ctx, "Hand chams", &settings.hand_chams);
 }
 
 static inline void tab_aim(void) {
@@ -225,6 +238,7 @@ static inline void tab_misc(void) {
 }
 
 static inline void tab_colors(void) {
+    /* Esp colors */
     nk_layout_row_dynamic(ctx, 15, 2);
     nk_label(ctx, "Friendly player ESP", NK_TEXT_CENTERED);
     nk_label(ctx, "Enemy player ESP", NK_TEXT_CENTERED);
@@ -252,6 +266,26 @@ static inline void tab_colors(void) {
     settings.col_healthpack_esp =
       nk_color_picker(ctx, settings.col_healthpack_esp, NK_RGBA);
 
+    /* Chams colors */
+    nk_layout_row_dynamic(ctx, 15, 2);
+    nk_label(ctx, "Friendly player chams", NK_TEXT_CENTERED);
+    nk_label(ctx, "Enemy player chams", NK_TEXT_CENTERED);
+    nk_layout_row_dynamic(ctx, 100, 2);
+    settings.col_friend_chams =
+      nk_color_picker(ctx, settings.col_friend_chams, NK_RGBA);
+    settings.col_enemy_chams =
+      nk_color_picker(ctx, settings.col_enemy_chams, NK_RGBA);
+
+    nk_layout_row_dynamic(ctx, 15, 2);
+    nk_label(ctx, "Weapon chams", NK_TEXT_CENTERED);
+    nk_label(ctx, "Hand chams", NK_TEXT_CENTERED);
+    nk_layout_row_dynamic(ctx, 100, 2);
+    settings.col_weapon_chams =
+      nk_color_picker(ctx, settings.col_weapon_chams, NK_RGBA);
+    settings.col_hand_chams =
+      nk_color_picker(ctx, settings.col_hand_chams, NK_RGBA);
+
+    /* Misc colors */
     nk_layout_row_dynamic(ctx, 15, 2);
     nk_label(ctx, "Aimbot FOV circle", NK_TEXT_CENTERED);
     nk_layout_row_dynamic(ctx, 100, 2);
