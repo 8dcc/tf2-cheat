@@ -30,10 +30,11 @@
 
 /*----------------------------------------------------------------------------*/
 
-void* h_client     = NULL;
-void* h_engine     = NULL;
-void* h_matsurface = NULL;
-void* h_sdl2       = NULL;
+void* h_client         = NULL;
+void* h_engine         = NULL;
+void* h_matsurface     = NULL;
+void* h_materialsystem = NULL;
+void* h_sdl2           = NULL;
 
 global_cache_t g;
 font_list_t g_fonts;
@@ -52,6 +53,7 @@ DECL_INTF(MatSurface, surface);
 DECL_INTF(IVModelInfo, modelinfo);
 DECL_INTF(RenderView, renderview);
 DECL_INTF(EngineTrace, enginetrace);
+DECL_INTF(MaterialSystem, materialsystem);
 DECL_INTF(ModelRender, modelrender);
 DECL_INTF(ClientMode, clientmode);
 DECL_CLASS(CGlobalVars, globalvars);
@@ -95,6 +97,7 @@ bool globals_init(void) {
     GET_HANDLER(h_client, CLIENT_SO);
     GET_HANDLER(h_engine, ENGINE_SO);
     GET_HANDLER(h_matsurface, MATSURFACE_SO);
+    GET_HANDLER(h_materialsystem, MATERIALSYSTEM_SO);
     GET_HANDLER(h_sdl2, SDL_SO);
 
     /* SDL2 */
@@ -111,6 +114,8 @@ bool globals_init(void) {
     GET_INTERFACE(RenderView*, i_renderview, h_engine, "VEngineRenderView014");
     GET_INTERFACE(EngineTrace*, i_enginetrace, h_engine,
                   "EngineTraceClient003");
+    GET_INTERFACE(MaterialSystem*, i_materialsystem, h_materialsystem,
+                  "VMaterialSystem081");
     GET_INTERFACE(ModelRender*, i_modelrender, h_engine, "VEngineModel016");
 
     /* Other interfaces */
@@ -135,6 +140,7 @@ bool globals_init(void) {
     dlclose(h_client);
     dlclose(h_engine);
     dlclose(h_matsurface);
+    dlclose(h_materialsystem);
     dlclose(h_sdl2);
 
     /* Individual functions/globals from signatures */

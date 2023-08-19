@@ -18,19 +18,19 @@ static bool valid_weapon(void) {
 
 static inline void setting_to_hitboxes(int setting, int* min, int* max) {
     switch (setting) {
-        case SETTING_HITBOX_HEAD:
+        case SETT_HITBOX_HEAD:
             *min = HITBOX_HEAD;
             *max = HITBOX_HEAD;
             break;
-        case SETTING_HITBOX_TORSO:
+        case SETT_HITBOX_TORSO:
             *min = HITBOX_PELVIS;
             *max = HITBOX_SPINE3;
             break;
-        case SETTING_HITBOX_ARMS:
+        case SETT_HITBOX_ARMS:
             *min = HITBOX_LEFT_UPPER_ARM;
             *max = HITBOX_RIGHT_HAND;
             break;
-        case SETTING_HITBOX_LEGS:
+        case SETT_HITBOX_LEGS:
             *min = HITBOX_LEFT_HIP;
             *max = HITBOX_RIGHT_FOOT;
             break;

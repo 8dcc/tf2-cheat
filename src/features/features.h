@@ -7,6 +7,10 @@
 /* src/features/esp.c */
 void esp(void);
 
+/* src/features/chams.c */
+bool chams(ModelRender* thisptr, const DrawModelState_t* state,
+           const ModelRenderInfo_t* pInfo, matrix3x4_t* pCustomBoneToWorld);
+
 /* src/features/aim.c */
 void aimbot(usercmd_t* cmd);
 void draw_aim_fov(void);

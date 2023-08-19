@@ -17,7 +17,9 @@ typedef struct {
 
 struct Weapon {
     VMT_Weapon* vmt;
-    PAD(0xA48);
+    PAD(0xA34);
+    CBaseHandle hOwner; /* 0xA38 */
+    PAD(0x10);
     float flNextPrimaryAttack; /* 0xA4C */
     PAD(0x1F0);
     bool bReadyToBackstab; /* 0xC40 */

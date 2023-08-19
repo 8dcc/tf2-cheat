@@ -42,6 +42,11 @@
     ((rgba_t){ (COLORF).r * 255, (COLORF).g * 255, (COLORF).b * 255, \
                (COLORF).a * 255 })
 
+/* rgba_t -> nk_colorf */
+#define COL2NK(COLOR)                                          \
+    ((struct nk_colorf){ (COLOR).r / 255.f, (COLOR).g / 255.f, \
+                         (COLOR).b / 255.f, (COLOR).a / 255.f })
+
 /*----------------------------------------------------------------------------*/
 
 void* get_interface(void* handle, const char* name);

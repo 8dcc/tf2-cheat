@@ -133,18 +133,18 @@ static inline void building_esp(Entity* ent, const char* str, rgba_t friend_col,
 
     /* Should we render this turret's team? */
     switch (settings.building_esp) {
-        case ENEMY:
+        case SETT_ENEMY:
             if (teammate)
                 return;
             break;
-        case FRIENDLY:
+        case SETT_FRIENDLY:
             if (!teammate)
                 return;
             break;
-        case ALL:
+        case SETT_ALL:
             break;
         default:
-        case OFF:
+        case SETT_OFF:
             return;
     }
 
@@ -199,7 +199,7 @@ static inline void building_esp(Entity* ent, const char* str, rgba_t friend_col,
 /*----------------------------------------------------------------------------*/
 
 void esp(void) {
-    if (settings.player_esp == OFF && settings.building_esp == OFF &&
+    if (settings.player_esp == SETT_OFF && settings.building_esp == SETT_OFF &&
         !settings.ammobox_esp && !settings.healthpack_esp)
         return;
 
@@ -240,18 +240,18 @@ void esp(void) {
 
                 /* Should we render this player's team? */
                 switch (settings.player_esp) {
-                    case ENEMY:
+                    case SETT_ENEMY:
                         if (teammate)
                             continue;
                         break;
-                    case FRIENDLY:
+                    case SETT_FRIENDLY:
                         if (!teammate)
                             continue;
                         break;
-                    case ALL:
+                    case SETT_ALL:
                         break;
                     default:
-                    case OFF:
+                    case SETT_OFF:
                         continue;
                 }
 
@@ -356,24 +356,24 @@ void esp(void) {
             }
 
             case CClass_CObjectSentrygun:
-                if (settings.building_esp_type == BTYPE_ALL ||
-                    settings.building_esp_type == BTYPE_SENTRY)
+                if (settings.building_esp_type == SETT_BTYPE_ALL ||
+                    settings.building_esp_type == SETT_BTYPE_SENTRY)
                     building_esp(ent, "Sentry", build_friend_col,
                                  build_enemy_col);
 
                 break;
 
             case CClass_CObjectDispenser:
-                if (settings.building_esp_type == BTYPE_ALL ||
-                    settings.building_esp_type == BTYPE_DISPENSER)
+                if (settings.building_esp_type == SETT_BTYPE_ALL ||
+                    settings.building_esp_type == SETT_BTYPE_DISPENSER)
                     building_esp(ent, "Dispenser", build_friend_col,
                                  build_enemy_col);
 
                 break;
 
             case CClass_CObjectTeleporter:
-                if (settings.building_esp_type == BTYPE_ALL ||
-                    settings.building_esp_type == BTYPE_TELEPORTER)
+                if (settings.building_esp_type == SETT_BTYPE_ALL ||
+                    settings.building_esp_type == SETT_BTYPE_TELEPORTER)
                     building_esp(ent, "Teleporter", build_friend_col,
                                  build_enemy_col);
 

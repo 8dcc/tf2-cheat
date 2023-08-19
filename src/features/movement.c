@@ -64,12 +64,12 @@ void bhop(usercmd_t* cmd) {
     if (is_jumping) {
         switch (settings.autostrafe) {
             default:
-            case OFF:
+            case SETT_OFF:
                 break;
-            case LEGIT:
+            case SETT_LEGIT:
                 autostrafe_legit(cmd);
                 break;
-            case RAGE:
+            case SETT_RAGE:
                 autostrafe_rage(cmd);
                 break;
         }

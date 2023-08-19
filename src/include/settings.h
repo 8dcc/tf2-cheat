@@ -6,27 +6,29 @@
 #define CONFIG_FOLDER "enoch-configs/"
 
 enum settings_rage {
-    OFF   = 0,
-    LEGIT = 1,
-    RAGE  = 2,
+    SETT_OFF   = 0,
+    SETT_LEGIT = 1,
+    SETT_RAGE  = 2,
 };
+
 enum settings_friendly {
-    FRIENDLY = 1,
-    ENEMY    = 2,
-    ALL      = 3,
+    SETT_FRIENDLY = 1,
+    SETT_ENEMY    = 2,
+    SETT_ALL      = 3,
 };
+
 enum settings_building_type {
-    BTYPE_ALL        = 0,
-    BTYPE_SENTRY     = 1,
-    BTYPE_DISPENSER  = 2,
-    BTYPE_TELEPORTER = 3,
+    SETT_BTYPE_ALL        = 0,
+    SETT_BTYPE_SENTRY     = 1,
+    SETT_BTYPE_DISPENSER  = 2,
+    SETT_BTYPE_TELEPORTER = 3,
 };
 
 enum settings_selected_hitbox {
-    SETTING_HITBOX_HEAD = 0,
-    SETTING_HITBOX_TORSO,
-    SETTING_HITBOX_ARMS,
-    SETTING_HITBOX_LEGS,
+    SETT_HITBOX_HEAD = 0,
+    SETT_HITBOX_TORSO,
+    SETT_HITBOX_ARMS,
+    SETT_HITBOX_LEGS,
 };
 
 typedef struct {
@@ -47,6 +49,11 @@ typedef struct {
 
     int ammobox_esp;
     int healthpack_esp;
+
+    int player_chams;
+    int chams_ignorez;
+    int weapon_chams;
+    int hand_chams;
 
     /* Aim */
     int aimbot;
@@ -74,6 +81,12 @@ typedef struct {
     struct nk_colorf col_friend_build;
     struct nk_colorf col_ammobox_esp;
     struct nk_colorf col_healthpack_esp;
+
+    struct nk_colorf col_friend_chams;
+    struct nk_colorf col_enemy_chams;
+    struct nk_colorf col_weapon_chams;
+    struct nk_colorf col_hand_chams;
+
     struct nk_colorf col_aim_fov;
 } Settings;
 

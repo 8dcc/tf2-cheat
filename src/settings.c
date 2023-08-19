@@ -11,7 +11,7 @@
 /* Global settings */
 Settings settings = {
     /* ESP */
-    .player_esp        = OFF,
+    .player_esp        = SETT_OFF,
     .player_box_esp    = false,
     .skeleton_esp      = false,
     .player_health_esp = false,
@@ -19,8 +19,8 @@ Settings settings = {
     .player_class_esp  = false,
     .player_weapon_esp = false,
 
-    .building_esp      = OFF,
-    .building_esp_type = BTYPE_ALL,
+    .building_esp      = SETT_OFF,
+    .building_esp_type = SETT_BTYPE_ALL,
     .building_box_esp  = false,
     .building_hp_esp   = false,
     .building_name_esp = false,
@@ -28,11 +28,16 @@ Settings settings = {
     .ammobox_esp    = false,
     .healthpack_esp = false,
 
+    .player_chams  = SETT_OFF,
+    .chams_ignorez = false,
+    .weapon_chams  = false,
+    .hand_chams    = false,
+
     /* Aim */
     .aimbot              = false,
     .aim_fov             = 0.f,
     .aim_smooth          = 1.f,
-    .aim_hitbox          = SETTING_HITBOX_HEAD,
+    .aim_hitbox          = SETT_HITBOX_HEAD,
     .aim_silent          = false,
     .aim_shoot_if_target = false,
     .aim_ignore_visible  = false,
@@ -41,7 +46,7 @@ Settings settings = {
 
     /* Misc */
     .bhop       = false,
-    .autostrafe = OFF,
+    .autostrafe = SETT_OFF,
     .rocketjump = false,
     .autostab   = false,
     .watermark  = true,
@@ -54,7 +59,13 @@ Settings settings = {
     .col_enemy_build    = (struct nk_colorf){ 0.90f, 0.31f, 0.00f, 1.f },
     .col_ammobox_esp    = (struct nk_colorf){ 0.55f, 0.43f, 0.38f, 1.f },
     .col_healthpack_esp = (struct nk_colorf){ 0.40f, 0.73f, 0.41f, 1.f },
-    .col_aim_fov        = (struct nk_colorf){ 0.80f, 0.80f, 0.80f, 0.30f },
+
+    .col_friend_chams = (struct nk_colorf){ 0.47f, 0.77f, 0.90f, 1.f },
+    .col_enemy_chams  = (struct nk_colorf){ 0.87f, 0.34f, 0.34f, 1.f },
+    .col_weapon_chams = (struct nk_colorf){ 0.80f, 0.57f, 0.84f, 1.f },
+    .col_hand_chams   = (struct nk_colorf){ 0.88f, 0.74f, 0.90f, 1.f },
+
+    .col_aim_fov = (struct nk_colorf){ 0.80f, 0.80f, 0.80f, 0.30f },
 };
 
 /*----------------------------------------------------------------------------*/
@@ -86,6 +97,10 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_INT(json_cfg, building_name_esp);
     JSON_SETTINGS_WRITE_INT(json_cfg, ammobox_esp);
     JSON_SETTINGS_WRITE_INT(json_cfg, healthpack_esp);
+    JSON_SETTINGS_WRITE_INT(json_cfg, player_chams);
+    JSON_SETTINGS_WRITE_INT(json_cfg, chams_ignorez);
+    JSON_SETTINGS_WRITE_INT(json_cfg, weapon_chams);
+    JSON_SETTINGS_WRITE_INT(json_cfg, hand_chams);
 
     JSON_SETTINGS_WRITE_INT(json_cfg, aimbot);
     JSON_SETTINGS_WRITE_FLOAT(json_cfg, aim_fov);
@@ -110,6 +125,10 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_COL(json_cfg, col_enemy_build);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_ammobox_esp);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_healthpack_esp);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_friend_chams);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_enemy_chams);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_weapon_chams);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_hand_chams);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_aim_fov);
 
     /* Convert filled json object to string */
@@ -197,6 +216,10 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_INT(json_cfg, building_name_esp);
     JSON_SETTINGS_READ_INT(json_cfg, ammobox_esp);
     JSON_SETTINGS_READ_INT(json_cfg, healthpack_esp);
+    JSON_SETTINGS_READ_INT(json_cfg, player_chams);
+    JSON_SETTINGS_READ_INT(json_cfg, chams_ignorez);
+    JSON_SETTINGS_READ_INT(json_cfg, weapon_chams);
+    JSON_SETTINGS_READ_INT(json_cfg, hand_chams);
 
     JSON_SETTINGS_READ_INT(json_cfg, aimbot);
     JSON_SETTINGS_READ_FLOAT(json_cfg, aim_fov);
@@ -221,6 +244,10 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_COL(json_cfg, col_enemy_build);
     JSON_SETTINGS_READ_COL(json_cfg, col_ammobox_esp);
     JSON_SETTINGS_READ_COL(json_cfg, col_healthpack_esp);
+    JSON_SETTINGS_READ_COL(json_cfg, col_friend_chams);
+    JSON_SETTINGS_READ_COL(json_cfg, col_enemy_chams);
+    JSON_SETTINGS_READ_COL(json_cfg, col_weapon_chams);
+    JSON_SETTINGS_READ_COL(json_cfg, col_hand_chams);
     JSON_SETTINGS_READ_COL(json_cfg, col_aim_fov);
 
     free(json_cfg_str);

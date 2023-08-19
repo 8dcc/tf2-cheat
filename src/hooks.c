@@ -128,9 +128,20 @@ void h_Paint(EngineVGui* thisptr, uint32_t mode) {
 void h_DrawModelExecute(ModelRender* thisptr, const DrawModelState_t* state,
                         const ModelRenderInfo_t* pInfo,
                         matrix3x4_t* pCustomBoneToWorld) {
-    ORIGINAL(DrawModelExecute, thisptr, state, pInfo, pCustomBoneToWorld);
+    /* Store original renderview colors */
+    static float_rgba_t orig_col;
+    METHOD_ARGS(i_renderview, GetColorModulation, &orig_col);
+    orig_col.a = METHOD(i_renderview, GetBlend);
 
-    printf("%s\n", pInfo->pModel->name);
+    if (!chams(thisptr, state, pInfo, pCustomBoneToWorld))
+        ORIGINAL(DrawModelExecute, thisptr, state, pInfo, pCustomBoneToWorld);
+
+    /* Reset old renderview color */
+    METHOD_ARGS(i_renderview, SetColorModulation, &orig_col);
+    METHOD_ARGS(i_renderview, SetBlend, orig_col.a);
+
+    /* Reset to defaut materials */
+    METHOD_ARGS(i_modelrender, ForcedMaterialOverride, NULL, OVERRIDE_NORMAL);
 }
 
 /*----------------------------------------------------------------------------*/

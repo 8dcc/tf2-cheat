@@ -29,6 +29,9 @@ typedef struct EngineVGui EngineVGui;
 typedef struct MatSurface MatSurface;
 typedef struct IVModelInfo IVModelInfo;
 typedef struct EngineTrace EngineTrace;
+typedef struct IMaterial IMaterial;
+typedef struct IMatRenderContext IMatRenderContext;
+typedef struct MaterialSystem MaterialSystem;
 typedef struct ModelRender ModelRender;
 typedef struct RenderView RenderView;
 typedef struct ClientMode ClientMode;
@@ -39,6 +42,7 @@ typedef struct ClientMode ClientMode;
 #include "sdk/enums.h"
 
 typedef char byte;
+typedef uint32_t CBaseHandle;
 
 typedef struct {
     float x, y;
@@ -71,8 +75,12 @@ typedef struct {
 } rgb_t;
 
 typedef struct {
-    uint8_t r, g, b, a;
+    uint8_t r, g, b, a; /* Range 0..255 */
 } rgba_t;
+
+typedef struct {
+    float r, g, b, a; /* Range 0..1 */
+} float_rgba_t;
 
 typedef rgba_t Color;
 typedef uint32_t HFont;
@@ -336,10 +344,47 @@ struct EngineTrace {
 };
 
 typedef struct {
-    PAD(4 * 19);
+    PAD(4 * 27);
+    void (*AlphaModulate)(IMaterial*, float alpha);               /* 27 */
+    void (*ColorModulate)(IMaterial*, float r, float g, float b); /* 28 */
+    void (*SetMaterialVarFlag)(IMaterial*, int flag, bool on);    /* 29 */
+    bool (*GetMaterialVarFlag)(IMaterial*, int flag);             /* 30 */
+} VMT_IMaterial;
+
+struct IMaterial {
+    VMT_IMaterial* vmt;
+};
+
+typedef struct {
+    PAD(4 * 11);
+    void (*DepthRange)(IMatRenderContext*, float zNear, float zFar);
+} VMT_IMatRenderContext;
+
+struct IMatRenderContext {
+    VMT_IMatRenderContext* vmt;
+};
+
+typedef struct {
+    PAD(4 * 73);
+    IMaterial* (*FindMaterial)(MaterialSystem*, char const* pMaterialName,
+                               const char* pTextureGroupName, bool complain,
+                               const char* pComplainPrefix); /* 73 */
+    PAD(4 * 26);
+    IMatRenderContext* (*GetRenderContext)(MaterialSystem*); /* 100 */
+} VMT_MaterialSystem;
+
+struct MaterialSystem {
+    VMT_MaterialSystem* vmt;
+};
+
+typedef struct {
+    PAD(4 * 1);
+    void (*ForcedMaterialOverride)(ModelRender*, IMaterial* newMaterial,
+                                   int nOverrideType); /* 1 */
+    PAD(4 * 17);
     void (*DrawModelExecute)(ModelRender*, const DrawModelState_t* state,
                              const ModelRenderInfo_t* pInfo,
-                             matrix3x4_t* pCustomBoneToWorld);
+                             matrix3x4_t* pCustomBoneToWorld); /* 19 */
 } VMT_ModelRender;
 
 struct ModelRender {
@@ -348,8 +393,11 @@ struct ModelRender {
 
 typedef struct {
     PAD(4 * 4);
-    void (*SetBlend)(RenderView*, float blend); /* 4 */
-    PAD(4 * 45);
+    void (*SetBlend)(RenderView*, float blend);                         /* 4 */
+    float (*GetBlend)(RenderView*);                                     /* 5 */
+    void (*SetColorModulation)(RenderView*, const float_rgba_t* blend); /* 6 */
+    void (*GetColorModulation)(RenderView*, float_rgba_t* blend);       /* 7 */
+    PAD(4 * 42);
     void (*GetMatricesForView)(RenderView*, const ViewSetup* view,
                                VMatrix* pWorldToView,
                                VMatrix* pViewToProjection,
