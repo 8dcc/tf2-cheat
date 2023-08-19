@@ -44,8 +44,8 @@ bool chams(ModelRender* thisptr, const DrawModelState_t* state,
     if (!mdl)
         return CALL_ORIGINAL;
 
-    if (settings.player_chams != SETT_OFF && strstr(mdl->name, "models/"
-                                                               "player")) {
+    if (settings.player_chams != SETT_OFF &&
+        strstr(mdl->name, "models/player")) {
         Entity* ent = g.ents[pInfo->entity_index];
         if (!g.localplayer || !ent)
             return CALL_ORIGINAL;

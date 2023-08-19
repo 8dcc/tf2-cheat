@@ -26,7 +26,7 @@ NamespaceIndentation: Inner
 PenaltyBreakAssignment: '4'
 PenaltyBreakBeforeFirstCallParameter: '3'
 PenaltyBreakComment: '1'
-PenaltyBreakString: '2'
+PenaltyBreakString: '100'
 SortIncludes: 'false'
 SpaceBeforeAssignmentOperators: 'true'
 SpaceBeforeParens: ControlStatements
