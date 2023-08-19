@@ -96,6 +96,7 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
 
     bhop(cmd);
     aimbot(cmd);
+    autorocketjump(cmd);
     autobackstab(cmd);
 
     correct_movement(cmd, old_angles);
