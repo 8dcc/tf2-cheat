@@ -9,10 +9,11 @@
 #include "sdk.h"
 
 /* Module names for handlers */
-#define CLIENT_SO     "./tf/bin/client.so"
-#define ENGINE_SO     "./bin/engine.so"
-#define MATSURFACE_SO "./bin/vguimatsurface.so"
-#define SDL_SO        "./bin/libSDL2-2.0.so.0"
+#define CLIENT_SO         "./tf/bin/client.so"
+#define ENGINE_SO         "./bin/engine.so"
+#define MATSURFACE_SO     "./bin/vguimatsurface.so"
+#define MATERIALSYSTEM_SO "./bin/materialsystem.so"
+#define SDL_SO            "./bin/libSDL2-2.0.so.0"
 
 /* Signatures */
 #define SIG_StartDrawing                                                    \
@@ -137,6 +138,7 @@ typedef struct {
 extern void* h_client;
 extern void* h_engine;
 extern void* h_matsurface;
+extern void* h_materialsystem;
 extern void* h_sdl2;
 
 extern global_cache_t g;
@@ -158,6 +160,7 @@ DECL_INTF_EXTERN(MatSurface, surface);
 DECL_INTF_EXTERN(IVModelInfo, modelinfo);
 DECL_INTF_EXTERN(RenderView, renderview);
 DECL_INTF_EXTERN(EngineTrace, enginetrace);
+DECL_INTF_EXTERN(MaterialSystem, materialsystem);
 DECL_INTF_EXTERN(ModelRender, modelrender);
 DECL_INTF_EXTERN(ClientMode, clientmode);
 DECL_CLASS_EXTERN(CGlobalVars, globalvars);
