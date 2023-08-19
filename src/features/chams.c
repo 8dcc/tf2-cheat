@@ -86,6 +86,21 @@ bool chams(const ModelRenderInfo_t* pInfo) {
         if (!settings.weapon_chams)
             return CALL_ORIGINAL;
 
+#if 0
+        /* TODO: Change weapon color depending on owner/only change viewmodel */
+        Weapon* wpn = (Weapon*)g.ents[pInfo->entity_index];
+        if (!wpn || !CBaseHandle_IsValid(wpn->hOwner))
+            return CALL_ORIGINAL;
+
+        const int owner_idx = CBaseHandle_GetEntryIndex(wpn->hOwner);
+        if (owner_idx < 1 || owner_idx >= g.MaxClients)
+            return CALL_ORIGINAL;
+
+        Entity* owner = g.ents[owner_idx];
+        if (!owner)
+            return CALL_ORIGINAL;
+#endif
+
         override_material(WPN_IGNOREZ, WPN_WIREFRAME, settings.col_weapon_chams,
                           "debug/debugambientcube");
         return CALL_ORIGINAL;
