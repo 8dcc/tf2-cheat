@@ -76,6 +76,37 @@ void bhop(usercmd_t* cmd) {
     }
 }
 
+void autorocketjump(usercmd_t* cmd) {
+    if (!settings.rocketjump || !g.localplayer || !(cmd->buttons & IN_JUMP))
+        return;
+
+    /* If bhop is off, only rocketjump on ground */
+    if (!settings.bhop && !(g.localplayer->flags & FL_ONGROUND))
+        return;
+
+    Weapon* weapon = METHOD(g.localplayer, GetWeapon);
+    if (!weapon)
+        return;
+
+    Networkable* net       = GetNetworkable((Entity*)weapon);
+    ClientClass* ent_class = METHOD(net, GetClientClass);
+    if (!ent_class)
+        return;
+
+    if (ent_class->class_id != CClass_CTFRocketLauncher &&
+        ent_class->class_id != CClass_CTFRocketLauncher_AirStrike &&
+        ent_class->class_id != CClass_CTFRocketLauncher_DirectHit &&
+        ent_class->class_id != CClass_CTFRocketLauncher_Mortar)
+        return;
+
+    if (!can_shoot(g.localplayer))
+        return;
+
+    cmd->viewangles.x = 89.f;
+    cmd->buttons |= IN_ATTACK | IN_DUCK | IN_JUMP;
+    cmd->buttons &= ~IN_ATTACK2;
+}
+
 void correct_movement(usercmd_t* cmd, vec3_t old_angles) {
     float old_y = old_angles.y + (old_angles.y < 0 ? 360 : 0);
     float new_y = cmd->viewangles.y + (cmd->viewangles.y < 0 ? 360 : 0);

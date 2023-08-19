@@ -62,6 +62,7 @@ typedef struct {
     /* Misc */
     int bhop;
     int autostrafe;
+    int rocketjump;
     int autostab;
     int watermark;
     int speclist;

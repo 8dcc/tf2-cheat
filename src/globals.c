@@ -156,6 +156,7 @@ bool resore_vtables(void) {
     RESTORE_VMT(BaseClient, i_baseclient);
     RESTORE_VMT(ClientMode, i_clientmode);
     RESTORE_VMT(EngineVGui, i_enginevgui);
+    RESTORE_VMT(ModelRender, i_modelrender);
 
     return true;
 }

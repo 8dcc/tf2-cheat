@@ -17,6 +17,7 @@ void draw_aim_fov(void);
 
 /* src/features/movement.c */
 void bhop(usercmd_t* cmd);
+void autorocketjump(usercmd_t* cmd);
 void correct_movement(usercmd_t* cmd, vec3_t old_angles);
 
 /* src/features/misc.c */
