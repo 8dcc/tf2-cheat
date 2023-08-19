@@ -11,7 +11,7 @@
 /* Global settings */
 Settings settings = {
     /* ESP */
-    .player_esp        = OFF,
+    .player_esp        = SETT_OFF,
     .player_box_esp    = false,
     .skeleton_esp      = false,
     .player_health_esp = false,
@@ -19,8 +19,8 @@ Settings settings = {
     .player_class_esp  = false,
     .player_weapon_esp = false,
 
-    .building_esp      = OFF,
-    .building_esp_type = BTYPE_ALL,
+    .building_esp      = SETT_OFF,
+    .building_esp_type = SETT_BTYPE_ALL,
     .building_box_esp  = false,
     .building_hp_esp   = false,
     .building_name_esp = false,
@@ -28,7 +28,7 @@ Settings settings = {
     .ammobox_esp    = false,
     .healthpack_esp = false,
 
-    .player_chams = OFF,
+    .player_chams = SETT_OFF,
     .weapon_chams = false,
     .hand_chams   = false,
 
@@ -36,7 +36,7 @@ Settings settings = {
     .aimbot              = false,
     .aim_fov             = 0.f,
     .aim_smooth          = 1.f,
-    .aim_hitbox          = SETTING_HITBOX_HEAD,
+    .aim_hitbox          = SETT_HITBOX_HEAD,
     .aim_silent          = false,
     .aim_shoot_if_target = false,
     .aim_ignore_visible  = false,
@@ -45,7 +45,7 @@ Settings settings = {
 
     /* Misc */
     .bhop       = false,
-    .autostrafe = OFF,
+    .autostrafe = SETT_OFF,
     .rocketjump = false,
     .autostab   = false,
     .watermark  = true,

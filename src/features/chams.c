@@ -42,7 +42,8 @@ bool chams(const ModelRenderInfo_t* pInfo) {
     if (!mdl)
         return CALL_ORIGINAL;
 
-    if (settings.player_chams != OFF && strstr(mdl->name, "models/player")) {
+    if (settings.player_chams != SETT_OFF && strstr(mdl->name, "models/"
+                                                               "player")) {
         Entity* ent = g.ents[pInfo->entity_index];
         if (!g.localplayer || !ent)
             return CALL_ORIGINAL;
@@ -54,9 +55,9 @@ bool chams(const ModelRenderInfo_t* pInfo) {
         const bool teammate = IsTeammate(ent);
 
         /* Are chams enabled for this player's team? */
-        if (settings.player_chams == OFF ||
-            (settings.player_chams == ENEMY && teammate) ||
-            (settings.player_chams == FRIENDLY && !teammate))
+        if (settings.player_chams == SETT_OFF ||
+            (settings.player_chams == SETT_ENEMY && teammate) ||
+            (settings.player_chams == SETT_FRIENDLY && !teammate))
             return CALL_ORIGINAL;
 
         struct nk_colorf vis_col   = teammate ? settings.col_friend_chams
