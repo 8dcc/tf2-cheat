@@ -30,6 +30,7 @@ typedef struct MatSurface MatSurface;
 typedef struct IVModelInfo IVModelInfo;
 typedef struct EngineTrace EngineTrace;
 typedef struct IMaterial IMaterial;
+typedef struct IMatRenderContext IMatRenderContext;
 typedef struct MaterialSystem MaterialSystem;
 typedef struct ModelRender ModelRender;
 typedef struct RenderView RenderView;
@@ -355,10 +356,21 @@ struct IMaterial {
 };
 
 typedef struct {
+    PAD(4 * 11);
+    void (*DepthRange)(IMatRenderContext*, float zNear, float zFar);
+} VMT_IMatRenderContext;
+
+struct IMatRenderContext {
+    VMT_IMatRenderContext* vmt;
+};
+
+typedef struct {
     PAD(4 * 73);
     IMaterial* (*FindMaterial)(MaterialSystem*, char const* pMaterialName,
                                const char* pTextureGroupName, bool complain,
                                const char* pComplainPrefix); /* 73 */
+    PAD(4 * 26);
+    IMatRenderContext* (*GetRenderContext)(MaterialSystem*); /* 100 */
 } VMT_MaterialSystem;
 
 struct MaterialSystem {
