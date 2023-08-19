@@ -48,6 +48,10 @@ typedef struct {
     int ammobox_esp;
     int healthpack_esp;
 
+    int player_chams;
+    int weapon_chams;
+    int hand_chams;
+
     /* Aim */
     int aimbot;
     float aim_fov;
@@ -74,6 +78,12 @@ typedef struct {
     struct nk_colorf col_friend_build;
     struct nk_colorf col_ammobox_esp;
     struct nk_colorf col_healthpack_esp;
+
+    struct nk_colorf col_friend_chams;
+    struct nk_colorf col_enemy_chams;
+    struct nk_colorf col_weapon_chams;
+    struct nk_colorf col_hand_chams;
+
     struct nk_colorf col_aim_fov;
 } Settings;
 
