@@ -133,7 +133,7 @@ void h_DrawModelExecute(ModelRender* thisptr, const DrawModelState_t* state,
     METHOD_ARGS(i_renderview, GetColorModulation, &orig_col);
     orig_col.a = METHOD(i_renderview, GetBlend);
 
-    if (!chams(pInfo))
+    if (!chams(thisptr, state, pInfo, pCustomBoneToWorld))
         ORIGINAL(DrawModelExecute, thisptr, state, pInfo, pCustomBoneToWorld);
 
     /* Reset old renderview color */

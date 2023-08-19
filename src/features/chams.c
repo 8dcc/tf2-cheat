@@ -1,6 +1,7 @@
 
 #include "features.h"
 #include "../include/sdk.h"
+#include "../include/hooks.h"
 #include "../include/globals.h"
 
 /* I rather keep the menu simple, so change here what you need */
@@ -37,7 +38,8 @@ static void override_material(bool ignorez, bool wireframe,
 
 /*----------------------------------------------------------------------------*/
 
-bool chams(const ModelRenderInfo_t* pInfo) {
+bool chams(ModelRender* thisptr, const DrawModelState_t* state,
+           const ModelRenderInfo_t* pInfo, matrix3x4_t* pCustomBoneToWorld) {
     const model_t* mdl = pInfo->pModel;
     if (!mdl)
         return CALL_ORIGINAL;
@@ -60,17 +62,22 @@ bool chams(const ModelRenderInfo_t* pInfo) {
             (settings.player_chams == SETT_FRIENDLY && !teammate))
             return CALL_ORIGINAL;
 
-        struct nk_colorf vis_col   = teammate ? settings.col_friend_chams
-                                              : settings.col_enemy_chams;
-        struct nk_colorf invis_col = COL2NK(col_scale(NK2COL(vis_col), 0.70f));
+        struct nk_colorf vis_col = teammate ? settings.col_friend_chams
+                                            : settings.col_enemy_chams;
 
-        /* TODO: Only visible chams setting */
-        if (!true) {
-            /* TODO: Override and call original directly */
+        /* Invisible player chams */
+        if (settings.chams_ignorez) {
+            const rgba_t col                 = NK2COL(vis_col);
+            const rgba_t scale               = col_scale(col, 0.50f);
+            const struct nk_colorf invis_col = COL2NK(scale);
+
+            override_material(true, false, invis_col, "debug/debugambientcube");
+            ORIGINAL(DrawModelExecute, thisptr, state, pInfo,
+                     pCustomBoneToWorld);
         }
 
-        override_material(HAND_IGNOREZ, HAND_WIREFRAME, vis_col,
-                          "debug/debugambientcube");
+        /* Visible player chams */
+        override_material(false, false, vis_col, "debug/debugambientcube");
         return CALL_ORIGINAL;
     }
 
