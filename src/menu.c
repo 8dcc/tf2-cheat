@@ -188,6 +188,7 @@ static inline void tab_esp(void) {
     nk_combobox(ctx, opts3, 4, &settings.player_chams, 15, size3);
 
     nk_layout_row_dynamic(ctx, 15, 1);
+    nk_checkbox_label(ctx, "Invisible player chams", &settings.chams_ignorez);
     nk_checkbox_label(ctx, "Weapon chams", &settings.weapon_chams);
     nk_checkbox_label(ctx, "Hand chams", &settings.hand_chams);
 }

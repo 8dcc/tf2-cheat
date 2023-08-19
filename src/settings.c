@@ -28,9 +28,10 @@ Settings settings = {
     .ammobox_esp    = false,
     .healthpack_esp = false,
 
-    .player_chams = SETT_OFF,
-    .weapon_chams = false,
-    .hand_chams   = false,
+    .player_chams  = SETT_OFF,
+    .chams_ignorez = false,
+    .weapon_chams  = false,
+    .hand_chams    = false,
 
     /* Aim */
     .aimbot              = false,
@@ -97,6 +98,7 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_INT(json_cfg, ammobox_esp);
     JSON_SETTINGS_WRITE_INT(json_cfg, healthpack_esp);
     JSON_SETTINGS_WRITE_INT(json_cfg, player_chams);
+    JSON_SETTINGS_WRITE_INT(json_cfg, chams_ignorez);
     JSON_SETTINGS_WRITE_INT(json_cfg, weapon_chams);
     JSON_SETTINGS_WRITE_INT(json_cfg, hand_chams);
 
@@ -215,6 +217,7 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_INT(json_cfg, ammobox_esp);
     JSON_SETTINGS_READ_INT(json_cfg, healthpack_esp);
     JSON_SETTINGS_READ_INT(json_cfg, player_chams);
+    JSON_SETTINGS_READ_INT(json_cfg, chams_ignorez);
     JSON_SETTINGS_READ_INT(json_cfg, weapon_chams);
     JSON_SETTINGS_READ_INT(json_cfg, hand_chams);
 

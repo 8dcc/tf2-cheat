@@ -51,6 +51,7 @@ typedef struct {
     int healthpack_esp;
 
     int player_chams;
+    int chams_ignorez;
     int weapon_chams;
     int hand_chams;
 
