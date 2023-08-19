@@ -73,8 +73,12 @@ typedef struct {
 } rgb_t;
 
 typedef struct {
-    uint8_t r, g, b, a;
+    uint8_t r, g, b, a; /* Range 0..255 */
 } rgba_t;
+
+typedef struct {
+    float r, g, b, a; /* Range 0..1 */
+} float_rgba_t;
 
 typedef rgba_t Color;
 typedef uint32_t HFont;
@@ -341,8 +345,8 @@ typedef struct {
     PAD(4 * 27);
     void (*AlphaModulate)(IMaterial*, float alpha);               /* 27 */
     void (*ColorModulate)(IMaterial*, float r, float g, float b); /* 28 */
-    void (*SetMaterialVarFlag)(int flag, bool on);                /* 29 */
-    bool (*GetMaterialVarFlag)(int flag);                         /* 30 */
+    void (*SetMaterialVarFlag)(IMaterial*, int flag, bool on);    /* 29 */
+    bool (*GetMaterialVarFlag)(IMaterial*, int flag);             /* 30 */
 } VMT_IMaterial;
 
 struct IMaterial {
