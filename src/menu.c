@@ -227,6 +227,7 @@ static inline void tab_misc(void) {
     nk_combobox(ctx, opts0, 3, &settings.autostrafe, 15, size0);
 
     nk_layout_row_dynamic(ctx, 15, 1);
+    nk_checkbox_label(ctx, "Thirdperson", &settings.thirdperson);
     nk_checkbox_label(ctx, "Autorocketjump", &settings.rocketjump);
     nk_checkbox_label(ctx, "Autobackstab", &settings.autostab);
 

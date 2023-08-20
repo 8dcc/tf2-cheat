@@ -45,12 +45,13 @@ Settings settings = {
     .aim_off_spectated   = false,
 
     /* Misc */
-    .bhop       = false,
-    .autostrafe = SETT_OFF,
-    .rocketjump = false,
-    .autostab   = false,
-    .watermark  = true,
-    .speclist   = true,
+    .bhop        = false,
+    .autostrafe  = SETT_OFF,
+    .thirdperson = false,
+    .rocketjump  = false,
+    .autostab    = false,
+    .watermark   = true,
+    .speclist    = true,
 
     /* Colors */
     .col_friend_esp     = (struct nk_colorf){ 0.05f, 0.47f, 0.95f, 1.f },
@@ -114,6 +115,7 @@ void save_config(const char* filename) {
 
     JSON_SETTINGS_WRITE_INT(json_cfg, bhop);
     JSON_SETTINGS_WRITE_INT(json_cfg, autostrafe);
+    JSON_SETTINGS_WRITE_INT(json_cfg, thirdperson);
     JSON_SETTINGS_WRITE_INT(json_cfg, rocketjump);
     JSON_SETTINGS_WRITE_INT(json_cfg, autostab);
     JSON_SETTINGS_WRITE_INT(json_cfg, watermark);
@@ -233,6 +235,7 @@ void load_config(const char* filename) {
 
     JSON_SETTINGS_READ_INT(json_cfg, bhop);
     JSON_SETTINGS_READ_INT(json_cfg, autostrafe);
+    JSON_SETTINGS_READ_INT(json_cfg, thirdperson);
     JSON_SETTINGS_READ_INT(json_cfg, rocketjump);
     JSON_SETTINGS_READ_INT(json_cfg, autostab);
     JSON_SETTINGS_READ_INT(json_cfg, watermark);
