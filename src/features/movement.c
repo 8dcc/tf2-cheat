@@ -103,12 +103,14 @@ void autorocketjump(usercmd_t* cmd) {
     if (!can_shoot(g.localplayer))
         return;
 
-    vec3_t viewangles;
-    METHOD_ARGS(i_engine, GetViewAngles, &viewangles);
+    if (settings.rocketjump_deg != 0.f) {
+        vec3_t viewangles;
+        METHOD_ARGS(i_engine, GetViewAngles, &viewangles);
 
-    /* Only rocketjump if we are looking at the floor */
-    if (viewangles.x < 45.f)
-        return;
+        /* Only rocketjump if we are looking down some degrees (default 45º) */
+        if (viewangles.x <= settings.rocketjump_deg)
+            return;
+    }
 
     cmd->viewangles.x = 89.f;
     cmd->buttons |= IN_ATTACK | IN_DUCK | IN_JUMP;
