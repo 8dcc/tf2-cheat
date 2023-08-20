@@ -144,6 +144,8 @@ struct Entity {
     int nTickBase; /* 0x1234 */
     PAD(0x3F8);
     int player_class; /* 0x1630 (ETFClass) */
+    PAD(0x7D0);
+    int nForceTauntCam; /* 0x1E04 */
 };
 
 #define IsTeammate(ent) \
