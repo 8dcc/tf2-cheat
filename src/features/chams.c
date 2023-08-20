@@ -46,12 +46,15 @@ bool chams(ModelRender* thisptr, const DrawModelState_t* state,
 
     if (settings.player_chams != SETT_OFF &&
         strstr(mdl->name, "models/player")) {
+        if (pInfo->entity_index < 1 || pInfo->entity_index >= g.MaxClients)
+            return CALL_ORIGINAL;
+
         Entity* ent = g.ents[pInfo->entity_index];
         if (!g.localplayer || !ent)
             return CALL_ORIGINAL;
 
         /* TODO: Localplayer chams after thirdperson */
-        if (g.localplayer == ent)
+        if (g.localidx == pInfo->entity_index)
             return CALL_ORIGINAL;
 
         const bool teammate = IsTeammate(ent);
