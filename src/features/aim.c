@@ -174,7 +174,7 @@ static inline float scale_fov_by_width(float fov, float aspect_ratio) {
 
 void draw_aim_fov(void) {
     if (!settings.aimbot || !settings.aim_draw_fov || !g.localplayer ||
-        !g.IsAlive)
+        !g.IsAlive || !valid_weapon())
         return;
 
     /* Circle won't fit on the screen */
