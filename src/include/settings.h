@@ -72,6 +72,7 @@ typedef struct {
     int autostrafe;
     int thirdperson;
     int rocketjump;
+    float rocketjump_deg;
     int autostab;
     int watermark;
     int speclist;
