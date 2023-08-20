@@ -41,8 +41,9 @@ static bool is_visible(vec3_t start, vec3_t end, Entity* target) {
     if (settings.aim_ignore_visible)
         return true;
 
+    /* We initialize with a custom ShouldHitEntity() for ignoring teammates */
     TraceFilter filter;
-    TraceFilterInit(&filter, g.localplayer);
+    TraceFilterInit_IgnoreFriendly(&filter, g.localplayer);
 
     Ray_t ray;
     RayInit(&ray, start, end);
