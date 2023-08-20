@@ -42,6 +42,7 @@ The cheat currently has the following features:
     - Rage
   - Thirdperson
   - Soldier's auto-rocketjump
+    - Degree cap (Only rocketjump if looking at the ground)
   - Spy's auto-backstab
   - Spectator list
   - Watermark
