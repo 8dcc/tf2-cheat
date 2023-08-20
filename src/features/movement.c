@@ -93,6 +93,7 @@ void autorocketjump(usercmd_t* cmd) {
     if (!ent_class)
         return;
 
+    /* Valid weapon */
     if (ent_class->class_id != CClass_CTFRocketLauncher &&
         ent_class->class_id != CClass_CTFRocketLauncher_AirStrike &&
         ent_class->class_id != CClass_CTFRocketLauncher_DirectHit &&
@@ -100,6 +101,13 @@ void autorocketjump(usercmd_t* cmd) {
         return;
 
     if (!can_shoot(g.localplayer))
+        return;
+
+    vec3_t viewangles;
+    METHOD_ARGS(i_engine, GetViewAngles, &viewangles);
+
+    /* Only rocketjump if we are looking at the floor */
+    if (viewangles.x < 45.f)
         return;
 
     cmd->viewangles.x = 89.f;
