@@ -16,21 +16,34 @@ The cheat currently has the following features:
   - Building ESP
     - Toggle friends only/enemies only/all
     - Toggle building types
-    - Building box
-    - Building health
-    - Building name (type of building)
-  - Ammo ESP
-  - Custom colors
+    - Box
+    - Health
+    - Name (type of building)
+  - Ammo box ESP
+  - Healing items ESP
+- Chams
+  - Players
+  - Local player (thirdperson)
+  - Viewmodel weapon
+  - Viewmodel arms
 - Aimbot
   - Custom FOV
-  - Smoothing
-  - Choose hitboxes
+  - Custom smoothing
+  - Custom hitboxes
   - Silent
+  - Only shoot if target
+  - Ignore visibility
+  - Draw FOV circle
   - Disable if spectated in 1st person
-- BunnyHop
-- Autostrafe
-  - Legit
-  - Rage
-- Spy autostab
-- Spectator list
-- Watermark
+- Misc
+  - BunnyHop
+  - Autostrafe
+    - Legit
+    - Rage
+  - Thirdperson
+  - Soldier's auto-rocketjump
+  - Spy's auto-backstab
+  - Spectator list
+  - Watermark
+- Custom colors for most settings
+- Config system
