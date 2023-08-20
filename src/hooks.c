@@ -94,6 +94,7 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
     if (ret)
         METHOD_ARGS(i_engine, SetViewAngles, &cmd->viewangles);
 
+    thirdperson();
     bhop(cmd);
     aimbot(cmd);
     autorocketjump(cmd);
