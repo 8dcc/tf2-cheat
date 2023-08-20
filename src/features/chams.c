@@ -44,7 +44,7 @@ bool chams(ModelRender* thisptr, const DrawModelState_t* state,
     if (!mdl)
         return CALL_ORIGINAL;
 
-    if (settings.player_chams != SETT_OFF &&
+    if ((settings.player_chams != SETT_OFF || settings.local_chams) &&
         strstr(mdl->name, "models/player")) {
         if (pInfo->entity_index < 1 || pInfo->entity_index >= g.MaxClients)
             return CALL_ORIGINAL;
@@ -53,8 +53,17 @@ bool chams(ModelRender* thisptr, const DrawModelState_t* state,
         if (!g.localplayer || !ent)
             return CALL_ORIGINAL;
 
-        /* TODO: Localplayer chams after thirdperson */
-        if (g.localidx == pInfo->entity_index)
+        /* Localplayer chams (thirdperson) if enabled */
+        if (g.localidx == pInfo->entity_index) {
+            if (settings.local_chams)
+                override_material(false, false, settings.col_local_chams,
+                                  "debug/debugambientcube");
+
+            return CALL_ORIGINAL;
+        }
+
+        /* Next part is for non-local player chams */
+        if (settings.player_chams == SETT_OFF)
             return CALL_ORIGINAL;
 
         const bool teammate = IsTeammate(ent);
