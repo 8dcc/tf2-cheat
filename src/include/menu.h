@@ -49,6 +49,5 @@ extern bool menu_open;
 bool menu_init(SDL_Window* window);
 void menu_render(void);
 void watermark_render(void);
-void spectator_list(void);
 
 #endif /* MENU_H_ */

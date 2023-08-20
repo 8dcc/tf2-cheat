@@ -22,5 +22,6 @@ void correct_movement(usercmd_t* cmd, vec3_t old_angles);
 
 /* src/features/misc.c */
 void autobackstab(usercmd_t* cmd);
+void spectator_list(void);
 
 #endif /* FEATURES_H_ */
