@@ -30,6 +30,7 @@ Settings settings = {
 
     .player_chams  = SETT_OFF,
     .chams_ignorez = false,
+    .local_chams   = false,
     .weapon_chams  = false,
     .hand_chams    = false,
 
@@ -63,6 +64,7 @@ Settings settings = {
 
     .col_friend_chams = (struct nk_colorf){ 0.47f, 0.77f, 0.90f, 1.f },
     .col_enemy_chams  = (struct nk_colorf){ 0.87f, 0.34f, 0.34f, 1.f },
+    .col_local_chams  = (struct nk_colorf){ 0.88f, 0.74f, 0.90f, 1.f },
     .col_weapon_chams = (struct nk_colorf){ 0.80f, 0.57f, 0.84f, 1.f },
     .col_hand_chams   = (struct nk_colorf){ 0.88f, 0.74f, 0.90f, 1.f },
 
@@ -100,6 +102,7 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_INT(json_cfg, healthpack_esp);
     JSON_SETTINGS_WRITE_INT(json_cfg, player_chams);
     JSON_SETTINGS_WRITE_INT(json_cfg, chams_ignorez);
+    JSON_SETTINGS_WRITE_INT(json_cfg, local_chams);
     JSON_SETTINGS_WRITE_INT(json_cfg, weapon_chams);
     JSON_SETTINGS_WRITE_INT(json_cfg, hand_chams);
 
@@ -129,6 +132,7 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_COL(json_cfg, col_healthpack_esp);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_friend_chams);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_enemy_chams);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_local_chams);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_weapon_chams);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_hand_chams);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_aim_fov);
@@ -220,6 +224,7 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_INT(json_cfg, healthpack_esp);
     JSON_SETTINGS_READ_INT(json_cfg, player_chams);
     JSON_SETTINGS_READ_INT(json_cfg, chams_ignorez);
+    JSON_SETTINGS_READ_INT(json_cfg, local_chams);
     JSON_SETTINGS_READ_INT(json_cfg, weapon_chams);
     JSON_SETTINGS_READ_INT(json_cfg, hand_chams);
 
@@ -249,6 +254,7 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_COL(json_cfg, col_healthpack_esp);
     JSON_SETTINGS_READ_COL(json_cfg, col_friend_chams);
     JSON_SETTINGS_READ_COL(json_cfg, col_enemy_chams);
+    JSON_SETTINGS_READ_COL(json_cfg, col_local_chams);
     JSON_SETTINGS_READ_COL(json_cfg, col_weapon_chams);
     JSON_SETTINGS_READ_COL(json_cfg, col_hand_chams);
     JSON_SETTINGS_READ_COL(json_cfg, col_aim_fov);

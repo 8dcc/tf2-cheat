@@ -52,6 +52,7 @@ typedef struct {
 
     int player_chams;
     int chams_ignorez;
+    int local_chams;
     int weapon_chams;
     int hand_chams;
 
@@ -85,6 +86,7 @@ typedef struct {
 
     struct nk_colorf col_friend_chams;
     struct nk_colorf col_enemy_chams;
+    struct nk_colorf col_local_chams;
     struct nk_colorf col_weapon_chams;
     struct nk_colorf col_hand_chams;
 
