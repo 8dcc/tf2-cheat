@@ -441,6 +441,7 @@ typedef struct {
 
 void RayInit(Ray_t* ray, vec3_t start, vec3_t end);
 void TraceFilterInit(TraceFilter* filter, Entity* entity);
+void TraceFilterInit_IgnoreFriendly(TraceFilter* filter, Entity* entity);
 bool IsBehindAndFacingTarget(Entity* owner, Entity* target);
 
 #endif /* SDK_H_ */

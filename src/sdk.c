@@ -1,5 +1,6 @@
 
 #include "include/sdk.h"
+#include "include/globals.h"
 #include "include/util.h"
 
 void RayInit(Ray_t* ray, vec3_t start, vec3_t end) {
@@ -19,7 +20,37 @@ void RayInit(Ray_t* ray, vec3_t start, vec3_t end) {
 
 static bool TraceFilterShouldHitEntity(TraceFilter* thisptr, Entity* ent,
                                        int mask) {
+    /* Unused */
     (void)mask;
+    return ent != thisptr->skip;
+}
+
+static bool TraceFilterShouldHitEnt_IgnoreFriendly(TraceFilter* thisptr,
+                                                   Entity* ent, int mask) {
+    /* Unused */
+    (void)mask;
+
+    Networkable* net = GetNetworkable(ent);
+    if (!g.localplayer || !ent || METHOD(net, IsDormant))
+        return ent != thisptr->skip;
+
+    ClientClass* ent_class = METHOD(net, GetClientClass);
+    if (!ent_class)
+        return ent != thisptr->skip;
+
+    /* If it's a friendly player or building, we can shoot through, so ignore */
+    switch (ent_class->class_id) {
+        case CClass_CTFPlayer:
+        case CClass_CObjectSentrygun:
+        case CClass_CObjectDispenser:
+        case CClass_CObjectTeleporter:
+            if (IsTeammate(ent))
+                return false;
+            break;
+        default:
+            break;
+    }
+
     return ent != thisptr->skip;
 }
 
@@ -32,6 +63,17 @@ void TraceFilterInit(TraceFilter* filter, Entity* entity) {
     /* Need to fill VMT if we are creating our own TraceFilter instance */
     static VMT_TraceFilter vmt = {
         .ShouldHitEntity = TraceFilterShouldHitEntity,
+        .GetTraceType    = TraceFilterGetTraceType,
+    };
+
+    filter->vmt  = &vmt;
+    filter->skip = entity;
+}
+
+void TraceFilterInit_IgnoreFriendly(TraceFilter* filter, Entity* entity) {
+    /* Using a different function for .ShouldHitEntity */
+    static VMT_TraceFilter vmt = {
+        .ShouldHitEntity = TraceFilterShouldHitEnt_IgnoreFriendly,
         .GetTraceType    = TraceFilterGetTraceType,
     };
 
