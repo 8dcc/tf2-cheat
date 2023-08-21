@@ -5,7 +5,12 @@
 #include "../include/globals.h"
 #include "../include/settings.h"
 
-static bool valid_weapon(void) {
+enum weapon_type {
+    AIM   = 0,
+    MELEE = 1,
+};
+
+static bool valid_weapon(enum weapon_type type) {
     Weapon* weapon = METHOD(g.localplayer, GetWeapon);
     if (!weapon)
         return false;
@@ -13,7 +18,9 @@ static bool valid_weapon(void) {
     /* For now just check if the current weapon is in a valid slot.
      * TODO: Add projectile aimbot depending on weapon->GetDamageType */
     int slot = METHOD(weapon, GetSlot);
-    return slot == WPN_SLOT_PRIMARY || slot == WPN_SLOT_SECONDARY;
+    return (type == AIM)
+             ? (slot == WPN_SLOT_PRIMARY || slot == WPN_SLOT_SECONDARY)
+             : (slot == WPN_SLOT_MELEE);
 }
 
 static inline void setting_to_hitboxes(int setting, int* min, int* max) {
@@ -53,6 +60,16 @@ static bool is_visible(vec3_t start, vec3_t end, Entity* target) {
                 &filter, &trace);
 
     return trace.entity == target || trace.fraction > 0.97f;
+}
+
+static bool in_swing_range(vec3_t start, vec3_t end, Entity* target) {
+    static vec3_t swing_mins = { -18.0f, -18.0f, -18.0f };
+    static vec3_t swing_maxs = { 18.0f, 18.0f, 18.0f };
+
+    Trace_t trace;
+    TraceHull(start, end, swing_mins, swing_maxs, MASK_SHOT, &trace);
+
+    return trace.entity == target;
 }
 
 #define HITBOX_SET 0
@@ -125,6 +142,64 @@ static vec3_t get_closest_delta(vec3_t viewangles) {
     return best_delta;
 }
 
+static vec3_t get_closest_distance(vec3_t viewangles) {
+    Weapon* weapon = METHOD(g.localplayer, GetWeapon);
+    if (!weapon)
+        return VEC_ZERO;
+
+    const float swing_range = METHOD(weapon, GetSwingRange);
+    if (swing_range <= 0.f)
+        return VEC_ZERO;
+
+    vec3_t shoot_pos  = METHOD(g.localplayer, EyePosition);
+    vec3_t local_eyes = METHOD(g.localplayer, GetShootPos);
+
+    /* Start best_dist as range*4 to filter far enemies */
+    float best_dist  = swing_range * 4.f;
+    vec3_t best_pos  = { 0, 0, 0 };
+    Entity* best_ent = NULL;
+
+    /* Store hitbox position of closest enemy */
+    for (int i = 1; i <= g.MaxClients; i++) {
+        Entity* ent = g.ents[i];
+
+        if (!ent || IsTeammate(ent))
+            continue;
+
+        /* Use head if we are on air, torso otherwise */
+        vec3_t target_pos = (g.localplayer->flags & FL_ONGROUND)
+                              ? get_hitbox_pos(ent, HITBOX_SPINE1)
+                              : get_hitbox_pos(ent, HITBOX_HEAD);
+        if (vec_is_zero(target_pos))
+            continue;
+
+        float dist = vec_len(vec_sub(shoot_pos, target_pos));
+
+        if (dist < best_dist) {
+            best_dist = dist;
+            VEC_COPY(best_pos, target_pos);
+            best_ent = ent;
+        }
+    }
+
+    if (!best_ent)
+        return VEC_ZERO;
+
+    const vec3_t enemy_angle = vec_to_ang(vec_sub(best_pos, local_eyes));
+    const vec3_t swing_end =
+      vec_add(shoot_pos, vec_flmul(ang_to_vec(enemy_angle), swing_range));
+
+    /* We can't see current hitbox */
+    if (!in_swing_range(shoot_pos, swing_end, best_ent))
+        return VEC_ZERO;
+
+    vec3_t delta = vec_sub(enemy_angle, viewangles);
+    vec_norm(&delta);
+    vec_clamp(&delta);
+
+    return delta;
+}
+
 /*----------------------------------------------------------------------------*/
 
 void aimbot(usercmd_t* cmd) {
@@ -136,7 +211,7 @@ void aimbot(usercmd_t* cmd) {
     if (settings.aim_off_spectated && g.spectated_1st)
         return;
 
-    if (!valid_weapon())
+    if (!valid_weapon(AIM))
         return;
 
     /* Calculate delta with the engine viewangles, not with the cmd ones */
@@ -175,7 +250,7 @@ static inline float scale_fov_by_width(float fov, float aspect_ratio) {
 
 void draw_aim_fov(void) {
     if (!settings.aimbot || !settings.aim_draw_fov || !g.localplayer ||
-        !g.IsAlive || !valid_weapon())
+        !g.IsAlive || !valid_weapon(AIM))
         return;
 
     /* Circle won't fit on the screen */
@@ -202,4 +277,38 @@ void draw_aim_fov(void) {
     const rgba_t col = NK2COL(settings.col_aim_fov);
     METHOD_ARGS(i_surface, SetColor, col.r, col.g, col.b, col.a);
     METHOD_ARGS(i_surface, DrawCircle, sw / 2, sh / 2, rad, 255);
+}
+
+/*----------------------------------------------------------------------------*/
+
+void meleebot(usercmd_t* cmd) {
+    if (!true || !(cmd->buttons & IN_ATTACK) || !g.localplayer ||
+        !can_shoot(g.localplayer))
+        return;
+
+    /* We are being spectated in 1st person and we want to hide it */
+    if (settings.aim_off_spectated && g.spectated_1st)
+        return;
+
+    if (!valid_weapon(MELEE))
+        return;
+
+    vec3_t engine_viewangles;
+    METHOD_ARGS(i_engine, GetViewAngles, &engine_viewangles);
+
+    /* NOTE: For meleebot we use cosest distance instead of FOV */
+    vec3_t best_delta = get_closest_distance(engine_viewangles);
+
+    if (!vec_is_zero(best_delta)) {
+        /* No smoothing for meleebot */
+        cmd->viewangles.x = engine_viewangles.x + best_delta.x;
+        cmd->viewangles.y = engine_viewangles.y + best_delta.y;
+        cmd->viewangles.z = engine_viewangles.z + best_delta.z;
+    } else if (settings.aim_shoot_if_target) {
+        cmd->buttons &= ~IN_ATTACK;
+    }
+
+    /* TODO: New setting for melee pSilent */
+    if (!settings.aim_silent)
+        METHOD_ARGS(i_engine, SetViewAngles, &cmd->viewangles);
 }

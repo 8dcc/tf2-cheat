@@ -13,6 +13,7 @@ bool chams(ModelRender* thisptr, const DrawModelState_t* state,
 
 /* src/features/aim.c */
 void aimbot(usercmd_t* cmd);
+void meleebot(usercmd_t* cmd);
 void draw_aim_fov(void);
 
 /* src/features/movement.c */

@@ -96,6 +96,7 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
 
     thirdperson();
     bhop(cmd);
+    meleebot(cmd);
     aimbot(cmd);
     autorocketjump(cmd);
     autobackstab(cmd);
