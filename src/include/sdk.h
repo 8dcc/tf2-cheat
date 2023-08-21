@@ -440,8 +440,15 @@ typedef struct {
 /* Functions from sdk.c */
 
 void RayInit(Ray_t* ray, vec3_t start, vec3_t end);
+void RayInitMinMax(Ray_t* ray, vec3_t start, vec3_t end, vec3_t min,
+                   vec3_t max);
+
 void TraceFilterInit(TraceFilter* filter, Entity* entity);
 void TraceFilterInit_IgnoreFriendly(TraceFilter* filter, Entity* entity);
+
+void TraceHull(vec3_t start, vec3_t end, vec3_t hull_min, vec3_t hull_max,
+               uint32_t mask, Trace_t* trace);
+
 bool IsBehindAndFacingTarget(Entity* owner, Entity* target);
 
 #endif /* SDK_H_ */

@@ -16,6 +16,25 @@ void RayInit(Ray_t* ray, vec3_t start, vec3_t end) {
     ray->m_IsSwept = delta.x || delta.y || delta.z;
 }
 
+void RayInitMinMax(Ray_t* ray, vec3_t start, vec3_t end, vec3_t min,
+                   vec3_t max) {
+    const vec3_t delta   = vec_sub(end, start);
+    const vec3_t extents = vec_flmul(vec_sub(max, min), 0.5);
+    vec3_t soffset       = vec_flmul(vec_add(max, min), 0.5);
+    const vec3_t fstart  = vec_sub(start, soffset);
+    soffset              = vec_flmul(soffset, -1.f);
+
+    /* VectorAligned just has an unused 4 byte pad at the end */
+    ray->m_Start = (VectorAligned){ fstart.x, fstart.y, fstart.z, 0.f };
+    ray->m_Delta = (VectorAligned){ delta.x, delta.y, delta.z, 0.f };
+    ray->m_StartOffset =
+      (VectorAligned){ soffset.x, soffset.y, soffset.z, 0.f };
+    ray->m_Extents = (VectorAligned){ extents.x, extents.y, extents.z, 0.f };
+
+    ray->m_IsRay   = vec_length_sqr(extents) < 1e-6;
+    ray->m_IsSwept = delta.x || delta.y || delta.z;
+}
+
 /*----------------------------------------------------------------------------*/
 
 static bool TraceFilterShouldHitEntity(TraceFilter* thisptr, Entity* ent,
@@ -79,6 +98,19 @@ void TraceFilterInit_IgnoreFriendly(TraceFilter* filter, Entity* entity) {
 
     filter->vmt  = &vmt;
     filter->skip = entity;
+}
+
+/*----------------------------------------------------------------------------*/
+
+void TraceHull(vec3_t start, vec3_t end, vec3_t hull_min, vec3_t hull_max,
+               uint32_t mask, Trace_t* trace) {
+    TraceFilter filter;
+    TraceFilterInit_IgnoreFriendly(&filter, g.localplayer);
+
+    Ray_t ray;
+    RayInitMinMax(&ray, start, end, hull_min, hull_max);
+
+    METHOD_ARGS(i_enginetrace, TraceRay, &ray, mask, &filter, trace);
 }
 
 /*----------------------------------------------------------------------------*/
