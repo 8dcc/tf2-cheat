@@ -57,6 +57,7 @@ vec3_t vec_add(vec3_t a, vec3_t b);
 vec3_t vec_sub(vec3_t a, vec3_t b);
 bool vec_cmp(vec3_t a, vec3_t b);
 bool vec_is_zero(vec3_t v);
+float vec_len(vec3_t v);
 float vec_len2d(vec3_t v);
 void vec_clamp(vec3_t* v);
 void vec_norm(vec3_t* v);

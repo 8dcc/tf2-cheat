@@ -123,6 +123,10 @@ bool vec_is_zero(vec3_t v) {
     return v.x == 0.0f && v.y == 0.0f && v.z == 0.0f;
 }
 
+float vec_len(vec3_t v) {
+    return sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
+}
+
 float vec_len2d(vec3_t v) {
     return sqrtf(v.x * v.x + v.y * v.y);
 }
