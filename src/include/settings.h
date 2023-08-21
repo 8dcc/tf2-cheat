@@ -67,6 +67,11 @@ typedef struct {
     int aim_draw_fov;
     int aim_off_spectated;
 
+    int meleebot;
+    int melee_silent;
+    int melee_shoot_if_target;
+    int melee_off_spectated;
+
     /* Misc */
     int bhop;
     int autostrafe;

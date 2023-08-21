@@ -215,6 +215,17 @@ static inline void tab_aim(void) {
                       &settings.aim_ignore_visible);
     nk_checkbox_label(ctx, "Draw FOV circle", &settings.aim_draw_fov);
     nk_checkbox_label(ctx, "Disable if spectated", &settings.aim_off_spectated);
+
+    nk_layout_row_dynamic(ctx, 8, 1);
+    nk_spacing(ctx, 0); /* ----------------------------  */
+    nk_layout_row_dynamic(ctx, 15, 1);
+
+    nk_checkbox_label(ctx, "Meleebot", &settings.meleebot);
+    nk_checkbox_label(ctx, "Silent", &settings.melee_silent);
+    nk_checkbox_label(ctx, "Attack only if target",
+                      &settings.melee_shoot_if_target);
+    nk_checkbox_label(ctx, "Disable if spectated",
+                      &settings.melee_off_spectated);
 }
 
 static inline void tab_misc(void) {
