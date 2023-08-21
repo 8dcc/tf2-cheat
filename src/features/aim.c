@@ -93,7 +93,7 @@ static vec3_t get_hitbox_pos(Entity* ent, int hitbox_idx) {
     return center_of_hitbox(hdr, bones, HITBOX_SET, hitbox_idx);
 }
 
-static vec3_t get_closest_delta(vec3_t viewangles) {
+static vec3_t get_closest_fov_delta(vec3_t viewangles) {
     /* Compensate aim punch */
     viewangles.x += g.localplayer->vecPunchAngle.x;
     viewangles.y += g.localplayer->vecPunchAngle.y;
@@ -142,7 +142,7 @@ static vec3_t get_closest_delta(vec3_t viewangles) {
     return best_delta;
 }
 
-static vec3_t get_closest_distance(vec3_t viewangles) {
+static vec3_t get_closest_distance_delta(vec3_t viewangles) {
     Weapon* weapon = METHOD(g.localplayer, GetWeapon);
     if (!weapon)
         return VEC_ZERO;
@@ -219,7 +219,7 @@ void aimbot(usercmd_t* cmd) {
     METHOD_ARGS(i_engine, GetViewAngles, &engine_viewangles);
 
     /* TODO: Add setting for lowest health instead of closest */
-    vec3_t best_delta = get_closest_delta(engine_viewangles);
+    vec3_t best_delta = get_closest_fov_delta(engine_viewangles);
 
     if (!vec_is_zero(best_delta)) {
         const float aim_smooth =
@@ -282,12 +282,12 @@ void draw_aim_fov(void) {
 /*----------------------------------------------------------------------------*/
 
 void meleebot(usercmd_t* cmd) {
-    if (!true || !(cmd->buttons & IN_ATTACK) || !g.localplayer ||
+    if (!settings.meleebot || !(cmd->buttons & IN_ATTACK) || !g.localplayer ||
         !can_shoot(g.localplayer))
         return;
 
     /* We are being spectated in 1st person and we want to hide it */
-    if (settings.aim_off_spectated && g.spectated_1st)
+    if (settings.melee_off_spectated && g.spectated_1st)
         return;
 
     if (!valid_weapon(MELEE))
@@ -296,19 +296,20 @@ void meleebot(usercmd_t* cmd) {
     vec3_t engine_viewangles;
     METHOD_ARGS(i_engine, GetViewAngles, &engine_viewangles);
 
-    /* NOTE: For meleebot we use cosest distance instead of FOV */
-    vec3_t best_delta = get_closest_distance(engine_viewangles);
+    /* NOTE: For meleebot we use cosest distance instead of FOV. This function
+     * will also check if its in swing range */
+    vec3_t best_delta = get_closest_distance_delta(engine_viewangles);
 
     if (!vec_is_zero(best_delta)) {
         /* No smoothing for meleebot */
         cmd->viewangles.x = engine_viewangles.x + best_delta.x;
         cmd->viewangles.y = engine_viewangles.y + best_delta.y;
         cmd->viewangles.z = engine_viewangles.z + best_delta.z;
-    } else if (settings.aim_shoot_if_target) {
+    } else if (settings.melee_shoot_if_target) {
         cmd->buttons &= ~IN_ATTACK;
     }
 
-    /* TODO: New setting for melee pSilent */
-    if (!settings.aim_silent)
+    /* TODO: pSilent */
+    if (!settings.melee_silent)
         METHOD_ARGS(i_engine, SetViewAngles, &cmd->viewangles);
 }
