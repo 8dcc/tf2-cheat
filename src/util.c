@@ -115,6 +115,14 @@ vec3_t vec_sub(vec3_t a, vec3_t b) {
     };
 }
 
+vec3_t vec_mul(vec3_t a, vec3_t b) {
+    return (vec3_t){
+        .x = a.x * b.x,
+        .y = a.y * b.y,
+        .z = a.z * b.z,
+    };
+}
+
 bool vec_cmp(vec3_t a, vec3_t b) {
     return a.x == b.x && a.y == b.y && a.z == b.z;
 }
