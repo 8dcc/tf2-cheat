@@ -8,7 +8,15 @@
 #include "globals.h"
 
 /* NOTE: For commented version, see:
- *   https://github.com/8dcc/hl-cheat/blob/main/src/include/hooks.h */
+ *   https://github.com/8dcc/hl-cheat/blob/main/src/include/hooks.h
+ *
+ * Table of prefixes:
+ *   prefix  | meaning
+ *   --------+----------------------------
+ *   *_t     | typedef (function type)
+ *   h_*     | hook function (ours)
+ *   ho_*    | hook original (ptr to orig)
+ */
 
 #define DECL_HOOK_EXTERN(type, name, ...)  \
     typedef type (*name##_t)(__VA_ARGS__); \
