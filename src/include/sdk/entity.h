@@ -123,7 +123,9 @@ typedef struct {
     vec3_t (*EyeAngles)(Entity*);   /* 195 */
     PAD(4 * 95);
     Weapon* (*GetWeapon)(Entity*); /* 291 */
-    PAD(4 * 17);
+    PAD(4 * 10);
+    vec3_t (*GetShootPos)(Entity*); /* 302 */
+    PAD(4 * 6);
     int (*GetObserverMode)(Entity*);       /* 309 */
     Entity* (*GetObserverTarget)(Entity*); /* 310 */
 } VMT_Entity;
