@@ -123,6 +123,14 @@ vec3_t vec_mul(vec3_t a, vec3_t b) {
     };
 }
 
+vec3_t vec_flmul(vec3_t a, float b) {
+    return (vec3_t){
+        .x = a.x * b,
+        .y = a.y * b,
+        .z = a.z * b,
+    };
+}
+
 bool vec_cmp(vec3_t a, vec3_t b) {
     return a.x == b.x && a.y == b.y && a.z == b.z;
 }

@@ -56,6 +56,7 @@ void* find_sig(const char* module, const byte* pattern);
 vec3_t vec_add(vec3_t a, vec3_t b);
 vec3_t vec_sub(vec3_t a, vec3_t b);
 vec3_t vec_mul(vec3_t a, vec3_t b);
+vec3_t vec_flmul(vec3_t a, float b);
 bool vec_cmp(vec3_t a, vec3_t b);
 bool vec_is_zero(vec3_t v);
 float vec_len(vec3_t v);
