@@ -13,6 +13,8 @@ typedef struct {
     PAD(4 * 48);
     int (*GetWeaponId)(Weapon*);   /* 449 */
     int (*GetDamageType)(Weapon*); /* 450 */
+    PAD(4 * 74);
+    int (*GetSwingRange)(Weapon*); /* 525 */
 } VMT_Weapon;
 
 struct Weapon {
