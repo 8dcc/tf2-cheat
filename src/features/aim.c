@@ -142,64 +142,6 @@ static vec3_t get_closest_fov_delta(vec3_t viewangles) {
     return best_delta;
 }
 
-static vec3_t get_closest_distance_delta(vec3_t viewangles) {
-    Weapon* weapon = METHOD(g.localplayer, GetWeapon);
-    if (!weapon)
-        return VEC_ZERO;
-
-    const float swing_range = METHOD(weapon, GetSwingRange);
-    if (swing_range <= 0.f)
-        return VEC_ZERO;
-
-    vec3_t shoot_pos  = METHOD(g.localplayer, EyePosition);
-    vec3_t local_eyes = METHOD(g.localplayer, GetShootPos);
-
-    /* Start best_dist as range*4 to filter far enemies */
-    float best_dist  = swing_range * 4.f;
-    vec3_t best_pos  = { 0, 0, 0 };
-    Entity* best_ent = NULL;
-
-    /* Store hitbox position of closest enemy */
-    for (int i = 1; i <= g.MaxClients; i++) {
-        Entity* ent = g.ents[i];
-
-        if (!ent || IsTeammate(ent))
-            continue;
-
-        /* Use head if we are on air, torso otherwise */
-        vec3_t target_pos = (g.localplayer->flags & FL_ONGROUND)
-                              ? get_hitbox_pos(ent, HITBOX_SPINE1)
-                              : get_hitbox_pos(ent, HITBOX_HEAD);
-        if (vec_is_zero(target_pos))
-            continue;
-
-        float dist = vec_len(vec_sub(shoot_pos, target_pos));
-
-        if (dist < best_dist) {
-            best_dist = dist;
-            VEC_COPY(best_pos, target_pos);
-            best_ent = ent;
-        }
-    }
-
-    if (!best_ent)
-        return VEC_ZERO;
-
-    const vec3_t enemy_angle = vec_to_ang(vec_sub(best_pos, local_eyes));
-    const vec3_t swing_end =
-      vec_add(shoot_pos, vec_flmul(ang_to_vec(enemy_angle), swing_range));
-
-    /* We can't see current hitbox */
-    if (!in_swing_range(shoot_pos, swing_end, best_ent))
-        return VEC_ZERO;
-
-    vec3_t delta = vec_sub(enemy_angle, viewangles);
-    vec_norm(&delta);
-    vec_clamp(&delta);
-
-    return delta;
-}
-
 /*----------------------------------------------------------------------------*/
 
 void aimbot(usercmd_t* cmd) {
@@ -284,6 +226,64 @@ void draw_aim_fov(void) {
 
 /*----------------------------------------------------------------------------*/
 
+static vec3_t get_melee_delta(vec3_t viewangles) {
+    Weapon* weapon = METHOD(g.localplayer, GetWeapon);
+    if (!weapon)
+        return VEC_ZERO;
+
+    const float swing_range = METHOD(weapon, GetSwingRange);
+    if (swing_range <= 0.f)
+        return VEC_ZERO;
+
+    vec3_t shoot_pos  = METHOD(g.localplayer, EyePosition);
+    vec3_t local_eyes = METHOD(g.localplayer, GetShootPos);
+
+    /* Start best_dist as range*4 to filter far enemies */
+    float best_dist  = swing_range * 4.f;
+    vec3_t best_pos  = { 0, 0, 0 };
+    Entity* best_ent = NULL;
+
+    /* Store hitbox position of closest enemy */
+    for (int i = 1; i <= g.MaxClients; i++) {
+        Entity* ent = g.ents[i];
+
+        if (!ent || IsTeammate(ent))
+            continue;
+
+        /* Use head if we are on air, torso otherwise */
+        vec3_t target_pos = (g.localplayer->flags & FL_ONGROUND)
+                              ? get_hitbox_pos(ent, HITBOX_SPINE1)
+                              : get_hitbox_pos(ent, HITBOX_HEAD);
+        if (vec_is_zero(target_pos))
+            continue;
+
+        float dist = vec_len(vec_sub(shoot_pos, target_pos));
+
+        if (dist < best_dist) {
+            best_dist = dist;
+            VEC_COPY(best_pos, target_pos);
+            best_ent = ent;
+        }
+    }
+
+    if (!best_ent)
+        return VEC_ZERO;
+
+    const vec3_t enemy_angle = vec_to_ang(vec_sub(best_pos, local_eyes));
+    const vec3_t swing_end =
+      vec_add(shoot_pos, vec_flmul(ang_to_vec(enemy_angle), swing_range));
+
+    /* We can't see current hitbox */
+    if (!in_swing_range(shoot_pos, swing_end, best_ent))
+        return VEC_ZERO;
+
+    vec3_t delta = vec_sub(enemy_angle, viewangles);
+    vec_norm(&delta);
+    vec_clamp(&delta);
+
+    return delta;
+}
+
 void meleebot(usercmd_t* cmd) {
     if (!settings.meleebot || !(cmd->buttons & IN_ATTACK) || !g.localplayer ||
         !can_shoot(g.localplayer))
@@ -301,7 +301,7 @@ void meleebot(usercmd_t* cmd) {
 
     /* NOTE: For meleebot we use cosest distance instead of FOV. This function
      * will also check if its in swing range */
-    vec3_t best_delta = get_closest_distance_delta(engine_viewangles);
+    vec3_t best_delta = get_melee_delta(engine_viewangles);
 
     if (!vec_is_zero(best_delta)) {
         /* No smoothing for meleebot */
