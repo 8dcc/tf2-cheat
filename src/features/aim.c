@@ -222,6 +222,27 @@ void draw_aim_fov(void) {
 /*----------------------------------------------------------------------------*/
 /* Melee bot */
 
+static bool melee_attacking(usercmd_t* cmd) {
+    Weapon* weapon = METHOD(g.localplayer, GetWeapon);
+    if (!weapon)
+        return false;
+
+    if (METHOD(weapon, GetWeaponId) == TF_WEAPON_KNIFE)
+        return (cmd->buttons & IN_ATTACK) && can_shoot(g.localplayer);
+    else {
+        /* TODO: Temporary until I add prediction */
+        const float flTime =
+          g.localplayer->nTickBase * c_globalvars->interval_per_tick;
+
+        /* Time since we started the melee attack */
+        float attack_time = fabs(weapon->smackTime - flTime);
+
+        /* This was the most reliable range I could find, hits ~90% with silent
+         * and almost 100% without silent. */
+        return attack_time >= 0.17f && attack_time <= 0.22f;
+    }
+}
+
 static bool in_swing_range(vec3_t start, vec3_t end, Entity* target) {
     static vec3_t swing_mins = { -18.0f, -18.0f, -18.0f };
     static vec3_t swing_maxs = { 18.0f, 18.0f, 18.0f };
@@ -258,7 +279,7 @@ static vec3_t get_melee_delta(vec3_t viewangles) {
 
         /* Use head if we are on air, torso otherwise */
         vec3_t target_pos = (g.localplayer->flags & FL_ONGROUND)
-                              ? get_hitbox_pos(ent, HITBOX_SPINE1)
+                              ? get_hitbox_pos(ent, HITBOX_SPINE3)
                               : get_hitbox_pos(ent, HITBOX_HEAD);
         if (vec_is_zero(target_pos))
             continue;
@@ -281,7 +302,8 @@ static vec3_t get_melee_delta(vec3_t viewangles) {
 
     /* We can't hit the current player */
     if (!in_swing_range(shoot_pos, swing_end, closest_ent)) {
-        if (!settings.melee_swing_pred)
+        if (!settings.melee_swing_pred ||
+            METHOD(weapon, GetWeaponId) == TF_WEAPON_KNIFE)
             return VEC_ZERO;
 
         static const float delay = 0.2f;
@@ -314,8 +336,9 @@ static vec3_t get_melee_delta(vec3_t viewangles) {
 }
 
 void meleebot(usercmd_t* cmd) {
-    if (!settings.meleebot || !(cmd->buttons & IN_ATTACK) || !g.localplayer ||
-        !can_shoot(g.localplayer))
+    if (!settings.meleebot || !(cmd->buttons & IN_ATTACK) || !g.localplayer
+        /*||
+        !can_shoot(g.localplayer)*/)
         return;
 
     /* We are being spectated in 1st person and we want to hide it */
@@ -333,18 +356,19 @@ void meleebot(usercmd_t* cmd) {
     vec3_t best_delta = get_melee_delta(engine_viewangles);
 
     if (!vec_is_zero(best_delta)) {
-        /* No smoothing for meleebot */
-        cmd->viewangles.x = engine_viewangles.x + best_delta.x;
-        cmd->viewangles.y = engine_viewangles.y + best_delta.y;
-        cmd->viewangles.z = engine_viewangles.z + best_delta.z;
+        if (melee_attacking(cmd)) {
+            /* No smoothing for meleebot */
+            cmd->viewangles.x = engine_viewangles.x + best_delta.x;
+            cmd->viewangles.y = engine_viewangles.y + best_delta.y;
+            cmd->viewangles.z = engine_viewangles.z + best_delta.z;
 
-        if (settings.melee_silent)
-            *bSendPacket = false;
+            if (settings.melee_silent)
+                *bSendPacket = false;
+        }
     } else if (settings.melee_shoot_if_target) {
         cmd->buttons &= ~IN_ATTACK;
     }
 
-    /* TODO: pSilent */
     if (!settings.melee_silent)
         METHOD_ARGS(i_engine, SetViewAngles, &cmd->viewangles);
 }

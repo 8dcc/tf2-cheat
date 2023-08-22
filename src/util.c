@@ -205,7 +205,7 @@ float vec_length_sqr(vec3_t v) {
 /*----------------------------------------------------------------------------*/
 
 bool can_shoot(Entity* ent) {
-    /* Temporary until I add prediction */
+    /* TODO: Temporary until I add prediction */
     const float flTime = ent->nTickBase * c_globalvars->interval_per_tick;
 
     Weapon* weapon = METHOD(ent, GetWeapon);
