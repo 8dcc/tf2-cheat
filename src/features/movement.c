@@ -112,7 +112,9 @@ void autorocketjump(usercmd_t* cmd) {
             return;
     }
 
+    *bSendPacket      = false;
     cmd->viewangles.x = 89.f;
+
     cmd->buttons |= IN_ATTACK | IN_DUCK | IN_JUMP;
     cmd->buttons &= ~IN_ATTACK2;
 }
