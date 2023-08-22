@@ -5,6 +5,9 @@
 #include "../include/globals.h"
 #include "../include/settings.h"
 
+/*----------------------------------------------------------------------------*/
+/* Common */
+
 enum weapon_type {
     AIM   = 0,
     MELEE = 1,
@@ -44,34 +47,6 @@ static inline void setting_to_hitboxes(int setting, int* min, int* max) {
     }
 }
 
-static bool is_visible(vec3_t start, vec3_t end, Entity* target) {
-    if (settings.aim_ignore_visible)
-        return true;
-
-    /* We initialize with a custom ShouldHitEntity() for ignoring teammates */
-    TraceFilter filter;
-    TraceFilterInit_IgnoreFriendly(&filter, g.localplayer);
-
-    Ray_t ray;
-    RayInit(&ray, start, end);
-
-    Trace_t trace;
-    METHOD_ARGS(i_enginetrace, TraceRay, &ray, MASK_SHOT | CONTENTS_GRATE,
-                &filter, &trace);
-
-    return trace.entity == target || trace.fraction > 0.97f;
-}
-
-static bool in_swing_range(vec3_t start, vec3_t end, Entity* target) {
-    static vec3_t swing_mins = { -18.0f, -18.0f, -18.0f };
-    static vec3_t swing_maxs = { 18.0f, 18.0f, 18.0f };
-
-    Trace_t trace;
-    TraceHull(start, end, swing_mins, swing_maxs, MASK_SHOT, &trace);
-
-    return trace.entity == target;
-}
-
 #define HITBOX_SET 0
 static vec3_t get_hitbox_pos(Entity* ent, int hitbox_idx) {
     static matrix3x4_t bones[MAXSTUDIOBONES];
@@ -91,6 +66,27 @@ static vec3_t get_hitbox_pos(Entity* ent, int hitbox_idx) {
         return VEC_ZERO;
 
     return center_of_hitbox(hdr, bones, HITBOX_SET, hitbox_idx);
+}
+
+/*----------------------------------------------------------------------------*/
+/* Aimbot */
+
+static bool is_visible(vec3_t start, vec3_t end, Entity* target) {
+    if (settings.aim_ignore_visible)
+        return true;
+
+    /* We initialize with a custom ShouldHitEntity() for ignoring teammates */
+    TraceFilter filter;
+    TraceFilterInit_IgnoreFriendly(&filter, g.localplayer);
+
+    Ray_t ray;
+    RayInit(&ray, start, end);
+
+    Trace_t trace;
+    METHOD_ARGS(i_enginetrace, TraceRay, &ray, MASK_SHOT | CONTENTS_GRATE,
+                &filter, &trace);
+
+    return trace.entity == target || trace.fraction > 0.97f;
 }
 
 static vec3_t get_closest_fov_delta(vec3_t viewangles) {
@@ -142,8 +138,6 @@ static vec3_t get_closest_fov_delta(vec3_t viewangles) {
     return best_delta;
 }
 
-/*----------------------------------------------------------------------------*/
-
 void aimbot(usercmd_t* cmd) {
     if (!settings.aimbot || !(cmd->buttons & IN_ATTACK) || !g.localplayer ||
         !can_shoot(g.localplayer))
@@ -182,6 +176,7 @@ void aimbot(usercmd_t* cmd) {
 }
 
 /*----------------------------------------------------------------------------*/
+/* Aimbot FOV circle */
 
 static inline float scale_fov_by_width(float fov, float aspect_ratio) {
     aspect_ratio *= 0.75f;
@@ -225,6 +220,17 @@ void draw_aim_fov(void) {
 }
 
 /*----------------------------------------------------------------------------*/
+/* Melee bot */
+
+static bool in_swing_range(vec3_t start, vec3_t end, Entity* target) {
+    static vec3_t swing_mins = { -18.0f, -18.0f, -18.0f };
+    static vec3_t swing_maxs = { 18.0f, 18.0f, 18.0f };
+
+    Trace_t trace;
+    TraceHull(start, end, swing_mins, swing_maxs, MASK_SHOT, &trace);
+
+    return trace.entity == target;
+}
 
 static vec3_t get_melee_delta(vec3_t viewangles) {
     Weapon* weapon = METHOD(g.localplayer, GetWeapon);
