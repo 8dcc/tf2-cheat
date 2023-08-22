@@ -245,7 +245,7 @@ static vec3_t get_melee_delta(vec3_t viewangles) {
     vec3_t local_eyes = METHOD(g.localplayer, GetShootPos);
 
     /* Start closest_dist as range*4 to filter far enemies */
-    float closest_dist  = swing_range * 4.f;
+    float closest_dist  = swing_range * 8.f;
     vec3_t closest_pos  = { 0, 0, 0 };
     Entity* closest_ent = NULL;
 
@@ -276,12 +276,35 @@ static vec3_t get_melee_delta(vec3_t viewangles) {
         return VEC_ZERO;
 
     const vec3_t enemy_angle = vec_to_ang(vec_sub(closest_pos, local_eyes));
-    const vec3_t swing_end =
-      vec_add(shoot_pos, vec_flmul(ang_to_vec(enemy_angle), swing_range));
+    const vec3_t forward     = ang_to_vec(enemy_angle);
+    vec3_t swing_end = vec_add(shoot_pos, vec_flmul(forward, swing_range));
 
     /* We can't hit the current player */
-    if (!in_swing_range(shoot_pos, swing_end, closest_ent))
-        return VEC_ZERO;
+    if (!in_swing_range(shoot_pos, swing_end, closest_ent)) {
+        if (!settings.melee_swing_pred)
+            return VEC_ZERO;
+
+        static const float delay = 0.2f;
+
+        /* Extrapolate position for getting new shootpos.
+         * Credits:
+         *   - SEOwned
+         *   - https://casualhacks.net/blog/2019-09-17/projectile-solver/ */
+        shoot_pos =
+          vec_add(shoot_pos, vec_flmul(g.localplayer->velocity, delay));
+
+        if (!(g.localplayer->flags & FL_ONGROUND)) {
+            /* TODO: Get from cvar at runtime */
+            const float sv_gravity = 800.f;
+            shoot_pos.z -= sv_gravity * 0.5f * delay * delay;
+        }
+
+        /* Calculate end of trace again and check if we can hit */
+        swing_end = vec_add(shoot_pos, vec_flmul(forward, swing_range));
+
+        if (!in_swing_range(shoot_pos, swing_end, closest_ent))
+            return VEC_ZERO;
+    }
 
     vec3_t delta = vec_sub(enemy_angle, viewangles);
     vec_norm(&delta);
