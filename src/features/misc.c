@@ -4,21 +4,15 @@
 #include "../include/globals.h"
 
 void autobackstab(usercmd_t* cmd) {
-    if (!settings.autostab || !g.localplayer || !g.IsAlive)
+    if (!settings.autostab || !g.localplayer || !g.localweapon || !g.IsAlive)
         return;
 
-    Weapon* weapon = METHOD(g.localplayer, GetWeapon);
-    if (!weapon)
-        return;
-
-    Networkable* net       = GetNetworkable((Entity*)weapon);
-    ClientClass* ent_class = METHOD(net, GetClientClass);
-    if (!ent_class || ent_class->class_id != CClass_CTFKnife)
+    if (METHOD(g.localweapon, GetWeaponId) != TF_WEAPON_KNIFE)
         return;
 
     /* TODO: Fix and use IsBehindAndFacingTarget
      * https://www.unknowncheats.me/forum/2897712-post287.html */
-    if (weapon->bReadyToBackstab)
+    if (g.localweapon->bReadyToBackstab)
         cmd->buttons |= IN_ATTACK;
 }
 

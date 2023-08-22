@@ -77,27 +77,15 @@ void bhop(usercmd_t* cmd) {
 }
 
 void autorocketjump(usercmd_t* cmd) {
-    if (!settings.rocketjump || !g.localplayer || !(cmd->buttons & IN_JUMP))
+    if (!settings.rocketjump || !g.localplayer || !g.localweapon ||
+        !(cmd->buttons & IN_JUMP))
         return;
 
     /* If bhop is off, only rocketjump on ground */
     if (!settings.bhop && !(g.localplayer->flags & FL_ONGROUND))
         return;
 
-    Weapon* weapon = METHOD(g.localplayer, GetWeapon);
-    if (!weapon)
-        return;
-
-    Networkable* net       = GetNetworkable((Entity*)weapon);
-    ClientClass* ent_class = METHOD(net, GetClientClass);
-    if (!ent_class)
-        return;
-
-    /* Valid weapon */
-    if (ent_class->class_id != CClass_CTFRocketLauncher &&
-        ent_class->class_id != CClass_CTFRocketLauncher_AirStrike &&
-        ent_class->class_id != CClass_CTFRocketLauncher_DirectHit &&
-        ent_class->class_id != CClass_CTFRocketLauncher_Mortar)
+    if (METHOD(g.localweapon, GetWeaponId) != TF_WEAPON_ROCKETLAUNCHER)
         return;
 
     if (!can_shoot(g.localplayer))
