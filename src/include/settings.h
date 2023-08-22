@@ -69,6 +69,7 @@ typedef struct {
 
     int meleebot;
     int melee_silent;
+    int melee_swing_pred;
     int melee_shoot_if_target;
     int melee_off_spectated;
 

@@ -47,6 +47,7 @@ Settings settings = {
 
     .meleebot              = false,
     .melee_silent          = false,
+    .melee_swing_pred      = false,
     .melee_shoot_if_target = false,
     .melee_off_spectated   = false,
 
@@ -123,6 +124,7 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_off_spectated);
     JSON_SETTINGS_WRITE_INT(json_cfg, meleebot);
     JSON_SETTINGS_WRITE_INT(json_cfg, melee_silent);
+    JSON_SETTINGS_WRITE_INT(json_cfg, melee_swing_pred);
     JSON_SETTINGS_WRITE_INT(json_cfg, melee_shoot_if_target);
     JSON_SETTINGS_WRITE_INT(json_cfg, melee_off_spectated);
 
@@ -250,6 +252,7 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_INT(json_cfg, aim_off_spectated);
     JSON_SETTINGS_READ_INT(json_cfg, meleebot);
     JSON_SETTINGS_READ_INT(json_cfg, melee_silent);
+    JSON_SETTINGS_READ_INT(json_cfg, melee_swing_pred);
     JSON_SETTINGS_READ_INT(json_cfg, melee_shoot_if_target);
     JSON_SETTINGS_READ_INT(json_cfg, melee_off_spectated);
 
