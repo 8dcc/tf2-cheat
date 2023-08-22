@@ -208,11 +208,13 @@ bool can_shoot(Entity* ent) {
     /* TODO: Temporary until I add prediction */
     const float flTime = ent->nTickBase * c_globalvars->interval_per_tick;
 
-    Weapon* weapon = METHOD(ent, GetWeapon);
-    if (!weapon)
+    if (!g.localweapon)
         return false;
 
-    return ent->flNextAttack <= flTime && weapon->flNextPrimaryAttack <= flTime;
+    /* TODO: It's a bit broken with some weapons, maybe fixed after I add
+     * prediction? */
+    return ent->flNextAttack <= flTime &&
+           g.localweapon->flNextPrimaryAttack <= flTime;
 }
 
 vec3_t center_of_hitbox(studiohdr_t* studio, matrix3x4_t* bonemat, int set,

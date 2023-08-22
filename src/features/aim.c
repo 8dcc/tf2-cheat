@@ -17,13 +17,9 @@ enum weapon_type {
 };
 
 static bool valid_weapon(enum weapon_type type) {
-    Weapon* weapon = METHOD(g.localplayer, GetWeapon);
-    if (!weapon)
-        return false;
-
     /* For now just check if the current weapon is in a valid slot.
      * TODO: Add projectile aimbot depending on weapon->GetDamageType */
-    int slot = METHOD(weapon, GetSlot);
+    int slot = METHOD(g.localweapon, GetSlot);
     return (type == AIM)
              ? (slot == WPN_SLOT_PRIMARY || slot == WPN_SLOT_SECONDARY)
              : (slot == WPN_SLOT_MELEE);
@@ -143,7 +139,7 @@ static vec3_t get_closest_fov_delta(vec3_t viewangles) {
 
 void aimbot(usercmd_t* cmd) {
     if (!settings.aimbot || !(cmd->buttons & IN_ATTACK) || !g.localplayer ||
-        !can_shoot(g.localplayer))
+        !g.localweapon || !can_shoot(g.localplayer))
         return;
 
     /* We are being spectated in 1st person and we want to hide it */
@@ -170,11 +166,7 @@ void aimbot(usercmd_t* cmd) {
 
         if (settings.aim_silent &&
             c_globalvars->tickcount - last_pSilent >= PSILENT_TICK_DELAY) {
-            Weapon* weapon = METHOD(g.localplayer, GetWeapon);
-            if (!weapon)
-                return;
-
-            const int wpn_id = METHOD(weapon, GetWeaponId);
+            const int wpn_id = METHOD(g.localweapon, GetWeaponId);
             if (wpn_id == TF_WEAPON_ROCKETLAUNCHER ||
                 wpn_id == TF_WEAPON_GRENADELAUNCHER ||
                 wpn_id == TF_WEAPON_PIPEBOMBLAUNCHER) {
@@ -238,24 +230,19 @@ void draw_aim_fov(void) {
 /* Melee bot */
 
 static bool melee_attacking(usercmd_t* cmd) {
-    Weapon* weapon = METHOD(g.localplayer, GetWeapon);
-    if (!weapon)
-        return false;
-
-    if (METHOD(weapon, GetWeaponId) == TF_WEAPON_KNIFE)
+    if (METHOD(g.localweapon, GetWeaponId) == TF_WEAPON_KNIFE)
         return (cmd->buttons & IN_ATTACK) && can_shoot(g.localplayer);
-    else {
-        /* TODO: Temporary until I add prediction */
-        const float flTime =
-          g.localplayer->nTickBase * c_globalvars->interval_per_tick;
 
-        /* Time since we started the melee attack */
-        float attack_time = fabs(weapon->smackTime - flTime);
+    /* TODO: Temporary until I add prediction */
+    const float flTime =
+      g.localplayer->nTickBase * c_globalvars->interval_per_tick;
 
-        /* This was the most reliable range I could find, hits ~90% with silent
-         * and almost 100% without silent. */
-        return attack_time >= 0.17f && attack_time <= 0.22f;
-    }
+    /* Time since we started the melee attack */
+    float attack_time = fabs(g.localweapon->smackTime - flTime);
+
+    /* This was the most reliable range I could find, hits ~90% with silent
+     * and almost 100% without silent. */
+    return attack_time >= 0.17f && attack_time <= 0.22f;
 }
 
 static bool in_swing_range(vec3_t start, vec3_t end, Entity* target) {
@@ -269,11 +256,7 @@ static bool in_swing_range(vec3_t start, vec3_t end, Entity* target) {
 }
 
 static vec3_t get_melee_delta(vec3_t viewangles) {
-    Weapon* weapon = METHOD(g.localplayer, GetWeapon);
-    if (!weapon)
-        return VEC_ZERO;
-
-    const float swing_range = METHOD(weapon, GetSwingRange);
+    const float swing_range = METHOD(g.localweapon, GetSwingRange);
     if (swing_range <= 0.f)
         return VEC_ZERO;
 
@@ -318,7 +301,7 @@ static vec3_t get_melee_delta(vec3_t viewangles) {
     /* We can't hit the current player */
     if (!in_swing_range(shoot_pos, swing_end, closest_ent)) {
         if (!settings.melee_swing_pred ||
-            METHOD(weapon, GetWeaponId) == TF_WEAPON_KNIFE)
+            METHOD(g.localweapon, GetWeaponId) == TF_WEAPON_KNIFE)
             return VEC_ZERO;
 
         static const float delay = 0.2f;
@@ -352,7 +335,7 @@ static vec3_t get_melee_delta(vec3_t viewangles) {
 
 void meleebot(usercmd_t* cmd) {
     if (!settings.meleebot || !(cmd->buttons & IN_ATTACK) || !g.localplayer ||
-        !can_shoot(g.localplayer))
+        !g.localweapon || !can_shoot(g.localplayer))
         return;
 
     /* We are being spectated in 1st person and we want to hide it */
