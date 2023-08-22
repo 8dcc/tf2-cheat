@@ -1,6 +1,7 @@
 
 #include <stdio.h>
 #include <dlfcn.h>
+#include <sys/mman.h> /* PROT_* */
 #include "include/globals.h"
 
 /* See wiki */
@@ -38,6 +39,8 @@ void* h_sdl2           = NULL;
 
 global_cache_t g;
 font_list_t g_fonts;
+
+bool* bSendPacket = NULL;
 
 StartDrawing_t StartDrawing   = NULL;
 FinishDrawing_t FinishDrawing = NULL;
@@ -88,6 +91,10 @@ static inline bool get_sigs(void) {
 
     GET_PATTERN(pat_FinishDrawing, MATSURFACE_SO, SIG_FinishDrawing);
     FinishDrawing = RELATIVE2ABSOLUTE(pat_FinishDrawing + 13);
+
+    GET_PATTERN(pat_bSendPacket, ENGINE_SO, SIG_bSendPacket);
+    bSendPacket = pat_bSendPacket + 1;
+    protect_addr(bSendPacket, PROT_READ | PROT_WRITE | PROT_EXEC);
 
     return true;
 }

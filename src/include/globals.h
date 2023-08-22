@@ -23,6 +23,10 @@
 #define SIG_FinishDrawing \
     "\x89\x04\x24\xFF\x92????\x89\x34\x24\xE8????\x80\x7D\x97?\x0F\x85????"
 
+#define SIG_bSendPacket                                                        \
+    "\xBE????\xE9????\x8D\xB6\x00\x00\x00\x00\xA1????\xC7\x45?????\xC7\x45???" \
+    "??\x85\xC0\x0F\x84????\x8D\x55\xA8\xC7\x44\x24?????"
+
 /*
  * NOTE: For commented version, see:
  *   https://github.com/8dcc/hl-cheat/blob/main/src/include/hooks.h
@@ -143,6 +147,8 @@ extern void* h_sdl2;
 
 extern global_cache_t g;
 extern font_list_t g_fonts;
+
+extern bool* bSendPacket;
 
 typedef void (*StartDrawing_t)(MatSurface*);
 extern StartDrawing_t StartDrawing;

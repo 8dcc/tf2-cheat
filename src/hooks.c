@@ -87,6 +87,8 @@ void h_FrameStageNotify(BaseClient* thisptr, ClientFrameStage_t curStage) {
 
 bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
                   usercmd_t* cmd) {
+    *bSendPacket = true;
+
     bool ret          = ORIGINAL(CreateMove, thisptr, flInputSampleTime, cmd);
     vec3_t old_angles = cmd->viewangles;
 
