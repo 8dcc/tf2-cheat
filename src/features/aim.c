@@ -244,10 +244,10 @@ static vec3_t get_melee_delta(vec3_t viewangles) {
     vec3_t shoot_pos  = METHOD(g.localplayer, EyePosition);
     vec3_t local_eyes = METHOD(g.localplayer, GetShootPos);
 
-    /* Start best_dist as range*4 to filter far enemies */
-    float best_dist  = swing_range * 4.f;
-    vec3_t best_pos  = { 0, 0, 0 };
-    Entity* best_ent = NULL;
+    /* Start closest_dist as range*4 to filter far enemies */
+    float closest_dist  = swing_range * 4.f;
+    vec3_t closest_pos  = { 0, 0, 0 };
+    Entity* closest_ent = NULL;
 
     /* Store hitbox position of closest enemy */
     for (int i = 1; i <= g.MaxClients; i++) {
@@ -265,22 +265,22 @@ static vec3_t get_melee_delta(vec3_t viewangles) {
 
         float dist = vec_len(vec_sub(shoot_pos, target_pos));
 
-        if (dist < best_dist) {
-            best_dist = dist;
-            VEC_COPY(best_pos, target_pos);
-            best_ent = ent;
+        if (dist < closest_dist) {
+            closest_dist = dist;
+            VEC_COPY(closest_pos, target_pos);
+            closest_ent = ent;
         }
     }
 
-    if (!best_ent)
+    if (!closest_ent)
         return VEC_ZERO;
 
-    const vec3_t enemy_angle = vec_to_ang(vec_sub(best_pos, local_eyes));
+    const vec3_t enemy_angle = vec_to_ang(vec_sub(closest_pos, local_eyes));
     const vec3_t swing_end =
       vec_add(shoot_pos, vec_flmul(ang_to_vec(enemy_angle), swing_range));
 
-    /* We can't see current hitbox */
-    if (!in_swing_range(shoot_pos, swing_end, best_ent))
+    /* We can't hit the current player */
+    if (!in_swing_range(shoot_pos, swing_end, closest_ent))
         return VEC_ZERO;
 
     vec3_t delta = vec_sub(enemy_angle, viewangles);
