@@ -8,6 +8,9 @@
 /*----------------------------------------------------------------------------*/
 /* Common */
 
+#define PSILENT_TICK_DELAY 10
+static int last_pSilent = 0;
+
 enum weapon_type {
     AIM   = 0,
     MELEE = 1,
@@ -165,8 +168,20 @@ void aimbot(usercmd_t* cmd) {
         cmd->viewangles.y = engine_viewangles.y + best_delta.y / aim_smooth;
         cmd->viewangles.z = engine_viewangles.z + best_delta.z / aim_smooth;
 
-        if (settings.aim_silent)
-            *bSendPacket = false;
+        if (settings.aim_silent &&
+            c_globalvars->tickcount - last_pSilent >= PSILENT_TICK_DELAY) {
+            Weapon* weapon = METHOD(g.localplayer, GetWeapon);
+            if (!weapon)
+                return;
+
+            const int wpn_id = METHOD(weapon, GetWeaponId);
+            if (wpn_id == TF_WEAPON_ROCKETLAUNCHER ||
+                wpn_id == TF_WEAPON_GRENADELAUNCHER ||
+                wpn_id == TF_WEAPON_PIPEBOMBLAUNCHER) {
+                *bSendPacket = false;
+                last_pSilent = c_globalvars->tickcount;
+            }
+        }
     } else if (settings.aim_shoot_if_target) {
         cmd->buttons &= ~IN_ATTACK;
     }
@@ -336,9 +351,8 @@ static vec3_t get_melee_delta(vec3_t viewangles) {
 }
 
 void meleebot(usercmd_t* cmd) {
-    if (!settings.meleebot || !(cmd->buttons & IN_ATTACK) || !g.localplayer
-        /*||
-        !can_shoot(g.localplayer)*/)
+    if (!settings.meleebot || !(cmd->buttons & IN_ATTACK) || !g.localplayer ||
+        !can_shoot(g.localplayer))
         return;
 
     /* We are being spectated in 1st person and we want to hide it */
@@ -362,8 +376,11 @@ void meleebot(usercmd_t* cmd) {
             cmd->viewangles.y = engine_viewangles.y + best_delta.y;
             cmd->viewangles.z = engine_viewangles.z + best_delta.z;
 
-            if (settings.melee_silent)
+            if (settings.melee_silent &&
+                c_globalvars->tickcount - last_pSilent >= PSILENT_TICK_DELAY) {
                 *bSendPacket = false;
+                last_pSilent = c_globalvars->tickcount;
+            }
         }
     } else if (settings.melee_shoot_if_target) {
         cmd->buttons &= ~IN_ATTACK;
