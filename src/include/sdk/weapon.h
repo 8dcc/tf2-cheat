@@ -19,7 +19,9 @@ typedef struct {
 
 struct Weapon {
     VMT_Weapon* vmt;
-    PAD(0xA34);
+    PAD(0x307);
+    float smackTime; /* 0x30B, see CTFWeaponBaseMelee::ItemPostFrame() */
+    PAD(0x729);
     CBaseHandle hOwner; /* 0xA38 */
     PAD(0x10);
     float flNextPrimaryAttack; /* 0xA4C */
