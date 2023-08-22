@@ -131,6 +131,7 @@ typedef struct {
     VMatrix w2s_vmatrix;
     Entity* ents[2049];
     Entity* localplayer;
+    Weapon* localweapon;
 
     /* Updated in EngineVGui::Paint() -> spectator_list() */
     bool spectated_1st;

@@ -158,6 +158,7 @@ bool globals_init(void) {
     cache_reset();
     cache_update();
     if (g.IsInGame) {
+        /* Call stuff that should be run each level change when injecting */
         g.localidx = METHOD(i_engine, GetLocalPlayer);
         cache_get_model_idx();
     }
@@ -252,10 +253,12 @@ void cache_get_model_idx(void) {
 void cache_reset(void) {
     g.IsInGame    = false;
     g.IsConnected = false;
+    g.IsAlive     = false;
     g.MaxClients  = 0;
     g.MaxEntities = 0;
 
     g.localplayer = NULL;
+    g.localweapon = NULL;
     for (int i = 0; i < (int)LENGTH(g.ents); i++)
         g.ents[i] = NULL;
 }
@@ -270,8 +273,12 @@ void cache_update(void) {
 
         /* Store localplayer even if not alive */
         g.localplayer = METHOD_ARGS(i_entitylist, GetClientEntity, g.localidx);
-        if (g.localplayer)
+        if (g.localplayer) {
             g.IsAlive = METHOD(g.localplayer, IsAlive);
+
+            if (g.IsAlive)
+                g.localweapon = METHOD(g.localplayer, GetWeapon);
+        }
 
         /* First iterate players */
         for (int i = 1; i <= g.MaxClients; i++) {
