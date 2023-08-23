@@ -427,6 +427,30 @@ void esp(void) {
                 break;
             }
 
+            case CClass_CTFTankBoss: {
+                if (settings.player_esp != SETT_ALL &&
+                    settings.player_esp != SETT_ENEMY)
+                    continue;
+
+                if (!get_bbox(ent, &x, &y, &w, &h))
+                    continue;
+
+                /* Only working settings for MvM tanks are box and name esp */
+                if (settings.player_box_esp)
+                    OUTLINED_BOX(x, y, w, h, player_enemy_col);
+
+                if (settings.player_name_esp || settings.player_class_esp) {
+                    int infopos_x = x + w / 2;
+                    int infopos_y = y + h + 2;
+
+                    draw_text(infopos_x, infopos_y, true, g_fonts.main.id,
+                              player_enemy_col, "Tank");
+                }
+
+                /* end: case CClass_CTFTankBoss */
+                break;
+            }
+
             default:
                 break;
         } /* end: Entity class switch */
