@@ -106,6 +106,17 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
     correct_movement(cmd, old_angles);
     ang_norm(&cmd->viewangles);
     ang_norm(&cmd->viewangles);
+
+    /* Make sure we aren't choking too much */
+    if (*bSendPacket == false) {
+        g.choked++;
+        if (g.choked >= MAX_CHOKE)
+            *bSendPacket = true;
+    }
+
+    if (*bSendPacket)
+        g.choked = 0;
+
     return false;
 }
 

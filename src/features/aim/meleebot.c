@@ -146,11 +146,8 @@ void meleebot(usercmd_t* cmd) {
             cmd->viewangles.y = engine_viewangles.y + best_delta.y;
             cmd->viewangles.z = engine_viewangles.z + best_delta.z;
 
-            if (settings.melee_silent &&
-                c_globalvars->tickcount - last_pSilent >= PSILENT_TICK_DELAY) {
+            if (settings.melee_silent)
                 *bSendPacket = false;
-                last_pSilent = c_globalvars->tickcount;
-            }
         }
     } else if (settings.melee_shoot_if_target) {
         cmd->buttons &= ~IN_ATTACK;

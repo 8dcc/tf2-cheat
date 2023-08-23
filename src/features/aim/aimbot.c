@@ -6,11 +6,6 @@
 #include "../../include/settings.h"
 #include "common.h"
 
-/* Used by aimbot.c and meleebot.c */
-int last_pSilent = 0;
-
-/*----------------------------------------------------------------------------*/
-
 static bool is_visible(vec3_t start, vec3_t end, Entity* target) {
     if (settings.aim_ignore_visible)
         return true;
@@ -111,15 +106,12 @@ void aimbot(usercmd_t* cmd) {
         cmd->viewangles.y = engine_viewangles.y + best_delta.y / aim_smooth;
         cmd->viewangles.z = engine_viewangles.z + best_delta.z / aim_smooth;
 
-        if (settings.aim_silent &&
-            c_globalvars->tickcount - last_pSilent >= PSILENT_TICK_DELAY) {
+        if (settings.aim_silent) {
             const int wpn_id = METHOD(g.localweapon, GetWeaponId);
             if (wpn_id == TF_WEAPON_ROCKETLAUNCHER ||
                 wpn_id == TF_WEAPON_GRENADELAUNCHER ||
-                wpn_id == TF_WEAPON_PIPEBOMBLAUNCHER) {
+                wpn_id == TF_WEAPON_PIPEBOMBLAUNCHER)
                 *bSendPacket = false;
-                last_pSilent = c_globalvars->tickcount;
-            }
         }
     } else if (settings.aim_shoot_if_target) {
         cmd->buttons &= ~IN_ATTACK;

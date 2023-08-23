@@ -2,9 +2,6 @@
 #include "../../include/sdk.h"
 #include "../../include/settings.h"
 
-#define PSILENT_TICK_DELAY 10
-extern int last_pSilent;
-
 static inline void setting_to_hitboxes(int setting, int* min, int* max) {
     switch (setting) {
         case SETT_HITBOX_HEAD:
