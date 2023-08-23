@@ -78,11 +78,7 @@ void bhop(usercmd_t* cmd) {
 
 void autorocketjump(usercmd_t* cmd) {
     if (!settings.rocketjump || !g.localplayer || !g.localweapon ||
-        !(cmd->buttons & IN_JUMP))
-        return;
-
-    /* If bhop is off, only rocketjump on ground */
-    if (!settings.bhop && !(g.localplayer->flags & FL_ONGROUND))
+        !(cmd->buttons & IN_ATTACK2) || !(g.localplayer->flags & FL_ONGROUND))
         return;
 
     if (METHOD(g.localweapon, GetWeaponId) != TF_WEAPON_ROCKETLAUNCHER)
@@ -91,20 +87,33 @@ void autorocketjump(usercmd_t* cmd) {
     if (!can_shoot(g.localplayer))
         return;
 
-    if (settings.rocketjump_deg != 0.f) {
-        vec3_t viewangles;
-        METHOD_ARGS(i_engine, GetViewAngles, &viewangles);
+    vec3_t velocity = g.localplayer->velocity;
 
-        /* Only rocketjump if we are looking down some degrees (default 45º) */
-        if (viewangles.x <= settings.rocketjump_deg)
-            return;
+    if (velocity.x == 0.f && velocity.y == 0.f) {
+        /* If we are not moving, aim down and reverse yaw */
+        cmd->viewangles.x = 89.f;
+
+        /* Reverting jaw does not work for rocketjumping, -85 works better */
+        cmd->viewangles.y = sub_offset_to_yaw(cmd->viewangles.y, 85.f);
+    } else {
+        vec3_t velocity_ang = velocity_to_ang(velocity);
+
+        /* Angle pitch will be the user angle (default 45º) and the yaw will be
+         * reversed velocity angle */
+        cmd->viewangles.x = settings.rocketjump_deg;
+        cmd->viewangles.y = velocity_ang.y - 180.f;
+
+        if (settings.rocketjump_deg >= 80.f)
+            cmd->viewangles.y = sub_offset_to_yaw(cmd->viewangles.y, 85.f);
     }
 
-    *bSendPacket      = false;
-    cmd->viewangles.x = 89.f;
-
-    cmd->buttons |= IN_ATTACK | IN_DUCK | IN_JUMP;
+    /* Release hotkey and hold rocketjump keys. Make it pSilent too */
     cmd->buttons &= ~IN_ATTACK2;
+    cmd->buttons |= IN_ATTACK | IN_DUCK | IN_JUMP;
+    *bSendPacket = false;
+
+    ang_norm(&cmd->viewangles);
+    ang_clamp(&cmd->viewangles);
 }
 
 void correct_movement(usercmd_t* cmd, vec3_t old_angles) {
