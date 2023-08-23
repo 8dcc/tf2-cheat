@@ -140,7 +140,7 @@ bool vec_is_zero(vec3_t v) {
 }
 
 float vec_len(vec3_t v) {
-    return sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
+    return sqrtf(dot_product(v, v));
 }
 
 float vec_len2d(vec3_t v) {
@@ -232,6 +232,46 @@ vec3_t center_of_hitbox(studiohdr_t* studio, matrix3x4_t* bonemat, int set,
         (min.y + max.y) * 0.5f,
         (min.z + max.z) * 0.5f,
     };
+}
+
+vec3_t velocity_to_ang(vec3_t vel) {
+    if (vel.y == 0.f && vel.x == 0.f) {
+        if (vel.z > 0.f)
+            return (vec3_t){ 270.f, 0.f, 0.f };
+        else
+            return (vec3_t){ 90.f, 0.f, 0.f };
+    }
+
+    /* Similar to vec_to_ang() */
+    float pitch = RAD2DEG(atan2f(-vel.z, vec_len(vel)));
+    float yaw   = RAD2DEG(atan2f(vel.y, vel.x));
+
+    if (pitch < 0.f)
+        pitch += 360.f;
+
+    if (yaw < 0.f)
+        yaw += 360.f;
+
+    return (vec3_t){ pitch, yaw, 0.f };
+}
+
+/* Jaw has (-180, 180) range, add an offset to that */
+float add_offset_to_yaw(float jaw, float offset) {
+    float ret = jaw + offset;
+
+    if (ret > 180)
+        ret = -180 + (ret - 180);
+
+    return ret;
+}
+
+float sub_offset_to_yaw(float jaw, float offset) {
+    float ret = jaw - offset;
+
+    if (ret < -180)
+        ret = 180 - (-180 - ret);
+
+    return ret;
 }
 
 /*----------------------------------------------------------------------------*/

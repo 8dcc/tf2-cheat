@@ -53,6 +53,7 @@ void* get_interface(void* handle, const char* name);
 size_t vmt_size(void* vmt);
 void* find_sig(const char* module, const byte* pattern);
 
+/* TODO: Make most of these functions inline */
 vec3_t vec_add(vec3_t a, vec3_t b);
 vec3_t vec_sub(vec3_t a, vec3_t b);
 vec3_t vec_mul(vec3_t a, vec3_t b);
@@ -73,6 +74,9 @@ float vec_length_sqr(vec3_t v);
 bool can_shoot(Entity* ent);
 vec3_t center_of_hitbox(studiohdr_t* studio, matrix3x4_t* bonemat, int set,
                         int idx);
+vec3_t velocity_to_ang(vec3_t vel);
+float add_offset_to_yaw(float jaw, float offset);
+float sub_offset_to_yaw(float jaw, float offset);
 
 rgba_t col_scale(rgba_t c, float factor);
 void draw_text(int x, int y, bool center, HFont f, rgba_t c, const char* str);
