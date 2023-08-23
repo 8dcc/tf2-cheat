@@ -103,8 +103,11 @@ void autorocketjump(usercmd_t* cmd) {
         cmd->viewangles.x = settings.rocketjump_deg;
         cmd->viewangles.y = velocity_ang.y - 180.f;
 
-        if (settings.rocketjump_deg >= 80.f)
-            cmd->viewangles.y = sub_offset_to_yaw(cmd->viewangles.y, 85.f);
+        /* We need to add since offset is already inverted */
+        if (settings.rocketjump_deg >= 70.f)
+            cmd->viewangles.y = add_offset_to_yaw(cmd->viewangles.y, 45.f);
+        else if (settings.rocketjump_deg >= 80.f)
+            cmd->viewangles.y = add_offset_to_yaw(cmd->viewangles.y, 75.f);
     }
 
     /* Release hotkey and hold rocketjump keys. Make it pSilent too */
