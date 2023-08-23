@@ -307,9 +307,17 @@ static vec3_t get_melee_delta(vec3_t viewangles) {
         static const float delay = 0.2f;
 
         /* Extrapolate position for getting new shootpos.
-         * Credits:
+         * If we know we travel 5 units in a second (velocity), we can just
+         * multiply that by the time we want to extrapolate to get the units
+         * traveled in N seconds. Then we can just add that to the current
+         * position.
+         *
+         * See also:
          *   - SEOwned
-         *   - https://casualhacks.net/blog/2019-09-17/projectile-solver/ */
+         *   - https://casualhacks.net/blog/2019-09-17/projectile-solver/
+         *   - https://en.wikipedia.org/wiki/Extrapolation
+         *   - https://en.wikipedia.org/wiki/Interpolation
+         */
         shoot_pos =
           vec_add(shoot_pos, vec_flmul(g.localplayer->velocity, delay));
 
