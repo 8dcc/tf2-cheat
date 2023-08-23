@@ -35,6 +35,11 @@ The cheat currently has the following features:
   - Ignore visibility
   - Draw FOV circle
   - Disable if spectated in 1st person
+- Meleebot
+  - pSilent
+  - Swing prediction
+  - Only attack if target
+  - Disable if spectated in 1st person
 - Misc
   - BunnyHop
   - Autostrafe
@@ -48,3 +53,6 @@ The cheat currently has the following features:
   - Watermark
 - Custom colors for most settings
 - Config system
+
+* Notes
+- All the "Player" settings also apply to MvM bots.
