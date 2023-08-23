@@ -11,10 +11,12 @@ void esp(void);
 bool chams(ModelRender* thisptr, const DrawModelState_t* state,
            const ModelRenderInfo_t* pInfo, matrix3x4_t* pCustomBoneToWorld);
 
-/* src/features/aim.c */
+/* src/features/aim/aimbot.c */
 void aimbot(usercmd_t* cmd);
-void meleebot(usercmd_t* cmd);
 void draw_aim_fov(void);
+
+/* src/features/aim/meleebot.c */
+void meleebot(usercmd_t* cmd);
 
 /* src/features/movement.c */
 void bhop(usercmd_t* cmd);
