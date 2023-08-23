@@ -131,7 +131,7 @@ vec3_t vec_flmul(vec3_t a, float b) {
     };
 }
 
-bool vec_cmp(vec3_t a, vec3_t b) {
+bool vec_equal(vec3_t a, vec3_t b) {
     return a.x == b.x && a.y == b.y && a.z == b.z;
 }
 
@@ -147,13 +147,13 @@ float vec_len2d(vec3_t v) {
     return sqrtf(v.x * v.x + v.y * v.y);
 }
 
-void vec_clamp(vec3_t* v) {
+void ang_clamp(vec3_t* v) {
     v->x = CLAMP(v->x, -89.0f, 89.0f);
     v->y = CLAMP(remainderf(v->y, 360.0f), -180.0f, 180.0f);
     v->z = CLAMP(v->z, -50.0f, 50.0f);
 }
 
-void vec_norm(vec3_t* v) {
+void ang_norm(vec3_t* v) {
     v->x = isfinite(v->x) ? remainder(v->x, 360) : 0;
     v->y = isfinite(v->y) ? remainder(v->y, 360) : 0;
     v->z = 0.0f;

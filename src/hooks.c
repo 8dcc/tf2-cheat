@@ -104,7 +104,8 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
     autobackstab(cmd);
 
     correct_movement(cmd, old_angles);
-    vec_clamp(&cmd->viewangles);
+    ang_norm(&cmd->viewangles);
+    ang_norm(&cmd->viewangles);
     return false;
 }
 

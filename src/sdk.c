@@ -124,17 +124,17 @@ bool IsBehindAndFacingTarget(Entity* owner, Entity* target) {
     vecToTarget   = vec_sub(*METHOD(target, WorldSpaceCenter),
                             *METHOD(owner, WorldSpaceCenter));
     vecToTarget.z = 0.0f;
-    vec_norm(&vecToTarget);
+    ang_norm(&vecToTarget);
 
     /* Get owner forward view vector */
     vec3_t vecOwnerForward = ang_to_vec(METHOD(owner, EyeAngles));
     vecOwnerForward.z      = 0.0f;
-    vec_norm(&vecOwnerForward);
+    ang_norm(&vecOwnerForward);
 
     /* Get target forward view vector */
     vec3_t vecTargetForward = ang_to_vec(METHOD(target, EyeAngles));
     vecTargetForward.z      = 0.0f;
-    vec_norm(&vecTargetForward);
+    ang_norm(&vecTargetForward);
 
     /* Make sure owner is behind, facing and aiming at target's back */
     float flPosVsTargetViewDot = dot_product(vecToTarget, vecTargetForward);
