@@ -154,8 +154,8 @@ void ang_clamp(vec3_t* v) {
 }
 
 void ang_norm(vec3_t* v) {
-    v->x = isfinite(v->x) ? remainder(v->x, 360) : 0;
-    v->y = isfinite(v->y) ? remainder(v->y, 360) : 0;
+    v->x = isfinite(v->x) ? remainderf(v->x, 360.f) : 0.f;
+    v->y = isfinite(v->y) ? remainderf(v->y, 360.f) : 0.f;
     v->z = 0.0f;
 }
 
@@ -174,11 +174,11 @@ vec3_t vec_to_ang(vec3_t v) {
 }
 
 vec3_t ang_to_vec(vec3_t a) {
-    float sy = sin(a.y / 180.f * (float)(M_PI));
-    float cy = cos(a.y / 180.f * (float)(M_PI));
+    const float sy = sin(a.y / 180.f * (float)(M_PI));
+    const float cy = cos(a.y / 180.f * (float)(M_PI));
 
-    float sp = sin(a.x / 180.f * (float)(M_PI));
-    float cp = cos(a.x / 180.f * (float)(M_PI));
+    const float sp = sin(a.x / 180.f * (float)(M_PI));
+    const float cp = cos(a.x / 180.f * (float)(M_PI));
 
     return (vec3_t){
         .x = cp * cy,
