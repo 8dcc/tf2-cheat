@@ -15,7 +15,10 @@
 #define MATERIALSYSTEM_SO "./bin/materialsystem.so"
 #define SDL_SO            "./bin/libSDL2-2.0.so.0"
 
+/*----------------------------------------------------------------------------*/
 /* Signatures */
+
+/* See: https://github.com/8dcc/tf2-cheat/wiki/Getting-SDL-offsets */
 #define SIG_StartDrawing                                                    \
     "\xF3\x0F\x2A\xC0\xF3\x0F\x59\x45?\xF3\x0F\x2C\xC0\x89\x85????\xE8????" \
     "\x8D\x4D\xE4"
@@ -23,9 +26,15 @@
 #define SIG_FinishDrawing \
     "\x89\x04\x24\xFF\x92????\x89\x34\x24\xE8????\x80\x7D\x97?\x0F\x85????"
 
+/* Only part in CL_Move where it sets bSendPacket to 1 */
 #define SIG_bSendPacket                                                        \
     "\xBE????\xE9????\x8D\xB6\x00\x00\x00\x00\xA1????\xC7\x45?????\xC7\x45???" \
     "??\x85\xC0\x0F\x84????\x8D\x55\xA8\xC7\x44\x24?????"
+
+/* CPrediction::RunCommand -> CPrediction::StartCommand -> SetP..RandomSeed() */
+#define SIG_SetPredictionRandomSeed                            \
+    "\x75\x7C\x31\xFF\xE8????\x89\xB3????\x89\x34\x24\xE8????" \
+    "\x89\xF8\x89\x1D????"
 
 /*
  * NOTE: For commented version, see:
@@ -160,6 +169,9 @@ typedef void (*StartDrawing_t)(MatSurface*);
 extern StartDrawing_t StartDrawing;
 typedef void (*FinishDrawing_t)(MatSurface*);
 extern FinishDrawing_t FinishDrawing;
+
+typedef void (*SetPredictionRandomSeed_t)(usercmd_t*);
+extern SetPredictionRandomSeed_t SetPredictionRandomSeed;
 
 DECL_SDL_FUNC(void, SwapWindow, SDL_Window* window);
 DECL_SDL_FUNC(int, PollEvent, SDL_Event* event);

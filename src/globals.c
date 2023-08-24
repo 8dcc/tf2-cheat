@@ -45,8 +45,9 @@ bool* bSendPacket = NULL;
 StartDrawing_t StartDrawing   = NULL;
 FinishDrawing_t FinishDrawing = NULL;
 
-SwapWindow_t* SwapWindowPtr = NULL;
-PollEvent_t* PollEventPtr   = NULL;
+SwapWindow_t* SwapWindowPtr                       = NULL;
+PollEvent_t* PollEventPtr                         = NULL;
+SetPredictionRandomSeed_t SetPredictionRandomSeed = NULL;
 
 DECL_INTF(BaseClient, baseclient);
 DECL_INTF(EngineClient, engine);
@@ -86,15 +87,23 @@ static inline CGlobalVars* get_globalvars(void) {
 }
 
 static inline bool get_sigs(void) {
+    /* SDL functions */
     GET_PATTERN(pat_StartDrawing, MATSURFACE_SO, SIG_StartDrawing);
     StartDrawing = RELATIVE2ABSOLUTE(pat_StartDrawing + 20);
 
     GET_PATTERN(pat_FinishDrawing, MATSURFACE_SO, SIG_FinishDrawing);
     FinishDrawing = RELATIVE2ABSOLUTE(pat_FinishDrawing + 13);
 
+    /* CL_Move's bSendPacket */
     GET_PATTERN(pat_bSendPacket, ENGINE_SO, SIG_bSendPacket);
     bSendPacket = pat_bSendPacket + 1;
     protect_addr(bSendPacket, PROT_READ | PROT_WRITE | PROT_EXEC);
+
+    /* CBaseEntity::SetPredictionRandomSeed() */
+    GET_PATTERN(pat_SetPredictionRandomSeed, CLIENT_SO,
+                SIG_SetPredictionRandomSeed);
+    SetPredictionRandomSeed =
+      RELATIVE2ABSOLUTE(pat_SetPredictionRandomSeed + 18);
 
     return true;
 }
