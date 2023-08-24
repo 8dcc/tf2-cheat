@@ -59,7 +59,7 @@ static vec3_t get_closest_fov_delta(vec3_t viewangles) {
               vec_to_ang(vec_sub(target_pos, local_eyes));
 
             vec3_t delta = vec_sub(enemy_angle, viewangles);
-            ang_norm(&delta);
+            vec_norm(&delta);
             ang_clamp(&delta);
 
             float fov = hypotf(delta.x, delta.y);

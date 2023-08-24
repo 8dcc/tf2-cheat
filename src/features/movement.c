@@ -115,7 +115,7 @@ void autorocketjump(usercmd_t* cmd) {
     cmd->buttons |= IN_ATTACK | IN_DUCK | IN_JUMP;
     *bSendPacket = false;
 
-    ang_norm(&cmd->viewangles);
+    vec_norm(&cmd->viewangles);
     ang_clamp(&cmd->viewangles);
 }
 

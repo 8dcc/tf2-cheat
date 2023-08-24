@@ -104,8 +104,8 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
     autobackstab(cmd);
 
     correct_movement(cmd, old_angles);
-    ang_norm(&cmd->viewangles);
-    ang_norm(&cmd->viewangles);
+    vec_norm(&cmd->viewangles);
+    ang_clamp(&cmd->viewangles);
 
     /* Make sure we aren't choking too much */
     if (*bSendPacket == false) {

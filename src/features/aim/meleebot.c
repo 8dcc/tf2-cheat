@@ -111,7 +111,7 @@ static vec3_t get_melee_delta(vec3_t viewangles) {
     }
 
     vec3_t delta = vec_sub(enemy_angle, viewangles);
-    ang_norm(&delta);
+    vec_norm(&delta);
     ang_clamp(&delta);
 
     return delta;
