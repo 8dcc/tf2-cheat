@@ -28,4 +28,8 @@ void autobackstab(usercmd_t* cmd);
 void spectator_list(void);
 void thirdperson(void);
 
+/* src/features/prediction.c */
+void pred_start(usercmd_t* cmd);
+void pred_end(void);
+
 #endif /* FEATURES_H_ */
