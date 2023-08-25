@@ -48,6 +48,7 @@ FinishDrawing_t FinishDrawing = NULL;
 SwapWindow_t* SwapWindowPtr                       = NULL;
 PollEvent_t* PollEventPtr                         = NULL;
 SetPredictionRandomSeed_t SetPredictionRandomSeed = NULL;
+MD5_PseudoRandom_t MD5_PseudoRandom               = NULL;
 
 DECL_INTF(BaseClient, baseclient);
 DECL_INTF(EngineClient, engine);
@@ -104,6 +105,10 @@ static inline bool get_sigs(void) {
                 SIG_SetPredictionRandomSeed);
     SetPredictionRandomSeed =
       RELATIVE2ABSOLUTE(pat_SetPredictionRandomSeed + 18);
+
+    /* MD5_PseudoRandom() */
+    GET_PATTERN(pat_MD5_PseudoRandom, CLIENT_SO, SIG_MD5_PseudoRandom);
+    MD5_PseudoRandom = RELATIVE2ABSOLUTE(pat_MD5_PseudoRandom + 18);
 
     return true;
 }

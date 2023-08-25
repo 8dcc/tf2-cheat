@@ -31,10 +31,15 @@
     "\xBE????\xE9????\x8D\xB6\x00\x00\x00\x00\xA1????\xC7\x45?????\xC7\x45???" \
     "??\x85\xC0\x0F\x84????\x8D\x55\xA8\xC7\x44\x24?????"
 
-/* CPrediction::RunCommand -> CPrediction::StartCommand -> SetP..RandomSeed() */
+/* CPrediction::RunCommand -> CPrediction::StartCommand -> SetPse..RandomSeed */
 #define SIG_SetPredictionRandomSeed                            \
     "\x75\x7C\x31\xFF\xE8????\x89\xB3????\x89\x34\x24\xE8????" \
     "\x89\xF8\x89\x1D????"
+
+/* CInput::CreateMove -> MD5_PseudoRandom */
+#define SIG_MD5_PseudoRandom                                                   \
+    "\x8B\x45\x08\xF3\x0F\x11\x80????\x8B\x45\x0C\x89\x04\x24\xE8????\x25????" \
+    "\x89\x43\x34\xE8????"
 
 /*
  * NOTE: For commented version, see:
@@ -172,6 +177,8 @@ extern FinishDrawing_t FinishDrawing;
 
 typedef void (*SetPredictionRandomSeed_t)(usercmd_t*);
 extern SetPredictionRandomSeed_t SetPredictionRandomSeed;
+typedef int (*MD5_PseudoRandom_t)(int);
+extern MD5_PseudoRandom_t MD5_PseudoRandom;
 
 DECL_SDL_FUNC(void, SwapWindow, SDL_Window* window);
 DECL_SDL_FUNC(int, PollEvent, SDL_Event* event);
