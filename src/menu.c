@@ -221,7 +221,7 @@ static inline void tab_aim(void) {
     nk_layout_row_dynamic(ctx, 15, 1);
 
     nk_checkbox_label(ctx, "Meleebot", &settings.meleebot);
-    nk_checkbox_label(ctx, "Silent", &settings.melee_silent);
+    nk_checkbox_label(ctx, "pSilent", &settings.melee_silent);
     nk_checkbox_label(ctx, "Swing prediction", &settings.melee_swing_pred);
     nk_checkbox_label(ctx, "Attack only if target",
                       &settings.melee_shoot_if_target);
