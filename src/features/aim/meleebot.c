@@ -13,12 +13,9 @@ static bool melee_attacking(usercmd_t* cmd) {
     const float flTime =
       g.localplayer->nTickBase * c_globalvars->interval_per_tick;
 
-    /* Time since we started the melee attack */
-    float attack_time = fabs(g.localweapon->smackTime - flTime);
-
-    /* This was the most reliable range I could find, hits ~90% with silent
-     * and almost 100% without silent. */
-    return attack_time >= 0.17f && attack_time <= 0.22f;
+    /* Credits: SEOwned (and afaik to KGB as well) */
+    return fabs(g.localweapon->smackTime - flTime) <
+           c_globalvars->interval_per_tick * 2.0f;
 }
 
 static bool in_swing_range(vec3_t start, vec3_t end, Entity* target) {
