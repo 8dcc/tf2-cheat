@@ -99,16 +99,14 @@ void* find_sig(const char* module, const byte* pattern) {
 
 /*----------------------------------------------------------------------------*/
 
-bool can_shoot(Entity* ent) {
+bool can_shoot(void) {
+    /* NOTE: g.localplayer and g.localweapon should be checked by the caller */
+
     /* TODO: Temporary until I add prediction */
-    const float flTime = ent->nTickBase * c_globalvars->interval_per_tick;
+    const float flTime =
+      g.localplayer->nTickBase * c_globalvars->interval_per_tick;
 
-    if (!g.localweapon)
-        return false;
-
-    /* TODO: It's a bit broken with some weapons, maybe fixed after I add
-     * prediction? */
-    return ent->flNextAttack <= flTime &&
+    return g.localplayer->flNextAttack <= flTime &&
            g.localweapon->flNextPrimaryAttack <= flTime;
 }
 

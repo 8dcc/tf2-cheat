@@ -162,7 +162,7 @@ void* get_interface(void* handle, const char* name);
 size_t vmt_size(void* vmt);
 void* find_sig(const char* module, const byte* pattern);
 
-bool can_shoot(Entity* ent);
+bool can_shoot(void);
 vec3_t center_of_hitbox(studiohdr_t* studio, matrix3x4_t* bonemat, int set,
                         int idx);
 vec3_t velocity_to_ang(vec3_t vel);
