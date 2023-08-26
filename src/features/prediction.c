@@ -5,6 +5,7 @@
 
 static float old_frametime = 0.f;
 static float old_curtime   = 0.f;
+static CMoveData move_data;
 
 void pred_start(usercmd_t* cmd) {
     if (!g.localplayer)
@@ -21,14 +22,19 @@ void pred_start(usercmd_t* cmd) {
     c_globalvars->curtime =
       p.localplayer->nTickBase * c_globalvars->interval_per_tick;
 
-    /* TODO: Game movement, move helper, prediction interface */
+    memset(&move_data, 0, sizeof(CMoveData));
+    /* TODO: MoveHelper->SetHost */
+    /* TODO: Prediction->SetupMove */
+    METHOD(i_gamemovement, ProcessMovement, g.localplayer, &move_data);
+    /* TODO: Prediction->FinishMove */
 }
 
 void pred_end(void) {
     if (!g.localplayer)
         return;
 
-    /* TODO: Finish game movement prediction, set move helper host to NULL */
+    METHOD(i_gamemovement, FinishTrackPredictionErrors, g.localplayer);
+    /* TODO: MoveHelper->SetHost(NULL) */
 
     /* If cmd parameter is null, function sets m_nPredictionRandomSeed to -1 */
     SetPredictionRandomSeed(NULL);

@@ -60,6 +60,7 @@ DECL_INTF(RenderView, renderview);
 DECL_INTF(EngineTrace, enginetrace);
 DECL_INTF(MaterialSystem, materialsystem);
 DECL_INTF(ModelRender, modelrender);
+DECL_INTF(GameMovement, gamemovement);
 DECL_INTF(ClientMode, clientmode);
 DECL_CLASS(CGlobalVars, globalvars);
 
@@ -138,6 +139,7 @@ bool globals_init(void) {
     GET_INTERFACE(MaterialSystem*, i_materialsystem, h_materialsystem,
                   "VMaterialSystem081");
     GET_INTERFACE(ModelRender*, i_modelrender, h_engine, "VEngineModel016");
+    GET_INTERFACE(GameMovement*, i_gamemovement, h_client, "GameMovement001");
 
     /* Other interfaces */
     i_clientmode = get_clientmode();
