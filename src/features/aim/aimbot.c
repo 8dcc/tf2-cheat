@@ -78,8 +78,15 @@ static vec3_t get_closest_fov_delta(vec3_t viewangles) {
 
 void aimbot(usercmd_t* cmd) {
     if (!settings.aimbot || !(cmd->buttons & IN_ATTACK) || !g.localplayer ||
-        !g.localweapon || !can_shoot(g.localplayer))
+        !g.localweapon)
         return;
+
+    if (!can_shoot(g.localplayer)) {
+        if (settings.aim_shoot_if_target)
+            cmd->buttons &= ~IN_ATTACK;
+
+        return;
+    }
 
     /* We are being spectated in 1st person and we want to hide it */
     if (settings.aim_off_spectated && g.spectated_1st)
