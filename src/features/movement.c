@@ -84,7 +84,7 @@ void autorocketjump(usercmd_t* cmd) {
     if (METHOD(g.localweapon, GetWeaponId) != TF_WEAPON_ROCKETLAUNCHER)
         return;
 
-    if (!can_shoot(g.localplayer))
+    if (!can_shoot())
         return;
 
     vec3_t velocity = g.localplayer->velocity;

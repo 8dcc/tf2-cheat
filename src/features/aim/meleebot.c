@@ -7,7 +7,7 @@
 
 static bool melee_attacking(usercmd_t* cmd) {
     if (METHOD(g.localweapon, GetWeaponId) == TF_WEAPON_KNIFE)
-        return (cmd->buttons & IN_ATTACK) && can_shoot(g.localplayer);
+        return (cmd->buttons & IN_ATTACK) && can_shoot();
 
     /* TODO: Temporary until I add prediction */
     const float flTime =
@@ -124,7 +124,7 @@ void meleebot(usercmd_t* cmd) {
         !g.localweapon)
         return;
 
-    if (!can_shoot(g.localplayer)) {
+    if (!can_shoot()) {
         if (settings.melee_shoot_if_target)
             cmd->buttons &= ~IN_ATTACK;
 

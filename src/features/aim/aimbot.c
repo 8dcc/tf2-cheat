@@ -81,7 +81,7 @@ void aimbot(usercmd_t* cmd) {
         !g.localweapon)
         return;
 
-    if (!can_shoot(g.localplayer)) {
+    if (!can_shoot()) {
         if (settings.aim_shoot_if_target)
             cmd->buttons &= ~IN_ATTACK;
 
