@@ -33,6 +33,7 @@ typedef struct IMaterial IMaterial;
 typedef struct IMatRenderContext IMatRenderContext;
 typedef struct MaterialSystem MaterialSystem;
 typedef struct ModelRender ModelRender;
+typedef struct GameMovement GameMovement;
 typedef struct RenderView RenderView;
 typedef struct ClientMode ClientMode;
 
@@ -43,6 +44,7 @@ typedef struct ClientMode ClientMode;
 
 typedef char byte;
 typedef uint32_t CBaseHandle;
+typedef CBaseHandle EntityHandle_t;
 
 typedef struct {
     float x, y;
@@ -199,6 +201,36 @@ typedef struct {
     int hitboxset;
     uint16_t instance; /* ModelInstanceHandle_t */
 } ModelRenderInfo_t;
+
+typedef struct {
+    bool m_bFirstRunOfFunctions;
+    bool m_bGameCodeMovedPlayer;
+    EntityHandle_t m_nPlayerHandle;
+    int m_nImpulseCommand;
+    vec3_t m_vecViewAngles;    /* QAngle */
+    vec3_t m_vecAbsViewAngles; /* QAngle */
+    int m_nButtons;
+    int m_nOldButtons;
+    float m_flForwardMove;
+    float m_flOldForwardMove;
+    float m_flSideMove;
+    float m_flUpMove;
+    float m_flMaxSpeed;
+    float m_flClientMaxSpeed;
+    vec3_t m_vecVelocity;
+    vec3_t m_vecAngles;    /* QAngle */
+    vec3_t m_vecOldAngles; /* QAngle*/
+    float m_outStepHeight;
+    vec3_t m_outWishVel;
+    vec3_t m_outJumpVel;
+    vec3_t m_vecConstraintCenter;
+    float m_flConstraintRadius;
+    float m_flConstraintWidth;
+    float m_flConstraintSpeedFactor;
+    /* SetAbsOrigin() */
+    /* GetAbsOrigin() */
+    vec3_t m_vecAbsOrigin;
+} CMoveData;
 
 typedef struct {
     void* vmt;
@@ -389,6 +421,17 @@ typedef struct {
 
 struct ModelRender {
     VMT_ModelRender* vmt;
+};
+
+typedef struct {
+    PAD(4 * 2);
+    void (*ProcessMovement)(GameMovement*, Entity* pPlayer, CMoveData* pMove);
+    void (*StartTrackPredictionErrors)(GameMovement*, Entity* pPlayer);
+    void (*FinishTrackPredictionErrors)(GameMovement*, Entity* pPlayer);
+} VMT_GameMovement;
+
+struct GameMovement {
+    VMT_GameMovement* vmt;
 };
 
 typedef struct {
