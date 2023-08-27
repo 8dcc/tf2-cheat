@@ -6,7 +6,7 @@
 static float old_curtime   = 0.f;
 static float old_frametime = 0.f;
 static int old_tickcount   = 0;
-static CMoveData move_data; /* TODO: Rename to movedata */
+static CMoveData movedata;
 
 /* NOTE: Prediction is a bit of a black box for me. Feel free to make a GitHub
  * issue with more information. */
@@ -32,11 +32,10 @@ void pred_start(usercmd_t* cmd) {
     if (!i_movehelper)
         return;
 
-    memset(&move_data, 0, sizeof(CMoveData));
-    METHOD(i_prediction, SetupMove, g.localplayer, cmd, i_movehelper,
-           move_data);
-    METHOD(i_gamemovement, ProcessMovement, g.localplayer, &move_data);
-    METHOD(i_prediction, FinishMove, g.localplayer, cmd, move_data);
+    memset(&movedata, 0, sizeof(CMoveData));
+    METHOD(i_prediction, SetupMove, g.localplayer, cmd, i_movehelper, movedata);
+    METHOD(i_gamemovement, ProcessMovement, g.localplayer, &movedata);
+    METHOD(i_prediction, FinishMove, g.localplayer, cmd, movedata);
 }
 
 void pred_end(void) {
