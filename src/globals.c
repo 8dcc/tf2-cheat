@@ -327,15 +327,3 @@ void cache_update(void) {
         }
     }
 }
-
-/* Called in EngineVGui::Paint() before any ESP */
-void update_w2s_viewmatrix(void) {
-    /* Get player view and viewmatrix */
-    static ViewSetup player_view;
-    if (!METHOD_ARGS(i_baseclient, GetPlayerView, &player_view))
-        return;
-
-    static VMatrix w2v, v2pr, w2px; /* Unused */
-    METHOD_ARGS(i_renderview, GetMatricesForView, &player_view, &w2v, &v2pr,
-                &g.w2s_vmatrix, &w2px);
-}

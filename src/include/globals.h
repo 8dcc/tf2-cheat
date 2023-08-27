@@ -209,6 +209,5 @@ void fonts_init(void);
 void cache_get_model_idx(void);
 void cache_reset(void);
 void cache_update(void);
-void update_w2s_viewmatrix(void);
 
 #endif /* GLOBALS_H_ */
