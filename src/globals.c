@@ -50,6 +50,7 @@ PollEvent_t* PollEventPtr                         = NULL;
 SetPredictionRandomSeed_t SetPredictionRandomSeed = NULL;
 MD5_PseudoRandom_t MD5_PseudoRandom               = NULL;
 
+/* Macro defined in globals.h */
 DECL_INTF(BaseClient, baseclient);
 DECL_INTF(EngineClient, engine);
 DECL_INTF(EntityList, entitylist);
@@ -154,7 +155,7 @@ bool globals_init(void) {
         return false;
     }
 
-    /* Needed for write permission on the VMTs */
+    /* Needed for write permission on the VMTs. Macro declared in globals.h */
     CLONE_VMT(BaseClient, i_baseclient);
     CLONE_VMT(ClientMode, i_clientmode);
     CLONE_VMT(EngineVGui, i_enginevgui);
@@ -183,6 +184,7 @@ bool globals_init(void) {
 }
 
 bool resore_vtables(void) {
+    /* Restore original VTables when unloading. Macro declared in globals.h */
     RESTORE_VMT(BaseClient, i_baseclient);
     RESTORE_VMT(ClientMode, i_clientmode);
     RESTORE_VMT(EngineVGui, i_enginevgui);
