@@ -6,7 +6,7 @@ INJECTOR_FLAGS=
 
 MAIN_OBJS=obj/main.c.o obj/sdk.c.o obj/globals.c.o obj/hooks.c.o obj/util.c.o obj/settings.c.o obj/menu.c.o
 DEPS_OBJS=obj/dependencies/cJSON/cJSON.c.o
-FEATURES_OBJS=obj/features/esp.c.o obj/features/chams.c.o obj/features/aim/aimbot.c.o obj/features/aim/meleebot.c.o obj/features/movement.c.o obj/features/misc.c.o
+FEATURES_OBJS=obj/features/esp.c.o obj/features/chams.c.o obj/features/aim/aimbot.c.o obj/features/aim/meleebot.c.o obj/features/movement.c.o obj/features/misc.c.o obj/features/prediction.c.o
 
 OBJS=$(MAIN_OBJS) $(DEPS_OBJS) $(FEATURES_OBJS)
 BIN=libenoch.so
