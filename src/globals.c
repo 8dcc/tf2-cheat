@@ -108,7 +108,7 @@ static inline bool get_sigs(void) {
     GET_PATTERN(pat_SetPredictionRandomSeed, CLIENT_SO,
                 SIG_SetPredictionRandomSeed);
     SetPredictionRandomSeed =
-      RELATIVE2ABSOLUTE(pat_SetPredictionRandomSeed + 18);
+      RELATIVE2ABSOLUTE(pat_SetPredictionRandomSeed + 19);
 
     /* MD5_PseudoRandom() */
     GET_PATTERN(pat_MD5_PseudoRandom, CLIENT_SO, SIG_MD5_PseudoRandom);
