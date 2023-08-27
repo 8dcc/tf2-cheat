@@ -25,6 +25,7 @@
 
 #define DECL_HOOK(name) name##_t ho_##name = NULL;
 
+/* TODO: Rename to VMT_HOOK */
 #define HOOK(interface, name)          \
     ho_##name       = interface->name; \
     interface->name = h_##name;
@@ -47,6 +48,8 @@ DECL_HOOK_EXTERN(bool, CreateMove, ClientMode*, float, usercmd_t*);
 DECL_HOOK_EXTERN(void, Paint, EngineVGui*, uint32_t);
 DECL_HOOK_EXTERN(void, DrawModelExecute, ModelRender*, const DrawModelState_t*,
                  const ModelRenderInfo_t*, matrix3x4_t*);
+DECL_HOOK_EXTERN(void, RunCommand, IPrediction*, Entity*, usercmd_t*,
+                 MoveHelper*);
 
 extern SwapWindow_t ho_SwapWindow;
 extern PollEvent_t ho_PollEvent;

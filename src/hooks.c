@@ -13,6 +13,7 @@ DECL_HOOK(FrameStageNotify);
 DECL_HOOK(CreateMove);
 DECL_HOOK(Paint);
 DECL_HOOK(DrawModelExecute);
+DECL_HOOK(RunCommand);
 
 SwapWindow_t ho_SwapWindow = NULL;
 PollEvent_t ho_PollEvent   = NULL;
@@ -26,6 +27,7 @@ bool hooks_init(void) {
     HOOK(i_clientmode->vmt, CreateMove);
     HOOK(i_enginevgui->vmt, Paint);
     HOOK(i_modelrender->vmt, DrawModelExecute);
+    HOOK(i_prediction->vmt, RunCommand);
 
     HOOK_SDL(SwapWindow);
     HOOK_SDL(PollEvent);
@@ -158,6 +160,17 @@ void h_DrawModelExecute(ModelRender* thisptr, const DrawModelState_t* state,
 
     /* Reset to defaut materials */
     METHOD_ARGS(i_modelrender, ForcedMaterialOverride, NULL, OVERRIDE_NORMAL);
+}
+
+/*----------------------------------------------------------------------------*/
+
+void h_RunCommand(IPrediction* thisptr, Entity* player, usercmd_t* cmd,
+                  MoveHelper* move_helper) {
+    /* We only hook this to get i_movehelper for prediction */
+    if (!i_movehelper)
+        i_movehelper = move_helper;
+
+    ORIGINAL(RunCommand, thisptr, player, cmd, move_helper);
 }
 
 /*----------------------------------------------------------------------------*/
