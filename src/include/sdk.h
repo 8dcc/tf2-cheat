@@ -34,6 +34,8 @@ typedef struct IMatRenderContext IMatRenderContext;
 typedef struct MaterialSystem MaterialSystem;
 typedef struct ModelRender ModelRender;
 typedef struct GameMovement GameMovement;
+typedef struct MoveHelper MoveHelper;
+typedef struct IPrediction IPrediction;
 typedef struct RenderView RenderView;
 typedef struct ClientMode ClientMode;
 
@@ -426,12 +428,34 @@ struct ModelRender {
 typedef struct {
     PAD(4 * 2);
     void (*ProcessMovement)(GameMovement*, Entity* pPlayer, CMoveData* pMove);
-    void (*StartTrackPredictionErrors)(GameMovement*, Entity* pPlayer);
-    void (*FinishTrackPredictionErrors)(GameMovement*, Entity* pPlayer);
+    void (*StartTrackPredictionErrors)(GameMovement*, Entity* pPlayer);  /* 3 */
+    void (*FinishTrackPredictionErrors)(GameMovement*, Entity* pPlayer); /* 4 */
 } VMT_GameMovement;
 
 struct GameMovement {
     VMT_GameMovement* vmt;
+};
+
+typedef struct {
+    void* unused; /* We only use the MoveHelper*, but never call any methods */
+} VMT_MoveHelper;
+
+struct MoveHelper {
+    VMT_MoveHelper* vmt;
+};
+
+typedef struct {
+    PAD(4 * 18);
+    void (*RunCommand)(IPrediction*, Entity* player, usercmd_t* cmd,
+                       MoveHelper* helper); /* 18 */
+    void (*SetupMove)(IPrediction*, Entity* player, usercmd_t* cmd,
+                      MoveHelper* helper, CMoveData* move); /* 19 */
+    void (*FinishMove)(IPrediction*, Entity* player, usercmd_t* cmd,
+                       CMoveData* move); /* 20 */
+} VMT_IPrediction;
+
+struct IPrediction {
+    VMT_IPrediction* vmt;
 };
 
 typedef struct {
