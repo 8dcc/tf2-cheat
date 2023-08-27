@@ -6,7 +6,7 @@
 static float old_curtime   = 0.f;
 static float old_frametime = 0.f;
 static int old_tickcount   = 0;
-static CMoveData move_data;
+static CMoveData move_data; /* TODO: Rename to movedata */
 
 /* NOTE: Prediction is a bit of a black box for me. Feel free to make a GitHub
  * issue with more information. */
@@ -28,10 +28,15 @@ void pred_start(usercmd_t* cmd) {
     c_globalvars->frametime = c_globalvars->interval_per_tick;
     c_globalvars->tickcount = tick_base;
 
+    /* Updated in h_RunCommand() */
+    if (!i_movehelper)
+        return;
+
     memset(&move_data, 0, sizeof(CMoveData));
-    /* TODO: Prediction->SetupMove */
+    METHOD(i_prediction, SetupMove, g.localplayer, cmd, i_movehelper,
+           move_data);
     METHOD(i_gamemovement, ProcessMovement, g.localplayer, &move_data);
-    /* TODO: Prediction->FinishMove */
+    METHOD(i_prediction, FinishMove, g.localplayer, cmd, move_data);
 }
 
 void pred_end(void) {
