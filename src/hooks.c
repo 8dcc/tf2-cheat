@@ -21,13 +21,13 @@ PollEvent_t ho_PollEvent   = NULL;
 /*----------------------------------------------------------------------------*/
 
 bool hooks_init(void) {
-    HOOK(i_baseclient->vmt, LevelShutdown);
-    HOOK(i_baseclient->vmt, LevelInitPostEntity);
-    HOOK(i_baseclient->vmt, FrameStageNotify);
-    HOOK(i_clientmode->vmt, CreateMove);
-    HOOK(i_enginevgui->vmt, Paint);
-    HOOK(i_modelrender->vmt, DrawModelExecute);
-    HOOK(i_prediction->vmt, RunCommand);
+    VMT_HOOK(i_baseclient, LevelShutdown);
+    VMT_HOOK(i_baseclient, LevelInitPostEntity);
+    VMT_HOOK(i_baseclient, FrameStageNotify);
+    VMT_HOOK(i_clientmode, CreateMove);
+    VMT_HOOK(i_enginevgui, Paint);
+    VMT_HOOK(i_modelrender, DrawModelExecute);
+    VMT_HOOK(i_prediction, RunCommand);
 
     HOOK_SDL(SwapWindow);
     HOOK_SDL(PollEvent);

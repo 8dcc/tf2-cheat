@@ -25,10 +25,9 @@
 
 #define DECL_HOOK(name) name##_t ho_##name = NULL;
 
-/* TODO: Rename to VMT_HOOK */
-#define HOOK(interface, name)          \
-    ho_##name       = interface->name; \
-    interface->name = h_##name;
+#define VMT_HOOK(interface, name)                \
+    ho_##name            = interface->vmt->name; \
+    interface->vmt->name = h_##name;
 
 #define ORIGINAL(name, ...) ho_##name(__VA_ARGS__);
 
