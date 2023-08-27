@@ -194,6 +194,8 @@ DECL_INTF_EXTERN(EngineTrace, enginetrace);
 DECL_INTF_EXTERN(MaterialSystem, materialsystem);
 DECL_INTF_EXTERN(ModelRender, modelrender);
 DECL_INTF_EXTERN(GameMovement, gamemovement);
+DECL_INTF_EXTERN(MoveHelper, movehelper);
+DECL_INTF_EXTERN(IPrediction, prediction);
 DECL_INTF_EXTERN(ClientMode, clientmode);
 DECL_CLASS_EXTERN(CGlobalVars, globalvars);
 

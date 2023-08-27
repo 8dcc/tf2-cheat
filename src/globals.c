@@ -62,6 +62,8 @@ DECL_INTF(EngineTrace, enginetrace);
 DECL_INTF(MaterialSystem, materialsystem);
 DECL_INTF(ModelRender, modelrender);
 DECL_INTF(GameMovement, gamemovement);
+DECL_INTF(MoveHelper, movehelper);
+DECL_INTF(IPrediction, prediction);
 DECL_INTF(ClientMode, clientmode);
 DECL_CLASS(CGlobalVars, globalvars);
 
@@ -141,6 +143,7 @@ bool globals_init(void) {
                   "VMaterialSystem081");
     GET_INTERFACE(ModelRender*, i_modelrender, h_engine, "VEngineModel016");
     GET_INTERFACE(GameMovement*, i_gamemovement, h_client, "GameMovement001");
+    GET_INTERFACE(IPrediction*, i_prediction, h_client, "VClientPrediction001");
 
     /* Other interfaces */
     i_clientmode = get_clientmode();
@@ -160,6 +163,7 @@ bool globals_init(void) {
     CLONE_VMT(ClientMode, i_clientmode);
     CLONE_VMT(EngineVGui, i_enginevgui);
     CLONE_VMT(ModelRender, i_modelrender);
+    CLONE_VMT(IPrediction, i_prediction);
 
     dlclose(h_client);
     dlclose(h_engine);
@@ -189,6 +193,7 @@ bool resore_vtables(void) {
     RESTORE_VMT(ClientMode, i_clientmode);
     RESTORE_VMT(EngineVGui, i_enginevgui);
     RESTORE_VMT(ModelRender, i_modelrender);
+    RESTORE_VMT(IPrediction, i_prediction);
 
     return true;
 }
