@@ -44,6 +44,8 @@ void pred_start(usercmd_t* cmd) {
 
     METHOD_ARGS(i_gamemovement, StartTrackPredictionErrors, g.localplayer);
 
+    METHOD_ARGS(i_prediction, SetLocalViewAngles, &cmd->viewangles);
+
     memset(&movedata, 0, sizeof(CMoveData));
     METHOD_ARGS(i_prediction, SetupMove, g.localplayer, cmd, i_movehelper,
                 &movedata);
