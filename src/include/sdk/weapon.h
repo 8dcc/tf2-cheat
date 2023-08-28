@@ -17,6 +17,9 @@ typedef struct {
     int (*GetSwingRange)(Weapon*); /* 525 */
 } VMT_Weapon;
 
+/* NOTE: Most of these offsets are from the game's NetVars, and have been dumped
+ * using 8dcc/source-netvar-dumper. Until I figure out a good netvar system in
+ * C, it might be a good idea to re-dump them on each game update. */
 struct Weapon {
     VMT_Weapon* vmt;
     PAD(0xA34);
