@@ -121,7 +121,8 @@ void meleebot(usercmd_t* cmd) {
         !g.localweapon)
         return;
 
-    if (!can_shoot()) {
+    /* We are not starting to attack and we are not mid-attack */
+    if (!can_shoot() && g.localweapon->smackTime == -1.f) {
         if (settings.melee_shoot_if_target)
             cmd->buttons &= ~IN_ATTACK;
 
