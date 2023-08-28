@@ -22,8 +22,9 @@ void pred_start(usercmd_t* cmd) {
     cmd->random_seed = MD5_PseudoRandom(cmd->command_number) & 0x7FFFFFFF;
     SetPredictionRandomSeed(cmd);
 
-    const int tick_base = g.localplayer->nTickBase;
+    g.localplayer->m_pCurrentCommand = cmd;
 
+    const int tick_base     = g.localplayer->nTickBase;
     c_globalvars->curtime   = tick_base * c_globalvars->interval_per_tick;
     c_globalvars->frametime = c_globalvars->interval_per_tick;
     c_globalvars->tickcount = tick_base;
@@ -31,6 +32,8 @@ void pred_start(usercmd_t* cmd) {
     /* Updated in h_RunCommand() */
     if (!i_movehelper)
         return;
+
+    METHOD_ARGS(i_gamemovement, StartTrackPredictionErrors, g.localplayer);
 
     memset(&movedata, 0, sizeof(CMoveData));
     METHOD_ARGS(i_prediction, SetupMove, g.localplayer, cmd, i_movehelper,
@@ -47,6 +50,8 @@ void pred_end(void) {
 
     /* If cmd parameter is null, function sets m_nPredictionRandomSeed to -1 */
     SetPredictionRandomSeed(NULL);
+
+    g.localplayer->m_pCurrentCommand = NULL;
 
     c_globalvars->curtime   = old_curtime;
     c_globalvars->frametime = old_frametime;
