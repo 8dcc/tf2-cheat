@@ -27,14 +27,6 @@ typedef struct Renderable Renderable;
 typedef struct Entity Entity;
 typedef struct Weapon Weapon;
 
-static inline int CBaseHandle_IsValid(CBaseHandle h) {
-    return h != INVALID_EHANDLE_INDEX;
-}
-
-static inline int CBaseHandle_GetEntryIndex(CBaseHandle h) {
-    return h & ENT_ENTRY_MASK;
-}
-
 typedef struct {
     PAD(4 * 1);
     vec3_t* (*ObbMinsPreScaled)(Collideable*); /* 1 */
@@ -130,6 +122,9 @@ typedef struct {
     Entity* (*GetObserverTarget)(Entity*); /* 310 */
 } VMT_Entity;
 
+/* NOTE: Most of these offsets are from the game's NetVars, and have been dumped
+ * using 8dcc/source-netvar-dumper. Until I figure out a good netvar system in
+ * C, it might be a good idea to re-dump them on each game update. */
 struct Entity {
     VMT_Entity* vmt;
     PAD(0x7C);
@@ -142,13 +137,25 @@ struct Entity {
     float flNextAttack; /* 0xC54 */
     PAD(0x214);
     vec3_t vecPunchAngle; /* 0xE6C */
-    PAD(0x3BC);
+    PAD(0x2EC);
+    usercmd_t* m_pCurrentCommand; /* 0x1164, see CPrediction::StartCommand() */
+    PAD(0xCC);
     int nTickBase; /* 0x1234 */
     PAD(0x3F8);
     int player_class; /* 0x1630 (ETFClass) */
     PAD(0x7D0);
     int nForceTauntCam; /* 0x1E04 */
 };
+
+/*----------------------------------------------------------------------------*/
+
+static inline int CBaseHandle_IsValid(CBaseHandle h) {
+    return h != INVALID_EHANDLE_INDEX;
+}
+
+static inline int CBaseHandle_GetEntryIndex(CBaseHandle h) {
+    return h & ENT_ENTRY_MASK;
+}
 
 #define IsTeammate(ent) \
     (METHOD(g.localplayer, GetTeamNumber) == METHOD(ent, GetTeamNumber))
