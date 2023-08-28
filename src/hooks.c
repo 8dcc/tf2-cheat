@@ -120,8 +120,14 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
     /* Make sure we aren't choking too much */
     if (*bSendPacket == false) {
         g.choked++;
-        if (g.choked >= MAX_CHOKE)
+        if (g.choked >= MAX_CHOKE) {
             *bSendPacket = true;
+
+#ifdef DEBUG
+            printf("[enoch@%.2f] Choked too many packets, sending.\n",
+                   c_globalvars->curtime);
+#endif
+        }
     }
 
     if (*bSendPacket)
