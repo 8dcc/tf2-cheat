@@ -456,6 +456,17 @@ typedef struct {
 
 struct IPrediction {
     VMT_IPrediction* vmt;
+    int m_hLastGround; /* CHandle<C_BaseEntity> */
+    bool m_bInPrediction;
+    bool m_bFirstTimePredicted;
+    bool m_bOldCLPredictValue;
+    bool m_bEnginePaused;
+    int m_nPreviousStartFrame;
+    int m_nCommandsPredicted;
+    int m_nServerCommandsAcknowledged;
+    int m_bPreviousAckHadErrors;
+    int m_nIncomingPacketNumber;
+    float m_flIdealPitch;
 };
 
 typedef struct {
