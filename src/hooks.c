@@ -100,10 +100,18 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
 
     thirdperson();
     bhop(cmd);
-    meleebot(cmd);
-    aimbot(cmd);
-    autorocketjump(cmd);
-    autobackstab(cmd);
+
+    /* (PREDICTION) FIXME:
+     *  - The rage autostrafe feels weird and is slower  */
+
+    /* pred_start(cmd); */
+    {
+        meleebot(cmd);
+        aimbot(cmd);
+        autorocketjump(cmd);
+        autobackstab(cmd);
+    }
+    /* pred_end(); */
 
     correct_movement(cmd, old_angles);
     vec_norm(&cmd->viewangles);
