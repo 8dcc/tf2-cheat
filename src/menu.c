@@ -14,7 +14,7 @@
 
 /* Defined at the bottom of this file */
 #define MAX_CFGS     30
-#define MAX_CFG_NAME 100
+#define MAX_CFG_NAME 200
 static inline int fill_configs(char* config_list[MAX_CFGS]);
 static inline void free_configs(char* config_list[MAX_CFGS], int config_num);
 
@@ -427,7 +427,7 @@ static inline int fill_configs(char* config_list[MAX_CFGS]) {
     struct dirent* dir;
     while (i < MAX_CFGS && (dir = readdir(d)) != NULL) {
         if (dir->d_type == DT_REG) {
-            config_list[i] = calloc(strlen(dir->d_name), sizeof(char));
+            config_list[i] = calloc(strlen(dir->d_name) + 1, sizeof(char));
             strcpy(config_list[i], dir->d_name);
             i++;
         }
@@ -440,5 +440,6 @@ static inline int fill_configs(char* config_list[MAX_CFGS]) {
 
 static inline void free_configs(char* config_list[MAX_CFGS], int config_num) {
     for (int i = 0; i < config_num; i++)
-        free(config_list[i]);
+        if (config_list[i])
+            free(config_list[i]);
 }
