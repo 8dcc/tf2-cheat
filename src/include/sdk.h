@@ -27,6 +27,7 @@ typedef struct EngineClient EngineClient;
 typedef struct EntityList EntityList;
 typedef struct EngineVGui EngineVGui;
 typedef struct MatSurface MatSurface;
+typedef struct IPanel IPanel;
 typedef struct IVModelInfo IVModelInfo;
 typedef struct EngineTrace EngineTrace;
 typedef struct IMaterial IMaterial;
@@ -47,6 +48,7 @@ typedef struct ClientMode ClientMode;
 typedef char byte;
 typedef uint32_t CBaseHandle;
 typedef CBaseHandle EntityHandle_t;
+typedef unsigned int VPanel;
 
 typedef struct {
     float x, y;
@@ -354,6 +356,18 @@ typedef struct {
 
 struct MatSurface {
     VMT_MatSurface* vmt;
+};
+
+typedef struct {
+    PAD(4 * 37);
+    const char* (*GetName)(IPanel*, VPanel); /* 37 */
+    PAD(4 * 4);
+    void (*PaintTraverse)(IPanel*, VPanel panel, bool forcerepaint,
+                          bool allowforce); /* 42 */
+} VMT_IPanel;
+
+struct IPanel {
+    VMT_IPanel* vmt;
 };
 
 typedef struct {
