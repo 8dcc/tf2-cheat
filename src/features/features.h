@@ -8,7 +8,7 @@
 void esp(void);
 
 /* src/features/chams.c */
-bool chams(ModelRender* thisptr, const DrawModelState_t* state,
+void chams(ModelRender* thisptr, const DrawModelState_t* state,
            const ModelRenderInfo_t* pInfo, matrix3x4_t* pCustomBoneToWorld);
 
 /* src/features/aim/aimbot.c */

@@ -12,9 +12,6 @@
 
 /*----------------------------------------------------------------------------*/
 
-#define CALL_ORIGINAL false
-#define SKIP_ORIGINAL true
-
 static void override_material(bool ignorez, bool wireframe,
                               struct nk_colorf col, const char* mat_name) {
     IMaterial* material = METHOD_ARGS(i_materialsystem, FindMaterial, mat_name,
@@ -38,20 +35,20 @@ static void override_material(bool ignorez, bool wireframe,
 
 /*----------------------------------------------------------------------------*/
 
-bool chams(ModelRender* thisptr, const DrawModelState_t* state,
+void chams(ModelRender* thisptr, const DrawModelState_t* state,
            const ModelRenderInfo_t* pInfo, matrix3x4_t* pCustomBoneToWorld) {
     const model_t* mdl = pInfo->pModel;
     if (!mdl)
-        return CALL_ORIGINAL;
+        return;
 
     if ((settings.player_chams != SETT_OFF || settings.local_chams) &&
         strstr(mdl->name, "models/player")) {
         if (pInfo->entity_index < 1 || pInfo->entity_index >= g.MaxClients)
-            return CALL_ORIGINAL;
+            return;
 
         Entity* ent = g.ents[pInfo->entity_index];
         if (!g.localplayer || !ent)
-            return CALL_ORIGINAL;
+            return;
 
         /* Localplayer chams (thirdperson) if enabled */
         if (g.localidx == pInfo->entity_index) {
@@ -59,12 +56,12 @@ bool chams(ModelRender* thisptr, const DrawModelState_t* state,
                 override_material(false, false, settings.col_local_chams,
                                   "debug/debugambientcube");
 
-            return CALL_ORIGINAL;
+            return;
         }
 
         /* Next part is for non-local player chams */
         if (settings.player_chams == SETT_OFF)
-            return CALL_ORIGINAL;
+            return;
 
         const bool teammate = IsTeammate(ent);
 
@@ -72,7 +69,7 @@ bool chams(ModelRender* thisptr, const DrawModelState_t* state,
         if (settings.player_chams == SETT_OFF ||
             (settings.player_chams == SETT_ENEMY && teammate) ||
             (settings.player_chams == SETT_FRIENDLY && !teammate))
-            return CALL_ORIGINAL;
+            return;
 
         struct nk_colorf vis_col = teammate ? settings.col_friend_chams
                                             : settings.col_enemy_chams;
@@ -90,41 +87,41 @@ bool chams(ModelRender* thisptr, const DrawModelState_t* state,
 
         /* Visible player chams */
         override_material(false, false, vis_col, "debug/debugambientcube");
-        return CALL_ORIGINAL;
+        return;
     }
 
     /* NOTE: We need to check arms and weapons in this order because the arms
      * model contains "weapons/c_" */
     if (strstr(mdl->name, "arms")) {
         if (!settings.hand_chams)
-            return CALL_ORIGINAL;
+            return;
 
         override_material(HAND_IGNOREZ, HAND_WIREFRAME, settings.col_hand_chams,
                           "debug/debugambientcube");
-        return CALL_ORIGINAL;
+        return;
     } else if (strstr(mdl->name, "weapons/c")) {
         if (!settings.weapon_chams)
-            return CALL_ORIGINAL;
+            return;
 
 #if 0
         /* TODO: Change weapon color depending on owner/only change viewmodel */
         Weapon* wpn = (Weapon*)g.ents[pInfo->entity_index];
         if (!wpn || !CBaseHandle_IsValid(wpn->hOwner))
-            return CALL_ORIGINAL;
+            return;
 
         const int owner_idx = CBaseHandle_GetEntryIndex(wpn->hOwner);
         if (owner_idx < 1 || owner_idx >= g.MaxClients)
-            return CALL_ORIGINAL;
+            return;
 
         Entity* owner = g.ents[owner_idx];
         if (!owner)
-            return CALL_ORIGINAL;
+            return;
 #endif
 
         override_material(WPN_IGNOREZ, WPN_WIREFRAME, settings.col_weapon_chams,
                           "debug/debugambientcube");
-        return CALL_ORIGINAL;
+        return;
     }
 
-    return CALL_ORIGINAL;
+    return;
 }

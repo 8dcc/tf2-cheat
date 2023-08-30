@@ -209,8 +209,11 @@ void h_DrawModelExecute(ModelRender* thisptr, const DrawModelState_t* state,
     METHOD_ARGS(i_renderview, GetColorModulation, &orig_col);
     orig_col.a = METHOD(i_renderview, GetBlend);
 
-    if (!chams(thisptr, state, pInfo, pCustomBoneToWorld))
-        ORIGINAL(DrawModelExecute, thisptr, state, pInfo, pCustomBoneToWorld);
+    /* Override renderview color, material, etc. if needed */
+    chams(thisptr, state, pInfo, pCustomBoneToWorld);
+
+    /* Call original */
+    ORIGINAL(DrawModelExecute, thisptr, state, pInfo, pCustomBoneToWorld);
 
     /* Reset old renderview color */
     METHOD_ARGS(i_renderview, SetColorModulation, &orig_col);
