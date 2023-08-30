@@ -179,10 +179,19 @@ void h_PaintTraverse(IPanel* thisptr, VPanel panel, bool forcerepaint,
 
     switch (hash_str(panel_name)) {
         case 0x47DE1CB6: /* hash_str("HudScope") */
-            if (settings.remove_scope)
+            if (settings.remove_scope) {
+                int sw = 0, sh = 0;
+                METHOD_ARGS(i_engine, GetScreenSize, &sw, &sh);
+
+                /* Draw lines */
+                METHOD_ARGS(i_surface, SetColor, 5, 5, 5, 255);
+                METHOD_ARGS(i_surface, DrawLine, 0, sh / 2, sw, sh / 2); /* - */
+                METHOD_ARGS(i_surface, DrawLine, sw / 2, 0, sw / 2, sh); /* | */
+
                 return; /* Don't draw this panel (scope) */
-            else
+            } else {
                 break;
+            }
         default:
             break;
     }
