@@ -12,6 +12,7 @@ DECL_HOOK(LevelInitPostEntity);
 DECL_HOOK(FrameStageNotify);
 DECL_HOOK(CreateMove);
 DECL_HOOK(Paint);
+DECL_HOOK(PaintTraverse);
 DECL_HOOK(DrawModelExecute);
 DECL_HOOK(RunCommand);
 
@@ -26,6 +27,7 @@ bool hooks_init(void) {
     VMT_HOOK(i_baseclient, FrameStageNotify);
     VMT_HOOK(i_clientmode, CreateMove);
     VMT_HOOK(i_enginevgui, Paint);
+    VMT_HOOK(i_panel, PaintTraverse);
     VMT_HOOK(i_modelrender, DrawModelExecute);
     VMT_HOOK(i_prediction, RunCommand);
 
@@ -164,6 +166,28 @@ void h_Paint(EngineVGui* thisptr, uint32_t mode) {
         }
         FinishDrawing(i_surface);
     }
+}
+
+/*----------------------------------------------------------------------------*/
+
+void h_PaintTraverse(IPanel* thisptr, VPanel panel, bool forcerepaint,
+                     bool allowforce) {
+    const char* panel_name = METHOD_ARGS(i_panel, GetName, panel);
+    if (!panel_name)
+        return ORIGINAL(PaintTraverse, thisptr, panel, forcerepaint,
+                        allowforce);
+
+    switch (hash_str(panel_name)) {
+        case 0x47DE1CB6: /* hash_str("HudScope") */
+            if (settings.remove_scope)
+                return; /* Don't draw this panel (scope) */
+            else
+                break;
+        default:
+            break;
+    }
+
+    ORIGINAL(PaintTraverse, thisptr, panel, forcerepaint, allowforce);
 }
 
 /*----------------------------------------------------------------------------*/
