@@ -296,7 +296,7 @@ typedef struct {
     bool (*IsInGame)(EngineClient*);    /* 26 */
     bool (*IsConnected)(EngineClient*); /* 27 */
     PAD(4 * 8);
-    VMatrix* (*WorldToScreenMatrix)(EngineClient*); /* 36 */
+    VMatrix* (*WorldToScreenMatrix)(EngineClient*); /* 36, not reliable */
 } VMT_EngineClient;
 
 struct EngineClient {
