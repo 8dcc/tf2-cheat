@@ -48,8 +48,8 @@ The cheat currently has the following features:
   - Thirdperson
   - Remove sniper scope overlay
   - Spy's auto-backstab
-  - Soldier's auto-rocketjump
-    - Degree cap (Only rocketjump if looking at the ground)
+  - Soldier's auto-rocketjump (On Mouse2)
+    - Pitch degrees when moving
   - Spectator list
   - Watermark
 - Custom colors for most settings
