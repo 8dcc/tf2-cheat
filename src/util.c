@@ -260,6 +260,29 @@ bool world_to_screen(vec3_t vec, vec2_t* screen) {
 
 /*----------------------------------------------------------------------------*/
 
+#define BASE_HASH    5381
+#define MAGIC_NUMBER 33
+
+/*
+ * Credits:
+ *   - http://www.cse.yorku.ca/~oz/hash.html
+ *     https://web.archive.org/web/20230714154454/http://www.cse.yorku.ca/~oz/hash.html
+ *   - http://casualhacks.net/hashtool.html
+ *     https://web.archive.org/web/20160102205932/http://www.casualhacks.net/hashtool.html
+ *   - https://www.unknowncheats.me/forum/904026-post8.html
+ *     https://web.archive.org/web/20140822095256/http://www.unknowncheats.me/forum/904026-post8.html
+ */
+uint32_t hash_str(const char* str) {
+    uint32_t hashed = BASE_HASH;
+
+    for (int i = 0; str[i] != '\0'; i++)
+        hashed = (hashed * MAGIC_NUMBER) ^ str[i];
+
+    return hashed;
+}
+
+/*----------------------------------------------------------------------------*/
+
 #define PAGE_SIZE          getpagesize()
 #define PAGE_MASK          (~(PAGE_SIZE - 1))
 #define PAGE_ALIGN(x)      ((x + PAGE_SIZE - 1) & PAGE_MASK)

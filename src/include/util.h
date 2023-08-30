@@ -176,6 +176,8 @@ void convert_player_name(char* dst, const char* src);
 
 bool world_to_screen(vec3_t vec, vec2_t* screen);
 
+uint32_t hash_str(const char* str);
+
 bool protect_addr(void* ptr, int new_flags);
 
 #endif /* UTIL_H_ */
