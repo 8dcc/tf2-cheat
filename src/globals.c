@@ -34,6 +34,7 @@
 void* h_client         = NULL;
 void* h_engine         = NULL;
 void* h_matsurface     = NULL;
+void* h_vgui           = NULL;
 void* h_materialsystem = NULL;
 void* h_sdl2           = NULL;
 
@@ -56,6 +57,7 @@ DECL_INTF(EngineClient, engine);
 DECL_INTF(EntityList, entitylist);
 DECL_INTF(EngineVGui, enginevgui);
 DECL_INTF(MatSurface, surface);
+DECL_INTF(IPanel, panel);
 DECL_INTF(IVModelInfo, modelinfo);
 DECL_INTF(RenderView, renderview);
 DECL_INTF(EngineTrace, enginetrace);
@@ -122,6 +124,7 @@ bool globals_init(void) {
     GET_HANDLER(h_client, CLIENT_SO);
     GET_HANDLER(h_engine, ENGINE_SO);
     GET_HANDLER(h_matsurface, MATSURFACE_SO);
+    GET_HANDLER(h_vgui, VGUI_SO);
     GET_HANDLER(h_materialsystem, MATERIALSYSTEM_SO);
     GET_HANDLER(h_sdl2, SDL_SO);
 
@@ -135,6 +138,7 @@ bool globals_init(void) {
     GET_INTERFACE(EntityList*, i_entitylist, h_client, "VClientEntityList003");
     GET_INTERFACE(EngineVGui*, i_enginevgui, h_engine, "VEngineVGui002");
     GET_INTERFACE(MatSurface*, i_surface, h_matsurface, "VGUI_Surface030");
+    GET_INTERFACE(IPanel*, i_panel, h_vgui, "VGUI_Panel009");
     GET_INTERFACE(IVModelInfo*, i_modelinfo, h_engine, "VModelInfoClient006");
     GET_INTERFACE(RenderView*, i_renderview, h_engine, "VEngineRenderView014");
     GET_INTERFACE(EngineTrace*, i_enginetrace, h_engine,
@@ -162,12 +166,14 @@ bool globals_init(void) {
     CLONE_VMT(BaseClient, i_baseclient);
     CLONE_VMT(ClientMode, i_clientmode);
     CLONE_VMT(EngineVGui, i_enginevgui);
+    CLONE_VMT(IPanel, i_panel);
     CLONE_VMT(ModelRender, i_modelrender);
     CLONE_VMT(IPrediction, i_prediction);
 
     dlclose(h_client);
     dlclose(h_engine);
     dlclose(h_matsurface);
+    dlclose(h_vgui);
     dlclose(h_materialsystem);
     dlclose(h_sdl2);
 
@@ -192,6 +198,7 @@ bool resore_vtables(void) {
     RESTORE_VMT(BaseClient, i_baseclient);
     RESTORE_VMT(ClientMode, i_clientmode);
     RESTORE_VMT(EngineVGui, i_enginevgui);
+    RESTORE_VMT(IPanel, i_panel);
     RESTORE_VMT(ModelRender, i_modelrender);
     RESTORE_VMT(IPrediction, i_prediction);
 

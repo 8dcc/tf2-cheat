@@ -12,6 +12,7 @@
 #define CLIENT_SO         "./tf/bin/client.so"
 #define ENGINE_SO         "./bin/engine.so"
 #define MATSURFACE_SO     "./bin/vguimatsurface.so"
+#define VGUI_SO           "./bin/vgui2.so"
 #define MATERIALSYSTEM_SO "./bin/materialsystem.so"
 #define SDL_SO            "./bin/libSDL2-2.0.so.0"
 
@@ -162,6 +163,7 @@ typedef struct {
 extern void* h_client;
 extern void* h_engine;
 extern void* h_matsurface;
+extern void* h_vgui;
 extern void* h_materialsystem;
 extern void* h_sdl2;
 
@@ -188,6 +190,7 @@ DECL_INTF_EXTERN(EngineClient, engine);
 DECL_INTF_EXTERN(EntityList, entitylist);
 DECL_INTF_EXTERN(EngineVGui, enginevgui);
 DECL_INTF_EXTERN(MatSurface, surface);
+DECL_INTF_EXTERN(IPanel, panel);
 DECL_INTF_EXTERN(IVModelInfo, modelinfo);
 DECL_INTF_EXTERN(RenderView, renderview);
 DECL_INTF_EXTERN(EngineTrace, enginetrace);
