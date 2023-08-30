@@ -46,9 +46,10 @@ The cheat currently has the following features:
     - Legit
     - Rage
   - Thirdperson
+  - Remove sniper scope overlay
+  - Spy's auto-backstab
   - Soldier's auto-rocketjump
     - Degree cap (Only rocketjump if looking at the ground)
-  - Spy's auto-backstab
   - Spectator list
   - Watermark
 - Custom colors for most settings
