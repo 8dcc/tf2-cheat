@@ -5,6 +5,15 @@
 
 #define CONFIG_FOLDER "enoch-configs/"
 
+/*
+ * Page up and page down for aimbots by default. Currently the only way to
+ * change the keybinds is either to change this define or change the value in
+ * each config direclty from the json. For keys, see:
+ *   https://github.com/8dcc/tf2-cheat/blob/ac8c9bd6ff10526d683b60bbf4346067b42227e1/src/dependencies/nuklear/nuklear.h#L305-L340
+ */
+#define DEFAULT_AIMBOT_KEY   NK_KEY_SCROLL_UP
+#define DEFAULT_MELEEBOT_KEY NK_KEY_SCROLL_UP
+
 enum settings_rage {
     SETT_OFF   = 0,
     SETT_LEGIT = 1,
@@ -62,7 +71,8 @@ typedef struct {
     float aim_smooth;
     int aim_hitbox;
     int aim_silent;
-    int aim_shoot_if_target;
+    int aim_on_key;
+    int aim_keycode;
     int aim_ignore_visible;
     int aim_draw_fov;
     int aim_off_spectated;
@@ -70,7 +80,8 @@ typedef struct {
     int meleebot;
     int melee_silent;
     int melee_swing_pred;
-    int melee_shoot_if_target;
+    int melee_on_key;
+    int melee_keycode;
     int melee_off_spectated;
 
     /* Misc */

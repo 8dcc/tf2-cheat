@@ -35,21 +35,23 @@ Settings settings = {
     .hand_chams    = false,
 
     /* Aim */
-    .aimbot              = false,
-    .aim_fov             = 0.f,
-    .aim_smooth          = 1.f,
-    .aim_hitbox          = SETT_HITBOX_HEAD,
-    .aim_silent          = false,
-    .aim_shoot_if_target = false,
-    .aim_ignore_visible  = false,
-    .aim_draw_fov        = false,
-    .aim_off_spectated   = false,
+    .aimbot             = false,
+    .aim_fov            = 0.f,
+    .aim_smooth         = 1.f,
+    .aim_hitbox         = SETT_HITBOX_HEAD,
+    .aim_silent         = false,
+    .aim_on_key         = false,
+    .aim_keycode        = DEFAULT_AIMBOT_KEY,
+    .aim_ignore_visible = false,
+    .aim_draw_fov       = false,
+    .aim_off_spectated  = false,
 
-    .meleebot              = false,
-    .melee_silent          = false,
-    .melee_swing_pred      = false,
-    .melee_shoot_if_target = false,
-    .melee_off_spectated   = false,
+    .meleebot            = false,
+    .melee_silent        = false,
+    .melee_swing_pred    = false,
+    .melee_on_key        = false,
+    .melee_keycode       = DEFAULT_MELEEBOT_KEY,
+    .melee_off_spectated = false,
 
     /* Misc */
     .bhop           = false,
@@ -119,14 +121,16 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_FLOAT(json_cfg, aim_smooth);
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_hitbox);
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_silent);
-    JSON_SETTINGS_WRITE_INT(json_cfg, aim_shoot_if_target);
+    JSON_SETTINGS_WRITE_INT(json_cfg, aim_on_key);
+    JSON_SETTINGS_WRITE_INT(json_cfg, aim_keycode);
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_ignore_visible);
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_draw_fov);
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_off_spectated);
     JSON_SETTINGS_WRITE_INT(json_cfg, meleebot);
     JSON_SETTINGS_WRITE_INT(json_cfg, melee_silent);
     JSON_SETTINGS_WRITE_INT(json_cfg, melee_swing_pred);
-    JSON_SETTINGS_WRITE_INT(json_cfg, melee_shoot_if_target);
+    JSON_SETTINGS_WRITE_INT(json_cfg, melee_on_key);
+    JSON_SETTINGS_WRITE_INT(json_cfg, melee_keycode);
     JSON_SETTINGS_WRITE_INT(json_cfg, melee_off_spectated);
 
     JSON_SETTINGS_WRITE_INT(json_cfg, bhop);
@@ -248,14 +252,16 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_FLOAT(json_cfg, aim_smooth);
     JSON_SETTINGS_READ_INT(json_cfg, aim_hitbox);
     JSON_SETTINGS_READ_INT(json_cfg, aim_silent);
-    JSON_SETTINGS_READ_INT(json_cfg, aim_shoot_if_target);
-    JSON_SETTINGS_WRITE_INT(json_cfg, aim_ignore_visible);
+    JSON_SETTINGS_READ_INT(json_cfg, aim_on_key);
+    JSON_SETTINGS_READ_INT(json_cfg, aim_keycode);
+    JSON_SETTINGS_READ_INT(json_cfg, aim_ignore_visible);
     JSON_SETTINGS_READ_INT(json_cfg, aim_draw_fov);
     JSON_SETTINGS_READ_INT(json_cfg, aim_off_spectated);
     JSON_SETTINGS_READ_INT(json_cfg, meleebot);
     JSON_SETTINGS_READ_INT(json_cfg, melee_silent);
     JSON_SETTINGS_READ_INT(json_cfg, melee_swing_pred);
-    JSON_SETTINGS_READ_INT(json_cfg, melee_shoot_if_target);
+    JSON_SETTINGS_READ_INT(json_cfg, melee_on_key);
+    JSON_SETTINGS_READ_INT(json_cfg, melee_keycode);
     JSON_SETTINGS_READ_INT(json_cfg, melee_off_spectated);
 
     JSON_SETTINGS_READ_INT(json_cfg, bhop);

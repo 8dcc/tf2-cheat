@@ -209,8 +209,7 @@ static inline void tab_aim(void) {
 
     nk_layout_row_dynamic(ctx, 15, 1);
     nk_checkbox_label(ctx, "Silent", &settings.aim_silent);
-    nk_checkbox_label(ctx, "Shoot only if target",
-                      &settings.aim_shoot_if_target);
+    nk_checkbox_label(ctx, "On key", &settings.aim_on_key);
     nk_checkbox_label(ctx, "Ignore visible check",
                       &settings.aim_ignore_visible);
     nk_checkbox_label(ctx, "Draw FOV circle", &settings.aim_draw_fov);
@@ -223,8 +222,7 @@ static inline void tab_aim(void) {
     nk_checkbox_label(ctx, "Meleebot", &settings.meleebot);
     nk_checkbox_label(ctx, "pSilent", &settings.melee_silent);
     nk_checkbox_label(ctx, "Swing prediction", &settings.melee_swing_pred);
-    nk_checkbox_label(ctx, "Attack only if target",
-                      &settings.melee_shoot_if_target);
+    nk_checkbox_label(ctx, "On key", &settings.melee_on_key);
     nk_checkbox_label(ctx, "Disable if spectated",
                       &settings.melee_off_spectated);
 }
