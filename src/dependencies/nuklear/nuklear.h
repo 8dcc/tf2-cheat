@@ -1,4 +1,4 @@
-
+/* clang-format off */
 #ifndef NK_SINGLE_FILE
   #define NK_SINGLE_FILE
 #endif
@@ -303,39 +303,39 @@ NK_API void nk_set_user_data(struct nk_context*, nk_handle handle);
 #endif
 
 enum nk_keys {
-    NK_KEY_NONE,
-    NK_KEY_SHIFT,
-    NK_KEY_CTRL,
-    NK_KEY_DEL,
-    NK_KEY_ENTER,
-    NK_KEY_TAB,
-    NK_KEY_BACKSPACE,
-    NK_KEY_COPY,
-    NK_KEY_CUT,
-    NK_KEY_PASTE,
-    NK_KEY_UP,
-    NK_KEY_DOWN,
-    NK_KEY_LEFT,
-    NK_KEY_RIGHT,
+    NK_KEY_NONE      = 0,
+    NK_KEY_SHIFT     = 1,
+    NK_KEY_CTRL      = 2,
+    NK_KEY_DEL       = 3,
+    NK_KEY_ENTER     = 4,
+    NK_KEY_TAB       = 5,
+    NK_KEY_BACKSPACE = 6,
+    NK_KEY_COPY      = 7,
+    NK_KEY_CUT       = 8,
+    NK_KEY_PASTE     = 9,
+    NK_KEY_UP        = 10,
+    NK_KEY_DOWN      = 11,
+    NK_KEY_LEFT      = 12,
+    NK_KEY_RIGHT     = 13,
 
-    NK_KEY_TEXT_INSERT_MODE,
-    NK_KEY_TEXT_REPLACE_MODE,
-    NK_KEY_TEXT_RESET_MODE,
-    NK_KEY_TEXT_LINE_START,
-    NK_KEY_TEXT_LINE_END,
-    NK_KEY_INSERT,
-    NK_KEY_TEXT_START,
-    NK_KEY_TEXT_END,
-    NK_KEY_TEXT_UNDO,
-    NK_KEY_TEXT_REDO,
-    NK_KEY_TEXT_SELECT_ALL,
-    NK_KEY_TEXT_WORD_LEFT,
-    NK_KEY_TEXT_WORD_RIGHT,
+    NK_KEY_TEXT_INSERT_MODE  = 14,
+    NK_KEY_TEXT_REPLACE_MODE = 15,
+    NK_KEY_TEXT_RESET_MODE   = 16,
+    NK_KEY_TEXT_LINE_START   = 17,
+    NK_KEY_TEXT_LINE_END     = 18,
+    NK_KEY_INSERT            = 19,
+    NK_KEY_TEXT_START        = 20,
+    NK_KEY_TEXT_END          = 21,
+    NK_KEY_TEXT_UNDO         = 22,
+    NK_KEY_TEXT_REDO         = 23,
+    NK_KEY_TEXT_SELECT_ALL   = 24,
+    NK_KEY_TEXT_WORD_LEFT    = 25,
+    NK_KEY_TEXT_WORD_RIGHT   = 26,
 
-    NK_KEY_SCROLL_START,
-    NK_KEY_SCROLL_END,
-    NK_KEY_SCROLL_DOWN,
-    NK_KEY_SCROLL_UP,
+    NK_KEY_SCROLL_START = 27,
+    NK_KEY_SCROLL_END   = 28,
+    NK_KEY_SCROLL_DOWN  = 29,
+    NK_KEY_SCROLL_UP    = 30,
     NK_KEY_MAX
 };
 enum nk_buttons {
@@ -24267,3 +24267,4 @@ nk_tooltipfv(struct nk_context *ctx, const char *fmt, va_list args)
 
 #endif
 
+/* clang-format off */
