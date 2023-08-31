@@ -6,6 +6,9 @@
 #include "../../include/settings.h"
 #include "common.h"
 
+/* Set in h_SwapWindow */
+bool aimbot_key_down = false;
+
 static bool is_visible(vec3_t start, vec3_t end, Entity* target) {
     if (settings.aim_ignore_visible)
         return true;
@@ -77,16 +80,15 @@ static vec3_t get_closest_fov_delta(vec3_t viewangles) {
 /* Main aimbot function */
 
 void aimbot(usercmd_t* cmd) {
-    if (!settings.aimbot || !(cmd->buttons & IN_ATTACK) || !g.localplayer ||
-        !g.localweapon)
+    if (!settings.aimbot || !g.localplayer || !g.localweapon)
         return;
 
-    if (!can_shoot()) {
-        if (settings.aim_shoot_if_target)
-            cmd->buttons &= ~IN_ATTACK;
-
+    if ((!settings.aim_on_key && !(cmd->buttons & IN_ATTACK)) ||
+        (settings.aim_on_key && !aimbot_key_down))
         return;
-    }
+
+    if (!can_shoot())
+        return;
 
     /* We are being spectated in 1st person and we want to hide it */
     if (settings.aim_off_spectated && g.spectated_1st)
@@ -119,8 +121,9 @@ void aimbot(usercmd_t* cmd) {
                 wpn_id == TF_WEAPON_PIPEBOMBLAUNCHER)
                 *bSendPacket = false;
         }
-    } else if (settings.aim_shoot_if_target) {
-        cmd->buttons &= ~IN_ATTACK;
+
+        if (settings.aim_on_key)
+            cmd->buttons |= IN_ATTACK;
     }
 
     if (!settings.aim_silent)

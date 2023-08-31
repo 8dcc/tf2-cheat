@@ -12,10 +12,12 @@ void chams(ModelRender* thisptr, const DrawModelState_t* state,
            const ModelRenderInfo_t* pInfo, matrix3x4_t* pCustomBoneToWorld);
 
 /* src/features/aim/aimbot.c */
+extern bool aimbot_key_down;
 void aimbot(usercmd_t* cmd);
 void draw_aim_fov(void);
 
 /* src/features/aim/meleebot.c */
+extern bool meleebot_key_down;
 void meleebot(usercmd_t* cmd);
 
 /* src/features/movement.c */

@@ -5,6 +5,9 @@
 #include "../../include/settings.h"
 #include "common.h"
 
+/* Set in h_SwapWindow */
+bool meleebot_key_down = false;
+
 static bool melee_attacking(usercmd_t* cmd) {
     if (METHOD(g.localweapon, GetWeaponId) == TF_WEAPON_KNIFE)
         return (cmd->buttons & IN_ATTACK) && can_shoot();
@@ -117,17 +120,16 @@ static vec3_t get_melee_delta(vec3_t viewangles) {
 /*----------------------------------------------------------------------------*/
 
 void meleebot(usercmd_t* cmd) {
-    if (!settings.meleebot || !(cmd->buttons & IN_ATTACK) || !g.localplayer ||
-        !g.localweapon)
+    if (!settings.meleebot || !g.localplayer || !g.localweapon)
+        return;
+
+    if ((!settings.melee_on_key && !(cmd->buttons & IN_ATTACK)) ||
+        (settings.melee_on_key && !meleebot_key_down))
         return;
 
     /* We are not starting to attack and we are not mid-attack */
-    if (!can_shoot() && g.localweapon->smackTime == -1.f) {
-        if (settings.melee_shoot_if_target)
-            cmd->buttons &= ~IN_ATTACK;
-
+    if (!can_shoot() && g.localweapon->smackTime == -1.f)
         return;
-    }
 
     /* We are being spectated in 1st person and we want to hide it */
     if (settings.melee_off_spectated && g.spectated_1st)
@@ -145,6 +147,7 @@ void meleebot(usercmd_t* cmd) {
     vec3_t best_delta = get_melee_delta(engine_viewangles);
 
     if (!vec_is_zero(best_delta)) {
+        /* Only move camera when we deal damage, not when we start attacking */
         if (melee_attacking(cmd)) {
             /* No smoothing for meleebot */
             cmd->viewangles.x = engine_viewangles.x + best_delta.x;
@@ -154,8 +157,9 @@ void meleebot(usercmd_t* cmd) {
             if (settings.melee_silent)
                 *bSendPacket = false;
         }
-    } else if (settings.melee_shoot_if_target) {
-        cmd->buttons &= ~IN_ATTACK;
+
+        if (settings.melee_on_key)
+            cmd->buttons |= IN_ATTACK;
     }
 
     if (!settings.melee_silent)
