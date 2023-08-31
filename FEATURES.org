@@ -63,3 +63,7 @@ The cheat currently has the following features:
      options are called =aim_keycode= and =melee_keycode=. You can find the
      keycodes [[https://github.com/8dcc/tf2-cheat/blob/ac8c9bd6ff10526d683b60bbf4346067b42227e1/src/dependencies/nuklear/nuklear.h#L305-L340][here]].
   2. Change the default keycodes from the code: [[https://github.com/8dcc/tf2-cheat/blob/2b0a9c2789b87a9c71cc3c62dcb28237fcd0cd20/src/include/settings.h#L8-L15][src/include/settings.h]]
+- If the aimbot/meleebot keycode is 0, it will use mouse1 (=IN_ATTACK=) as key.
+  This means that the aimbot will auto-shoot when holding mouse1 and will not
+  attack if there is no target. This can act as the old "Release attack if no
+  valid target" setting.
