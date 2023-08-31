@@ -236,6 +236,19 @@ void h_RunCommand(IPrediction* thisptr, Entity* player, usercmd_t* cmd,
 
 /*----------------------------------------------------------------------------*/
 
+static inline void toggle_keybinds(void) {
+    /* Toggle menu and cursor */
+    if (nk_input_is_key_released(&ctx->input, MENU_KEY)) {
+        menu_open = !menu_open;
+        METHOD_ARGS(i_surface, SetCursorAlwaysVisible, menu_open);
+    }
+
+    /* Feature keybinds. See features.h */
+    aimbot_key_down = nk_input_is_key_down(&ctx->input, settings.aim_keycode);
+    meleebot_key_down =
+      nk_input_is_key_down(&ctx->input, settings.melee_keycode);
+}
+
 void h_SwapWindow(SDL_Window* window) {
     /* Initialize once */
     if (!ctx)
@@ -245,11 +258,8 @@ void h_SwapWindow(SDL_Window* window) {
     /* Switch to our gl context */
     SDL_GL_MakeCurrent(window, gl_ctx);
 
-    /* Toggle menu and cursor */
-    if (nk_input_is_key_released(&ctx->input, MENU_KEY)) {
-        menu_open = !menu_open;
-        METHOD_ARGS(i_surface, SetCursorAlwaysVisible, menu_open);
-    }
+    /* Check if we need to toggle menu or keybinds */
+    toggle_keybinds();
 
     /* Render the watermark and menu */
     if (settings.watermark || menu_open) {
