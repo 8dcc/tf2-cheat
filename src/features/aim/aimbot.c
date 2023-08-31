@@ -106,8 +106,7 @@ void aimbot(usercmd_t* cmd) {
     vec3_t best_delta = get_closest_fov_delta(engine_viewangles);
 
     if (!vec_is_zero(best_delta)) {
-        const float aim_smooth =
-          (settings.aim_smooth >= 1.f) ? settings.aim_smooth : 1.f;
+        const float aim_smooth = MAX(settings.aim_smooth, 1.f);
 
         cmd->viewangles.x = engine_viewangles.x + best_delta.x / aim_smooth;
         cmd->viewangles.y = engine_viewangles.y + best_delta.y / aim_smooth;
