@@ -8,6 +8,14 @@
 /* Set in h_SwapWindow */
 bool meleebot_key_down = false;
 
+static inline bool attack_key(usercmd_t* cmd) {
+    /* If keycode is 0, we use mouse1 as key */
+    if (settings.melee_on_key && settings.melee_keycode != 0)
+        return meleebot_key_down;
+    else
+        return cmd->buttons & IN_ATTACK;
+}
+
 static bool melee_attacking(usercmd_t* cmd) {
     if (METHOD(g.localweapon, GetWeaponId) == TF_WEAPON_KNIFE)
         return (cmd->buttons & IN_ATTACK) && can_shoot();
@@ -120,11 +128,8 @@ static vec3_t get_melee_delta(vec3_t viewangles) {
 /*----------------------------------------------------------------------------*/
 
 void meleebot(usercmd_t* cmd) {
-    if (!settings.meleebot || !g.localplayer || !g.localweapon)
-        return;
-
-    if ((!settings.melee_on_key && !(cmd->buttons & IN_ATTACK)) ||
-        (settings.melee_on_key && !meleebot_key_down))
+    if (!settings.meleebot || !g.localplayer || !g.localweapon ||
+        !attack_key(cmd))
         return;
 
     /* We are not starting to attack and we are not mid-attack */
@@ -160,6 +165,10 @@ void meleebot(usercmd_t* cmd) {
 
         if (settings.melee_on_key)
             cmd->buttons |= IN_ATTACK;
+    } else if (settings.melee_on_key && settings.melee_keycode == 0) {
+        /* We didn't find a valid target, we want to auto-attack on key, and the
+         * keycode is 0 (mouse1): Release attack */
+        cmd->buttons &= ~IN_ATTACK;
     }
 
     if (!settings.melee_silent)

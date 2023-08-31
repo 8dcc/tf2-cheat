@@ -9,6 +9,14 @@
 /* Set in h_SwapWindow */
 bool aimbot_key_down = false;
 
+static inline bool attack_key(usercmd_t* cmd) {
+    /* If keycode is 0, we use mouse1 as key */
+    if (settings.aim_on_key && settings.aim_keycode != 0)
+        return aimbot_key_down;
+    else
+        return cmd->buttons & IN_ATTACK;
+}
+
 static bool is_visible(vec3_t start, vec3_t end, Entity* target) {
     if (settings.aim_ignore_visible)
         return true;
@@ -80,14 +88,8 @@ static vec3_t get_closest_fov_delta(vec3_t viewangles) {
 /* Main aimbot function */
 
 void aimbot(usercmd_t* cmd) {
-    if (!settings.aimbot || !g.localplayer || !g.localweapon)
-        return;
-
-    if ((!settings.aim_on_key && !(cmd->buttons & IN_ATTACK)) ||
-        (settings.aim_on_key && !aimbot_key_down))
-        return;
-
-    if (!can_shoot())
+    if (!settings.aimbot || !g.localplayer || !g.localweapon ||
+        !attack_key(cmd) || !can_shoot())
         return;
 
     /* We are being spectated in 1st person and we want to hide it */
@@ -124,6 +126,10 @@ void aimbot(usercmd_t* cmd) {
 
         if (settings.aim_on_key)
             cmd->buttons |= IN_ATTACK;
+    } else if (settings.aim_on_key && settings.aim_keycode == 0) {
+        /* We didn't find a valid target, we want to auto-shoot on key, and the
+         * keycode is 0 (mouse1): Don't shoot */
+        cmd->buttons &= ~IN_ATTACK;
     }
 
     if (!settings.aim_silent)
