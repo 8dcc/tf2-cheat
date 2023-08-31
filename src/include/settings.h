@@ -6,10 +6,10 @@
 #define CONFIG_FOLDER "enoch-configs/"
 
 /*
- * Page up and page down for aimbots by default. Currently the only way to
- * change the keybinds is either to change this define or change the value in
- * each config direclty from the json. For keys, see:
- *   https://github.com/8dcc/tf2-cheat/blob/ac8c9bd6ff10526d683b60bbf4346067b42227e1/src/dependencies/nuklear/nuklear.h#L305-L340
+ * Page up for aimbots by default. Currently the only way to change the keybinds
+ * is either to change this define or change the value in each config direclty
+ * from the json. For keys, see:
+ *   https://github.com/8dcc/tf2-cheat/blob/54e83f4b785723939380de4e52040ef3d85d5a30/src/dependencies/nuklear/nuklear.h#L305-L340
  */
 #define DEFAULT_AIMBOT_KEY   NK_KEY_SCROLL_UP
 #define DEFAULT_MELEEBOT_KEY NK_KEY_SCROLL_UP
