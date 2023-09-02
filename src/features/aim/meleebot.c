@@ -44,8 +44,8 @@ static vec3_t get_melee_delta(vec3_t viewangles) {
     if (swing_range <= 0.f)
         return VEC_ZERO;
 
-    vec3_t shoot_pos  = METHOD(g.localplayer, EyePosition);
-    vec3_t local_eyes = METHOD(g.localplayer, GetShootPos);
+    vec3_t local_eyes = METHOD(g.localplayer, EyePosition);
+    vec3_t shoot_pos  = METHOD(g.localplayer, GetShootPos);
 
     /* Start closest_dist as range*4 to filter far enemies */
     float closest_dist  = swing_range * 8.f;
