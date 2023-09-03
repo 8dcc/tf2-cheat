@@ -1,5 +1,6 @@
 
 #include "../../include/sdk.h"
+#include "../../include/globals.h"
 #include "../../include/settings.h"
 
 static inline void setting_to_hitboxes(int setting, int* min, int* max) {
