@@ -1,5 +1,6 @@
 
 #include "features.h"
+#include "aim/common.h"
 #include "../include/sdk.h"
 #include "../include/globals.h"
 
@@ -10,9 +11,51 @@ void autobackstab(usercmd_t* cmd) {
     if (METHOD(g.localweapon, GetWeaponId) != TF_WEAPON_KNIFE)
         return;
 
-    /* TODO: Fix and use IsBehindAndFacingTarget
-     * https://www.unknowncheats.me/forum/2897712-post287.html */
-    if (g.localweapon->bReadyToBackstab)
+    const float swing_range = METHOD(g.localweapon, GetSwingRange);
+    if (swing_range <= 0.f)
+        return;
+
+    static const vec3_t swing_mins = { -18.0f, -18.0f, -18.0f };
+    static const vec3_t swing_maxs = { 18.0f, 18.0f, 18.0f };
+
+    const vec3_t shoot_pos    = METHOD(g.localplayer, GetShootPos);
+    const vec3_t local_origin = METHOD(g.localplayer, GetAbsOrigin);
+
+    float closest_dist  = swing_range * 4.f;
+    Entity* closest_ent = NULL;
+
+    /* Store hitbox position of closest enemy */
+    for (int i = 1; i <= g.MaxClients; i++) {
+        Entity* ent = g.ents[i];
+
+        if (!ent || IsTeammate(ent))
+            continue;
+
+        vec3_t ent_origin = METHOD(ent, GetAbsOrigin);
+        if (vec_is_zero(target_pos))
+            continue;
+
+        float dist = vec_len(vec_sub(local_origin, ent_origin));
+
+        if (dist < closest_dist) {
+            closest_dist = dist;
+            closest_ent  = ent;
+        }
+    }
+
+    if (!closest_ent)
+        return;
+
+    if (!IsBehindAndFacingTarget(g.localplayer, closest_ent))
+        return;
+
+    vec3_t forward   = ang_to_vec(cmd->viewangles);
+    vec3_t swing_end = vec_add(shoot_pos, vec_flmul(forward, swing_range));
+
+    Trace_t trace;
+    TraceHull(shoot_pos, swing_end, swing_mins, swing_maxs, MASK_SHOT, &trace);
+
+    if (trace.entity == closest_ent)
         cmd->buttons |= IN_ATTACK;
 }
 
