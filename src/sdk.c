@@ -115,32 +115,44 @@ void TraceHull(vec3_t start, vec3_t end, vec3_t hull_min, vec3_t hull_max,
 
 /*----------------------------------------------------------------------------*/
 
-bool IsBehindAndFacingTarget(Entity* owner, Entity* target) {
-    if (!METHOD(owner, IsAlive))
-        return false;
+static inline void vec_norm_in_place(vec3_t* v) {
+    float len        = vec_len(*v);
+    float len_normal = 1.f / (FLT_EPSILON + len);
 
+    v->x *= len_normal;
+    v->y *= len_normal;
+    v->z *= len_normal;
+}
+
+bool IsBehindAndFacingTarget(Entity* owner, Entity* target) {
     /* Get a vector from owner origin to target origin */
-    vec3_t vecToTarget;
-    vecToTarget   = vec_sub(*METHOD(target, WorldSpaceCenter),
-                            *METHOD(owner, WorldSpaceCenter));
-    vecToTarget.z = 0.0f;
-    vec_norm(&vecToTarget);
+    vec3_t vecToTarget = vec_sub(*METHOD(target, WorldSpaceCenter),
+                                 *METHOD(owner, WorldSpaceCenter));
+    vecToTarget.z      = 0.0f;
+    vec_norm_in_place(&vecToTarget);
 
     /* Get owner forward view vector */
-    vec3_t vecOwnerForward = ang_to_vec(METHOD(owner, EyeAngles));
+    vec3_t vecOwnerForward = ang_to_vec(*METHOD(owner, EyeAngles));
     vecOwnerForward.z      = 0.0f;
-    vec_norm(&vecOwnerForward);
+    vec_norm_in_place(&vecOwnerForward);
 
     /* Get target forward view vector */
-    vec3_t vecTargetForward = ang_to_vec(METHOD(target, EyeAngles));
+    vec3_t vecTargetForward = ang_to_vec(*METHOD(target, EyeAngles));
     vecTargetForward.z      = 0.0f;
-    vec_norm(&vecTargetForward);
+    vec_norm_in_place(&vecTargetForward);
 
     /* Make sure owner is behind, facing and aiming at target's back */
     float flPosVsTargetViewDot = vec_dotproduct(vecToTarget, vecTargetForward);
-    float flPosVsOwnerViewDot  = vec_dotproduct(vecToTarget, vecOwnerForward);
-    float flViewAnglesDot = vec_dotproduct(vecTargetForward, vecOwnerForward);
+    if (flPosVsTargetViewDot <= 0.01f)
+        return false;
 
-    return (flPosVsTargetViewDot > 0.f && flPosVsOwnerViewDot > 0.5 &&
-            flViewAnglesDot > -0.3f);
+    float flPosVsOwnerViewDot = vec_dotproduct(vecToTarget, vecOwnerForward);
+    if (flPosVsOwnerViewDot <= 0.5f)
+        return false;
+
+    float flViewAnglesDot = vec_dotproduct(vecTargetForward, vecOwnerForward);
+    if (flViewAnglesDot <= -0.3f)
+        return false;
+
+    return true;
 }
