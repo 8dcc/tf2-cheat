@@ -2,7 +2,8 @@
 #define UTIL_H_
 
 #include <stdbool.h>
-#include <stddef.h>
+#include <stddef.h> /* size_t */
+#include <float.h>  /* FLT_EPSILON */
 #include <math.h>
 #include <link.h> /* link_map */
 #include "sdk.h"
@@ -111,6 +112,15 @@ static inline void vec_norm(vec3_t* v) {
     v->x = isfinite(v->x) ? remainderf(v->x, 360.f) : 0.f;
     v->y = isfinite(v->y) ? remainderf(v->y, 360.f) : 0.f;
     v->z = 0.0f;
+}
+
+static inline void vec_norm_in_place(vec3_t* v) {
+    float len        = vec_len(*v);
+    float len_normal = 1.f / (FLT_EPSILON + len);
+
+    v->x *= len_normal;
+    v->y *= len_normal;
+    v->z *= len_normal;
 }
 
 static inline void vec_transform(vec3_t v, matrix3x4_t* mat, vec3_t* out) {

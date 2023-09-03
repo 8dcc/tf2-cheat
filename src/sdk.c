@@ -115,15 +115,6 @@ void TraceHull(vec3_t start, vec3_t end, vec3_t hull_min, vec3_t hull_max,
 
 /*----------------------------------------------------------------------------*/
 
-static inline void vec_norm_in_place(vec3_t* v) {
-    float len        = vec_len(*v);
-    float len_normal = 1.f / (FLT_EPSILON + len);
-
-    v->x *= len_normal;
-    v->y *= len_normal;
-    v->z *= len_normal;
-}
-
 bool IsBehindAndFacingTarget(Entity* owner, Entity* target) {
     /* Get a vector from owner origin to target origin */
     vec3_t vecToTarget = vec_sub(*METHOD(target, WorldSpaceCenter),
