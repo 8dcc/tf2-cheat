@@ -134,7 +134,7 @@ static void set_style(void) {
 
 /*----------------------------------------------------------------------------*/
 
-#define COMBO_DROP_W 161
+#define COMBO_DROP_W 186
 
 static inline void tab_esp(void) {
     nk_layout_row_dynamic(ctx, 18, 2);
