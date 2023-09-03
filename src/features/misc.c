@@ -10,6 +10,12 @@ void autobackstab(usercmd_t* cmd) {
     if (METHOD(g.localweapon, GetWeaponId) != TF_WEAPON_KNIFE)
         return;
 
+    /* We don't need to check anything else */
+    if (g.localweapon->bReadyToBackstab) {
+        cmd->buttons |= IN_ATTACK;
+        return;
+    }
+
     const float swing_range = METHOD(g.localweapon, GetSwingRange);
     if (swing_range <= 0.f)
         return;
