@@ -1,6 +1,5 @@
 
 #include "features.h"
-#include "aim/common.h"
 #include "../include/sdk.h"
 #include "../include/globals.h"
 
@@ -19,7 +18,7 @@ void autobackstab(usercmd_t* cmd) {
     static const vec3_t swing_maxs = { 18.0f, 18.0f, 18.0f };
 
     const vec3_t shoot_pos    = METHOD(g.localplayer, GetShootPos);
-    const vec3_t local_origin = METHOD(g.localplayer, GetAbsOrigin);
+    const vec3_t local_origin = *METHOD(g.localplayer, GetAbsOrigin);
 
     float closest_dist  = swing_range * 4.f;
     Entity* closest_ent = NULL;
@@ -31,8 +30,8 @@ void autobackstab(usercmd_t* cmd) {
         if (!ent || IsTeammate(ent))
             continue;
 
-        vec3_t ent_origin = METHOD(ent, GetAbsOrigin);
-        if (vec_is_zero(target_pos))
+        vec3_t ent_origin = *METHOD(ent, GetAbsOrigin);
+        if (vec_is_zero(ent_origin))
             continue;
 
         float dist = vec_len(vec_sub(local_origin, ent_origin));
