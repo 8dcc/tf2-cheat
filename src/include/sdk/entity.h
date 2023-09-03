@@ -109,7 +109,7 @@ typedef struct {
     bool (*IsWeapon)(Entity*); /* 190 */
     PAD(4 * 3);
     vec3_t (*EyePosition)(Entity*); /* 194 */
-    vec3_t (*EyeAngles)(Entity*);   /* 195 */
+    vec3_t* (*EyeAngles)(Entity*);  /* 195 */
     PAD(4 * 95);
     Weapon* (*GetWeapon)(Entity*); /* 291 */
     PAD(4 * 10);
