@@ -6,6 +6,8 @@
 #include "../include/util.h"
 #include "../include/sdk.h"
 
+static bool was_on_ground = false;
+
 static void autostrafe_legit(usercmd_t* cmd) {
     /* Check mouse x delta */
     if (cmd->mousedx < 0)
@@ -21,14 +23,16 @@ static void autostrafe_rage(usercmd_t* cmd) {
     static const float cl_forwardspeed  = 450.0f;
     static const float cl_sidespeed     = 450.0f;
 
+    /* 2 consecutive ticks on ground, don't autostrafe */
+    if (was_on_ground && (g.localplayer->flags & FL_ONGROUND) != 0)
+        return;
+
     const vec3_t velocity = g.localplayer->velocity;
     const float speed     = vec_len2d(velocity);
 
     /* If low speed, start forward */
-    if (speed < 30 && (cmd->buttons & IN_FORWARD)) {
-        cmd->forwardmove = 450.0f;
+    if (speed < 30)
         return;
-    }
 
     float term = sv_airaccelerate / sv_maxspeed * 100.0f / speed;
     if (term < -1 || term > 1)
@@ -74,6 +78,8 @@ void bhop(usercmd_t* cmd) {
                 break;
         }
     }
+
+    was_on_ground = (g.localplayer->flags & FL_ONGROUND) != 0;
 }
 
 void autorocketjump(usercmd_t* cmd) {
