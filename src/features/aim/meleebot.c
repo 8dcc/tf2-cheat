@@ -20,12 +20,8 @@ static bool melee_attacking(usercmd_t* cmd) {
     if (METHOD(g.localweapon, GetWeaponId) == TF_WEAPON_KNIFE)
         return (cmd->buttons & IN_ATTACK) && can_shoot();
 
-    /* TODO: Temporary until I add prediction */
-    const float flTime =
-      g.localplayer->nTickBase * c_globalvars->interval_per_tick;
-
     /* Credits: SEOwned (and afaik to KGB as well) */
-    return fabs(g.localweapon->smackTime - flTime) <
+    return fabs(g.localweapon->smackTime - c_globalvars->curtime) <
            c_globalvars->interval_per_tick * 2.0f;
 }
 
