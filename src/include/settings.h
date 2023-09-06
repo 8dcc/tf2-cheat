@@ -90,6 +90,7 @@ typedef struct {
     int thirdperson;
     int remove_scope;
     int autostab;
+    int anim_stab;
     int rocketjump;
     float rocketjump_deg;
     int watermark;

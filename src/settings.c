@@ -59,6 +59,7 @@ Settings settings = {
     .thirdperson    = false,
     .remove_scope   = false,
     .autostab       = false,
+    .anim_stab      = false,
     .rocketjump     = false,
     .rocketjump_deg = 45.f,
     .watermark      = true,
@@ -138,6 +139,7 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_INT(json_cfg, thirdperson);
     JSON_SETTINGS_WRITE_INT(json_cfg, remove_scope);
     JSON_SETTINGS_WRITE_INT(json_cfg, autostab);
+    JSON_SETTINGS_WRITE_INT(json_cfg, anim_stab);
     JSON_SETTINGS_WRITE_INT(json_cfg, rocketjump);
     JSON_SETTINGS_WRITE_FLOAT(json_cfg, rocketjump_deg);
     JSON_SETTINGS_WRITE_INT(json_cfg, watermark);
@@ -269,6 +271,7 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_INT(json_cfg, thirdperson);
     JSON_SETTINGS_READ_INT(json_cfg, remove_scope);
     JSON_SETTINGS_READ_INT(json_cfg, autostab);
+    JSON_SETTINGS_READ_INT(json_cfg, anim_stab);
     JSON_SETTINGS_READ_INT(json_cfg, rocketjump);
     JSON_SETTINGS_READ_FLOAT(json_cfg, rocketjump_deg);
     JSON_SETTINGS_READ_INT(json_cfg, watermark);

@@ -16,6 +16,10 @@ void autobackstab(usercmd_t* cmd) {
         return;
     }
 
+    /* Only check bReadyToBackstab, skip TraceHull */
+    if (settings.anim_stab)
+        return;
+
     const float swing_range = METHOD(g.localweapon, GetSwingRange);
     if (swing_range <= 0.f)
         return;

@@ -240,7 +240,13 @@ static inline void tab_misc(void) {
     nk_layout_row_dynamic(ctx, 15, 1);
     nk_checkbox_label(ctx, "Thirdperson", &settings.thirdperson);
     nk_checkbox_label(ctx, "Remove sniper scope", &settings.remove_scope);
+
+    nk_layout_row_dynamic(ctx, 8, 1);
+    nk_spacing(ctx, 0); /* ----------------------------  */
+    nk_layout_row_dynamic(ctx, 15, 1);
+
     nk_checkbox_label(ctx, "Autobackstab", &settings.autostab);
+    nk_checkbox_label(ctx, "Only check animation", &settings.anim_stab);
 
     nk_layout_row_dynamic(ctx, 8, 1);
     nk_spacing(ctx, 0); /* ----------------------------  */
