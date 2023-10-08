@@ -13,36 +13,38 @@ You can see a full list of features in [[./FEATURES.org][FEATURES.org]].
 * Dependencies
 We need the 32 bit SDL2 and GLEW libraries for linking the final shared object.
 
-The cheat uses the [[https://github.com/slavfox/Cozette][Cozette Vector]] font for rendering using =ISurface=. You can
-install it with with the following command.
-
-Arch ([[https://aur.archlinux.org/packages/cozette-ttf][AUR]]):
+Arch-based distros:
 #+begin_src console
 $ sudo pacman -S lib32-sdl lib32-glew
-$ yay -S cozette-ttf  # Has to be ttf
 #+end_src
 
-Debian
+Debian-based distros:
 #+begin_src console
 $ sudo apt install libglew-dev:i386 libsdl2-dev:i386
 #+end_src
 
+The cheat uses the [[https://github.com/slavfox/Cozette][Cozette Vector]] font for rendering using =ISurface=. You can
+install it with with the following command.
 
-Without AUR helper:
+Arch-based ([[https://aur.archlinux.org/packages/cozette-ttf][AUR]]):
+#+begin_src console
+$ yay -S cozette-ttf  # Has to be ttf
+#+end_src
+
+Arch-based (Without AUR helper):
 #+begin_src console
 $ git clone https://aur.archlinux.org/cozette-ttf.git
 $ cd cozette-ttf
 $ makepkg -si
 #+end_src
 
-or:
+Manually (other distros):
 #+begin_src console
 $ wget https://github.com/slavfox/Cozette/releases/download/v.1.22.2/CozetteFonts-v-1-22-2.zip
 $ unzip CozetteFonts-v-1-22-2.zip
 $ cp -R CozetteFonts /usr/share/fonts/truetype
 $ fc-cache
 #+end_src
-
 
 * Building
 
