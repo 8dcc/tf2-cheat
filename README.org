@@ -22,12 +22,27 @@ $ sudo pacman -S lib32-sdl lib32-glew
 $ yay -S cozette-ttf  # Has to be ttf
 #+end_src
 
+Debian
+#+begin_src console
+$ sudo apt install libglew-dev:i386 libsdl2-dev:i386
+#+end_src
+
+
 Without AUR helper:
 #+begin_src console
 $ git clone https://aur.archlinux.org/cozette-ttf.git
 $ cd cozette-ttf
 $ makepkg -si
 #+end_src
+
+or:
+#+begin_src console
+$ wget https://github.com/slavfox/Cozette/releases/download/v.1.22.2/CozetteFonts-v-1-22-2.zip
+$ unzip CozetteFonts-v-1-22-2.zip
+$ cp -R CozetteFonts /usr/share/fonts/truetype
+$ fc-cache
+#+end_src
+
 
 * Building
 
