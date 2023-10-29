@@ -99,8 +99,13 @@ void autorocketjump(usercmd_t* cmd) {
         /* If we are not moving, aim down and reverse yaw */
         cmd->viewangles.x = 89.f;
 
-        /* Reverting jaw does not work for rocketjumping, -85 works better */
-        cmd->viewangles.y = sub_offset_to_yaw(cmd->viewangles.y, 85.f);
+        /* For normal rocketlaunchers, reverting jaw directly is not ideal
+         * because the rocket shoots from an offset, we use -85º for all except
+         * "The Original" */
+        if (g.localweapon->m_iItemDefinitionIndex == Soldier_m_TheOriginal)
+            cmd->viewangles.y = sub_offset_to_yaw(cmd->viewangles.y, 180.f);
+        else
+            cmd->viewangles.y = sub_offset_to_yaw(cmd->viewangles.y, 85.f);
     } else {
         vec3_t velocity_ang = velocity_to_ang(velocity);
 
@@ -109,11 +114,14 @@ void autorocketjump(usercmd_t* cmd) {
         cmd->viewangles.x = settings.rocketjump_deg;
         cmd->viewangles.y = velocity_ang.y - 180.f;
 
-        /* We need to add since offset is already inverted */
-        if (settings.rocketjump_deg >= 70.f)
-            cmd->viewangles.y = add_offset_to_yaw(cmd->viewangles.y, 45.f);
-        else if (settings.rocketjump_deg >= 80.f)
-            cmd->viewangles.y = add_offset_to_yaw(cmd->viewangles.y, 75.f);
+        /* See previous comment when stopped. We need to add since offset is
+         * already inverted */
+        if (g.localweapon->m_iItemDefinitionIndex != Soldier_m_TheOriginal) {
+            if (settings.rocketjump_deg >= 70.f)
+                cmd->viewangles.y = add_offset_to_yaw(cmd->viewangles.y, 45.f);
+            else if (settings.rocketjump_deg >= 80.f)
+                cmd->viewangles.y = add_offset_to_yaw(cmd->viewangles.y, 75.f);
+        }
     }
 
     /* Release hotkey and hold rocketjump keys. Make it pSilent too */
