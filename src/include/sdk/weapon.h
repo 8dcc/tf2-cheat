@@ -22,7 +22,9 @@ typedef struct {
  * C, it might be a good idea to re-dump them on each game update. */
 struct Weapon {
     VMT_Weapon* vmt;
-    PAD(0xA34);
+    PAD(0x924);
+    int m_iItemDefinitionIndex; /* 0x928 */
+    PAD(0x10C);
     CBaseHandle hOwner; /* 0xA38 */
     PAD(0x10);
     float flNextPrimaryAttack; /* 0xA4C */
