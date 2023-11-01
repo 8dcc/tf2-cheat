@@ -2,7 +2,10 @@
 #include "features.h"
 #include "../include/sdk.h"
 #include "../include/globals.h"
+
+#if 0
 #include "aim/common.h" /* get_hitbox_pos */
+#endif
 
 void autobackstab(usercmd_t* cmd) {
     if (!settings.autostab || !g.localplayer || !g.localweapon || !g.IsAlive)
