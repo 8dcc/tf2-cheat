@@ -116,7 +116,7 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
     vec_norm(&cmd->viewangles);
     ang_clamp(&cmd->viewangles);
 
-    /* Make sure we aren't choking too much */
+    /* Make sure we aren't choking too many packets */
     if (*bSendPacket == false) {
         g.choked++;
         if (g.choked >= MAX_CHOKE) {

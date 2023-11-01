@@ -2,6 +2,7 @@
 #include "features.h"
 #include "../include/sdk.h"
 #include "../include/globals.h"
+#include "aim/common.h" /* get_hitbox_pos */
 
 void autobackstab(usercmd_t* cmd) {
     if (!settings.autostab || !g.localplayer || !g.localweapon || !g.IsAlive)
@@ -64,8 +65,20 @@ void autobackstab(usercmd_t* cmd) {
     Trace_t trace;
     TraceHull(shoot_pos, swing_end, swing_mins, swing_maxs, MASK_SHOT, &trace);
 
-    if (trace.entity == closest_ent)
-        cmd->buttons |= IN_ATTACK;
+    if (trace.entity != closest_ent)
+        return;
+
+#if 0
+    /* FIXME: Add setting for changing view when backstabbing */
+
+    /* Look to the player (yaw only) for more consistency */
+    const vec3_t target_pos = get_hitbox_pos(closest_ent, HITBOX_SPINE2);
+    const vec3_t target_ang = vec_to_ang(vec_sub(target_pos, shoot_pos));
+    cmd->viewangles.y       = target_ang.y;
+#endif
+
+    /* Finally, attack */
+    cmd->buttons |= IN_ATTACK;
 }
 
 /*----------------------------------------------------------------------------*/
