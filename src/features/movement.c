@@ -62,6 +62,8 @@ void bhop(usercmd_t* cmd) {
 
     const bool is_jumping = (cmd->buttons & IN_JUMP) != 0;
 
+    /* TODO: Because we disable jumping mid-air, this blocks scout's double
+     * jump. I tried SEOwned's method, but it only works ~1/5 of the time */
     if (!(g.localplayer->flags & FL_ONGROUND))
         cmd->buttons &= ~IN_JUMP;
 
