@@ -100,16 +100,19 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
     if (ret)
         METHOD_ARGS(i_engine, SetViewAngles, &cmd->viewangles);
 
+    autobackstab(cmd);
+    thirdperson();
+
     pred_start(cmd);
     {
         meleebot(cmd);
         aimbot(cmd);
         autorocketjump(cmd);
-        autobackstab(cmd);
     }
     pred_end();
 
-    thirdperson();
+    /* NOTE: The autostrafer (called from bhop) needs to be run after prediction
+     * instead of before or, for some reason, it gets slower. */
     bhop(cmd);
 
     correct_movement(cmd, old_angles);
