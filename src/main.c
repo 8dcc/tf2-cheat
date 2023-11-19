@@ -33,12 +33,12 @@ void unload() {
         return;
 
     if (!resore_vtables()) {
-        ERR("Error restoring vtables, aborting\n");
+        ERR("Error restoring vtables, aborting");
         self_unload();
     }
 
     if (!hooks_restore()) {
-        ERR("Error restoring hooks, aborting\n");
+        ERR("Error restoring hooks, aborting");
         self_unload();
     }
 

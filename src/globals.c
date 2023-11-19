@@ -152,13 +152,13 @@ bool globals_init(void) {
     /* Other interfaces */
     i_clientmode = get_clientmode();
     if (!i_clientmode || !i_clientmode->vmt) {
-        ERR("Couldn't load i_clientmodebms\n");
+        ERR("Couldn't load i_clientmodebms");
         return false;
     }
 
     c_globalvars = get_globalvars();
     if (!c_globalvars) {
-        ERR("Couldn't load c_globalvars\n");
+        ERR("Couldn't load c_globalvars");
         return false;
     }
 
