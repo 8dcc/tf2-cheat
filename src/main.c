@@ -13,14 +13,14 @@ void load(void) {
     printf("Enoch injected!\n");
 
     if (!globals_init()) {
-        fprintf(stderr, "load: error loading globals, aborting\n");
+        ERR("Error loading globals, aborting");
         self_unload();
     }
 
     fonts_init();
 
     if (!hooks_init()) {
-        fprintf(stderr, "load: error loading hooks, aborting\n");
+        ERR("Error loading hooks, aborting");
         self_unload();
     }
 
@@ -33,12 +33,12 @@ void unload() {
         return;
 
     if (!resore_vtables()) {
-        fprintf(stderr, "unload: error restoring vtables, aborting\n");
+        ERR("Error restoring vtables, aborting\n");
         self_unload();
     }
 
     if (!hooks_restore()) {
-        fprintf(stderr, "unload: error restoring hooks, aborting\n");
+        ERR("Error restoring hooks, aborting\n");
         self_unload();
     }
 

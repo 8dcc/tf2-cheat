@@ -8,25 +8,25 @@
 #define SWAPWINDOW_OFFSET 0xFD648
 #define POLLEVENT_OFFSET  0xFCF64
 
-#define GET_HANDLER(VAR, STR)                                   \
-    VAR = dlopen(STR, RTLD_LAZY | RTLD_NOLOAD);                 \
-    if (!VAR) {                                                 \
-        fprintf(stderr, "globals_init: can't open " #VAR "\n"); \
-        return false;                                           \
+#define GET_HANDLER(VAR, STR)                   \
+    VAR = dlopen(STR, RTLD_LAZY | RTLD_NOLOAD); \
+    if (!VAR) {                                 \
+        ERR("Can't open " #VAR);                \
+        return false;                           \
     }
 
-#define GET_INTERFACE(TYPE, VAR, HANDLER, STR)                  \
-    VAR = (TYPE)get_interface(HANDLER, STR);                    \
-    if (!VAR || !VAR->vmt) {                                    \
-        fprintf(stderr, "globals_init: can't load " #VAR "\n"); \
-        return false;                                           \
+#define GET_INTERFACE(TYPE, VAR, HANDLER, STR) \
+    VAR = (TYPE)get_interface(HANDLER, STR);   \
+    if (!VAR || !VAR->vmt) {                   \
+        ERR("Can't load " #VAR);               \
+        return false;                          \
     }
 
-#define GET_PATTERN(VAR, MODULE, SIG)                                      \
-    void* VAR = find_sig(MODULE, SIG);                                     \
-    if (!VAR) {                                                            \
-        fprintf(stderr, "get_sigs: coundn't find pattern for " #SIG "\n"); \
-        return false;                                                      \
+#define GET_PATTERN(VAR, MODULE, SIG)           \
+    void* VAR = find_sig(MODULE, SIG);          \
+    if (!VAR) {                                 \
+        ERR("Coundn't find pattern for " #SIG); \
+        return false;                           \
     }
 
 /*----------------------------------------------------------------------------*/
@@ -152,13 +152,13 @@ bool globals_init(void) {
     /* Other interfaces */
     i_clientmode = get_clientmode();
     if (!i_clientmode || !i_clientmode->vmt) {
-        fprintf(stderr, "globals_init: couldn't load i_clientmodebms\n");
+        ERR("Couldn't load i_clientmodebms\n");
         return false;
     }
 
     c_globalvars = get_globalvars();
     if (!c_globalvars) {
-        fprintf(stderr, "globals_init: couldn't load c_globalvars\n");
+        ERR("Couldn't load c_globalvars\n");
         return false;
     }
 

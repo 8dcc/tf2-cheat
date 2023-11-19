@@ -8,15 +8,22 @@
 #include <link.h> /* link_map */
 #include "sdk.h"
 
+#define ERR(...)                                  \
+    do {                                          \
+        fprintf(stderr, "enoch: %s: ", __func__); \
+        fprintf(stderr, __VA_ARGS__);             \
+        fputc('\n', stderr);                      \
+    } while (0)
+
 #define PRINT_BYTES(ptr, n)                        \
-    {                                              \
+    do {                                           \
         for (size_t i = 0; i < n; i++) {           \
             if (*((uint8_t*)(ptr) + i) < 0x10)     \
                 putchar('0');                      \
             printf("%X ", *((uint8_t*)(ptr) + i)); \
         }                                          \
         putchar('\n');                             \
-    }
+    } while (0)
 
 /* Location of address + Size of offset + Offset */
 #define RELATIVE2ABSOLUTE(addr) (void*)((void*)(addr) + 4 + *(uint32_t*)(addr))

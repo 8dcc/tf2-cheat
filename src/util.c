@@ -13,8 +13,7 @@
 
 void* get_interface(void* handle, const char* name) {
     if (!handle) {
-        fprintf(stderr, "get_interface: invalid handle for interface %s\n",
-                name);
+        ERR("Invalid handle for interface %s", name);
         return NULL;
     }
 
@@ -23,7 +22,7 @@ void* get_interface(void* handle, const char* name) {
 
     /* dlsym failed */
     if (!CreateInterface) {
-        fprintf(stderr, "get_interface: dlsym couldn't get CreateInterface\n");
+        ERR("dlsym() couldn't find CreateInterface");
         return NULL;
     }
 
@@ -63,7 +62,7 @@ void* find_sig(const char* module, const byte* pattern) {
 
     struct our_link_map* link = dlopen(module, RTLD_NOLOAD | RTLD_NOW);
     if (!link) {
-        fprintf(stderr, "find_sig: can't open module \"%s\"\n", module);
+        ERR("Can't open module \"%s\"", module);
         return NULL;
     }
 
@@ -278,17 +277,16 @@ uint32_t hash_str(const char* str) {
 
 /*----------------------------------------------------------------------------*/
 
-#define PAGE_SIZE          getpagesize()
-#define PAGE_MASK          (~(PAGE_SIZE - 1))
-#define PAGE_ALIGN(x)      ((x + PAGE_SIZE - 1) & PAGE_MASK)
-#define PAGE_ALIGN_DOWN(x) (PAGE_ALIGN(x) - PAGE_SIZE)
+#define PAGE_MASK          (~(PAGE_SZ - 1))
+#define PAGE_ALIGN(x)      ((x + PAGE_SZ - 1) & PAGE_MASK)
+#define PAGE_ALIGN_DOWN(x) (PAGE_ALIGN(x) - PAGE_SZ)
 
 bool protect_addr(void* ptr, int new_flags) {
-    void* p  = (void*)PAGE_ALIGN_DOWN((int)ptr);
-    int pgsz = getpagesize();
+    int PAGE_SZ = getpagesize();
+    void* p     = (void*)PAGE_ALIGN_DOWN((uint32_t)ptr);
 
-    if (mprotect(p, pgsz, new_flags) == -1) {
-        printf("hl-cheat: error protecting %p\n", ptr);
+    if (mprotect(p, PAGE_SZ, new_flags) == -1) {
+        ERR("Error protecting %p", ptr);
         return false;
     }
 
