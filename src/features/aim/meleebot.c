@@ -133,8 +133,10 @@ void meleebot(usercmd_t* cmd) {
         return;
 
     /* We are being spectated in 1st person and we want to hide it */
-    if (settings.melee_off_spectated && g.spectated_1st)
+    if (settings.melee_off_spectated && g.spectated_1st) {
+		cmd->buttons |= IN_ATTACK;
         return;
+	}
 
     const int wpn_slot = METHOD(g.localweapon, GetSlot);
     if (wpn_slot != WPN_SLOT_MELEE)

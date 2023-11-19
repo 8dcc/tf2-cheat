@@ -93,8 +93,10 @@ void aimbot(usercmd_t* cmd) {
         return;
 
     /* We are being spectated in 1st person and we want to hide it */
-    if (settings.aim_off_spectated && g.spectated_1st)
+    if (settings.aim_off_spectated && g.spectated_1st) {
+		cmd->buttons |= IN_ATTACK;
         return;
+	}
 
     /* For now just check if the current weapon is in a valid slot.
      * TODO: Add projectile aimbot depending on weapon->GetDamageType */
