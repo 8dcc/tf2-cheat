@@ -132,8 +132,6 @@ typedef struct {
     font_t tiny;
 } font_list_t;
 
-#define MAX_CHOKE 15
-
 typedef struct {
     /* Index updated in LevelInitPostEntity */
     int localidx;

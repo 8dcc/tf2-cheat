@@ -7,6 +7,8 @@
 #include "include/menu.h"
 #include "features/features.h"
 
+#define MAX_CHOKE 15
+
 DECL_HOOK(LevelShutdown);
 DECL_HOOK(LevelInitPostEntity);
 DECL_HOOK(FrameStageNotify);
