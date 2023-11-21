@@ -355,43 +355,48 @@ void esp(void) {
                 break;
             }
 
-            case CClass_CObjectSentrygun:
+            case CClass_CObjectSentrygun: {
                 if (settings.building_esp_type == SETT_BTYPE_ALL ||
                     settings.building_esp_type == SETT_BTYPE_SENTRY)
                     building_esp(ent, "Sentry", build_friend_col,
                                  build_enemy_col);
 
                 break;
+            }
 
-            case CClass_CObjectDispenser:
+            case CClass_CObjectDispenser: {
                 if (settings.building_esp_type == SETT_BTYPE_ALL ||
                     settings.building_esp_type == SETT_BTYPE_DISPENSER)
                     building_esp(ent, "Dispenser", build_friend_col,
                                  build_enemy_col);
 
                 break;
+            }
 
-            case CClass_CObjectTeleporter:
+            case CClass_CObjectTeleporter: {
                 if (settings.building_esp_type == SETT_BTYPE_ALL ||
                     settings.building_esp_type == SETT_BTYPE_TELEPORTER)
                     building_esp(ent, "Teleporter", build_friend_col,
                                  build_enemy_col);
 
                 break;
+            }
 
-            case CClass_CTFAmmoPack:
+            case CClass_CTFAmmoPack: {
                 /* Dropped ammo, not the normal ammo boxes */
                 if (settings.ammobox_esp) {
                     GENERIC_ENT_NAME(ent, "Ammo", ammobox_col);
                 }
                 break;
+            }
 
-            case CClass_CCurrencyPack:
+            case CClass_CCurrencyPack: {
                 /* I am not adding another option/color for this shit */
                 if (settings.ammobox_esp) {
                     GENERIC_ENT_NAME(ent, "Currency", ammobox_col);
                 }
                 break;
+            }
 
             case CClass_CBaseAnimating: {
                 /* Ammo boxes and healing items are all CBaseAnimating, so we
