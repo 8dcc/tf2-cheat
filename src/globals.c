@@ -8,11 +8,11 @@
 #define SWAPWINDOW_OFFSET 0xFD648
 #define POLLEVENT_OFFSET  0xFCF64
 
-#define GET_HANDLER(VAR, STR)                   \
-    VAR = dlopen(STR, RTLD_LAZY | RTLD_NOLOAD); \
-    if (!VAR) {                                 \
-        ERR("Can't open " #VAR);                \
-        return false;                           \
+#define GET_HANDLER(VAR, STR)                         \
+    void* VAR = dlopen(STR, RTLD_LAZY | RTLD_NOLOAD); \
+    if (!VAR) {                                       \
+        ERR("Can't open " #VAR);                      \
+        return false;                                 \
     }
 
 #define GET_INTERFACE(TYPE, VAR, HANDLER, STR) \
@@ -30,15 +30,6 @@
     }
 
 /*----------------------------------------------------------------------------*/
-
-/* Handlers
- * TODO: Change scope if not used outside */
-void* h_client         = NULL;
-void* h_engine         = NULL;
-void* h_matsurface     = NULL;
-void* h_vgui           = NULL;
-void* h_materialsystem = NULL;
-void* h_sdl2           = NULL;
 
 /* Global cache and fonts */
 global_cache_t g;

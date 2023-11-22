@@ -163,14 +163,6 @@ typedef struct {
 /*----------------------------------------------------------------------------*/
 /* Global variables */
 
-/* TODO: Remove if not used outside of globals_init() */
-extern void* h_client;
-extern void* h_engine;
-extern void* h_matsurface;
-extern void* h_vgui;
-extern void* h_materialsystem;
-extern void* h_sdl2;
-
 extern global_cache_t g;
 extern font_list_t g_fonts;
 
