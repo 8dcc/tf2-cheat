@@ -146,6 +146,11 @@ struct Entity {
 
 /*----------------------------------------------------------------------------*/
 
+#define IsTeammate(ENT) \
+    (METHOD(g.localplayer, GetTeamNumber) == METHOD(ENT, GetTeamNumber))
+
+#define IsSteamFriend(ENT) (IsPlayerOnSteamFriendsList(g.localplayer, ENT))
+
 static inline int CBaseHandle_IsValid(CBaseHandle h) {
     return h != INVALID_EHANDLE_INDEX;
 }
@@ -153,9 +158,6 @@ static inline int CBaseHandle_IsValid(CBaseHandle h) {
 static inline int CBaseHandle_GetEntryIndex(CBaseHandle h) {
     return h & ENT_ENTRY_MASK;
 }
-
-#define IsTeammate(ent) \
-    (METHOD(g.localplayer, GetTeamNumber) == METHOD(ent, GetTeamNumber))
 
 static inline Renderable* GetRenderable(Entity* ent) {
     return (Renderable*)((void*)ent + 0x4);
