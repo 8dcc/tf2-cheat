@@ -206,12 +206,13 @@ void esp(void) {
     if (!g.localplayer)
         return;
 
-    rgba_t player_friend_col = NK2COL(settings.col_friend_esp);
-    rgba_t player_enemy_col  = NK2COL(settings.col_enemy_esp);
-    rgba_t build_friend_col  = NK2COL(settings.col_friend_build);
-    rgba_t build_enemy_col   = NK2COL(settings.col_enemy_build);
-    rgba_t ammobox_col       = NK2COL(settings.col_ammobox_esp);
-    rgba_t healthpack_col    = NK2COL(settings.col_healthpack_esp);
+    rgba_t player_steam_friend_col = NK2COL(settings.col_steam_friend_esp);
+    rgba_t player_friend_col       = NK2COL(settings.col_friend_esp);
+    rgba_t player_enemy_col        = NK2COL(settings.col_enemy_esp);
+    rgba_t build_friend_col        = NK2COL(settings.col_friend_build);
+    rgba_t build_enemy_col         = NK2COL(settings.col_enemy_build);
+    rgba_t ammobox_col             = NK2COL(settings.col_ammobox_esp);
+    rgba_t healthpack_col          = NK2COL(settings.col_healthpack_esp);
 
     /* For bounding box */
     static int x, y, w, h;
@@ -258,7 +259,9 @@ void esp(void) {
                 if (!get_bbox(ent, &x, &y, &w, &h))
                     continue;
 
-                rgba_t col = teammate ? player_friend_col : player_enemy_col;
+                rgba_t col = IsSteamFriend(ent) ? player_steam_friend_col
+                             : teammate         ? player_friend_col
+                                                : player_enemy_col;
 
                 /*------------------------------------------------------------*/
                 /* Player skeleton ESP */
