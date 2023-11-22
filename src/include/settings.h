@@ -97,6 +97,7 @@ typedef struct {
     int speclist;
 
     /* Colors */
+    struct nk_colorf col_steam_friend_esp;
     struct nk_colorf col_friend_esp;
     struct nk_colorf col_enemy_esp;
     struct nk_colorf col_enemy_build;

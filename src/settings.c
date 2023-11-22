@@ -66,12 +66,13 @@ Settings settings = {
     .speclist       = true,
 
     /* Colors */
-    .col_friend_esp     = (struct nk_colorf){ 0.05f, 0.47f, 0.95f, 1.f },
-    .col_enemy_esp      = (struct nk_colorf){ 0.95f, 0.10f, 0.09f, 1.f },
-    .col_friend_build   = (struct nk_colorf){ 0.29f, 0.07f, 0.54f, 1.f },
-    .col_enemy_build    = (struct nk_colorf){ 0.90f, 0.31f, 0.00f, 1.f },
-    .col_ammobox_esp    = (struct nk_colorf){ 0.55f, 0.43f, 0.38f, 1.f },
-    .col_healthpack_esp = (struct nk_colorf){ 0.40f, 0.73f, 0.41f, 1.f },
+    .col_steam_friend_esp = (struct nk_colorf){ 0.21f, 0.77f, 0.23f, 1.f },
+    .col_friend_esp       = (struct nk_colorf){ 0.05f, 0.47f, 0.95f, 1.f },
+    .col_enemy_esp        = (struct nk_colorf){ 0.95f, 0.10f, 0.09f, 1.f },
+    .col_friend_build     = (struct nk_colorf){ 0.29f, 0.07f, 0.54f, 1.f },
+    .col_enemy_build      = (struct nk_colorf){ 0.90f, 0.31f, 0.00f, 1.f },
+    .col_ammobox_esp      = (struct nk_colorf){ 0.55f, 0.43f, 0.38f, 1.f },
+    .col_healthpack_esp   = (struct nk_colorf){ 0.40f, 0.73f, 0.41f, 1.f },
 
     .col_friend_chams = (struct nk_colorf){ 0.47f, 0.77f, 0.90f, 1.f },
     .col_enemy_chams  = (struct nk_colorf){ 0.87f, 0.34f, 0.34f, 1.f },
@@ -145,6 +146,7 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_INT(json_cfg, watermark);
     JSON_SETTINGS_WRITE_INT(json_cfg, speclist);
 
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_steam_friend_esp);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_friend_esp);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_enemy_esp);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_friend_build);
@@ -277,6 +279,7 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_INT(json_cfg, watermark);
     JSON_SETTINGS_READ_INT(json_cfg, speclist);
 
+    JSON_SETTINGS_READ_COL(json_cfg, col_steam_friend_esp);
     JSON_SETTINGS_READ_COL(json_cfg, col_friend_esp);
     JSON_SETTINGS_READ_COL(json_cfg, col_enemy_esp);
     JSON_SETTINGS_READ_COL(json_cfg, col_friend_build);
