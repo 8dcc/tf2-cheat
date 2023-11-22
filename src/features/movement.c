@@ -60,6 +60,10 @@ void bhop(usercmd_t* cmd) {
     if (!settings.bhop || !g.IsAlive || !g.localplayer)
         return;
 
+    /* Don't do anything in water */
+    if (g.localplayer->flags & FL_INWATER || g.localplayer->flags & FL_SWIM)
+        return;
+
     const bool is_jumping = (cmd->buttons & IN_JUMP) != 0;
 
     /* TODO: Because we disable jumping mid-air, this blocks scout's double
