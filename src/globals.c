@@ -22,15 +22,17 @@
         return false;                          \
     }
 
-#define GET_PATTERN(VAR, MODULE, SIG)           \
-    void* VAR = find_sig(MODULE, SIG);          \
-    if (!VAR) {                                 \
-        ERR("Coundn't find pattern for " #SIG); \
-        return false;                           \
+#define GET_SIGNATURE(VAR, MODULE, SIG)            \
+    void* VAR = find_sig(MODULE, SIG);             \
+    if (!VAR) {                                    \
+        ERR("Coundn't match signature for " #SIG); \
+        return false;                              \
     }
 
 /*----------------------------------------------------------------------------*/
 
+/* Handlers
+ * TODO: Change scope if not used outside */
 void* h_client         = NULL;
 void* h_engine         = NULL;
 void* h_matsurface     = NULL;
@@ -38,20 +40,26 @@ void* h_vgui           = NULL;
 void* h_materialsystem = NULL;
 void* h_sdl2           = NULL;
 
+/* Global cache and fonts */
 global_cache_t g;
 font_list_t g_fonts;
 
+/* Signature pointers */
 bool* bSendPacket = NULL;
 
-StartDrawing_t StartDrawing   = NULL;
-FinishDrawing_t FinishDrawing = NULL;
+/* Signature functions */
+StartDrawing_t StartDrawing                             = NULL;
+FinishDrawing_t FinishDrawing                           = NULL;
+SetPredictionRandomSeed_t SetPredictionRandomSeed       = NULL;
+MD5_PseudoRandom_t MD5_PseudoRandom                     = NULL;
+IsPlayerOnSteamFriendsList_t IsPlayerOnSteamFriendsList = NULL;
 
-SwapWindow_t* SwapWindowPtr                       = NULL;
-PollEvent_t* PollEventPtr                         = NULL;
-SetPredictionRandomSeed_t SetPredictionRandomSeed = NULL;
-MD5_PseudoRandom_t MD5_PseudoRandom               = NULL;
+/* SDL functions */
+SwapWindow_t* SwapWindowPtr = NULL;
+PollEvent_t* PollEventPtr   = NULL;
 
-/* Macro defined in globals.h */
+/* Interfaces and classes
+ * NOTE: Macro defined in globals.h */
 DECL_INTF(BaseClient, baseclient);
 DECL_INTF(EngineClient, engine);
 DECL_INTF(EntityList, entitylist);
@@ -94,27 +102,38 @@ static inline CGlobalVars* get_globalvars(void) {
 }
 
 static inline bool get_sigs(void) {
-    /* SDL functions */
-    GET_PATTERN(pat_StartDrawing, MATSURFACE_SO, SIG_StartDrawing);
+    /* NOTE: Signature scanning and pointer functions can be a bit messy. Keep
+     * in mind that RELATIVE2ABSOLUTE() dereferences the pointer once */
+
+    /* MatSurface functions */
+    GET_SIGNATURE(pat_StartDrawing, MATSURFACE_SO, SIG_StartDrawing);
     StartDrawing = RELATIVE2ABSOLUTE(pat_StartDrawing + 20);
 
-    GET_PATTERN(pat_FinishDrawing, MATSURFACE_SO, SIG_FinishDrawing);
+    GET_SIGNATURE(pat_FinishDrawing, MATSURFACE_SO, SIG_FinishDrawing);
     FinishDrawing = RELATIVE2ABSOLUTE(pat_FinishDrawing + 13);
 
-    /* CL_Move's bSendPacket */
-    GET_PATTERN(pat_bSendPacket, ENGINE_SO, SIG_bSendPacket);
+    /* CL_Move's bSendPacket
+     * NOTE: We set PROT_WRITE since since we will change the pointer value */
+    GET_SIGNATURE(pat_bSendPacket, ENGINE_SO, SIG_bSendPacket);
     bSendPacket = pat_bSendPacket + 1;
     protect_addr(bSendPacket, PROT_READ | PROT_WRITE | PROT_EXEC);
 
     /* CBaseEntity::SetPredictionRandomSeed() */
-    GET_PATTERN(pat_SetPredictionRandomSeed, CLIENT_SO,
-                SIG_SetPredictionRandomSeed);
+    GET_SIGNATURE(pat_SetPredictionRandomSeed, CLIENT_SO,
+                  SIG_SetPredictionRandomSeed);
     SetPredictionRandomSeed =
       RELATIVE2ABSOLUTE(pat_SetPredictionRandomSeed + 19);
 
     /* MD5_PseudoRandom() */
-    GET_PATTERN(pat_MD5_PseudoRandom, CLIENT_SO, SIG_MD5_PseudoRandom);
+    GET_SIGNATURE(pat_MD5_PseudoRandom, CLIENT_SO, SIG_MD5_PseudoRandom);
     MD5_PseudoRandom = RELATIVE2ABSOLUTE(pat_MD5_PseudoRandom + 18);
+
+    /* IsPlayerOnSteamFriendsList()
+     * NOTE: We don't use RELATIVE2ABSOLUTE() and we don't add any offset since
+     * this is the signature to the function itself */
+    GET_SIGNATURE(pat_IsPlayerOnSteamFriendsList, CLIENT_SO,
+                  SIG_IsPlayerOnSteamFriendsList);
+    IsPlayerOnSteamFriendsList = pat_IsPlayerOnSteamFriendsList;
 
     return true;
 }

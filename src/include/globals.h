@@ -42,6 +42,11 @@
     "\x8B\x45\x08\xF3\x0F\x11\x80????\x8B\x45\x0C\x89\x04\x24\xE8????\x25????" \
     "\x89\x43\x34\xE8????"
 
+/* CTargetID::GetTargetForSteamAvatar -> IsPlayerOnSteamFriendsList */
+#define SIG_IsPlayerOnSteamFriendsList             \
+    "\x55\x89\xE5\x56\x53\x81\xEC????\x65\xA1????" \
+    "\x89\x45\xF4\x31\xC0\x8B\x5D\x0C\xE8????\x85\xC0\x74\x48\x85\xDB\x74\x44"
+
 /*
  * NOTE: For commented version, see:
  *   https://github.com/8dcc/hl-cheat/blob/main/src/include/hooks.h
@@ -158,6 +163,7 @@ typedef struct {
 /*----------------------------------------------------------------------------*/
 /* Global variables */
 
+/* TODO: Remove if not used outside of globals_init() */
 extern void* h_client;
 extern void* h_engine;
 extern void* h_matsurface;
@@ -179,6 +185,9 @@ typedef void (*SetPredictionRandomSeed_t)(usercmd_t*);
 extern SetPredictionRandomSeed_t SetPredictionRandomSeed;
 typedef int (*MD5_PseudoRandom_t)(int);
 extern MD5_PseudoRandom_t MD5_PseudoRandom;
+
+typedef bool (*IsPlayerOnSteamFriendsList_t)(Entity*, Entity*);
+extern IsPlayerOnSteamFriendsList_t IsPlayerOnSteamFriendsList;
 
 DECL_SDL_FUNC(void, SwapWindow, SDL_Window* window);
 DECL_SDL_FUNC(int, PollEvent, SDL_Event* event);
