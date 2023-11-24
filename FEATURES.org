@@ -7,6 +7,7 @@ The cheat currently has the following features:
 - ESP
   - Player ESP
     - Toggle friends only/enemies only/all
+    - Different color for Steam friends
     - Box
     - Skeleton
     - Health
@@ -24,7 +25,7 @@ The cheat currently has the following features:
 - Chams
   - Players
   - Local player (thirdperson)
-  - Viewmodel weapon
+  - Weapons (viewmodel and world)
   - Viewmodel arms
 - Aimbot
   - Custom FOV
@@ -32,7 +33,7 @@ The cheat currently has the following features:
   - Custom hitboxes
   - Silent
   - Auto-shoot on key (=PgUp=)*
-  - Ignore visibility
+  - Ignore target visibility
   - Draw FOV circle
   - Disable if spectated in 1st person
 - Meleebot
