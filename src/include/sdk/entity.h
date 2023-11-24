@@ -128,7 +128,9 @@ struct Entity {
     int model_idx; /* 0x80 */
     PAD(0x8C);
     vec3_t velocity; /* 0x110 */
-    PAD(0x250);
+    PAD(0x238);
+    vec3_t m_vecOrigin; /* 0x354 */
+    PAD(0xC);
     int flags; /* 0x36C */
     PAD(0x8E4);
     float flNextAttack; /* 0xC54 */
@@ -190,6 +192,20 @@ static inline const char* GetClassName(Entity* ent) {
         default:
             return "Unknown class";
     }
+}
+
+static inline vec3_t GetCenter(Entity* ent) {
+    Collideable* collideable = METHOD(ent, GetCollideable);
+    if (!collideable)
+        return VEC_ZERO;
+
+    vec3_t mins = *METHOD(collideable, ObbMins);
+    vec3_t maxs = *METHOD(collideable, ObbMaxs);
+
+    vec3_t ret = ent->m_vecOrigin;
+    ret.z += (mins.z + maxs.z) / 2.0f;
+
+    return ret;
 }
 
 #endif /* SDK_ENTITY_H_ */
