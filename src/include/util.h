@@ -109,6 +109,10 @@ static inline float vec_len2d(vec3_t v) {
     return sqrtf(v.x * v.x + v.y * v.y);
 }
 
+static inline float vec_dist(vec3_t a, vec3_t b) {
+    return vec_len(vec_sub(a, b));
+}
+
 static inline void ang_clamp(vec3_t* v) {
     v->x = CLAMP(v->x, -89.0f, 89.0f);
     v->y = CLAMP(remainderf(v->y, 360.0f), -180.0f, 180.0f);
