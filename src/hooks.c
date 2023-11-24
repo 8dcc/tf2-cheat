@@ -103,6 +103,7 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
         METHOD_ARGS(i_engine, SetViewAngles, &cmd->viewangles);
 
     autobackstab(cmd);
+    automedigun(cmd);
     thirdperson();
 
     pred_start(cmd);

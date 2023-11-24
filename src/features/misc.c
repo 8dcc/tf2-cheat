@@ -3,10 +3,6 @@
 #include "../include/sdk.h"
 #include "../include/globals.h"
 
-#if 0
-#include "aim/common.h" /* get_hitbox_pos */
-#endif
-
 void autobackstab(usercmd_t* cmd) {
     if (!settings.autostab || !g.localplayer || !g.localweapon || !g.IsAlive)
         return;
@@ -70,15 +66,6 @@ void autobackstab(usercmd_t* cmd) {
 
     if (trace.entity != closest_ent)
         return;
-
-#if 0
-    /* FIXME: Add setting for changing view when backstabbing */
-
-    /* Look to the player (yaw only) for more consistency */
-    const vec3_t target_pos = get_hitbox_pos(closest_ent, HITBOX_SPINE2);
-    const vec3_t target_ang = vec_to_ang(vec_sub(target_pos, shoot_pos));
-    cmd->viewangles.y       = target_ang.y;
-#endif
 
     /* Finally, attack */
     cmd->buttons |= IN_ATTACK;
@@ -207,4 +194,88 @@ void thirdperson(void) {
 
     g.localplayer->nForceTauntCam = true;
     was_thirdperson               = true;
+}
+
+/*----------------------------------------------------------------------------*/
+
+static bool is_visible(vec3_t start, vec3_t end, Entity* target) {
+    TraceFilter filter;
+    TraceFilterInit(&filter, g.localplayer);
+
+    Ray_t ray;
+    RayInit(&ray, start, end);
+
+    Trace_t trace;
+    METHOD_ARGS(i_enginetrace, TraceRay, &ray, MASK_SHOT | CONTENTS_GRATE,
+                &filter, &trace);
+
+    return trace.entity == target || trace.fraction > 0.97f;
+}
+
+void automedigun(usercmd_t* cmd) {
+    if (!settings.automedigun || !g.localplayer || !g.localweapon || !g.IsAlive)
+        return;
+
+    if (METHOD(g.localweapon, GetWeaponId) != TF_WEAPON_MEDIGUN)
+        return;
+
+    /* No need to calculate more than once */
+    vec3_t local_shoot_pos = METHOD(g.localplayer, GetShootPos);
+
+    /* These vars are used to store the best target across iterations */
+    vec3_t best_center = VEC_ZERO;
+    float best_dist    = 0.f;
+
+    for (int i = 1; i <= g.MaxClients; i++) {
+        Entity* ent = g.ents[i];
+
+        if (!ent || !IsTeammate(ent) || METHOD(ent, GetIndex) == g.localidx)
+            continue;
+
+        vec3_t ent_center = GetCenter(ent);
+        if (vec_is_zero(ent_center))
+            continue;
+
+        float cur_dist = vec_dist(ent_center, local_shoot_pos);
+
+        /* Too far */
+        if (cur_dist > 449.0f)
+            continue;
+
+        float health_mult =
+          (g.localweapon->m_iItemDefinitionIndex == Medic_s_TheQuickFix)
+            ? 1.24f
+            : 1.44f;
+
+        if (METHOD(ent, GetHealth) >= METHOD(ent, GetMaxHealth) * health_mult)
+            continue;
+
+        if (!is_visible(local_shoot_pos, ent_center, ent))
+            continue;
+
+        /* Closer than the best target, store */
+        if (best_dist < cur_dist) {
+            best_dist = cur_dist;
+            VEC_COPY(best_center, ent_center);
+        }
+    }
+
+    if (vec_is_zero(best_center))
+        return;
+
+    /* Spam attack each 2 ticks */
+    if (cmd->tick_count % 2 == 0 || !can_shoot()) {
+        cmd->buttons &= ~IN_ATTACK;
+        return;
+    }
+
+    vec3_t target_angle = vec_to_ang(vec_sub(best_center, local_shoot_pos));
+    ang_clamp(&target_angle);
+
+    cmd->viewangles = target_angle;
+    cmd->buttons |= IN_ATTACK;
+
+    /* pSilent */
+    if (settings.automedigun_psilent)
+        *bSendPacket = false;
 }
