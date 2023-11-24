@@ -181,9 +181,12 @@ void spectator_list(void) {
 void thirdperson(void) {
     static bool was_thirdperson = false;
 
+    if (!g.localplayer)
+        return;
+
     /* Thirdperson only for localplayer since I just play casual and I can
      * change view when spectating :) */
-    if (!settings.thirdperson || !g.localplayer || !g.IsAlive) {
+    if (!settings.thirdperson || !g.IsAlive) {
         if (was_thirdperson) {
             g.localplayer->nForceTauntCam = false;
             was_thirdperson               = false;
