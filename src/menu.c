@@ -252,6 +252,14 @@ static inline void tab_misc(void) {
     nk_spacing(ctx, 0); /* ----------------------------  */
     nk_layout_row_dynamic(ctx, 15, 1);
 
+    nk_checkbox_label(ctx, "Automedigun", &settings.automedigun);
+    nk_checkbox_label(ctx, "pSilent (instead of just client)",
+                      &settings.automedigun_psilent);
+
+    nk_layout_row_dynamic(ctx, 8, 1);
+    nk_spacing(ctx, 0); /* ----------------------------  */
+    nk_layout_row_dynamic(ctx, 15, 1);
+
     nk_checkbox_label(ctx, "Autorocketjump (mouse2)", &settings.rocketjump);
     FLOAT_SLIDER("Degrees when moving", 25.f, settings.rocketjump_deg, 89.f,
                  0.5f);

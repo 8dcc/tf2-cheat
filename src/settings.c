@@ -54,16 +54,18 @@ Settings settings = {
     .melee_off_spectated = false,
 
     /* Misc */
-    .bhop           = false,
-    .autostrafe     = SETT_OFF,
-    .thirdperson    = false,
-    .remove_scope   = false,
-    .autostab       = false,
-    .anim_stab      = false,
-    .rocketjump     = false,
-    .rocketjump_deg = 45.f,
-    .watermark      = true,
-    .speclist       = true,
+    .bhop                = false,
+    .autostrafe          = SETT_OFF,
+    .thirdperson         = false,
+    .remove_scope        = false,
+    .autostab            = false,
+    .anim_stab           = false,
+    .automedigun         = false,
+    .automedigun_psilent = false,
+    .rocketjump          = false,
+    .rocketjump_deg      = 45.f,
+    .watermark           = true,
+    .speclist            = true,
 
     /* Colors */
     .col_steam_friend_esp = (struct nk_colorf){ 0.21f, 0.77f, 0.23f, 1.f },
@@ -141,6 +143,8 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_INT(json_cfg, remove_scope);
     JSON_SETTINGS_WRITE_INT(json_cfg, autostab);
     JSON_SETTINGS_WRITE_INT(json_cfg, anim_stab);
+    JSON_SETTINGS_WRITE_INT(json_cfg, automedigun);
+    JSON_SETTINGS_WRITE_INT(json_cfg, automedigun_psilent);
     JSON_SETTINGS_WRITE_INT(json_cfg, rocketjump);
     JSON_SETTINGS_WRITE_FLOAT(json_cfg, rocketjump_deg);
     JSON_SETTINGS_WRITE_INT(json_cfg, watermark);
@@ -274,6 +278,8 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_INT(json_cfg, remove_scope);
     JSON_SETTINGS_READ_INT(json_cfg, autostab);
     JSON_SETTINGS_READ_INT(json_cfg, anim_stab);
+    JSON_SETTINGS_READ_INT(json_cfg, automedigun);
+    JSON_SETTINGS_READ_INT(json_cfg, automedigun_psilent);
     JSON_SETTINGS_READ_INT(json_cfg, rocketjump);
     JSON_SETTINGS_READ_FLOAT(json_cfg, rocketjump_deg);
     JSON_SETTINGS_READ_INT(json_cfg, watermark);
