@@ -223,8 +223,8 @@ void automedigun(usercmd_t* cmd) {
     vec3_t local_shoot_pos = METHOD(g.localplayer, GetShootPos);
 
     /* These vars are used to store the best target across iterations */
-    vec3_t best_center = VEC_ZERO;
-    float best_dist    = 0.f;
+    vec3_t best_center          = VEC_ZERO;
+    float lowest_health_percent = 1.f;
 
     for (int i = 1; i <= g.MaxClients; i++) {
         Entity* ent = g.ents[i];
@@ -242,20 +242,25 @@ void automedigun(usercmd_t* cmd) {
         if (cur_dist > 449.0f)
             continue;
 
-        float health_mult =
+        const float health_mult =
           (g.localweapon->m_iItemDefinitionIndex == Medic_s_TheQuickFix)
             ? 1.24f
             : 1.44f;
 
-        if (METHOD(ent, GetHealth) >= METHOD(ent, GetMaxHealth) * health_mult)
+        const float real_max_health = METHOD(ent, GetMaxHealth) * health_mult;
+        const float health          = METHOD(ent, GetHealth);
+
+        if (health >= real_max_health)
             continue;
 
         if (!is_visible(local_shoot_pos, ent_center, ent))
             continue;
 
+        const float real_health_percent = health / real_max_health;
+
         /* Closer than the best target, store */
-        if (best_dist < cur_dist) {
-            best_dist = cur_dist;
+        if (lowest_health_percent > real_health_percent) {
+            lowest_health_percent = real_health_percent;
             VEC_COPY(best_center, ent_center);
         }
     }
