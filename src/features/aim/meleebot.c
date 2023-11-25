@@ -3,7 +3,6 @@
 #include "../../include/sdk.h"
 #include "../../include/globals.h"
 #include "../../include/settings.h"
-#include "common.h"
 
 /* Set in h_SwapWindow */
 bool meleebot_key_down = false;
@@ -43,9 +42,9 @@ static vec3_t get_melee_delta(vec3_t viewangles) {
     vec3_t local_eyes = METHOD(g.localplayer, EyePosition);
     vec3_t shoot_pos  = METHOD(g.localplayer, GetShootPos);
 
-    /* Start closest_dist as range*4 to filter far enemies */
-    float closest_dist  = swing_range * 8.f;
-    vec3_t closest_pos  = { 0, 0, 0 };
+    /* Start closest_dist as range*N to filter far enemies */
+    float closest_dist  = swing_range * 10.f;
+    vec3_t closest_pos  = VEC_ZERO;
     Entity* closest_ent = NULL;
 
     /* Store hitbox position of closest enemy */
@@ -55,10 +54,8 @@ static vec3_t get_melee_delta(vec3_t viewangles) {
         if (!ent || IsTeammate(ent))
             continue;
 
-        /* Use head if we are on air, torso otherwise */
-        vec3_t target_pos = (g.localplayer->flags & FL_ONGROUND)
-                              ? get_hitbox_pos(ent, HITBOX_SPINE3)
-                              : get_hitbox_pos(ent, HITBOX_HEAD);
+        /* Use the center of the entity's collision box */
+        vec3_t target_pos = GetCenter(ent);
         if (vec_is_zero(target_pos))
             continue;
 
@@ -134,9 +131,9 @@ void meleebot(usercmd_t* cmd) {
 
     /* We are being spectated in 1st person and we want to hide it */
     if (settings.melee_off_spectated && g.spectated_1st) {
-		cmd->buttons |= IN_ATTACK;
+        cmd->buttons |= IN_ATTACK;
         return;
-	}
+    }
 
     const int wpn_slot = METHOD(g.localweapon, GetSlot);
     if (wpn_slot != WPN_SLOT_MELEE)
