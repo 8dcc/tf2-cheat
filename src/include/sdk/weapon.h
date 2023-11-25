@@ -36,8 +36,14 @@ struct Weapon {
 
 static inline bool IsMedigunHealing(Weapon* w) {
 	/* CWeaponMedigun->m_bHealing */
-	const size_t offset = 0x31;
-	return (bool)((void*)w + offset);
+	const size_t offset = 0xC31;
+	return *(bool*)((uint32_t)w + offset);
+}
+
+static inline CBaseHandle GetMedigunHealingHandler(Weapon* w) {
+	/* CWeaponMedigun->m_hHealingTarget */
+	const size_t offset = 0xC28;
+	return *(CBaseHandle*)((uint32_t)w + offset) ;
 }
 
 #endif /* SDK_WEAPON_H_ */
