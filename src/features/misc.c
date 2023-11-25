@@ -303,27 +303,31 @@ void automedigun(usercmd_t* cmd) {
     /* Get target angle */
     vec3_t target_angle = vec_to_ang(vec_sub(best_center, local_shoot_pos));
 
-    /* Get delta from engine viewangles */
-    vec3_t viewangles;
-    METHOD_ARGS(i_engine, GetViewAngles, &viewangles);
-
-    vec3_t delta = vec_sub(target_angle, viewangles);
-    vec_norm(&delta);
-    ang_clamp(&delta);
-
-    /* Use smoothing, depending on user setting */
-    const float aim_smooth = MAX(settings.automedigun_smooth, 1.f);
-
-    /* Change view, scaling with smoothing */
-    cmd->viewangles.x = viewangles.x + delta.x / aim_smooth;
-    cmd->viewangles.y = viewangles.y + delta.y / aim_smooth;
-    cmd->viewangles.z = viewangles.z + delta.z / aim_smooth;
-
-    /* Use pSilent or change engine viewangles back depending on setting */
-    if (settings.automedigun_silent)
+    if (settings.automedigun_silent) {
+        /* If pSilent, ignore smoothing. Just set the angles. */
+        VEC_COPY(cmd->viewangles, target_angle);
         *bSendPacket = false;
-    else
-        METHOD_ARGS(i_engine, SetViewAngles, &cmd->viewangles);
+    } else {
+        /* Otherwise, get delta from engine viewangles */
+        vec3_t viewangles;
+        METHOD_ARGS(i_engine, GetViewAngles, &viewangles);
 
+        vec3_t delta = vec_sub(target_angle, viewangles);
+        vec_norm(&delta);
+        ang_clamp(&delta);
+
+        /* Use smoothing, depending on user setting */
+        const float aim_smooth = MAX(settings.automedigun_smooth, 1.f);
+
+        /* Change view, scaling with smoothing */
+        cmd->viewangles.x = viewangles.x + delta.x / aim_smooth;
+        cmd->viewangles.y = viewangles.y + delta.y / aim_smooth;
+        cmd->viewangles.z = viewangles.z + delta.z / aim_smooth;
+
+        /* Since we are not using silent, also change the engine viewangles */
+        METHOD_ARGS(i_engine, SetViewAngles, &cmd->viewangles);
+    }
+
+    /* Finally, attack */
     cmd->buttons |= IN_ATTACK;
 }
