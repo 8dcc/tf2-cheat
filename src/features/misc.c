@@ -222,6 +222,34 @@ void automedigun(usercmd_t* cmd) {
     if (METHOD(g.localweapon, GetWeaponId) != TF_WEAPON_MEDIGUN)
         return;
 
+    /*--------------------------------------------------------------------*/
+
+    /* Ticks since last target switch */
+    static int last_release = 0;
+
+    /* TODO: Setting */
+    const int switch_time = 30;
+
+    /* A tick has passed since last release */
+    last_release++;
+
+    if (!can_shoot() || last_release >= switch_time) {
+        /* Every `switch_time` seconds, release attack for 1 tick */
+        cmd->buttons &= ~IN_ATTACK;
+
+        /* Store we just did that */
+        last_release = 0;
+        return;
+    }
+
+    /* If we are already healing, hold it */
+    if (g.localweapon->m_bHealing) {
+        cmd->buttons |= IN_ATTACK;
+        return;
+    }
+
+    /*--------------------------------------------------------------------*/
+
     /* No need to calculate more than once */
     vec3_t local_shoot_pos = METHOD(g.localplayer, GetShootPos);
 
@@ -268,22 +296,34 @@ void automedigun(usercmd_t* cmd) {
         }
     }
 
+    /* No valid target, release attack */
     if (vec_is_zero(best_center))
         return;
 
-    /* Spam attack each 2 ticks */
-    if (cmd->tick_count % 2 == 0 || !can_shoot()) {
-        cmd->buttons &= ~IN_ATTACK;
-        return;
-    }
-
+    /* Get target angle */
     vec3_t target_angle = vec_to_ang(vec_sub(best_center, local_shoot_pos));
-    ang_clamp(&target_angle);
 
-    cmd->viewangles = target_angle;
-    cmd->buttons |= IN_ATTACK;
+    /* Get delta from engine viewangles */
+    vec3_t viewangles;
+    METHOD_ARGS(i_engine, GetViewAngles, &viewangles);
 
-    /* pSilent */
-    if (settings.automedigun_psilent)
+    vec3_t delta = vec_sub(target_angle, viewangles);
+    vec_norm(&delta);
+    ang_clamp(&delta);
+
+    /* Use smoothing, depending on user setting */
+    const float aim_smooth = MAX(settings.automedigun_smooth, 1.f);
+
+    /* Change view, scaling with smoothing */
+    cmd->viewangles.x = viewangles.x + delta.x / aim_smooth;
+    cmd->viewangles.y = viewangles.y + delta.y / aim_smooth;
+    cmd->viewangles.z = viewangles.z + delta.z / aim_smooth;
+
+    /* Use pSilent or change engine viewangles back depending on setting */
+    if (settings.automedigun_silent)
         *bSendPacket = false;
+    else
+        METHOD_ARGS(i_engine, SetViewAngles, &cmd->viewangles);
+
+    cmd->buttons |= IN_ATTACK;
 }
