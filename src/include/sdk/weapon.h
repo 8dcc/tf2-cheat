@@ -30,10 +30,14 @@ struct Weapon {
     float flNextPrimaryAttack; /* 0xA4C */
     PAD(0x1DC);
     float smackTime; /* 0xC2C, see CTFWeaponBaseMelee::ItemPostFrame() */
-    PAD(0x1);
-    bool m_bHealing; /* 00xC31, for medigun */
-    PAD(0x8);
+    PAD(0x10);
     bool bReadyToBackstab; /* 0xC40 */
 };
+
+static inline bool IsMedigunHealing(Weapon* w) {
+	/* CWeaponMedigun->m_bHealing */
+	const size_t offset = 0x31;
+	return (bool)((void*)w + offset);
+}
 
 #endif /* SDK_WEAPON_H_ */
