@@ -94,6 +94,7 @@ typedef struct {
     int automedigun;
     int automedigun_silent;
     float automedigun_smooth;
+    int automedigun_switch_time;
     int rocketjump;
     float rocketjump_deg;
     int watermark;

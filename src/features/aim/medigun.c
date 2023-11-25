@@ -102,8 +102,8 @@ void automedigun(usercmd_t* cmd) {
     /* Every tick, increase count */
     ticks_since_switch++;
 
-    /* TODO: Setting */
-    const int switch_time = 30;
+	/* Min ticks is 3 */
+    const uint32_t switch_time = MAX(3, settings.automedigun_switch_time);
 
     /* If we are already healing, and enough ticks have passed since last switch
      * depending on user setting. */
@@ -137,7 +137,9 @@ void automedigun(usercmd_t* cmd) {
     if (settings.automedigun_silent) {
         /* If pSilent, ignore smoothing. Just set the angles. */
         VEC_COPY(cmd->viewangles, target_angle);
-        *bSendPacket = false;
+
+		/* TODO: Fix pSilent */
+        //*bSendPacket = false;
     } else {
         /* Otherwise, get delta from engine viewangles */
         vec3_t viewangles;
@@ -148,7 +150,7 @@ void automedigun(usercmd_t* cmd) {
         ang_clamp(&delta);
 
         /* Use smoothing, depending on user setting */
-        const float aim_smooth = MAX(settings.automedigun_smooth, 1.f);
+        const float aim_smooth = MAX(1.f, settings.automedigun_smooth);
 
         /* Change view, scaling with smoothing */
         cmd->viewangles.x = viewangles.x + delta.x / aim_smooth;

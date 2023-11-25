@@ -44,7 +44,7 @@ static inline void free_configs(char* config_list[MAX_CFGS], int config_num);
         cur_tab = idx;             \
     RESET_BUTTON_COLOR();
 
-#define FLOAT_SLIDER(STRING, MIN, SETTING, MAX, STEP)                   \
+#define SLIDER_FLOAT(STRING, MIN, SETTING, MAX, STEP)                   \
     do {                                                                \
         char* tmpPtr = malloc(strlen(STRING) + sizeof(" (999999.99)")); \
         sprintf(tmpPtr, "%s (%.2f)", STRING, SETTING);                  \
@@ -52,6 +52,16 @@ static inline void free_configs(char* config_list[MAX_CFGS], int config_num);
         nk_label(ctx, tmpPtr, NK_TEXT_LEFT);                            \
         nk_slider_float(ctx, MIN, &SETTING, MAX, STEP);                 \
         free(tmpPtr);                                                   \
+    } while (0);
+
+#define SLIDER_INT(STRING, MIN, SETTING, MAX, STEP)                  \
+    do {                                                             \
+        char* tmpPtr = malloc(strlen(STRING) + sizeof(" (999999)")); \
+        sprintf(tmpPtr, "%s (%d)", STRING, SETTING);               \
+        nk_layout_row_dynamic(ctx, 15, 2);                           \
+        nk_label(ctx, tmpPtr, NK_TEXT_LEFT);                         \
+        nk_slider_int(ctx, MIN, &SETTING, MAX, STEP);                \
+        free(tmpPtr);                                                \
     } while (0);
 
 /*----------------------------------------------------------------------------*/
@@ -198,8 +208,8 @@ static inline void tab_aim(void) {
     nk_layout_row_dynamic(ctx, 15, 1);
     nk_checkbox_label(ctx, "Aimbot", &settings.aimbot);
 
-    FLOAT_SLIDER("Aimbot FOV", 0.f, settings.aim_fov, 180.f, 0.5f);
-    FLOAT_SLIDER("Aimbot smoothing", 1.f, settings.aim_smooth, 50.f, 0.5f);
+    SLIDER_FLOAT("Aimbot FOV", 0.f, settings.aim_fov, 180.f, 0.5f);
+    SLIDER_FLOAT("Aimbot smoothing", 1.f, settings.aim_smooth, 50.f, 0.5f);
 
     nk_layout_row_dynamic(ctx, 18, 2);
     static const char* opts0[] = { "Head", "Torso", "Arms", "Legs" };
@@ -253,16 +263,18 @@ static inline void tab_misc(void) {
     nk_layout_row_dynamic(ctx, 15, 1);
 
     nk_checkbox_label(ctx, "Automedigun", &settings.automedigun);
-    nk_checkbox_label(ctx, "pSilent", &settings.automedigun_silent);
-    FLOAT_SLIDER("Medigun smoothing", 1.f, settings.automedigun_smooth, 100.f,
+    nk_checkbox_label(ctx, "Silent", &settings.automedigun_silent);
+    SLIDER_FLOAT("Medigun smoothing", 1.f, settings.automedigun_smooth, 100.f,
                  0.5f);
+    SLIDER_INT("Target switch ticks", 3,
+              settings.automedigun_switch_time, 100, 1);
 
     nk_layout_row_dynamic(ctx, 8, 1);
     nk_spacing(ctx, 0); /* ----------------------------  */
     nk_layout_row_dynamic(ctx, 15, 1);
 
     nk_checkbox_label(ctx, "Autorocketjump (mouse2)", &settings.rocketjump);
-    FLOAT_SLIDER("Degrees when moving", 25.f, settings.rocketjump_deg, 89.f,
+    SLIDER_FLOAT("Degrees when moving", 25.f, settings.rocketjump_deg, 89.f,
                  0.5f);
 
     nk_layout_row_dynamic(ctx, 8, 1);
