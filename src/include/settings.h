@@ -92,7 +92,8 @@ typedef struct {
     int autostab;
     int anim_stab;
     int automedigun;
-    int automedigun_psilent;
+    int automedigun_silent;
+    float automedigun_smooth;
     int rocketjump;
     float rocketjump_deg;
     int watermark;

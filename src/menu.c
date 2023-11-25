@@ -253,8 +253,9 @@ static inline void tab_misc(void) {
     nk_layout_row_dynamic(ctx, 15, 1);
 
     nk_checkbox_label(ctx, "Automedigun", &settings.automedigun);
-    nk_checkbox_label(ctx, "pSilent (instead of just client)",
-                      &settings.automedigun_psilent);
+    nk_checkbox_label(ctx, "pSilent", &settings.automedigun_silent);
+    FLOAT_SLIDER("Medigun smoothing", 1.f, settings.automedigun_smooth, 100.f,
+                 0.5f);
 
     nk_layout_row_dynamic(ctx, 8, 1);
     nk_spacing(ctx, 0); /* ----------------------------  */
