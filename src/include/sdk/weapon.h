@@ -30,7 +30,9 @@ struct Weapon {
     float flNextPrimaryAttack; /* 0xA4C */
     PAD(0x1DC);
     float smackTime; /* 0xC2C, see CTFWeaponBaseMelee::ItemPostFrame() */
-    PAD(0x10);
+    PAD(0x1);
+    bool m_bHealing; /* 00xC31, for medigun */
+    PAD(0x8);
     bool bReadyToBackstab; /* 0xC40 */
 };
 
