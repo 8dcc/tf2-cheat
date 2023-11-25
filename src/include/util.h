@@ -15,15 +15,18 @@
         fputc('\n', stderr);                      \
     } while (0)
 
-#define PRINT_BYTES(ptr, n)                        \
+#define PRINT_BYTES(PTR, N)                        \
     do {                                           \
-        for (size_t i = 0; i < n; i++) {           \
-            if (*((uint8_t*)(ptr) + i) < 0x10)     \
+        for (size_t i = 0; i < N; i++) {           \
+            if (*((uint8_t*)(PTR) + i) < 0x10)     \
                 putchar('0');                      \
-            printf("%X ", *((uint8_t*)(ptr) + i)); \
+            printf("%X ", *((uint8_t*)(PTR) + i)); \
         }                                          \
         putchar('\n');                             \
     } while (0)
+
+#define VEC_PRINT(VEC) \
+    printf("(%3.2f, %3.2f, %3.2f)", (VEC).x, (VEC).y, (VEC).z)
 
 /* Location of address + Size of offset + Offset */
 #define RELATIVE2ABSOLUTE(addr) (void*)((void*)(addr) + 4 + *(uint32_t*)(addr))
