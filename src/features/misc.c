@@ -215,41 +215,7 @@ static bool is_visible(vec3_t start, vec3_t end, Entity* target) {
     return trace.entity == target || trace.fraction > 0.97f;
 }
 
-void automedigun(usercmd_t* cmd) {
-    if (!settings.automedigun || !g.localplayer || !g.localweapon || !g.IsAlive)
-        return;
-
-    if (METHOD(g.localweapon, GetWeaponId) != TF_WEAPON_MEDIGUN)
-        return;
-
-    /*--------------------------------------------------------------------*/
-
-    /* Ticks since last target switch */
-    static int last_release = 0;
-
-    /* TODO: Setting */
-    const int switch_time = 30;
-
-    /* A tick has passed since last release */
-    last_release++;
-
-    if (!can_shoot() || last_release >= switch_time) {
-        /* Every `switch_time` seconds, release attack for 1 tick */
-        cmd->buttons &= ~IN_ATTACK;
-
-        /* Store we just did that */
-        last_release = 0;
-        return;
-    }
-
-    /* If we are already healing, hold it */
-    if (g.localweapon->m_bHealing) {
-        cmd->buttons |= IN_ATTACK;
-        return;
-    }
-
-    /*--------------------------------------------------------------------*/
-
+static vec3_t get_best_center(void) {
     /* No need to calculate more than once */
     vec3_t local_shoot_pos = METHOD(g.localplayer, GetShootPos);
 
@@ -296,12 +262,53 @@ void automedigun(usercmd_t* cmd) {
         }
     }
 
-    /* No valid target, release attack */
-    if (vec_is_zero(best_center))
+    return best_center;
+}
+
+void automedigun(usercmd_t* cmd) {
+    if (!settings.automedigun || !g.localplayer || !g.localweapon || !g.IsAlive)
+        return;
+
+    if (METHOD(g.localweapon, GetWeaponId) != TF_WEAPON_MEDIGUN)
+        return;
+
+    /*--------------------------------------------------------------------*/
+
+    /* Ticks since last target switch */
+    static int last_release = 0;
+
+    /* TODO: Setting */
+    const int switch_time = 30;
+
+    /* A tick has passed since last release */
+    last_release++;
+
+    if (!can_shoot() || last_release >= switch_time) {
+        /* Every `switch_time` seconds, release attack for 1 tick */
+        cmd->buttons &= ~IN_ATTACK;
+
+        /* Store we just did that */
+        last_release = 0;
+        return;
+    }
+
+    /* If we are already healing, hold it */
+    if (g.localweapon->m_bHealing) {
+        cmd->buttons |= IN_ATTACK;
+        return;
+    }
+
+    /*--------------------------------------------------------------------*/
+
+	/* Get center of best teammate, depending on health percentage */
+    vec3_t target_pos = get_best_center();
+
+    /* No valid target */
+    if (vec_is_zero(target_pos))
         return;
 
     /* Get target angle */
-    vec3_t target_angle = vec_to_ang(vec_sub(best_center, local_shoot_pos));
+    vec3_t target_angle = vec_to_ang(vec_sub(target_pos, local_shoot_pos));
 
     if (settings.automedigun_silent) {
         /* If pSilent, ignore smoothing. Just set the angles. */
