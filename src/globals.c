@@ -66,6 +66,7 @@ DECL_INTF(GameMovement, gamemovement);
 DECL_INTF(MoveHelper, movehelper);
 DECL_INTF(IPrediction, prediction);
 DECL_INTF(ClientMode, clientmode);
+DECL_CLASS(CClientState, clientstate);
 DECL_CLASS(CGlobalVars, globalvars);
 
 /*----------------------------------------------------------------------------*/
@@ -109,6 +110,11 @@ static inline bool get_sigs(void) {
     bSendPacket = pat_bSendPacket + 1;
     protect_addr(bSendPacket, PROT_READ | PROT_WRITE | PROT_EXEC);
 
+    /* ClientState
+     * NOTE: We don't use RELATIVE2ABSOLUTE() since it's an absolute address */
+    GET_SIGNATURE(pat_ClientState, ENGINE_SO, SIG_ClientState);
+    c_clientstate = *(CClientState**)(pat_ClientState + 3);
+
     /* CBaseEntity::SetPredictionRandomSeed() */
     GET_SIGNATURE(pat_SetPredictionRandomSeed, CLIENT_SO,
                   SIG_SetPredictionRandomSeed);
@@ -121,7 +127,7 @@ static inline bool get_sigs(void) {
 
     /* IsPlayerOnSteamFriendsList()
      * NOTE: We don't use RELATIVE2ABSOLUTE() and we don't add any offset since
-     * this is the signature to the function itself */
+     * this is the signature to the function itself. */
     GET_SIGNATURE(pat_IsPlayerOnSteamFriendsList, CLIENT_SO,
                   SIG_IsPlayerOnSteamFriendsList);
     IsPlayerOnSteamFriendsList = pat_IsPlayerOnSteamFriendsList;

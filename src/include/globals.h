@@ -32,6 +32,10 @@
     "\xBE????\xE9????\x8D\xB6\x00\x00\x00\x00\xA1????\xC7\x45?????\xC7\x45???" \
     "??\x85\xC0\x0F\x84????\x8D\x55\xA8\xC7\x44\x24?????"
 
+/* CL_RegisterResources (Also in CL_ReadPackets) */
+#define SIG_ClientState \
+    "\xC7\x04\x24????\xE8????\xC7\x04\x24????\x89\x44\x24\x04\xE8????\xA1????"
+
 /* CPrediction::RunCommand -> CPrediction::StartCommand -> SetPse..RandomSeed */
 #define SIG_SetPredictionRandomSeed                            \
     "\x75\x7C\x31\xFF\xE8????\x89\xB3????\x89\x34\x24\xE8????" \
@@ -200,6 +204,7 @@ DECL_INTF_EXTERN(MoveHelper, movehelper);
 DECL_INTF_EXTERN(IPrediction, prediction);
 DECL_INTF_EXTERN(ClientMode, clientmode);
 DECL_CLASS_EXTERN(CGlobalVars, globalvars);
+DECL_CLASS_EXTERN(CClientState, clientstate);
 
 /*----------------------------------------------------------------------------*/
 /* Functions from globals.c */

@@ -530,6 +530,19 @@ typedef struct {
     int nTimestampRandomizeWindow;
 } CGlobalVars;
 
+typedef struct {
+    PAD(0x10);
+    void* m_NetChannel; /* INetChannel */
+    PAD(0x18C);
+    int m_nDeltaTick;
+    PAD(0x110);
+    int m_nMaxClients;
+    PAD(0x4864); /* Was 0x486C, but chokedcommands offset was wrong */
+    int lastoutgoingcommand;
+    int chokedcommands;
+    int last_command_ack;
+} CClientState;
+
 /*----------------------------------------------------------------------------*/
 /* Functions from sdk.c */
 
