@@ -100,9 +100,6 @@ void automedigun(usercmd_t* cmd) {
         return;
     }
 
-    /* Did we release attack on the last tick? */
-    static bool just_released = false;
-
     /* Curtime when we last switched target */
     static float last_switch = 0.f;
 
@@ -111,13 +108,6 @@ void automedigun(usercmd_t* cmd) {
       c_globalvars->curtime >= last_switch + settings.automedigun_switch_time;
 
     if (is_medigun_healing) {
-        /* Did we release the mouse on the last tick? Then we should not be
-         * healing anyone, if we are, release again and stop */
-        if (just_released) {
-            cmd->buttons &= ~IN_ATTACK;
-            return;
-        }
-
         /* Get index of currently healed player */
         CBaseHandle healed_handler = GetMedigunHealingHandler(g.localweapon);
         const int healed_idx       = CBaseHandle_GetEntryIndex(healed_handler);
@@ -136,16 +126,10 @@ void automedigun(usercmd_t* cmd) {
             return;
         }
 
+		/* Release so we can start healing the target on the next tick */
         cmd->buttons &= ~IN_ATTACK;
-
-        /* Store when we just released the mouse */
-        just_released = true;
-
-        /* Always return if we are already healing */
         return;
     }
-
-    just_released = false;
 
     /* Get the entity center from collision box */
     vec3_t target_pos = GetCenter(best_target);
