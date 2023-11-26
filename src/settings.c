@@ -63,7 +63,7 @@ Settings settings = {
     .automedigun             = false,
     .automedigun_silent      = false,
     .automedigun_smooth      = 0.f,
-    .automedigun_switch_time = 1,
+    .automedigun_switch_time = 1.f,
     .rocketjump              = false,
     .rocketjump_deg          = 45.f,
     .watermark               = true,
@@ -148,7 +148,7 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_INT(json_cfg, automedigun);
     JSON_SETTINGS_WRITE_INT(json_cfg, automedigun_silent);
     JSON_SETTINGS_WRITE_FLOAT(json_cfg, automedigun_smooth);
-    JSON_SETTINGS_WRITE_INT(json_cfg, automedigun_switch_time);
+    JSON_SETTINGS_WRITE_FLOAT(json_cfg, automedigun_switch_time);
     JSON_SETTINGS_WRITE_INT(json_cfg, rocketjump);
     JSON_SETTINGS_WRITE_FLOAT(json_cfg, rocketjump_deg);
     JSON_SETTINGS_WRITE_INT(json_cfg, watermark);
@@ -285,7 +285,7 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_INT(json_cfg, automedigun);
     JSON_SETTINGS_READ_INT(json_cfg, automedigun_silent);
     JSON_SETTINGS_READ_FLOAT(json_cfg, automedigun_smooth);
-    JSON_SETTINGS_READ_INT(json_cfg, automedigun_switch_time);
+    JSON_SETTINGS_READ_FLOAT(json_cfg, automedigun_switch_time);
     JSON_SETTINGS_READ_INT(json_cfg, rocketjump);
     JSON_SETTINGS_READ_FLOAT(json_cfg, rocketjump_deg);
     JSON_SETTINGS_READ_INT(json_cfg, watermark);

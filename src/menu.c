@@ -57,7 +57,7 @@ static inline void free_configs(char* config_list[MAX_CFGS], int config_num);
 #define SLIDER_INT(STRING, MIN, SETTING, MAX, STEP)                  \
     do {                                                             \
         char* tmpPtr = malloc(strlen(STRING) + sizeof(" (999999)")); \
-        sprintf(tmpPtr, "%s (%d)", STRING, SETTING);               \
+        sprintf(tmpPtr, "%s (%d)", STRING, SETTING);                 \
         nk_layout_row_dynamic(ctx, 15, 2);                           \
         nk_label(ctx, tmpPtr, NK_TEXT_LEFT);                         \
         nk_slider_int(ctx, MIN, &SETTING, MAX, STEP);                \
@@ -266,8 +266,8 @@ static inline void tab_misc(void) {
     nk_checkbox_label(ctx, "Silent", &settings.automedigun_silent);
     SLIDER_FLOAT("Medigun smoothing", 1.f, settings.automedigun_smooth, 100.f,
                  0.5f);
-    SLIDER_INT("Target switch ticks", 3,
-              settings.automedigun_switch_time, 100, 1);
+    SLIDER_FLOAT("Target switch seconds", 0.1f,
+                 settings.automedigun_switch_time, 5.f, 0.1f);
 
     nk_layout_row_dynamic(ctx, 8, 1);
     nk_spacing(ctx, 0); /* ----------------------------  */
