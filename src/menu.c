@@ -266,8 +266,8 @@ static inline void tab_misc(void) {
     nk_checkbox_label(ctx, "Silent", &settings.automedigun_silent);
     SLIDER_FLOAT("Medigun smoothing", 1.f, settings.automedigun_smooth, 100.f,
                  0.5f);
-    SLIDER_FLOAT("Target switch seconds", 0.1f,
-                 settings.automedigun_switch_time, 5.f, 0.1f);
+    SLIDER_FLOAT("Target switch time", 0.f, settings.automedigun_switch_time,
+                 5.f, 0.1f);
 
     nk_layout_row_dynamic(ctx, 8, 1);
     nk_spacing(ctx, 0); /* ----------------------------  */

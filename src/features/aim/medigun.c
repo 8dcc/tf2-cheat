@@ -3,6 +3,11 @@
 #include "../../include/sdk.h"
 #include "../../include/globals.h"
 
+#define MEDIGUN_RANGE 449.0f
+
+/* If we are looking X degrees away from the desired angle, start healing */
+#define AIM_DEGREE_THRESHOD 3.f
+
 /* Different from the one in aimbot.c */
 static bool is_visible(vec3_t start, vec3_t end, Entity* target) {
     TraceFilter filter;
@@ -37,7 +42,7 @@ static Entity* get_best_target(vec3_t local_shoot_pos) {
         float cur_dist = vec_dist(ent_center, local_shoot_pos);
 
         /* Too far, ignore */
-        if (cur_dist > 449.0f)
+        if (cur_dist > MEDIGUN_RANGE)
             continue;
 
         const float health_mult =
@@ -106,17 +111,6 @@ void automedigun(usercmd_t* cmd) {
       c_globalvars->curtime >= last_switch + settings.automedigun_switch_time;
 
     if (is_medigun_healing) {
-        /* If we are healing someone but we still need to wait, keep healing and
-         * stop */
-        if (!switch_time_passed) {
-            /* TODO: If we have high smoothing, and we move so little that we
-             * are still healing the same target, it will wait until moving a
-             * little again. We need to check this after checking if we are
-             * healing the best possible player, probably */
-            cmd->buttons |= IN_ATTACK;
-            return;
-        }
-
         /* Did we release the mouse on the last tick? Then we should not be
          * healing anyone, if we are, release again and stop */
         if (just_released) {
@@ -127,19 +121,25 @@ void automedigun(usercmd_t* cmd) {
         /* Get index of currently healed player */
         CBaseHandle healed_handler = GetMedigunHealingHandler(g.localweapon);
         const int healed_idx       = CBaseHandle_GetEntryIndex(healed_handler);
-        if (healed_idx < 1 || healed_idx >= g.MaxClients)
-            return;
 
         /* If it's already the best possible target, hold it. Otherwise, release
          * attack so we can find the best target on the next tick. */
         if (METHOD(best_target, GetIndex) == healed_idx) {
             cmd->buttons |= IN_ATTACK;
-        } else {
-            cmd->buttons &= ~IN_ATTACK;
-
-            /* Store when we just released the mouse */
-            just_released = true;
+            return;
         }
+
+        /* If we are healing someone that is not the best target, but we still
+         * need to wait, stop */
+        if (!switch_time_passed) {
+            cmd->buttons |= IN_ATTACK;
+            return;
+        }
+
+        cmd->buttons &= ~IN_ATTACK;
+
+        /* Store when we just released the mouse */
+        just_released = true;
 
         /* Always return if we are already healing */
         return;
@@ -178,9 +178,16 @@ void automedigun(usercmd_t* cmd) {
         METHOD_ARGS(i_engine, SetViewAngles, &cmd->viewangles);
     }
 
-    /* Store we just switched targets */
-    last_switch = c_globalvars->curtime;
+    vec3_t new_delta = vec_sub(target_angle, cmd->viewangles);
 
-    /* Finally, attack */
-    cmd->buttons |= IN_ATTACK;
+    /* Are we looking at the target, or we need more ticks because of smoothing?
+     * Only start healing when we are looking at him. */
+    if (ABS(new_delta.x) < AIM_DEGREE_THRESHOD &&
+        ABS(new_delta.y) < AIM_DEGREE_THRESHOD) {
+        /* Store we just switched targets */
+        last_switch = c_globalvars->curtime;
+
+        /* Since we have it in front of us, attack */
+        cmd->buttons |= IN_ATTACK;
+    }
 }
