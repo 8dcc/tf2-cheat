@@ -7,7 +7,7 @@
 #include "include/menu.h"
 #include "features/features.h"
 
-#define MAX_CHOKE 15
+#define MAX_CHOKE 16
 
 DECL_HOOK(LevelShutdown);
 DECL_HOOK(LevelInitPostEntity);
@@ -93,10 +93,14 @@ void h_FrameStageNotify(BaseClient* thisptr, ClientFrameStage_t curStage) {
 
 bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
                   usercmd_t* cmd) {
-    *bSendPacket = true;
+    /* Reset each tick */
+    g.psilent = false;
 
-    bool ret          = ORIGINAL(CreateMove, thisptr, flInputSampleTime, cmd);
-    vec3_t old_angles = cmd->viewangles;
+    const vec3_t old_angles  = cmd->viewangles;
+    const float old_sidemove = cmd->sidemove;
+    const float old_forward  = cmd->forwardmove;
+
+    bool ret = ORIGINAL(CreateMove, thisptr, flInputSampleTime, cmd);
 
     /* If original returned true, update engine viewangles to cmd viewangles */
     if (ret)
@@ -122,21 +126,27 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
     vec_norm(&cmd->viewangles);
     ang_clamp(&cmd->viewangles);
 
-    /* Make sure we aren't choking too many packets */
-    if (*bSendPacket == false) {
-        g.choked++;
-        if (g.choked >= MAX_CHOKE) {
-            *bSendPacket = true;
+	/* Did I choke in the last tick? */
+	static bool did_choke = false;
 
-#ifdef DEBUG
-            printf("[enoch@%.2f] Choked too many packets, sending.\n",
-                   c_globalvars->curtime);
-#endif
-        }
+    if (g.psilent) {
+        *bSendPacket = false;
+		did_choke = true;
+    } else if (did_choke) {
+        /* Only restore if we chocked on the tick before this one */
+        *bSendPacket = true;
+		did_choke = false;
+
+        cmd->viewangles  = old_angles;
+        cmd->sidemove    = old_sidemove;
+        cmd->forwardmove = old_forward;
     }
 
-    if (*bSendPacket)
-        g.choked = 0;
+    /* Make sure we aren't choking too many packets */
+    if (c_clientstate->chokedcommands >= MAX_CHOKE) {
+        *bSendPacket = true;
+		did_choke = false;
+    }
 
     return false;
 }

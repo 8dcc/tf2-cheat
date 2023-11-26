@@ -159,7 +159,7 @@ void meleebot(usercmd_t* cmd) {
             cmd->viewangles.z = engine_viewangles.z + best_delta.z;
 
             if (settings.melee_silent)
-                *bSendPacket = false;
+				g.psilent = true;
         }
 
         if (settings.melee_on_key)

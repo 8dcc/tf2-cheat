@@ -160,8 +160,8 @@ typedef struct {
     /* Updated in EngineVGui::Paint() -> spectator_list() */
     bool spectated_1st;
 
-    /* Updated in CreateMove */
-    uint8_t choked;
+    /* Updated in features and used in CreateMove */
+    bool psilent;
 } global_cache_t;
 
 /*----------------------------------------------------------------------------*/

@@ -133,7 +133,7 @@ void autorocketjump(usercmd_t* cmd) {
     /* Release hotkey and hold rocketjump keys. Make it pSilent too */
     cmd->buttons &= ~IN_ATTACK2;
     cmd->buttons |= IN_ATTACK | IN_DUCK | IN_JUMP;
-    *bSendPacket = false;
+	g.psilent = true;
 
     vec_norm(&cmd->viewangles);
     ang_clamp(&cmd->viewangles);

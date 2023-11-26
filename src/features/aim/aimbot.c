@@ -152,6 +152,7 @@ void aimbot(usercmd_t* cmd) {
     /* TODO: Add setting for lowest health instead of closest */
     vec3_t best_delta = get_closest_fov_delta(engine_viewangles);
 
+	/* TODO: Don't use smoothing in aim_silent */
     if (!vec_is_zero(best_delta)) {
         const float aim_smooth = MAX(settings.aim_smooth, 1.f);
 
@@ -164,7 +165,7 @@ void aimbot(usercmd_t* cmd) {
             if (wpn_id == TF_WEAPON_ROCKETLAUNCHER ||
                 wpn_id == TF_WEAPON_GRENADELAUNCHER ||
                 wpn_id == TF_WEAPON_PIPEBOMBLAUNCHER)
-                *bSendPacket = false;
+                g.psilent = true;
         }
 
         if (settings.aim_on_key)

@@ -137,9 +137,7 @@ void automedigun(usercmd_t* cmd) {
     if (settings.automedigun_silent) {
         /* If pSilent, ignore smoothing. Just set the angles. */
         VEC_COPY(cmd->viewangles, target_angle);
-
-		/* TODO: Fix pSilent */
-        //*bSendPacket = false;
+		g.psilent = true;
     } else {
         /* Otherwise, get delta from engine viewangles */
         vec3_t viewangles;
