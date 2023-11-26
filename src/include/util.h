@@ -30,24 +30,25 @@
     printf("(%3.2f, %3.2f, %3.2f)", (VEC).x, (VEC).y, (VEC).z)
 
 /* Location of address + Size of offset + Offset */
-#define RELATIVE2ABSOLUTE(addr) (void*)((void*)(addr) + 4 + *(uint32_t*)(addr))
+#define RELATIVE2ABSOLUTE(ADDR) (void*)((void*)(ADDR) + 4 + *(uint32_t*)(ADDR))
 
 /* Offset from dlopen() handler */
 #define GET_OFFSET(HANDLER, OFFSET) \
     ((void*)(((struct link_map*)HANDLER)->l_addr) + OFFSET)
 
-#define LENGTH(arr) (sizeof(arr) / sizeof(arr[0]))
-#define MAX(a, b)   ((a) < (b) ? b : a)
-#define MIN(a, b)   ((a) > (b) ? b : a)
-#define DEG2RAD(n)  ((n)*M_PI / 180.0f)
-#define RAD2DEG(n)  ((n)*180.0f / M_PI)
-#define CLAMP(val, min, max) \
-    (((val) > (max)) ? (max) : (((val) < (min)) ? (min) : (val)))
+#define LENGTH(ARR) (sizeof(ARR) / sizeof(ARR[0]))
+#define ABS(X)      ((X) < 0 ? -(X) : (X))
+#define MAX(A, B)   ((A) < (B) ? B : A)
+#define MIN(A, B)   ((A) > (B) ? B : A)
+#define DEG2RAD(N)  ((N)*M_PI / 180.0F)
+#define RAD2DEG(N)  ((N)*180.0F / M_PI)
+#define CLAMP(VAL, MIN, MAX) \
+    (((VAL) > (MAX)) ? (MAX) : (((VAL) < (MIN)) ? (MIN) : (VAL)))
 
-#define VEC_COPY(dst, src) \
-    (dst).x = (src).x;     \
-    (dst).y = (src).y;     \
-    (dst).z = (src).z;
+#define VEC_COPY(DST, SRC) \
+    (DST).x = (SRC).x;     \
+    (DST).y = (SRC).y;     \
+    (DST).z = (SRC).z;
 
 /* nk_colorf -> rgba_t */
 #define NK2COL(COLORF)                                               \
