@@ -317,8 +317,12 @@ void esp(void) {
                     player_info_t pinfo;
                     METHOD_ARGS(i_engine, GetPlayerInfo, i, &pinfo);
 
+                    /* Replace multibyte chars with '?' */
+                    static char converted_name[MAX_PLAYER_NAME_LENGTH];
+                    convert_player_name(converted_name, pinfo.name);
+
                     draw_text(infopos_x, infopos_y, true, g_fonts.main.id, col,
-                              pinfo.name);
+                              converted_name);
 
                     col = col_scale(col, COL_SCALE);
                     infopos_y += INFOPOS_LINE_H;
