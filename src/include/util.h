@@ -17,6 +17,7 @@
 
 #define PRINT_BYTES(PTR, N)                        \
     do {                                           \
+        printf("%p: ", PTR);                       \
         for (size_t i = 0; i < N; i++) {           \
             if (*((uint8_t*)(PTR) + i) < 0x10)     \
                 putchar('0');                      \
