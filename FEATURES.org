@@ -49,6 +49,10 @@ The cheat currently has the following features:
   - Thirdperson
   - Remove sniper scope overlay
   - Spy's auto-backstab
+  - Automedigun (automatically heal the best target)
+    - pSilent
+    - Custom smoothing
+    - Custom time before switching targets
   - Soldier's auto-rocketjump (On Mouse2)
     - Pitch degrees when moving
   - Spectator list
