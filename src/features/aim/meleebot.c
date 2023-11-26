@@ -81,7 +81,12 @@ static vec3_t get_melee_delta(vec3_t viewangles) {
             METHOD(g.localweapon, GetWeaponId) == TF_WEAPON_KNIFE)
             return VEC_ZERO;
 
-        static const float delay = 0.2f;
+        static const float delay = 0.18f;
+
+        /* Calculate velocity difference between us and the target rather than
+         * just our velocity because he is also moving. */
+        vec3_t velocity_diff =
+          vec_sub(g.localplayer->velocity, closest_ent->velocity);
 
         /* Extrapolate position for getting new shootpos.
          * If we know we travel 5 units in a second (velocity), we can just
@@ -95,8 +100,7 @@ static vec3_t get_melee_delta(vec3_t viewangles) {
          *   - https://en.wikipedia.org/wiki/Extrapolation
          *   - https://en.wikipedia.org/wiki/Interpolation
          */
-        shoot_pos =
-          vec_add(shoot_pos, vec_flmul(g.localplayer->velocity, delay));
+        shoot_pos = vec_add(shoot_pos, vec_flmul(velocity_diff, delay));
 
         if (!(g.localplayer->flags & FL_ONGROUND)) {
             /* TODO: Get from cvar at runtime */
