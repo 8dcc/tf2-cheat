@@ -76,57 +76,76 @@ void automedigun(usercmd_t* cmd) {
     if (METHOD(g.localweapon, GetWeaponId) != TF_WEAPON_MEDIGUN)
         return;
 
-    /* We can't shoot, stop */
-    if (!can_shoot()) {
-        cmd->buttons &= ~IN_ATTACK;
+    if (!can_shoot())
         return;
-    }
 
-    vec3_t local_shoot_pos = METHOD(g.localplayer, GetShootPos);
+    /* Calculate only once */
+    const vec3_t local_shoot_pos  = METHOD(g.localplayer, GetShootPos);
+    const bool is_medigun_healing = IsMedigunHealing(g.localweapon);
 
     /* Get best teammate, depending on health percentage */
     Entity* best_target = get_best_target(local_shoot_pos);
 
-    /* No valid target */
+    /* No valid target, or we still need to wait */
     if (!best_target) {
         /* Even if there is no good target, if we are healing, don't stop */
-        if (IsMedigunHealing(g.localweapon))
+        if (is_medigun_healing)
             cmd->buttons |= IN_ATTACK;
 
         return;
     }
 
-    /* Ticks since we switched target */
-    static uint32_t ticks_since_switch = 0;
+    /* Did we release attack on the last tick? */
+    static bool just_released = false;
 
-    /* Every tick, increase count */
-    ticks_since_switch++;
+    /* Curtime when we last switched target */
+    static float last_switch = 0.f;
 
-	/* Min ticks is 3 */
-    const uint32_t switch_time = MAX(3, settings.automedigun_switch_time);
+    /* Did enough time pass since last switch? Variable for readability */
+    const bool switch_time_passed =
+      c_globalvars->curtime >= last_switch + settings.automedigun_switch_time;
 
-    /* If we are already healing, and enough ticks have passed since last switch
-     * depending on user setting. */
-    if (IsMedigunHealing(g.localweapon) && ticks_since_switch >= switch_time) {
+    if (is_medigun_healing) {
+        /* If we are healing someone but we still need to wait, keep healing and
+         * stop */
+        if (!switch_time_passed) {
+            /* TODO: If we have high smoothing, and we move so little that we
+             * are still healing the same target, it will wait until moving a
+             * little again. We need to check this after checking if we are
+             * healing the best possible player, probably */
+            cmd->buttons |= IN_ATTACK;
+            return;
+        }
+
+        /* Did we release the mouse on the last tick? Then we should not be
+         * healing anyone, if we are, release again and stop */
+        if (just_released) {
+            cmd->buttons &= ~IN_ATTACK;
+            return;
+        }
+
+        /* Get index of currently healed player */
         CBaseHandle healed_handler = GetMedigunHealingHandler(g.localweapon);
         const int healed_idx       = CBaseHandle_GetEntryIndex(healed_handler);
         if (healed_idx < 1 || healed_idx >= g.MaxClients)
             return;
 
         /* If it's already the best possible target, hold it. Otherwise, release
-         * attack so we can find the best target on the next tick */
+         * attack so we can find the best target on the next tick. */
         if (METHOD(best_target, GetIndex) == healed_idx) {
             cmd->buttons |= IN_ATTACK;
         } else {
             cmd->buttons &= ~IN_ATTACK;
 
-            /* Store we switched on this tick */
-            ticks_since_switch = 0;
+            /* Store when we just released the mouse */
+            just_released = true;
         }
 
         /* Always return if we are already healing */
         return;
     }
+
+    just_released = false;
 
     /* Get the entity center from collision box */
     vec3_t target_pos = GetCenter(best_target);
@@ -137,7 +156,7 @@ void automedigun(usercmd_t* cmd) {
     if (settings.automedigun_silent) {
         /* If pSilent, ignore smoothing. Just set the angles. */
         VEC_COPY(cmd->viewangles, target_angle);
-		g.psilent = true;
+        g.psilent = true;
     } else {
         /* Otherwise, get delta from engine viewangles */
         vec3_t viewangles;
@@ -158,6 +177,9 @@ void automedigun(usercmd_t* cmd) {
         /* Since we are not using silent, also change the engine viewangles */
         METHOD_ARGS(i_engine, SetViewAngles, &cmd->viewangles);
     }
+
+    /* Store we just switched targets */
+    last_switch = c_globalvars->curtime;
 
     /* Finally, attack */
     cmd->buttons |= IN_ATTACK;
