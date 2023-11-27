@@ -1,7 +1,7 @@
-#+title: Features
-#+options: toc:nil
-#+startup: showeverything
-#+author: 8dcc
+#+ title : Features
+#+ options : toc : nil
+#+ startup : showeverything
+#+ author : 8dcc
 
 The cheat currently has the following features:
 - ESP
@@ -30,6 +30,7 @@ The cheat currently has the following features:
 - Aimbot
   - Custom FOV
   - Custom smoothing
+  - Degree threshold before shooting (for smoothing)*
   - Custom hitboxes
   - Silent
   - Auto-shoot on key (=PgUp=)*
@@ -62,6 +63,9 @@ The cheat currently has the following features:
 
 * Notes
 - All the "Player" settings also apply to MvM bots.
+- The degree threshold setting changes the ammount of degrees away from the
+  target that the cheat will consider as valid. This is used with smoothing to
+  shoot a bit before reaching the target angle.
 - Currently the menu has no "Keybinds" option, so if you want to change the
   aimbot or meleebot keybinds, you need to do one of these:
   1. Change the keycodes for each config by editing the JSON directly. The
