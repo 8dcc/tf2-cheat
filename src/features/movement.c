@@ -3,8 +3,9 @@
 #include <math.h>
 #include "features.h"
 #include "../include/globals.h"
-#include "../include/util.h"
 #include "../include/sdk.h"
+#include "../include/util.h"
+#include "../include/math.h"
 
 static bool was_on_ground = false;
 

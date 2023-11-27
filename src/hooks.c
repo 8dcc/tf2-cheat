@@ -4,6 +4,7 @@
 #include "include/hooks.h"
 #include "include/globals.h"
 #include "include/sdk.h"
+#include "include/math.h"
 #include "include/menu.h"
 #include "features/features.h"
 

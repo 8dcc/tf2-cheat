@@ -1,6 +1,7 @@
 
 #include "../features.h"
 #include "../../include/sdk.h"
+#include "../../include/math.h"
 #include "../../include/globals.h"
 #include "../../include/settings.h"
 

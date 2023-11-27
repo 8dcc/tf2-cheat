@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <dlfcn.h>
 #include <sys/mman.h> /* PROT_* */
+#include "include/math.h"
 #include "include/globals.h"
 
 /* See wiki */

@@ -2,6 +2,7 @@
 #include "include/sdk.h"
 #include "include/globals.h"
 #include "include/util.h"
+#include "include/math.h"
 
 void RayInit(Ray_t* ray, vec3_t start, vec3_t end) {
     const vec3_t delta = vec_sub(end, start);

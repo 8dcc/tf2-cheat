@@ -9,6 +9,7 @@
 
 #include "include/sdk.h"
 #include "include/util.h"
+#include "include/math.h"
 #include "include/globals.h"
 
 void* get_interface(void* handle, const char* name) {

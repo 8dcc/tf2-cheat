@@ -1,6 +1,7 @@
 
 #include "../features.h"
 #include "../../include/sdk.h"
+#include "../../include/math.h"
 #include "../../include/globals.h"
 
 #define MEDIGUN_RANGE 449.0f
