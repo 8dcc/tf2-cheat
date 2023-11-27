@@ -69,6 +69,7 @@ typedef struct {
     int aimbot;
     float aim_fov;
     float aim_smooth;
+    float aim_deg_threshold;
     int aim_hitbox;
     int aim_silent;
     int aim_on_key;

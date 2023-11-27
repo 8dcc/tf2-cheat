@@ -209,7 +209,9 @@ static inline void tab_aim(void) {
     nk_checkbox_label(ctx, "Aimbot", &settings.aimbot);
 
     SLIDER_FLOAT("Aimbot FOV", 0.f, settings.aim_fov, 180.f, 0.5f);
-    SLIDER_FLOAT("Aimbot smoothing", 1.f, settings.aim_smooth, 50.f, 0.5f);
+    SLIDER_FLOAT("Smoothing amount", 1.f, settings.aim_smooth, 50.f, 0.5f);
+    SLIDER_FLOAT("Degree threshold", 0.f, settings.aim_deg_threshold,
+                 5.f, 0.1f);
 
     nk_layout_row_dynamic(ctx, 18, 2);
     static const char* opts0[] = { "Head", "Torso", "Arms", "Legs" };
