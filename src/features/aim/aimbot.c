@@ -76,7 +76,7 @@ static bool is_visible(vec3_t start, vec3_t end, Entity* target) {
     return trace.entity == target || trace.fraction > 0.97f;
 }
 
-static vec3_t get_closest_fov_delta(vec3_t viewangles) {
+static vec3_t get_closest_fov(vec3_t viewangles) {
     /* Compensate aim punch */
     viewangles.x += g.localplayer->vecPunchAngle.x;
     viewangles.y += g.localplayer->vecPunchAngle.y;
@@ -87,7 +87,7 @@ static vec3_t get_closest_fov_delta(vec3_t viewangles) {
     /* These 2 vars are used to store the best target across iterations.
      * NOTE: The initial value of best_fov will be the aimbot fov */
     float best_fov    = settings.aim_fov;
-    vec3_t best_delta = { 0, 0, 0 };
+    vec3_t best_angle = VEC_ZERO;
 
     for (int i = 1; i <= g.MaxClients; i++) {
         Entity* ent = g.ents[i];
@@ -116,13 +116,13 @@ static vec3_t get_closest_fov_delta(vec3_t viewangles) {
 
             float fov = hypotf(delta.x, delta.y);
             if (fov < best_fov) {
-                best_fov = fov;
-                VEC_COPY(best_delta, delta);
+                best_fov   = fov;
+                best_angle = enemy_angle;
             }
         }
     }
 
-    return best_delta;
+    return best_angle;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -130,14 +130,14 @@ static vec3_t get_closest_fov_delta(vec3_t viewangles) {
 
 void aimbot(usercmd_t* cmd) {
     if (!settings.aimbot || !g.localplayer || !g.localweapon ||
-        !attack_key(cmd) || !can_shoot())
+        !attack_key(cmd))
         return;
 
     /* We are being spectated in 1st person and we want to hide it */
     if (settings.aim_off_spectated && g.spectated_1st) {
-		cmd->buttons |= IN_ATTACK;
+        cmd->buttons |= IN_ATTACK;
         return;
-	}
+    }
 
     /* For now just check if the current weapon is in a valid slot.
      * TODO: Add projectile aimbot depending on weapon->GetDamageType */
@@ -149,35 +149,77 @@ void aimbot(usercmd_t* cmd) {
     vec3_t engine_viewangles;
     METHOD_ARGS(i_engine, GetViewAngles, &engine_viewangles);
 
-    /* TODO: Add setting for lowest health instead of closest */
-    vec3_t best_delta = get_closest_fov_delta(engine_viewangles);
+    /* TODO: Add setting for lowest health instead of closest to crosshair */
+    vec3_t target_angle = get_closest_fov(engine_viewangles);
 
-	/* TODO: Don't use smoothing in aim_silent */
-    if (!vec_is_zero(best_delta)) {
-        const float aim_smooth = MAX(settings.aim_smooth, 1.f);
+    if (vec_is_zero(target_angle)) {
+        /* We didn't find a valid target, we want to auto-shoot on key, and
+         * the keycode is 0 (mouse1): Don't shoot */
+        if (settings.aim_on_key && settings.aim_keycode == 0)
+            cmd->buttons &= ~IN_ATTACK;
 
-        cmd->viewangles.x = engine_viewangles.x + best_delta.x / aim_smooth;
-        cmd->viewangles.y = engine_viewangles.y + best_delta.y / aim_smooth;
-        cmd->viewangles.z = engine_viewangles.z + best_delta.z / aim_smooth;
-
-        if (settings.aim_silent) {
-            const int wpn_id = METHOD(g.localweapon, GetWeaponId);
-            if (wpn_id == TF_WEAPON_ROCKETLAUNCHER ||
-                wpn_id == TF_WEAPON_GRENADELAUNCHER ||
-                wpn_id == TF_WEAPON_PIPEBOMBLAUNCHER)
-                g.psilent = true;
-        }
-
-        if (settings.aim_on_key)
-            cmd->buttons |= IN_ATTACK;
-    } else if (settings.aim_on_key && settings.aim_keycode == 0) {
-        /* We didn't find a valid target, we want to auto-shoot on key, and the
-         * keycode is 0 (mouse1): Don't shoot */
-        cmd->buttons &= ~IN_ATTACK;
+        return;
     }
 
-    if (!settings.aim_silent)
+    const bool we_can_shoot = can_shoot();
+
+    if (settings.aim_silent) {
+        /* With silent aim, we only want to look at the target when we can
+         * shoot. This is not the case with smoothing */
+        if (!we_can_shoot)
+            return;
+
+        /* If silent aim is enabled, ignore smoothing and look directly to the
+         * target */
+        cmd->viewangles = target_angle;
+
+        /* If the weapon supports pSilent (e.g. projectiles), enable */
+        const int wpn_id = METHOD(g.localweapon, GetWeaponId);
+        if (wpn_id == TF_WEAPON_ROCKETLAUNCHER ||
+            wpn_id == TF_WEAPON_GRENADELAUNCHER ||
+            wpn_id == TF_WEAPON_PIPEBOMBLAUNCHER)
+            g.psilent = true;
+
+        /* If we are using a custom key for aimbot: Shoot now */
+        if (settings.aim_on_key)
+            cmd->buttons |= IN_ATTACK;
+    } else {
+        /* If we are not using silent aim, check if we want smoothing */
+        const float aim_smooth = MAX(settings.aim_smooth, 1.f);
+
+        /* If we don't want smoothing, and we can't shoot, dont look at the
+         * target yet.
+         * NOTE: If we are using smoothing, we want to move the view even if we
+         * can't shoot yet. */
+        if (aim_smooth == 1.f && !we_can_shoot)
+            return;
+
+        /* Delta to the target angle */
+        vec3_t delta = vec_sub(target_angle, engine_viewangles);
+        vec_norm(&delta);
+        ang_clamp(&delta);
+
+        /* Change cmd viewangles, scaling with smoothing */
+        cmd->viewangles.x = engine_viewangles.x + delta.x / aim_smooth;
+        cmd->viewangles.y = engine_viewangles.y + delta.y / aim_smooth;
+        cmd->viewangles.z = engine_viewangles.z + delta.z / aim_smooth;
+
+        /* And also change the viewangles */
         METHOD_ARGS(i_engine, SetViewAngles, &cmd->viewangles);
+
+        /* How much do we need until reaching the target? */
+        vec3_t new_delta = vec_sub(target_angle, cmd->viewangles);
+
+        /* With smoothing, if we are looking X degrees away from the desired
+         * angle, shoot anyway. */
+        const float degree_threshod = MAX(settings.aim_deg_threshold, 0.01f);
+
+        /* If we are using a custom key for aimbot, and we are looking close
+         * enough to the target: Shoot now */
+        if (settings.aim_on_key && ABS(new_delta.x) < degree_threshod &&
+            ABS(new_delta.y) < degree_threshod)
+            cmd->buttons |= IN_ATTACK;
+    }
 }
 
 /*----------------------------------------------------------------------------*/
