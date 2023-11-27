@@ -60,6 +60,9 @@ void bhop(usercmd_t* cmd) {
     if (!settings.bhop || !g.IsAlive || !g.localplayer)
         return;
 
+    if (GetMoveType(g.localplayer) != MOVETYPE_WALK)
+        return;
+
     /* Don't do anything in water */
     if (g.localplayer->flags & FL_INWATER || g.localplayer->flags & FL_SWIM)
         return;
@@ -133,7 +136,7 @@ void autorocketjump(usercmd_t* cmd) {
     /* Release hotkey and hold rocketjump keys. Make it pSilent too */
     cmd->buttons &= ~IN_ATTACK2;
     cmd->buttons |= IN_ATTACK | IN_DUCK | IN_JUMP;
-	g.psilent = true;
+    g.psilent = true;
 
     vec_norm(&cmd->viewangles);
     ang_clamp(&cmd->viewangles);
