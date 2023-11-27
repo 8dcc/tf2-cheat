@@ -162,11 +162,16 @@ static inline int CBaseHandle_GetEntryIndex(CBaseHandle h) {
 }
 
 static inline Renderable* GetRenderable(Entity* ent) {
-    return (Renderable*)((void*)ent + 0x4);
+    return (Renderable*)((uint32_t)ent + 0x4);
 }
 
 static inline Networkable* GetNetworkable(Entity* ent) {
-    return (Networkable*)((void*)ent + 0x8);
+    return (Networkable*)((uint32_t)ent + 0x8);
+}
+
+/* Got the offset from the top of CBaseEntity::VPhysicsUpdate() */
+static inline int GetMoveType(Entity* ent) {
+    return *(int*)((uint32_t)ent + 0x194);
 }
 
 static inline const char* GetClassName(Entity* ent) {

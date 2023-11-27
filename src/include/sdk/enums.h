@@ -152,6 +152,25 @@ enum entity_flags {
     FL_UNBLOCKABLE_BY_PLAYER = (1 << 30)
 };
 
+enum MoveType_t {
+    MOVETYPE_NONE = 0,
+    MOVETYPE_ISOMETRIC,
+    MOVETYPE_WALK,
+    MOVETYPE_STEP,
+    MOVETYPE_FLY,
+    MOVETYPE_FLYGRAVITY,
+    MOVETYPE_VPHYSICS,
+    MOVETYPE_PUSH,
+    MOVETYPE_NOCLIP,
+    MOVETYPE_LADDER,
+    MOVETYPE_OBSERVER,
+    MOVETYPE_CUSTOM,
+
+    MOVETYPE_LAST = MOVETYPE_CUSTOM,
+
+    MOVETYPE_MAX_BITS = 4
+};
+
 enum ETFClientClass {
     CClass_CTFWearableRazorback                  = 341,
     CClass_CTFWearableDemoShield                 = 338,
