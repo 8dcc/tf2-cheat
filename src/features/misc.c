@@ -7,18 +7,17 @@ void autobackstab(usercmd_t* cmd) {
     if (!settings.autostab || !g.localplayer || !g.localweapon || !g.IsAlive)
         return;
 
-    if (METHOD(g.localweapon, GetWeaponId) != TF_WEAPON_KNIFE)
-        return;
+    /* Also use autobackstab with the Holiday punch */
+    if (g.localweapon->m_iItemDefinitionIndex != Heavy_t_TheHolidayPunch) {
+        if (METHOD(g.localweapon, GetWeaponId) != TF_WEAPON_KNIFE)
+            return;
 
-    /* We don't need to check anything else */
-    if (g.localweapon->bReadyToBackstab) {
-        cmd->buttons |= IN_ATTACK;
-        return;
+        /* If setting, only check bReadyToBackstab, skip TraceHull */
+        if (settings.anim_stab && g.localweapon->bReadyToBackstab) {
+            cmd->buttons |= IN_ATTACK;
+            return;
+        }
     }
-
-    /* Only check bReadyToBackstab, skip TraceHull */
-    if (settings.anim_stab)
-        return;
 
     const float swing_range = METHOD(g.localweapon, GetSwingRange);
     if (swing_range <= 0.f)
