@@ -220,6 +220,14 @@ void esp(void) {
     /* For skeleton ESP */
     static matrix3x4_t bones[MAXSTUDIOBONES];
 
+    /* If we are dead, get the index of the spectated entity. If it's a player,
+     * we don't render his ESP. */
+    int spectated_idx = 0;
+    if (!g.IsAlive) {
+        Entity* spectated = METHOD(g.localplayer, GetObserverTarget);
+        spectated_idx     = METHOD(spectated, GetIndex);
+    }
+
     /* Iterate all entities */
     for (int i = 1; i < g.MaxEntities; i++) {
         if (i == g.localidx)
@@ -237,6 +245,9 @@ void esp(void) {
 
         switch (ent_class->class_id) {
             case CClass_CTFPlayer: {
+                if (!g.IsAlive && i == spectated_idx)
+                    continue;
+
                 const bool teammate = IsTeammate(ent);
 
                 /* Should we render this player's team? */
