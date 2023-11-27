@@ -126,7 +126,7 @@ void automedigun(usercmd_t* cmd) {
             return;
         }
 
-		/* Release so we can start healing the target on the next tick */
+        /* Release so we can start healing the target on the next tick */
         cmd->buttons &= ~IN_ATTACK;
         return;
     }
@@ -166,8 +166,9 @@ void automedigun(usercmd_t* cmd) {
 
     /* Are we looking at the target, or we need more ticks because of smoothing?
      * Only start healing when we are looking at him. */
-    if (ABS(new_delta.x) < AIM_DEGREE_THRESHOD &&
-        ABS(new_delta.y) < AIM_DEGREE_THRESHOD) {
+    if (settings.automedigun_silent ||
+        (ABS(new_delta.x) < AIM_DEGREE_THRESHOD &&
+         ABS(new_delta.y) < AIM_DEGREE_THRESHOD)) {
         /* Store we just switched targets */
         last_switch = c_globalvars->curtime;
 
