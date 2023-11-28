@@ -171,6 +171,13 @@ enum MoveType_t {
     MOVETYPE_MAX_BITS = 4
 };
 
+enum EWaterLevels {
+    WL_NotInWater = 0,
+    WL_Feet,
+    WL_Waist,
+    WL_Eyes,
+};
+
 enum ETFClientClass {
     CClass_CTFWearableRazorback                  = 341,
     CClass_CTFWearableDemoShield                 = 338,

@@ -128,7 +128,9 @@ struct Entity {
     int model_idx; /* 0x80 */
     PAD(0x8C);
     vec3_t velocity; /* 0x110 */
-    PAD(0x238);
+	PAD(0x7C);
+	uint8_t m_nWaterLevel; /* 0x198 */
+    PAD(0x1B8);
     vec3_t m_vecOrigin; /* 0x354 */
     PAD(0xC);
     int flags; /* 0x36C */
