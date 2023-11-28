@@ -61,11 +61,13 @@ void bhop(usercmd_t* cmd) {
     if (!settings.bhop || !g.IsAlive || !g.localplayer)
         return;
 
+    /* Wrong movetype, like noclip */
     if (GetMoveType(g.localplayer) != MOVETYPE_WALK)
         return;
 
     /* Don't do anything in water */
-    if (g.localplayer->flags & FL_INWATER || g.localplayer->flags & FL_SWIM)
+    if (g.localplayer->flags & FL_INWATER || g.localplayer->flags & FL_SWIM ||
+        g.localplayer->m_nWaterLevel > WL_Feet)
         return;
 
     const bool is_jumping = (cmd->buttons & IN_JUMP) != 0;
