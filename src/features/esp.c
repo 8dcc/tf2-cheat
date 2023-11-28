@@ -226,7 +226,8 @@ void esp(void) {
     int spectated_idx = 0;
     if (!g.IsAlive) {
         Entity* spectated = METHOD(g.localplayer, GetObserverTarget);
-        spectated_idx     = METHOD(spectated, GetIndex);
+        if (spectated)
+            spectated_idx = METHOD(spectated, GetIndex);
     }
 
     /* Iterate all entities */
@@ -246,7 +247,8 @@ void esp(void) {
 
         switch (ent_class->class_id) {
             case CClass_CTFPlayer: {
-                if (!g.IsAlive && i == spectated_idx)
+                /* Don't render ESP for the spectated player */
+                if (i == spectated_idx)
                     continue;
 
                 const bool teammate = IsTeammate(ent);
