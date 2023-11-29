@@ -36,6 +36,11 @@
     "C7 04 24 ? ? ? ? E8 ? ? ? ? C7 04 24 ? ? ? ? 89 44 24 04 E8 ? ? ? ? A1 " \
     "? ? ? ?"
 
+/* CConfirmDialog::GetResFile (Also in C_BasePlayer::GetToolRecordingState) */
+#define SIG_CInput                                                            \
+    "A1 ? ? ? ? 8B 10 89 04 24 FF 92 ? ? ? ? BA ? ? ? ? C9 84 C0 B8 ? ? ? ? " \
+    "0F 44 D0 89 D0 C3"
+
 /* CPrediction::RunCommand -> CPrediction::StartCommand -> SetPse..RandomSeed */
 #define SIG_SetPredictionRandomSeed                                           \
     "75 7C 31 FF E8 ? ? ? ? 89 B3 ? ? ? ? 89 34 24 E8 ? ? ? ? 89 F8 89 1D ? " \
@@ -202,6 +207,7 @@ DECL_INTF_EXTERN(ModelRender, modelrender);
 DECL_INTF_EXTERN(GameMovement, gamemovement);
 DECL_INTF_EXTERN(MoveHelper, movehelper);
 DECL_INTF_EXTERN(IPrediction, prediction);
+DECL_INTF_EXTERN(CInput, input);
 DECL_INTF_EXTERN(ClientMode, clientmode);
 DECL_CLASS_EXTERN(CGlobalVars, globalvars);
 DECL_CLASS_EXTERN(CClientState, clientstate);

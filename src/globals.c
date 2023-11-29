@@ -66,6 +66,7 @@ DECL_INTF(ModelRender, modelrender);
 DECL_INTF(GameMovement, gamemovement);
 DECL_INTF(MoveHelper, movehelper);
 DECL_INTF(IPrediction, prediction);
+DECL_INTF(CInput, input);
 DECL_INTF(ClientMode, clientmode);
 DECL_CLASS(CClientState, clientstate);
 DECL_CLASS(CGlobalVars, globalvars);
@@ -115,6 +116,9 @@ static inline bool get_sigs(void) {
      * NOTE: We don't use RELATIVE2ABSOLUTE() since it's an absolute address */
     GET_SIGNATURE(pat_ClientState, ENGINE_SO, SIG_ClientState);
     c_clientstate = *(CClientState**)(pat_ClientState + 3);
+
+    GET_SIGNATURE(pat_CInput, CLIENT_SO, SIG_CInput);
+    i_input = *(CInput**)(pat_CInput + 1);
 
     /* CBaseEntity::SetPredictionRandomSeed() */
     GET_SIGNATURE(pat_SetPredictionRandomSeed, CLIENT_SO,
