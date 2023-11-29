@@ -50,7 +50,7 @@
 
 void* get_interface(void* handle, const char* name);
 size_t vmt_size(void* vmt);
-void* find_sig(const char* module, const byte* pattern);
+void* find_sig(const char* module, const byte* ida_pattern);
 
 bool can_shoot(void);
 vec3_t center_of_hitbox(studiohdr_t* studio, matrix3x4_t* bonemat, int set,

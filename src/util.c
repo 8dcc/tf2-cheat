@@ -43,6 +43,38 @@ size_t vmt_size(void* vmt) {
     return i * sizeof(void*);
 }
 
+/* "E0" -> 224 */
+int hex_to_num(const char* hex) {
+    int ret = 0;
+
+    /* Skip preceding spaces, if any */
+    while (*hex == ' ')
+        hex++;
+
+    /* Store a byte (two digits of string) */
+    for (int i = 0; i < 2 && hex[i] != '\0'; i++) {
+        char c = hex[i];
+
+        /* For example "E ", although the format should always be "0E" */
+        if (c == ' ')
+            break;
+
+        uint8_t n = 0;
+        if (c >= '0' && c <= '9')
+            n = c - '0';
+        else if (c >= 'a' && c <= 'f')
+            n = 10 + c - 'a';
+        else if (c >= 'A' && c <= 'F')
+            n = 10 + c - 'A';
+
+        /* Shift size of 0xF and add the next half of byte */
+        ret <<= 4;
+        ret |= n & 0xF;
+    }
+
+    return ret;
+}
+
 void* find_sig(const char* module, const byte* pattern) {
     struct our_link_map {
         /* Base from link.h */
@@ -72,26 +104,46 @@ void* find_sig(const char* module, const byte* pattern) {
 
     dlclose(link);
 
-    const byte* memPos = start;
-    const byte* patPos = pattern;
+    /* Skip preceding spaces from pattern, if any */
+    while (*pattern == ' ')
+        pattern++;
 
-    /* Iterate memory area until *patPos is '\0' (we found pattern).
-     * If we start a pattern match, keep checking all pattern positions until we
-     * are done or until mismatch. If we find mismatch, reset pattern position
-     * and continue checking at the memory location where we started +1 */
-    while (memPos < end && *patPos != '\0') {
-        if (*memPos == *patPos || *patPos == '?') {
-            memPos++;
-            patPos++;
-        } else {
-            start++;
-            memPos = start;
-            patPos = pattern;
+    const byte* mem_ptr = start;
+    int pat_pos         = 0;
+
+    while (mem_ptr < end && pattern[pat_pos] != '\0') {
+        /* Wildcard, always match */
+        if (pattern[pat_pos] == '?') {
+            mem_ptr++;
+            pat_pos++;
+            goto skip_following_spaces;
         }
+
+        /* "E0" -> 224 */
+        byte current_byte = (byte)hex_to_num(&pattern[pat_pos]);
+
+        if (*mem_ptr == current_byte) {
+            /* Found exact byte match in sequence */
+            mem_ptr++;
+
+            /* Go to next byte separator in pattern: space */
+            while (pattern[pat_pos] != ' ' && pattern[pat_pos] != '\0')
+                pat_pos++;
+        } else {
+            /* Byte didn't match, check pattern from the begining on the next
+             * position in memory */
+            start++;
+            mem_ptr = start;
+            pat_pos = 0;
+        }
+
+    skip_following_spaces:
+        while (pattern[pat_pos] == ' ' && pattern[pat_pos] != '\0')
+            pat_pos++;
     }
 
     /* We reached end of pattern, we found it */
-    if (*patPos == '\0')
+    if (pattern[pat_pos] == '\0')
         return start;
 
     return NULL;
