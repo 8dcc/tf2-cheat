@@ -50,6 +50,7 @@ DECL_HOOK_EXTERN(void, DrawModelExecute, ModelRender*, const DrawModelState_t*,
                  const ModelRenderInfo_t*, matrix3x4_t*);
 DECL_HOOK_EXTERN(void, RunCommand, IPrediction*, Entity*, usercmd_t*,
                  MoveHelper*);
+DECL_HOOK_EXTERN(usercmd_t*, GetUserCmd, CInput*, int);
 
 extern SwapWindow_t ho_SwapWindow;
 extern PollEvent_t ho_PollEvent;

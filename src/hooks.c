@@ -18,6 +18,7 @@ DECL_HOOK(Paint);
 DECL_HOOK(PaintTraverse);
 DECL_HOOK(DrawModelExecute);
 DECL_HOOK(RunCommand);
+DECL_HOOK(GetUserCmd);
 
 SwapWindow_t ho_SwapWindow = NULL;
 PollEvent_t ho_PollEvent   = NULL;
@@ -33,6 +34,7 @@ bool hooks_init(void) {
     VMT_HOOK(i_panel, PaintTraverse);
     VMT_HOOK(i_modelrender, DrawModelExecute);
     VMT_HOOK(i_prediction, RunCommand);
+    VMT_HOOK(i_input, GetUserCmd);
 
     HOOK_SDL(SwapWindow);
     HOOK_SDL(PollEvent);
@@ -127,16 +129,16 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
     vec_norm(&cmd->viewangles);
     ang_clamp(&cmd->viewangles);
 
-	/* Did I choke in the last tick? */
-	static bool did_choke = false;
+    /* Did I choke in the last tick? */
+    static bool did_choke = false;
 
     if (g.psilent) {
         *bSendPacket = false;
-		did_choke = true;
+        did_choke    = true;
     } else if (did_choke) {
         /* Only restore if we chocked on the tick before this one */
         *bSendPacket = true;
-		did_choke = false;
+        did_choke    = false;
 
         cmd->viewangles  = old_angles;
         cmd->sidemove    = old_sidemove;
@@ -146,7 +148,7 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
     /* Make sure we aren't choking too many packets */
     if (c_clientstate->chokedcommands >= MAX_CHOKE) {
         *bSendPacket = true;
-		did_choke = false;
+        did_choke    = false;
     }
 
     return false;
@@ -246,6 +248,36 @@ void h_RunCommand(IPrediction* thisptr, Entity* player, usercmd_t* cmd,
         i_movehelper = move_helper;
 
     ORIGINAL(RunCommand, thisptr, player, cmd, move_helper);
+}
+
+/*----------------------------------------------------------------------------*/
+
+usercmd_t* h_GetUserCmd(CInput* thisptr, int sequence_number) {
+    /*
+     * To get CInput.m_pCommands, you can look at the first line of CInput's
+     * CreateMove(). From IDA's decompiler:
+     *
+     *   v5 = thisptr[64] + 68 * (sequence_number % 90);
+     *
+     * Where `thisptr` is the first argument of the function and
+     * `sequence_number` is the second argument.
+     *
+     * You can probably tell that it's accessing an index in an array at
+     * `thisptr[64]`, where each item of the array is 68 bytes. This is the
+     * location of m_pCommands, but keep in mind that `thisptr[64]` is the same
+     * as:
+     *
+     *   thisptr + (sizeof(void*) * 64)
+     *
+     * So the offset is not 64 but 0x100.
+     */
+    usercmd_t* usercmd =
+      &thisptr->m_pCommands[sequence_number % MULTIPLAYER_BACKUP];
+
+    /* We need to hook this to remove the original check, for crithack:
+     * https://github.com/OthmanAba/TeamFortress2/blob/1b81dded673d49adebf4d0958e52236ecc28a956/tf2_src/game/client/in_main.cpp#L1405-L1408
+     */
+    return usercmd;
 }
 
 /*----------------------------------------------------------------------------*/
