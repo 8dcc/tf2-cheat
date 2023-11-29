@@ -90,6 +90,8 @@ typedef struct {
     int autostrafe;
     int thirdperson;
     int remove_scope;
+    int crits_melee;
+    int crits_chance;
     int autostab;
     int anim_stab;
     int automedigun;

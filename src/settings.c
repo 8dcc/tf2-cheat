@@ -59,6 +59,8 @@ Settings settings = {
     .autostrafe              = SETT_OFF,
     .thirdperson             = false,
     .remove_scope            = false,
+    .crits_melee             = false,
+    .crits_chance            = 100,
     .autostab                = false,
     .anim_stab               = false,
     .automedigun             = false,
@@ -103,6 +105,7 @@ void save_config(const char* filename) {
     if (!json_cfg)
         SAVE_ABORT("save_config: error creating main json object\n");
 
+    /* Esp */
     JSON_SETTINGS_WRITE_INT(json_cfg, player_esp);
     JSON_SETTINGS_WRITE_INT(json_cfg, player_box_esp);
     JSON_SETTINGS_WRITE_INT(json_cfg, skeleton_esp);
@@ -123,6 +126,7 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_INT(json_cfg, weapon_chams);
     JSON_SETTINGS_WRITE_INT(json_cfg, hand_chams);
 
+    /* Aim */
     JSON_SETTINGS_WRITE_INT(json_cfg, aimbot);
     JSON_SETTINGS_WRITE_FLOAT(json_cfg, aim_fov);
     JSON_SETTINGS_WRITE_FLOAT(json_cfg, aim_smooth);
@@ -141,10 +145,13 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_INT(json_cfg, melee_keycode);
     JSON_SETTINGS_WRITE_INT(json_cfg, melee_off_spectated);
 
+    /* Misc */
     JSON_SETTINGS_WRITE_INT(json_cfg, bhop);
     JSON_SETTINGS_WRITE_INT(json_cfg, autostrafe);
     JSON_SETTINGS_WRITE_INT(json_cfg, thirdperson);
     JSON_SETTINGS_WRITE_INT(json_cfg, remove_scope);
+    JSON_SETTINGS_WRITE_INT(json_cfg, crits_melee);
+    JSON_SETTINGS_WRITE_INT(json_cfg, crits_chance);
     JSON_SETTINGS_WRITE_INT(json_cfg, autostab);
     JSON_SETTINGS_WRITE_INT(json_cfg, anim_stab);
     JSON_SETTINGS_WRITE_INT(json_cfg, automedigun);
@@ -156,6 +163,7 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_INT(json_cfg, watermark);
     JSON_SETTINGS_WRITE_INT(json_cfg, speclist);
 
+    /* Cols */
     JSON_SETTINGS_WRITE_COL(json_cfg, col_steam_friend_esp);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_friend_esp);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_enemy_esp);
@@ -241,6 +249,7 @@ void load_config(const char* filename) {
     if (!json_cfg)
         LOAD_PRINT_ERROR();
 
+    /* Esp */
     JSON_SETTINGS_READ_INT(json_cfg, player_esp);
     JSON_SETTINGS_READ_INT(json_cfg, player_box_esp);
     JSON_SETTINGS_READ_INT(json_cfg, skeleton_esp);
@@ -261,6 +270,7 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_INT(json_cfg, weapon_chams);
     JSON_SETTINGS_READ_INT(json_cfg, hand_chams);
 
+    /* Aim */
     JSON_SETTINGS_READ_INT(json_cfg, aimbot);
     JSON_SETTINGS_READ_FLOAT(json_cfg, aim_fov);
     JSON_SETTINGS_READ_FLOAT(json_cfg, aim_smooth);
@@ -279,10 +289,13 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_INT(json_cfg, melee_keycode);
     JSON_SETTINGS_READ_INT(json_cfg, melee_off_spectated);
 
+    /* Misc */
     JSON_SETTINGS_READ_INT(json_cfg, bhop);
     JSON_SETTINGS_READ_INT(json_cfg, autostrafe);
     JSON_SETTINGS_READ_INT(json_cfg, thirdperson);
     JSON_SETTINGS_READ_INT(json_cfg, remove_scope);
+    JSON_SETTINGS_READ_INT(json_cfg, crits_melee);
+    JSON_SETTINGS_READ_INT(json_cfg, crits_chance);
     JSON_SETTINGS_READ_INT(json_cfg, autostab);
     JSON_SETTINGS_READ_INT(json_cfg, anim_stab);
     JSON_SETTINGS_READ_INT(json_cfg, automedigun);
@@ -294,6 +307,7 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_INT(json_cfg, watermark);
     JSON_SETTINGS_READ_INT(json_cfg, speclist);
 
+    /* Colors */
     JSON_SETTINGS_READ_COL(json_cfg, col_steam_friend_esp);
     JSON_SETTINGS_READ_COL(json_cfg, col_friend_esp);
     JSON_SETTINGS_READ_COL(json_cfg, col_enemy_esp);

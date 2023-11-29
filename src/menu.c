@@ -210,8 +210,8 @@ static inline void tab_aim(void) {
 
     SLIDER_FLOAT("Aimbot FOV", 0.f, settings.aim_fov, 180.f, 0.5f);
     SLIDER_FLOAT("Smoothing amount", 1.f, settings.aim_smooth, 50.f, 0.5f);
-    SLIDER_FLOAT("Degree threshold", 0.f, settings.aim_deg_threshold,
-                 5.f, 0.1f);
+    SLIDER_FLOAT("Degree threshold", 0.f, settings.aim_deg_threshold, 5.f,
+                 0.1f);
 
     nk_layout_row_dynamic(ctx, 18, 2);
     static const char* opts0[] = { "Head", "Torso", "Arms", "Legs" };
@@ -252,6 +252,13 @@ static inline void tab_misc(void) {
     nk_layout_row_dynamic(ctx, 15, 1);
     nk_checkbox_label(ctx, "Thirdperson", &settings.thirdperson);
     nk_checkbox_label(ctx, "Remove sniper scope", &settings.remove_scope);
+
+    nk_layout_row_dynamic(ctx, 8, 1);
+    nk_spacing(ctx, 0); /* ----------------------------  */
+    nk_layout_row_dynamic(ctx, 15, 1);
+
+    nk_checkbox_label(ctx, "Melee crithack", &settings.crits_melee);
+    SLIDER_INT("Crithack chance", 1, settings.crits_chance, 100, 1);
 
     nk_layout_row_dynamic(ctx, 8, 1);
     nk_spacing(ctx, 0); /* ----------------------------  */
