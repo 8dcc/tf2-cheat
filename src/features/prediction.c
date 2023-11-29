@@ -1,4 +1,5 @@
 
+#include <limits.h>
 #include "features.h"
 #include "../include/sdk.h"
 #include "../include/globals.h"
@@ -24,7 +25,7 @@ void pred_start(usercmd_t* cmd) {
     old_bFirstTimePredicted = i_prediction->m_bFirstTimePredicted;
 
     /* Get and set random seed */
-    cmd->random_seed = MD5_PseudoRandom(cmd->command_number) & 0x7FFFFFFF;
+    cmd->random_seed = MD5_PseudoRandom(cmd->command_number) & INT_MAX;
     SetPredictionRandomSeed(cmd);
 
     g.localplayer->m_pCurrentCommand = cmd;
