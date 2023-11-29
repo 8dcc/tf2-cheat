@@ -2,8 +2,13 @@
 #define SDK_ENUMS_H_
 
 /* NOTE: This file is included from sdk.h and depends on its declarations */
-
 /* clang-format off */
+
+/* Used for CInput.m_pCommands (for crithack) */
+#define MULTIPLAYER_BACKUP 90
+
+/*----------------------------------------------------------------------------*/
+
 enum {
     CONTENTS_EMPTY                = 0x0,
     CONTENTS_SOLID                = 0x1,
