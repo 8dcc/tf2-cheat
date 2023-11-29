@@ -6,14 +6,18 @@
 typedef struct Weapon Weapon;
 
 typedef struct {
-    PAD(4 * 398);
+    PAD(4 * 79);
+    int (*GetIndex)(Weapon*); /* 79 */
+    PAD(4 * 318);
     int (*GetSlot)(Weapon*); /* 398 */
     PAD(4 * 1);
     const char* (*GetName)(Weapon*); /* 400 */
     PAD(4 * 48);
     int (*GetWeaponId)(Weapon*);   /* 449 */
     int (*GetDamageType)(Weapon*); /* 450 */
-    PAD(4 * 74);
+    PAD(4 * 14);
+    bool (*CalcIsAttackCriticalHelper)(Weapon*); /* 465 */
+    PAD(4 * 59);
     int (*GetSwingRange)(Weapon*); /* 525 */
 } VMT_Weapon;
 
