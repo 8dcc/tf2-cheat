@@ -38,6 +38,7 @@ typedef struct GameMovement GameMovement;
 typedef struct MoveHelper MoveHelper;
 typedef struct IPrediction IPrediction;
 typedef struct RenderView RenderView;
+typedef struct CInput CInput;
 typedef struct ClientMode ClientMode;
 
 /*----------------------------------------------------------------------------*/
@@ -501,6 +502,17 @@ typedef struct {
 
 struct RenderView {
     VMT_RenderView* vmt;
+};
+
+typedef struct {
+    PAD(4 * 8);
+    usercmd_t* (*GetUserCmd)(CInput*, int sequence_number);
+} VMT_CInput;
+
+struct CInput {
+    VMT_CInput* vmt;
+    PAD(0xFC);
+    usercmd_t* m_pCommands;
 };
 
 typedef struct {
