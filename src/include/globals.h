@@ -20,36 +20,36 @@
 /* Signatures */
 
 /* See: https://github.com/8dcc/tf2-cheat/wiki/Getting-SDL-offsets */
-#define SIG_StartDrawing                                                    \
-    "\xF3\x0F\x2A\xC0\xF3\x0F\x59\x45?\xF3\x0F\x2C\xC0\x89\x85????\xE8????" \
-    "\x8D\x4D\xE4"
+#define SIG_StartDrawing \
+    "F3 0F 2A C0 F3 0F 59 45 ? F3 0F 2C C0 89 85 ? ? ? ? E8 ? ? ? ? 8D 4D E4"
 
 #define SIG_FinishDrawing \
-    "\x89\x04\x24\xFF\x92????\x89\x34\x24\xE8????\x80\x7D\x97?\x0F\x85????"
+    "89 04 24 FF 92 ? ? ? ? 89 34 24 E8 ? ? ? ? 80 7D 97 ? 0F 85 ? ? ? ?"
 
 /* Only part in CL_Move where it sets bSendPacket to 1 */
-#define SIG_bSendPacket                                                        \
-    "\xBE????\xE9????\x8D\xB6\x00\x00\x00\x00\xA1????\xC7\x45?????\xC7\x45???" \
-    "??\x85\xC0\x0F\x84????\x8D\x55\xA8\xC7\x44\x24?????"
+#define SIG_bSendPacket                                                      \
+    "BE ? ? ? ? E9 ? ? ? ? 8D B6 00 00 00 00 A1 ? ? ? ? C7 45 ? ? ? ? ? C7 " \
+    "45 ? ? ? ? ? 85 C0 0F 84 ? ? ? ? 8D 55 A8 C7 44 24 ? ? ? ? ?"
 
 /* CL_RegisterResources (Also in CL_ReadPackets) */
-#define SIG_ClientState \
-    "\xC7\x04\x24????\xE8????\xC7\x04\x24????\x89\x44\x24\x04\xE8????\xA1????"
+#define SIG_ClientState                                                       \
+    "C7 04 24 ? ? ? ? E8 ? ? ? ? C7 04 24 ? ? ? ? 89 44 24 04 E8 ? ? ? ? A1 " \
+    "? ? ? ?"
 
 /* CPrediction::RunCommand -> CPrediction::StartCommand -> SetPse..RandomSeed */
-#define SIG_SetPredictionRandomSeed                            \
-    "\x75\x7C\x31\xFF\xE8????\x89\xB3????\x89\x34\x24\xE8????" \
-    "\x89\xF8\x89\x1D????"
+#define SIG_SetPredictionRandomSeed                                           \
+    "75 7C 31 FF E8 ? ? ? ? 89 B3 ? ? ? ? 89 34 24 E8 ? ? ? ? 89 F8 89 1D ? " \
+    "? ? ?"
 
 /* CInput::CreateMove -> MD5_PseudoRandom */
 #define SIG_MD5_PseudoRandom                                                   \
-    "\x8B\x45\x08\xF3\x0F\x11\x80????\x8B\x45\x0C\x89\x04\x24\xE8????\x25????" \
-    "\x89\x43\x34\xE8????"
+    "8B 45 08 F3 0F 11 80 ? ? ? ? 8B 45 0C 89 04 24 E8 ? ? ? ? 25 ? ? ? ? 89 " \
+    "43 34 E8 ? ? ? ?"
 
 /* CTargetID::GetTargetForSteamAvatar -> IsPlayerOnSteamFriendsList */
-#define SIG_IsPlayerOnSteamFriendsList             \
-    "\x55\x89\xE5\x56\x53\x81\xEC????\x65\xA1????" \
-    "\x89\x45\xF4\x31\xC0\x8B\x5D\x0C\xE8????\x85\xC0\x74\x48\x85\xDB\x74\x44"
+#define SIG_IsPlayerOnSteamFriendsList                                         \
+    "55 89 E5 56 53 81 EC ? ? ? ? 65 A1 ? ? ? ? 89 45 F4 31 C0 8B 5D 0C E8 ? " \
+    "? ? ? 85 C0 74 48 85 DB 74 44"
 
 /*
  * NOTE: For commented version, see:
