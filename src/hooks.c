@@ -113,9 +113,9 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
     if (ret)
         METHOD_ARGS(i_engine, SetViewAngles, &cmd->viewangles);
 
-
     autobackstab(cmd);
     thirdperson();
+    bhop(cmd);
 
     pred_start(cmd);
     {
@@ -125,10 +125,6 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
         autorocketjump(cmd);
     }
     pred_end();
-
-    /* NOTE: The autostrafer (called from bhop) needs to be run after prediction
-     * instead of before or, for some reason, it gets slower. */
-    bhop(cmd);
 
     correct_movement(cmd, old_angles);
     vec_norm(&cmd->viewangles);
