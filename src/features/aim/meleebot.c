@@ -37,6 +37,8 @@ static int get_next_crit_tick(usercmd_t* cmd) {
     return cmd_num;
 }
 
+/* FIXME: This is getting called more than once when attacking, and it's causing
+ * network lag */
 static void melee_crithack(usercmd_t* cmd) {
     if (!settings.crits_melee || !g.localplayer || !g.localweapon || !g.IsAlive)
         return;
