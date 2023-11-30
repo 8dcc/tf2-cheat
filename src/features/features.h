@@ -20,6 +20,9 @@ void draw_aim_fov(void);
 extern bool meleebot_key_down;
 void meleebot(usercmd_t* cmd);
 
+/* src/features/aim/medigun.c */
+void automedigun(usercmd_t* cmd);
+
 /* src/features/movement.c */
 void bhop(usercmd_t* cmd);
 void autorocketjump(usercmd_t* cmd);
@@ -29,7 +32,6 @@ void correct_movement(usercmd_t* cmd, vec3_t old_angles);
 void autobackstab(usercmd_t* cmd);
 void spectator_list(void);
 void thirdperson(void);
-void automedigun(usercmd_t* cmd);
 
 /* src/features/prediction.c */
 void pred_start(usercmd_t* cmd);

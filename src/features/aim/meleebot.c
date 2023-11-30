@@ -1,4 +1,6 @@
 
+#include <limits.h>
+#include <time.h>
 #include "../features.h"
 #include "../../include/sdk.h"
 #include "../../include/math.h"
@@ -7,6 +9,64 @@
 
 /* Set in h_SwapWindow */
 bool meleebot_key_down = false;
+
+/*----------------------------------------------------------------------------*/
+/* Melee crithack */
+
+#define CRIT_TICKS_TO_PRED 60
+
+static int get_next_crit_tick(usercmd_t* cmd) {
+    int cmd_num = cmd->command_number;
+
+    /* While we don't have a crit tick stored, check the next N ticks */
+    for (int i = 0; i < CRIT_TICKS_TO_PRED; i++) {
+        cmd->random_seed = MD5_PseudoRandom(cmd_num) & INT_MAX;
+        SetPredictionRandomSeed(cmd);
+
+        /* Store crit tick for when we are attacking */
+        if (METHOD(g.localweapon, CalcIsAttackCriticalHelper))
+            break;
+
+        cmd_num++;
+    }
+
+    /* Reset seed to the original command_number */
+    cmd->random_seed = MD5_PseudoRandom(cmd->command_number) & INT_MAX;
+    SetPredictionRandomSeed(cmd);
+
+    return cmd_num;
+}
+
+void melee_crithack(usercmd_t* cmd) {
+    if (!settings.crits_melee || !g.localplayer || !g.localweapon || !g.IsAlive)
+        return;
+
+    /* Make sure we are currently using melee */
+    if (METHOD(g.localweapon, GetSlot) != WPN_SLOT_MELEE)
+        return;
+
+    /* Set seed for rand() */
+    static bool seed_changed = false;
+    if (!seed_changed) {
+        srand(time(NULL));
+        seed_changed = true;
+    }
+
+    /* Check against user crit change */
+    if ((rand() % 100) >= settings.crits_chance)
+        return;
+
+    /* Get tick when we are attacking */
+    if (!(cmd->buttons & IN_ATTACK) || !can_shoot())
+        return;
+
+    /* Set the current cmd number to the next crit tick */
+    const int crit_tick = get_next_crit_tick(cmd);
+    cmd->command_number = crit_tick;
+    cmd->random_seed    = MD5_PseudoRandom(crit_tick) & INT_MAX;
+}
+
+/*----------------------------------------------------------------------------*/
 
 static inline bool attack_key(usercmd_t* cmd) {
     /* If keycode is 0, we use mouse1 as key */
@@ -151,6 +211,7 @@ void meleebot(usercmd_t* cmd) {
      * will also check if its in swing range */
     vec3_t best_delta = get_melee_delta(engine_viewangles);
 
+    /* TODO: Same silent changes as aimbot */
     if (!vec_is_zero(best_delta)) {
         /* Only move camera when we deal damage, not when we start attacking */
         if (melee_attacking(cmd)) {
@@ -160,7 +221,7 @@ void meleebot(usercmd_t* cmd) {
             cmd->viewangles.z = engine_viewangles.z + best_delta.z;
 
             if (settings.melee_silent)
-				g.psilent = true;
+                g.psilent = true;
         }
 
         if (settings.melee_on_key)
@@ -173,4 +234,7 @@ void meleebot(usercmd_t* cmd) {
 
     if (!settings.melee_silent)
         METHOD_ARGS(i_engine, SetViewAngles, &cmd->viewangles);
+
+    if (cmd->buttons & IN_ATTACK)
+        melee_crithack(cmd);
 }
