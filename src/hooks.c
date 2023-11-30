@@ -105,9 +105,14 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
 
     bool ret = ORIGINAL(CreateMove, thisptr, flInputSampleTime, cmd);
 
+    /* On dummy calls, return */
+    if (!cmd || cmd->command_number == 0)
+        return ret;
+
     /* If original returned true, update engine viewangles to cmd viewangles */
     if (ret)
         METHOD_ARGS(i_engine, SetViewAngles, &cmd->viewangles);
+
 
     autobackstab(cmd);
     thirdperson();

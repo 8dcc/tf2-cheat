@@ -45,10 +45,6 @@ static void melee_crithack(usercmd_t* cmd) {
     if (METHOD(g.localweapon, GetSlot) != WPN_SLOT_MELEE)
         return;
 
-    /* For some reason, this is 0 sometimes */
-    if (cmd->command_number == 0)
-        return;
-
 #if 0
     /* NOTE: The caller is already checking this, uncomment if moved out of
      * meleebot */
