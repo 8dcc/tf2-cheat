@@ -45,6 +45,19 @@ static void melee_crithack(usercmd_t* cmd) {
     if (METHOD(g.localweapon, GetSlot) != WPN_SLOT_MELEE)
         return;
 
+    /* For some reason, this is 0 sometimes */
+    if (cmd->command_number == 0)
+        return;
+
+#if 0
+    /* NOTE: The caller is already checking this, uncomment if moved out of
+     * meleebot */
+
+    /* Get tick when we are attacking */
+    if (!(cmd->buttons & IN_ATTACK) || !can_shoot())
+        return;
+#endif
+
     /* Set seed for rand() */
     static bool seed_changed = false;
     if (!seed_changed) {
@@ -54,10 +67,6 @@ static void melee_crithack(usercmd_t* cmd) {
 
     /* Check against user crit change */
     if ((rand() % 100) >= settings.crits_chance)
-        return;
-
-    /* Get tick when we are attacking */
-    if (!(cmd->buttons & IN_ATTACK) || !can_shoot())
         return;
 
     /* Set the current cmd number to the next crit tick */
@@ -186,8 +195,10 @@ void meleebot(usercmd_t* cmd) {
         !attack_key(cmd))
         return;
 
+    const bool we_are_attacking = g.localweapon->smackTime != -1.f;
+
     /* We are not starting to attack and we are not mid-attack */
-    if (!can_shoot() && g.localweapon->smackTime == -1.f)
+    if (!can_shoot() && !we_are_attacking)
         return;
 
     /* We are being spectated in 1st person and we want to hide it */
@@ -214,9 +225,16 @@ void meleebot(usercmd_t* cmd) {
         return;
     }
 
-    /* Start to attack */
-    if (settings.melee_on_key)
+    /* If we are not in the middle of an attack, start one */
+    if (!we_are_attacking && settings.melee_on_key) {
         cmd->buttons |= IN_ATTACK;
+
+        /* NOTE: Run the melee crithack here since every attack seems too much.
+         * This can be moved to the CreateMove hook directly (after prediction,
+         * for example), but keep in mind that it will force crits on all melee
+         * weapons like the spy knife, engineer wrench when repairing, etc. */
+        melee_crithack(cmd);
+    }
 
     /* If we are actually going to deal damage in this tick (attack animation is
      * over), look to the target */
@@ -229,11 +247,4 @@ void meleebot(usercmd_t* cmd) {
         if (!settings.melee_silent)
             METHOD_ARGS(i_engine, SetViewAngles, &cmd->viewangles);
     }
-
-    /* NOTE: Run the melee crithack here since every attack seems too much. This
-     * can be moved to the CreateMove hook directly (after prediction, for
-     * example), but keep in mind that it will force crits on all melee weapons
-     * like the spy knife, engineer wrench when repairing, etc. */
-    if (cmd->buttons & IN_ATTACK)
-        melee_crithack(cmd);
 }

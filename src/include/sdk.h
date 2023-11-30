@@ -506,13 +506,13 @@ struct RenderView {
 
 typedef struct {
     PAD(4 * 8);
-    usercmd_t* (*GetUserCmd)(CInput*, int sequence_number);
+    usercmd_t* (*GetUserCmd)(CInput*, int sequence_number); /* 8 */
 } VMT_CInput;
 
 struct CInput {
     VMT_CInput* vmt;
     PAD(0xFC);
-    usercmd_t* m_pCommands;
+    usercmd_t* m_pCommands; /* 0x100 */
 };
 
 typedef struct {
