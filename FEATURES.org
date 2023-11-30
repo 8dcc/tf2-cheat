@@ -48,6 +48,8 @@ The cheat currently has the following features:
     - Legit
     - Rage
   - Thirdperson
+  - Melee crithack
+    - Custom chance percentage
   - Remove sniper scope overlay
   - Spy's auto-backstab
   - Automedigun (automatically heal the best target)
