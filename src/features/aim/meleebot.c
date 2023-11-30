@@ -37,7 +37,7 @@ static int get_next_crit_tick(usercmd_t* cmd) {
     return cmd_num;
 }
 
-void melee_crithack(usercmd_t* cmd) {
+static void melee_crithack(usercmd_t* cmd) {
     if (!settings.crits_melee || !g.localplayer || !g.localweapon || !g.IsAlive)
         return;
 
@@ -95,7 +95,7 @@ static bool in_swing_range(vec3_t start, vec3_t end, Entity* target) {
     return trace.entity == target;
 }
 
-static vec3_t get_melee_delta(vec3_t viewangles) {
+static vec3_t get_melee_angle(void) {
     const float swing_range = METHOD(g.localweapon, GetSwingRange);
     if (swing_range <= 0.f)
         return VEC_ZERO;
@@ -176,11 +176,7 @@ static vec3_t get_melee_delta(vec3_t viewangles) {
             return VEC_ZERO;
     }
 
-    vec3_t delta = vec_sub(enemy_angle, viewangles);
-    vec_norm(&delta);
-    ang_clamp(&delta);
-
-    return delta;
+    return enemy_angle;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -204,37 +200,40 @@ void meleebot(usercmd_t* cmd) {
     if (wpn_slot != WPN_SLOT_MELEE)
         return;
 
-    vec3_t engine_viewangles;
-    METHOD_ARGS(i_engine, GetViewAngles, &engine_viewangles);
-
     /* NOTE: For meleebot we use cosest distance instead of FOV. This function
-     * will also check if its in swing range */
-    vec3_t best_delta = get_melee_delta(engine_viewangles);
+     * will also check if its in swing range, and predict positions after the
+     * swing. */
+    vec3_t target_angle = get_melee_angle();
 
-    /* TODO: Same silent changes as aimbot */
-    if (!vec_is_zero(best_delta)) {
-        /* Only move camera when we deal damage, not when we start attacking */
-        if (melee_attacking(cmd)) {
-            /* No smoothing for meleebot */
-            cmd->viewangles.x = engine_viewangles.x + best_delta.x;
-            cmd->viewangles.y = engine_viewangles.y + best_delta.y;
-            cmd->viewangles.z = engine_viewangles.z + best_delta.z;
+    if (vec_is_zero(target_angle)) {
+        /* We didn't find a valid target, we want to auto-attack on key, and
+         * the keycode is 0 (mouse1): Don't attack */
+        if (settings.melee_on_key && settings.melee_keycode == 0)
+            cmd->buttons &= ~IN_ATTACK;
 
-            if (settings.melee_silent)
-                g.psilent = true;
-        }
-
-        if (settings.melee_on_key)
-            cmd->buttons |= IN_ATTACK;
-    } else if (settings.melee_on_key && settings.melee_keycode == 0) {
-        /* We didn't find a valid target, we want to auto-attack on key, and the
-         * keycode is 0 (mouse1): Release attack */
-        cmd->buttons &= ~IN_ATTACK;
+        return;
     }
 
-    if (!settings.melee_silent)
-        METHOD_ARGS(i_engine, SetViewAngles, &cmd->viewangles);
+    /* Start to attack */
+    if (settings.melee_on_key)
+        cmd->buttons |= IN_ATTACK;
 
+    /* If we are actually going to deal damage in this tick (attack animation is
+     * over), look to the target */
+    if (melee_attacking(cmd)) {
+        /* We have no smoothing for meleebot */
+        cmd->viewangles = target_angle;
+        g.psilent       = true;
+
+        /* If we don't want silent meleebot, change engine viewangles too */
+        if (!settings.melee_silent)
+            METHOD_ARGS(i_engine, SetViewAngles, &cmd->viewangles);
+    }
+
+    /* NOTE: Run the melee crithack here since every attack seems too much. This
+     * can be moved to the CreateMove hook directly (after prediction, for
+     * example), but keep in mind that it will force crits on all melee weapons
+     * like the spy knife, engineer wrench when repairing, etc. */
     if (cmd->buttons & IN_ATTACK)
         melee_crithack(cmd);
 }
