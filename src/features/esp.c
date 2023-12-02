@@ -225,8 +225,10 @@ void esp(void) {
      * we don't render his ESP. */
     int spectated_idx = 0;
     if (!g.IsAlive) {
-        Entity* spectated = METHOD(g.localplayer, GetObserverTarget);
-        if (spectated)
+        const int obs_mode = METHOD(g.localplayer, GetObserverMode);
+        Entity* spectated  = METHOD(g.localplayer, GetObserverTarget);
+        if ((obs_mode == OBS_MODE_IN_EYE || obs_mode == OBS_MODE_CHASE) &&
+            spectated)
             spectated_idx = METHOD(spectated, GetIndex);
     }
 
