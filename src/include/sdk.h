@@ -26,6 +26,8 @@ typedef struct BaseClient BaseClient;
 typedef struct EngineClient EngineClient;
 typedef struct EntityList EntityList;
 typedef struct EngineVGui EngineVGui;
+typedef struct ConVar ConVar;
+typedef struct ICvar ICvar;
 typedef struct MatSurface MatSurface;
 typedef struct IPanel IPanel;
 typedef struct IVModelInfo IVModelInfo;
@@ -261,6 +263,7 @@ typedef struct {
 #include "sdk/studiohdr.h"
 #include "sdk/entity.h"
 #include "sdk/weapon.h"
+#include "sdk/convar.h"
 
 /*----------------------------------------------------------------------------*/
 /* Interfaces */
@@ -322,6 +325,18 @@ typedef struct {
 
 struct EngineVGui {
     VMT_EngineVGui* vmt;
+};
+
+typedef struct {
+    PAD(4 * 12);
+    ConVar* (*FindVar)(ICvar*, const char* name);                     /* 12 */
+    const ConVar* (*FindVar_const)(ICvar*, const char* name);         /* 13 */
+    ConCommand* (*FindCommand)(ICvar*, const char* name);             /* 14 */
+    const ConCommand* (*FindCommand_const)(ICvar*, const char* name); /* 15 */
+} VMT_ICvar;
+
+struct ICvar {
+    VMT_ICvar* vmt;
 };
 
 typedef struct {
