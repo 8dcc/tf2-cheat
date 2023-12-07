@@ -222,8 +222,10 @@ static inline void tab_aim(void) {
     nk_layout_row_dynamic(ctx, 15, 1);
     nk_checkbox_label(ctx, "Silent", &settings.aim_silent);
     nk_checkbox_label(ctx, "On key", &settings.aim_on_key);
-    nk_checkbox_label(ctx, "Ignore visible check",
-                      &settings.aim_ignore_visible);
+    nk_checkbox_label(ctx, "Target invulnerable",
+                      &settings.aim_target_invul);
+    nk_checkbox_label(ctx, "Target non-visible",
+                      &settings.aim_target_invis);
     nk_checkbox_label(ctx, "Draw FOV circle", &settings.aim_draw_fov);
     nk_checkbox_label(ctx, "Disable if spectated", &settings.aim_off_spectated);
 

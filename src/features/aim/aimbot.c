@@ -60,7 +60,7 @@ static vec3_t get_hitbox_pos(Entity* ent, int hitbox_idx) {
 }
 
 static bool is_visible(vec3_t start, vec3_t end, Entity* target) {
-    if (settings.aim_ignore_visible)
+    if (settings.aim_target_invis)
         return true;
 
     /* We initialize with a custom ShouldHitEntity() for ignoring teammates */
@@ -94,6 +94,9 @@ static vec3_t get_closest_fov(vec3_t viewangles) {
         Entity* ent = g.ents[i];
 
         if (!ent || IsTeammate(ent))
+            continue;
+
+        if (!settings.aim_target_invul && IsInvulnerable(ent))
             continue;
 
         int minhitbox = 0, maxhitbox = 0;

@@ -74,7 +74,8 @@ typedef struct {
     int aim_silent;
     int aim_on_key;
     int aim_keycode;
-    int aim_ignore_visible;
+    int aim_target_invis;
+    int aim_target_invul;
     int aim_draw_fov;
     int aim_off_spectated;
 

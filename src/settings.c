@@ -43,7 +43,8 @@ Settings settings = {
     .aim_silent         = false,
     .aim_on_key         = false,
     .aim_keycode        = DEFAULT_AIMBOT_KEY,
-    .aim_ignore_visible = false,
+    .aim_target_invis   = false,
+    .aim_target_invul   = false,
     .aim_draw_fov       = false,
     .aim_off_spectated  = false,
 
@@ -136,7 +137,8 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_silent);
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_on_key);
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_keycode);
-    JSON_SETTINGS_WRITE_INT(json_cfg, aim_ignore_visible);
+    JSON_SETTINGS_WRITE_INT(json_cfg, aim_target_invis);
+    JSON_SETTINGS_WRITE_INT(json_cfg, aim_target_invul);
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_draw_fov);
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_off_spectated);
     JSON_SETTINGS_WRITE_INT(json_cfg, meleebot);
@@ -281,7 +283,8 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_INT(json_cfg, aim_silent);
     JSON_SETTINGS_READ_INT(json_cfg, aim_on_key);
     JSON_SETTINGS_READ_INT(json_cfg, aim_keycode);
-    JSON_SETTINGS_READ_INT(json_cfg, aim_ignore_visible);
+    JSON_SETTINGS_READ_INT(json_cfg, aim_target_invis);
+    JSON_SETTINGS_READ_INT(json_cfg, aim_target_invul);
     JSON_SETTINGS_READ_INT(json_cfg, aim_draw_fov);
     JSON_SETTINGS_READ_INT(json_cfg, aim_off_spectated);
     JSON_SETTINGS_READ_INT(json_cfg, meleebot);
