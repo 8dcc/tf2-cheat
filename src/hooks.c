@@ -56,13 +56,18 @@ bool hooks_restore(void) {
 void h_LevelShutdown(BaseClient* thisptr) {
     ORIGINAL(LevelShutdown, thisptr);
 
-    /* Reset localplayer idx, FrameStageNotify cache and model index cache on
-     * LevelShutdown */
+    /* Clear localplayer idx */
     g.localidx = 0;
+
+    /* Clear FrameStageNotify cache */
     cache_reset();
 
+    /* Clear model index cache */
     for (int i = 0; i < MDLIDX_ARR_SZ; i++)
         g.mdl_idx[i] = -1;
+
+    /* Reset cvars to their default values */
+    cache_reset_cvars();
 }
 
 void h_LevelInitPostEntity(BaseClient* thisptr) {
@@ -73,6 +78,9 @@ void h_LevelInitPostEntity(BaseClient* thisptr) {
 
     /* Get model indexes that we might need in the game (e.g. for entity esp) */
     cache_get_model_idx();
+
+    /* Cache cvars we are going to use */
+    cache_store_cvars();
 }
 
 void h_FrameStageNotify(BaseClient* thisptr, ClientFrameStage_t curStage) {
@@ -113,6 +121,7 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
     if (ret)
         METHOD_ARGS(i_engine, SetViewAngles, &cmd->viewangles);
 
+    nopush();
     autobackstab(cmd);
     thirdperson();
     bhop(cmd);

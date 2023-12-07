@@ -205,6 +205,7 @@ bool globals_init(void) {
 
     /* Initialize global cache */
     cache_reset();
+    cache_reset_cvars();
     cache_update();
     if (g.IsInGame) {
         /* Call stuff that should be run each level change when injecting */
@@ -275,6 +276,7 @@ void fonts_init(void) {
     g.mdl_idx[MDLIDX_##arr_idx] =   \
       METHOD_ARGS(i_modelinfo, GetModelIndex, mdl_str);
 
+/* Will be called once per level change in LevelInitPostEntity */
 void cache_get_model_idx(void) {
     /* Health */
     STORE_MDL(MEDKIT_SMALL, "models/items/medkit_small.mdl");
@@ -302,6 +304,29 @@ void cache_get_model_idx(void) {
     STORE_MDL(AMMOPACK_SMALL_BDAY, "models/items/ammopack_small_bday.mdl");
 }
 
+#define GET_CONVAR_FLT(NAME)                        \
+    static ConVar* NAME = NULL;                     \
+    if (!NAME) {                                    \
+        NAME = METHOD_ARGS(i_cvar, FindVar, #NAME); \
+    }                                               \
+    g.NAME = ConVar_GetFloat(NAME);
+
+void cache_store_cvars(void) {
+    /* ConVar pointers, used to get the values */
+    GET_CONVAR_FLT(sv_airaccelerate);
+    GET_CONVAR_FLT(sv_maxspeed);
+    GET_CONVAR_FLT(cl_forwardspeed);
+    GET_CONVAR_FLT(cl_sidespeed);
+}
+
+void cache_reset_cvars(void) {
+    g.sv_airaccelerate = 10.0f;
+    g.sv_maxspeed      = 320.0f;
+    g.cl_forwardspeed  = 450.0f;
+    g.cl_sidespeed     = 450.0f;
+}
+
+/* Will be called each frame in FRAME_NET_UPDATE_START */
 void cache_reset(void) {
     g.IsInGame    = false;
     g.IsConnected = false;
@@ -315,6 +340,7 @@ void cache_reset(void) {
         g.ents[i] = NULL;
 }
 
+/* Will be called each frame in FRAME_NET_UPDATE_END */
 void cache_update(void) {
     g.IsInGame    = METHOD(i_engine, IsInGame);
     g.IsConnected = METHOD(i_engine, IsConnected);

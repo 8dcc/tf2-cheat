@@ -151,6 +151,10 @@ typedef struct {
     /* Index updated in LevelInitPostEntity */
     int localidx;
     int mdl_idx[MDLIDX_ARR_SZ];
+    float sv_airaccelerate;
+    float sv_maxspeed;
+    float cl_forwardspeed;
+    float cl_sidespeed;
 
     /* Updated in FrameStageNotify(FRAME_NET_UPDATE_END) */
     bool IsAlive;
@@ -222,6 +226,8 @@ bool resore_vtables(void);
 void fonts_init(void);
 
 void cache_get_model_idx(void);
+void cache_store_cvars(void);
+void cache_reset_cvars(void);
 void cache_reset(void);
 void cache_update(void);
 

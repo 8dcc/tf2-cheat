@@ -18,12 +18,6 @@ static void autostrafe_legit(usercmd_t* cmd) {
 }
 
 static void autostrafe_rage(usercmd_t* cmd) {
-    /* TODO: Get at runtime */
-    static const float sv_airaccelerate = 10.0f;
-    static const float sv_maxspeed      = 320.0f;
-    static const float cl_forwardspeed  = 450.0f;
-    static const float cl_sidespeed     = 450.0f;
-
     /* 2 consecutive ticks on ground, don't autostrafe */
     if (was_on_ground && (g.localplayer->flags & FL_ONGROUND) != 0)
         return;
@@ -35,7 +29,7 @@ static void autostrafe_rage(usercmd_t* cmd) {
     if (speed < 30)
         return;
 
-    float term = sv_airaccelerate / sv_maxspeed * 100.0f / speed;
+    float term = g.sv_airaccelerate / g.sv_maxspeed * 100.0f / speed;
     if (term < -1 || term > 1)
         return;
 
@@ -53,8 +47,8 @@ static void autostrafe_rage(usercmd_t* cmd) {
 
     float movedir = delta < 0 ? vel_dir + best_delta : vel_dir - best_delta;
 
-    cmd->forwardmove = cosf(movedir) * cl_forwardspeed;
-    cmd->sidemove    = -sinf(movedir) * cl_sidespeed;
+    cmd->forwardmove = cosf(movedir) * g.cl_forwardspeed;
+    cmd->sidemove    = -sinf(movedir) * g.cl_sidespeed;
 }
 
 void bhop(usercmd_t* cmd) {
