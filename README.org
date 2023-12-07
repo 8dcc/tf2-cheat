@@ -15,12 +15,13 @@ We need the 32 bit SDL2 and GLEW libraries for linking the final shared object.
 
 Arch-based distros:
 #+begin_src console
+# Enable the [multilib] repository in /etc/pacman.conf, then pacman should pull the 32-bit gcc libraries. (needs further testing)
 $ sudo pacman -S lib32-sdl lib32-glew
 #+end_src
 
 Debian-based distros:
 #+begin_src console
-$ sudo apt install libglew-dev:i386 libsdl2-dev:i386
+$ sudo apt install libglew-dev:i386 libsdl2-dev:i386 gcc-multilib
 #+end_src
 
 The cheat uses the [[https://github.com/slavfox/Cozette][Cozette Vector]] font for rendering using =ISurface=. You can
