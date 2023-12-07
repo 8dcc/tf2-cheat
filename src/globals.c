@@ -16,11 +16,11 @@
         return false;                                 \
     }
 
-#define GET_INTERFACE(TYPE, VAR, HANDLER, STR) \
-    VAR = (TYPE)get_interface(HANDLER, STR);   \
-    if (!VAR || !VAR->vmt) {                   \
-        ERR("Can't load " #VAR);               \
-        return false;                          \
+#define GET_INTERFACE(HANDLER, VAR, STR) \
+    VAR = get_interface(HANDLER, STR);   \
+    if (!VAR || !VAR->vmt) {             \
+        ERR("Can't load " #VAR);         \
+        return false;                    \
     }
 
 #define GET_SIGNATURE(VAR, MODULE, SIG)            \
@@ -154,21 +154,19 @@ bool globals_init(void) {
     PollEventPtr  = (PollEvent_t*)GET_OFFSET(h_sdl2, POLLEVENT_OFFSET);
 
     /* Interfaces */
-    GET_INTERFACE(BaseClient*, i_baseclient, h_client, "VClient017");
-    GET_INTERFACE(EngineClient*, i_engine, h_engine, "VEngineClient014");
-    GET_INTERFACE(EntityList*, i_entitylist, h_client, "VClientEntityList003");
-    GET_INTERFACE(EngineVGui*, i_enginevgui, h_engine, "VEngineVGui002");
-    GET_INTERFACE(MatSurface*, i_surface, h_matsurface, "VGUI_Surface030");
-    GET_INTERFACE(IPanel*, i_panel, h_vgui, "VGUI_Panel009");
-    GET_INTERFACE(IVModelInfo*, i_modelinfo, h_engine, "VModelInfoClient006");
-    GET_INTERFACE(RenderView*, i_renderview, h_engine, "VEngineRenderView014");
-    GET_INTERFACE(EngineTrace*, i_enginetrace, h_engine,
-                  "EngineTraceClient003");
-    GET_INTERFACE(MaterialSystem*, i_materialsystem, h_materialsystem,
-                  "VMaterialSystem081");
-    GET_INTERFACE(ModelRender*, i_modelrender, h_engine, "VEngineModel016");
-    GET_INTERFACE(GameMovement*, i_gamemovement, h_client, "GameMovement001");
-    GET_INTERFACE(IPrediction*, i_prediction, h_client, "VClientPrediction001");
+    GET_INTERFACE(h_client, i_baseclient, "VClient017");
+    GET_INTERFACE(h_engine, i_engine, "VEngineClient014");
+    GET_INTERFACE(h_client, i_entitylist, "VClientEntityList003");
+    GET_INTERFACE(h_engine, i_enginevgui, "VEngineVGui002");
+    GET_INTERFACE(h_matsurface, i_surface, "VGUI_Surface030");
+    GET_INTERFACE(h_vgui, i_panel, "VGUI_Panel009");
+    GET_INTERFACE(h_engine, i_modelinfo, "VModelInfoClient006");
+    GET_INTERFACE(h_engine, i_renderview, "VEngineRenderView014");
+    GET_INTERFACE(h_engine, i_enginetrace, "EngineTraceClient003");
+    GET_INTERFACE(h_materialsystem, i_materialsystem, "VMaterialSystem081");
+    GET_INTERFACE(h_engine, i_modelrender, "VEngineModel016");
+    GET_INTERFACE(h_client, i_gamemovement, "GameMovement001");
+    GET_INTERFACE(h_client, i_prediction, "VClientPrediction001");
 
     /* Other interfaces */
     i_clientmode = get_clientmode();
