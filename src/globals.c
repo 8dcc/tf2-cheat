@@ -56,6 +56,7 @@ DECL_INTF(BaseClient, baseclient);
 DECL_INTF(EngineClient, engine);
 DECL_INTF(EntityList, entitylist);
 DECL_INTF(EngineVGui, enginevgui);
+DECL_INTF(ICvar, cvar);
 DECL_INTF(MatSurface, surface);
 DECL_INTF(IPanel, panel);
 DECL_INTF(IVModelInfo, modelinfo);
@@ -147,6 +148,7 @@ bool globals_init(void) {
     GET_HANDLER(h_matsurface, MATSURFACE_SO);
     GET_HANDLER(h_vgui, VGUI_SO);
     GET_HANDLER(h_materialsystem, MATERIALSYSTEM_SO);
+    GET_HANDLER(h_vstdlib, VSTDLIB_SO);
     GET_HANDLER(h_sdl2, SDL_SO);
 
     /* SDL2 */
@@ -158,6 +160,7 @@ bool globals_init(void) {
     GET_INTERFACE(h_engine, i_engine, "VEngineClient014");
     GET_INTERFACE(h_client, i_entitylist, "VClientEntityList003");
     GET_INTERFACE(h_engine, i_enginevgui, "VEngineVGui002");
+    GET_INTERFACE(h_vstdlib, i_cvar, "VEngineCvar004");
     GET_INTERFACE(h_matsurface, i_surface, "VGUI_Surface030");
     GET_INTERFACE(h_vgui, i_panel, "VGUI_Panel009");
     GET_INTERFACE(h_engine, i_modelinfo, "VModelInfoClient006");

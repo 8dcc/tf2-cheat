@@ -14,6 +14,7 @@
 #define MATSURFACE_SO     "./bin/vguimatsurface.so"
 #define VGUI_SO           "./bin/vgui2.so"
 #define MATERIALSYSTEM_SO "./bin/materialsystem.so"
+#define VSTDLIB_SO        "./bin/libvstdlib.so"
 #define SDL_SO            "./bin/libSDL2-2.0.so.0"
 
 /*----------------------------------------------------------------------------*/
@@ -197,6 +198,7 @@ DECL_INTF_EXTERN(BaseClient, baseclient);
 DECL_INTF_EXTERN(EngineClient, engine);
 DECL_INTF_EXTERN(EntityList, entitylist);
 DECL_INTF_EXTERN(EngineVGui, enginevgui);
+DECL_INTF_EXTERN(ICvar, cvar);
 DECL_INTF_EXTERN(MatSurface, surface);
 DECL_INTF_EXTERN(IPanel, panel);
 DECL_INTF_EXTERN(IVModelInfo, modelinfo);
