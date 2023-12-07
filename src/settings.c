@@ -58,6 +58,7 @@ Settings settings = {
     .bhop                    = false,
     .autostrafe              = SETT_OFF,
     .thirdperson             = false,
+    .nopush                  = false,
     .remove_scope            = false,
     .crits_melee             = false,
     .crits_chance            = 100,
@@ -149,6 +150,7 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_INT(json_cfg, bhop);
     JSON_SETTINGS_WRITE_INT(json_cfg, autostrafe);
     JSON_SETTINGS_WRITE_INT(json_cfg, thirdperson);
+    JSON_SETTINGS_WRITE_INT(json_cfg, nopush);
     JSON_SETTINGS_WRITE_INT(json_cfg, remove_scope);
     JSON_SETTINGS_WRITE_INT(json_cfg, crits_melee);
     JSON_SETTINGS_WRITE_INT(json_cfg, crits_chance);
@@ -293,6 +295,7 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_INT(json_cfg, bhop);
     JSON_SETTINGS_READ_INT(json_cfg, autostrafe);
     JSON_SETTINGS_READ_INT(json_cfg, thirdperson);
+    JSON_SETTINGS_READ_INT(json_cfg, nopush);
     JSON_SETTINGS_READ_INT(json_cfg, remove_scope);
     JSON_SETTINGS_READ_INT(json_cfg, crits_melee);
     JSON_SETTINGS_READ_INT(json_cfg, crits_chance);

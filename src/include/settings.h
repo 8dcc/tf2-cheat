@@ -89,6 +89,7 @@ typedef struct {
     int bhop;
     int autostrafe;
     int thirdperson;
+    int nopush;
     int remove_scope;
     int crits_melee;
     int crits_chance;
