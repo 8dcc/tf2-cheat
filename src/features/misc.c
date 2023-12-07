@@ -179,7 +179,7 @@ void spectator_list(void) {
 /*----------------------------------------------------------------------------*/
 
 void thirdperson(void) {
-    static bool was_thirdperson = false;
+    static bool was_thirdperson = true;
 
     if (!g.localplayer)
         return;
@@ -197,4 +197,16 @@ void thirdperson(void) {
 
     g.localplayer->nForceTauntCam = true;
     was_thirdperson               = true;
+}
+
+void nopush(void) {
+    static ConVar* pushaway = NULL;
+
+    if (!pushaway) {
+        pushaway = METHOD_ARGS(i_cvar, FindVar, "tf_avoidteammates_pushaway");
+        return;
+    }
+
+    if (settings.nopush == ConVar_GetBool(pushaway))
+        ConVar_SetInt(pushaway, !settings.nopush);
 }

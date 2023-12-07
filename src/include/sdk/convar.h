@@ -56,6 +56,10 @@ static inline int ConVar_GetInt(ConVar* thisptr) {
     return thisptr->m_pParent->m_nValue;
 }
 
+static inline bool ConVar_GetBool(ConVar* thisptr) {
+    return thisptr->m_pParent->m_nValue > 0;
+}
+
 static inline const char* ConVar_GetString(ConVar* thisptr) {
     return (thisptr->m_pParent->m_pszString != NULL)
              ? thisptr->m_pParent->m_pszString
