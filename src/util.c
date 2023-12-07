@@ -44,10 +44,10 @@ size_t vmt_size(void* vmt) {
 }
 
 /* "E0" -> 224 */
-int hex_to_num(const char* hex) {
+uint8_t hex_to_byte(const char* hex) {
     int ret = 0;
 
-    /* Skip preceding spaces, if any */
+    /* Skip leading spaces, if any */
     while (*hex == ' ')
         hex++;
 
@@ -72,10 +72,11 @@ int hex_to_num(const char* hex) {
         ret |= n & 0xF;
     }
 
-    return ret;
+    return ret & 0xFF;
 }
 
-void* find_sig(const char* module, const byte* pattern) {
+/* See: https://8dcc.github.io/programming/signature-scanning.html */
+void* find_sig(const char* module, const char* pattern) {
     struct our_link_map {
         /* Base from link.h */
         ElfW(Addr) l_addr;
@@ -99,8 +100,8 @@ void* find_sig(const char* module, const byte* pattern) {
         return NULL;
     }
 
-    byte* start = (byte*)link->l_addr;
-    byte* end   = start + link->phdr[0].p_memsz;
+    uint8_t* start = (uint8_t*)link->l_addr;
+    uint8_t* end   = start + link->phdr[0].p_memsz;
 
     dlclose(link);
 
@@ -108,45 +109,50 @@ void* find_sig(const char* module, const byte* pattern) {
     while (*pattern == ' ')
         pattern++;
 
-    const byte* mem_ptr = start;
-    int pat_pos         = 0;
+    /* Current position in memory and current position in pattern */
+    uint8_t* mem_ptr    = start;
+    const char* pat_ptr = pattern;
 
-    while (mem_ptr < end && pattern[pat_pos] != '\0') {
+    /* Iterate until we reach the end of the memory or the end of the pattern */
+    while (mem_ptr < end && *pat_ptr != '\0') {
         /* Wildcard, always match */
-        if (pattern[pat_pos] == '?') {
+        if (*pat_ptr == '?') {
             mem_ptr++;
-            pat_pos++;
-            goto skip_following_spaces;
+            pat_ptr++;
+
+            /* Remove trailing spaces after '?'
+             * NOTE: I reused this code, but you could use `goto` */
+            while (*pat_ptr == ' ')
+                pat_ptr++;
+
+            continue;
         }
 
         /* "E0" -> 224 */
-        byte current_byte = (byte)hex_to_num(&pattern[pat_pos]);
+        uint8_t cur_byte = hex_to_byte(pat_ptr);
 
-        if (*mem_ptr == current_byte) {
-            /* Found exact byte match in sequence */
+        if (*mem_ptr == cur_byte) {
+            /* Found exact byte match in sequence, go to next byte in memory */
             mem_ptr++;
 
-            /* Go to next byte separator in pattern: space */
-            while (pattern[pat_pos] != ' ' && pattern[pat_pos] != '\0')
-                pat_pos++;
+            /* Go to next byte separator in pattern (space) */
+            while (*pat_ptr != ' ' && *pat_ptr != '\0')
+                pat_ptr++;
         } else {
             /* Byte didn't match, check pattern from the begining on the next
              * position in memory */
             start++;
             mem_ptr = start;
-            pat_pos = 0;
+            pat_ptr = pattern;
         }
 
-    skip_following_spaces:
-        while (pattern[pat_pos] == ' ' && pattern[pat_pos] != '\0')
-            pat_pos++;
+        /* Skip trailing spaces */
+        while (*pat_ptr == ' ')
+            pat_ptr++;
     }
 
-    /* We reached end of pattern, we found it */
-    if (pattern[pat_pos] == '\0')
-        return start;
-
-    return NULL;
+    /* If we reached end of pattern, return the match. Otherwise, NULL */
+    return (*pat_ptr == '\0') ? start : NULL;
 }
 
 /*----------------------------------------------------------------------------*/
