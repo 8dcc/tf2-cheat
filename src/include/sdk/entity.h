@@ -128,8 +128,8 @@ struct Entity {
     int model_idx; /* 0x80 */
     PAD(0x8C);
     vec3_t velocity; /* 0x110 */
-	PAD(0x7C);
-	uint8_t m_nWaterLevel; /* 0x198 */
+    PAD(0x7C);
+    uint8_t m_nWaterLevel; /* 0x198, gcc adds 3 bytes of padding */
     PAD(0x1B8);
     vec3_t m_vecOrigin; /* 0x354 */
     PAD(0xC);
@@ -144,7 +144,15 @@ struct Entity {
     int nTickBase; /* 0x1234 */
     PAD(0x3F8);
     int player_class; /* 0x1630 (ETFClass) */
-    PAD(0x7D0);
+    PAD(0x36C);
+    int m_nPlayerCond;    /* 0x19A0 */
+    int m_nPlayerCondEx;  /* 0x19A4 */
+    int m_nPlayerCondEx2; /* 0x19A8 */
+    int m_nPlayerCondEx3; /* 0x19AC */
+    int m_nPlayerCondEx4; /* 0x19B0 */
+    PAD(0x18);
+    int condition_bits; /* 0x19CC */
+    PAD(0x434);
     int nForceTauntCam; /* 0x1E04 */
 };
 
@@ -213,6 +221,42 @@ static inline vec3_t GetCenter(Entity* ent) {
     ret.z += (mins.z + maxs.z) / 2.0f;
 
     return ret;
+}
+
+static inline bool InCond(Entity* ent, enum ETFCond cond) {
+    switch (cond / 32) {
+        case 0: {
+            const int bit = (1 << cond);
+            return ((ent->m_nPlayerCond & bit) == bit ||
+                    (ent->condition_bits & bit) == bit);
+        }
+        case 1: {
+            const int bit = 1 << (cond - 32);
+            return ((ent->m_nPlayerCondEx & bit) == bit);
+        }
+        case 2: {
+            const int bit = 1 << (cond - 64);
+            return ((ent->m_nPlayerCondEx2 & bit) == bit);
+        }
+        case 3: {
+            const int bit = 1 << (cond - 96);
+            return ((ent->m_nPlayerCondEx3 & bit) == bit);
+        }
+        case 4: {
+            const int bit = 1 << (cond - 128);
+            return ((ent->m_nPlayerCondEx4 & bit) == bit);
+        }
+        default:
+            return false;
+    }
+}
+
+static inline bool IsInvulnerable(Entity* ent) {
+    return InCond(ent, TF_COND_INVULNERABLE) ||
+           InCond(ent, TF_COND_INVULNERABLE_CARD_EFFECT) ||
+           InCond(ent, TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGE) ||
+           InCond(ent, TF_COND_INVULNERABLE_USER_BUFF) ||
+           InCond(ent, TF_COND_PHASE);
 }
 
 #endif /* SDK_ENTITY_H_ */
