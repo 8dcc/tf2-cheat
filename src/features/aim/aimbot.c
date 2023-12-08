@@ -179,9 +179,9 @@ void aimbot(usercmd_t* cmd) {
             return;
         }
 
-        /* If we can't headshot and setting is enabled.
+        /* If we can't headshot and one of the settings is enabled.
          * NOTE: Needs to be checked after autoscope */
-        if (settings.aim_off_unscoped &&
+        if ((settings.aim_off_unscoped || settings.aim_autoscope) &&
             (!we_are_scoped || !SniperCanHeadshot(g.localweapon)))
             return;
     }
