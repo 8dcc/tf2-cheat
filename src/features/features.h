@@ -33,6 +33,7 @@ void autobackstab(usercmd_t* cmd);
 void spectator_list(void);
 void thirdperson(void);
 void nopush(void);
+void antiafk(usercmd_t* cmd);
 
 /* src/features/prediction.c */
 void pred_start(usercmd_t* cmd);

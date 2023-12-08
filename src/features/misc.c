@@ -199,6 +199,8 @@ void thirdperson(void) {
     was_thirdperson               = true;
 }
 
+/*----------------------------------------------------------------------------*/
+
 void nopush(void) {
     static ConVar* pushaway = NULL;
 
@@ -209,4 +211,36 @@ void nopush(void) {
 
     if (settings.nopush == ConVar_GetBool(pushaway))
         ConVar_SetInt(pushaway, !settings.nopush);
+}
+
+/*----------------------------------------------------------------------------*/
+
+#define AFK_TIME 50.f /* seconds */
+
+void antiafk(usercmd_t* cmd) {
+    if (!settings.antiafk || !g.localplayer || !g.IsInGame)
+        return;
+
+    static float last_afk_time = 0;
+
+    /* We are not AFK */
+    if (cmd->buttons != 0) {
+        last_afk_time = 0.f;
+        return;
+    }
+
+    /* This is the first tick where buttons are zero, store time */
+    if (last_afk_time == 0.f) {
+        last_afk_time = c_globalvars->curtime;
+        return;
+    }
+
+    static bool went_forward = false;
+
+    /* If buttons have been zero for N seconds, move */
+    if (c_globalvars->curtime - last_afk_time > AFK_TIME) {
+        cmd->buttons |= (went_forward) ? IN_BACK : IN_FORWARD;
+        went_forward = !went_forward;
+        last_afk_time = 0.f;
+    }
 }

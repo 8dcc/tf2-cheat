@@ -135,6 +135,8 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
     }
     pred_end();
 
+    antiafk(cmd);
+
     correct_movement(cmd, old_angles);
     vec_norm(&cmd->viewangles);
     ang_clamp(&cmd->viewangles);
