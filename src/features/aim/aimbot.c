@@ -137,17 +137,27 @@ void aimbot(usercmd_t* cmd) {
         !attack_key(cmd))
         return;
 
-    /* We are being spectated in 1st person and we want to hide it */
-    if (settings.aim_off_spectated && g.spectated_1st) {
-        cmd->buttons |= IN_ATTACK;
-        return;
-    }
-
     /* For now just check if the current weapon is in a valid slot.
      * TODO: Add projectile aimbot depending on weapon->GetDamageType */
     const int wpn_slot = METHOD(g.localweapon, GetSlot);
     if (wpn_slot != WPN_SLOT_PRIMARY && wpn_slot != WPN_SLOT_SECONDARY)
         return;
+
+    /* We are not scoped, and setting is enabled */
+    const int wpn_id = METHOD(g.localweapon, GetWeaponId);
+    if (settings.aim_off_unscoped && wpn_id == TF_WEAPON_SNIPERRIFLE &&
+        !InCond(g.localplayer, TF_COND_ZOOMED)) {
+        /* See comment bellow when target_angle is zero */
+        if (settings.aim_on_key && settings.aim_keycode == 0)
+            cmd->buttons &= ~IN_ATTACK;
+        return;
+    }
+
+    /* We are being spectated in 1st person and we want to hide it */
+    if (settings.aim_off_spectated && g.spectated_1st) {
+        cmd->buttons |= IN_ATTACK;
+        return;
+    }
 
     /* Calculate delta with the engine viewangles, not with the cmd ones */
     vec3_t engine_viewangles;
@@ -178,7 +188,6 @@ void aimbot(usercmd_t* cmd) {
         cmd->viewangles = target_angle;
 
         /* If the weapon supports pSilent (e.g. projectiles), enable */
-        const int wpn_id = METHOD(g.localweapon, GetWeaponId);
         if (wpn_id == TF_WEAPON_ROCKETLAUNCHER ||
             wpn_id == TF_WEAPON_GRENADELAUNCHER ||
             wpn_id == TF_WEAPON_PIPEBOMBLAUNCHER)
