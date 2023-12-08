@@ -146,10 +146,13 @@ void aimbot(usercmd_t* cmd) {
     /* We are not scoped, and setting is enabled */
     const int wpn_id = METHOD(g.localweapon, GetWeaponId);
     if (settings.aim_off_unscoped && wpn_id == TF_WEAPON_SNIPERRIFLE &&
-        !InCond(g.localplayer, TF_COND_ZOOMED)) {
+        (!InCond(g.localplayer, TF_COND_ZOOMED) ||
+         !SniperCanHeadshot(g.localweapon))) {
         /* See comment bellow when target_angle is zero */
         if (settings.aim_on_key && settings.aim_keycode == 0)
             cmd->buttons &= ~IN_ATTACK;
+
+        /* TODO: If autoscope and not in zoom cond, IN_ATTACK2. Return anyway */
         return;
     }
 
