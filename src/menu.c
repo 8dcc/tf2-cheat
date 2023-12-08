@@ -226,7 +226,8 @@ static inline void tab_aim(void) {
                       &settings.aim_target_invul);
     nk_checkbox_label(ctx, "Target non-visible",
                       &settings.aim_target_invis);
-    nk_checkbox_label(ctx, "Only when scoped", &settings.aim_off_unscoped);
+    nk_checkbox_label(ctx, "Auto-scope", &settings.aim_autoscope);
+    nk_checkbox_label(ctx, "Disable if unscoped", &settings.aim_off_unscoped);
     nk_checkbox_label(ctx, "Disable if spectated", &settings.aim_off_spectated);
     nk_checkbox_label(ctx, "Draw FOV circle", &settings.aim_draw_fov);
 

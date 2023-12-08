@@ -76,8 +76,9 @@ typedef struct {
     int aim_keycode;
     int aim_target_invis;
     int aim_target_invul;
-    int aim_off_spectated;
+    int aim_autoscope;
     int aim_off_unscoped;
+    int aim_off_spectated;
     int aim_draw_fov;
 
     int meleebot;

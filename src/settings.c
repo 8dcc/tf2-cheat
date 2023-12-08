@@ -45,6 +45,7 @@ Settings settings = {
     .aim_keycode        = DEFAULT_AIMBOT_KEY,
     .aim_target_invis   = false,
     .aim_target_invul   = false,
+    .aim_autoscope      = false,
     .aim_off_unscoped   = false,
     .aim_off_spectated  = false,
     .aim_draw_fov       = false,
@@ -140,6 +141,7 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_keycode);
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_target_invis);
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_target_invul);
+    JSON_SETTINGS_WRITE_INT(json_cfg, aim_autoscope);
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_off_unscoped);
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_off_spectated);
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_draw_fov);
@@ -287,6 +289,7 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_INT(json_cfg, aim_keycode);
     JSON_SETTINGS_READ_INT(json_cfg, aim_target_invis);
     JSON_SETTINGS_READ_INT(json_cfg, aim_target_invul);
+    JSON_SETTINGS_READ_INT(json_cfg, aim_autoscope);
     JSON_SETTINGS_READ_INT(json_cfg, aim_off_unscoped);
     JSON_SETTINGS_READ_INT(json_cfg, aim_off_spectated);
     JSON_SETTINGS_READ_INT(json_cfg, aim_draw_fov);
