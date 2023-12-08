@@ -143,18 +143,10 @@ void aimbot(usercmd_t* cmd) {
     if (wpn_slot != WPN_SLOT_PRIMARY && wpn_slot != WPN_SLOT_SECONDARY)
         return;
 
-    /* We are not scoped, and setting is enabled */
-    const int wpn_id = METHOD(g.localweapon, GetWeaponId);
-    if (settings.aim_off_unscoped && wpn_id == TF_WEAPON_SNIPERRIFLE &&
-        (!InCond(g.localplayer, TF_COND_ZOOMED) ||
-         !SniperCanHeadshot(g.localweapon))) {
-        /* See comment bellow when target_angle is zero */
-        if (settings.aim_on_key && settings.aim_keycode == 0)
-            cmd->buttons &= ~IN_ATTACK;
-
-        /* TODO: If autoscope and not in zoom cond, IN_ATTACK2. Return anyway */
-        return;
-    }
+    /* If we have "Aim on key" and the key is 0 (Mouse1), release the attack
+     * button. We will re-enable it later if needed */
+    if (settings.aim_on_key && settings.aim_keycode == 0)
+        cmd->buttons &= ~IN_ATTACK;
 
     /* We are being spectated in 1st person and we want to hide it */
     if (settings.aim_off_spectated && g.spectated_1st) {
@@ -169,16 +161,30 @@ void aimbot(usercmd_t* cmd) {
     /* TODO: Add setting for lowest health instead of closest to crosshair */
     vec3_t target_angle = get_closest_fov(engine_viewangles);
 
-    if (vec_is_zero(target_angle)) {
-        /* We didn't find a valid target, we want to auto-shoot on key, and
-         * the keycode is 0 (mouse1): Don't shoot */
-        if (settings.aim_on_key && settings.aim_keycode == 0)
-            cmd->buttons &= ~IN_ATTACK;
-
+    if (vec_is_zero(target_angle))
         return;
-    }
 
+    /* Get constants once here */
+    const int wpn_id        = METHOD(g.localweapon, GetWeaponId);
     const bool we_can_shoot = can_shoot();
+
+    /* If we are using a sniper, check scope stuff */
+    if (wpn_id == TF_WEAPON_SNIPERRIFLE) {
+        const bool we_are_scoped = InCond(g.localplayer, TF_COND_ZOOMED);
+
+        /* If we are not scoped and we want auto-scope.
+         * NOTE: Needs to be checked once we have a valid target */
+        if (settings.aim_autoscope && !we_are_scoped) {
+            cmd->buttons |= IN_ATTACK2;
+            return;
+        }
+
+        /* If we can't headshot and setting is enabled.
+         * NOTE: Needs to be checked after autoscope */
+        if (settings.aim_off_unscoped &&
+            (!we_are_scoped || !SniperCanHeadshot(g.localweapon)))
+            return;
+    }
 
     if (settings.aim_silent) {
         /* With silent aim, we only want to look at the target when we can
