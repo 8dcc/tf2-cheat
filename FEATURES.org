@@ -34,9 +34,12 @@ The cheat currently has the following features:
   - Custom hitboxes
   - Silent
   - Auto-shoot on key (=PgUp=)*
-  - Ignore target visibility
-  - Draw FOV circle
+  - Target invulnerable
+  - Target non-visible (behind walls)
+  - Auto-scope
+  - Disable if unscoped
   - Disable if spectated in 1st person
+  - Draw FOV circle
 - Meleebot
   - pSilent
   - Swing prediction
@@ -48,9 +51,10 @@ The cheat currently has the following features:
     - Legit
     - Rage
   - Thirdperson
+  - NoPush (no teammate collision)
+  - Remove sniper scope overlay
   - Melee crithack
     - Custom chance percentage
-  - Remove sniper scope overlay
   - Spy's auto-backstab
   - Automedigun (automatically heal the best target)
     - pSilent
