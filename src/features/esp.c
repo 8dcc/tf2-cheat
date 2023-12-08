@@ -374,6 +374,12 @@ void esp(void) {
                     }
                 }
 
+                /* NOTE: We could add other information to the ESP depending on
+                 * InCond(ent, TF_COND_*), for example:
+                 *   - ZOOMED
+                 *   - DISGUISED
+                 *   - IsInvulnerable */
+
                 /* end: case CClass_CTFPlayer */
                 break;
             }
@@ -398,9 +404,12 @@ void esp(void) {
 
             case CClass_CObjectTeleporter: {
                 if (settings.building_esp_type == SETT_BTYPE_ALL ||
-                    settings.building_esp_type == SETT_BTYPE_TELEPORTER)
-                    building_esp(ent, "Teleporter", build_friend_col,
-                                 build_enemy_col);
+                    settings.building_esp_type == SETT_BTYPE_TELEPORTER) {
+                    const char* name = (ent->m_iObjectMode == 0)
+                                         ? "Teleporter entry"
+                                         : "Teleporter exit";
+                    building_esp(ent, name, build_friend_col, build_enemy_col);
+                }
 
                 break;
             }
