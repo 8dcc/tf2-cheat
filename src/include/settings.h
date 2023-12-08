@@ -93,6 +93,7 @@ typedef struct {
     int autostrafe;
     int thirdperson;
     int nopush;
+    int antiafk;
     int remove_scope;
     int crits_melee;
     int crits_chance;
