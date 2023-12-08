@@ -138,7 +138,9 @@ struct Entity {
     float flNextAttack; /* 0xC54 */
     PAD(0x214);
     vec3_t vecPunchAngle; /* 0xE6C */
-    PAD(0x2EC);
+    PAD(0xD0);
+    int m_iObjectMode; /* 0xF48 */
+    PAD(0x218);
     usercmd_t* m_pCurrentCommand; /* 0x1164, see CPrediction::StartCommand() */
     PAD(0xCC);
     int nTickBase; /* 0x1234 */
@@ -158,6 +160,7 @@ struct Entity {
 
 /*----------------------------------------------------------------------------*/
 
+/* Use macros if we use g.localplayer, we don't want to include globals.h */
 #define IsTeammate(ENT) \
     (METHOD(g.localplayer, GetTeamNumber) == METHOD(ENT, GetTeamNumber))
 
