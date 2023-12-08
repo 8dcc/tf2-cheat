@@ -17,7 +17,9 @@ typedef struct {
     int (*GetDamageType)(Weapon*); /* 450 */
     PAD(4 * 14);
     bool (*CalcIsAttackCriticalHelper)(Weapon*); /* 465 */
-    PAD(4 * 59);
+    PAD(4 * 28);
+    bool (*CanFireCriticalShot)(Weapon*, bool bIsHeadshot); /* 494 */
+    PAD(4 * 30);
     int (*GetSwingRange)(Weapon*); /* 525 */
 } VMT_Weapon;
 
@@ -48,6 +50,10 @@ static inline CBaseHandle GetMedigunHealingHandler(Weapon* w) {
 	/* CWeaponMedigun->m_hHealingTarget */
 	const size_t offset = 0xC28;
 	return *(CBaseHandle*)((uint32_t)w + offset) ;
+}
+
+static inline bool SniperCanHeadshot(Weapon* w) {
+    return METHOD_ARGS(w, CanFireCriticalShot, true);
 }
 
 #endif /* SDK_WEAPON_H_ */
