@@ -64,14 +64,15 @@ void bhop(usercmd_t* cmd) {
         g.localplayer->m_nWaterLevel > WL_Feet)
         return;
 
-    const bool is_jumping = (cmd->buttons & IN_JUMP) != 0;
+    /* Added last_is_jumping check to fix scout's double jump*/
+    static bool last_is_jumping = false;
+    const bool is_jumping       = (cmd->buttons & IN_JUMP) != 0;
+    const bool is_on_ground     = (g.localplayer->flags & FL_ONGROUND) != 0;
 
-    /* TODO: Because we disable jumping mid-air, this blocks scout's double
-     * jump. I tried SEOwned's method, but it only works ~1/5 of the time */
-    if (!(g.localplayer->flags & FL_ONGROUND))
+    if (last_is_jumping && !is_on_ground)
         cmd->buttons &= ~IN_JUMP;
 
-    if (is_jumping) {
+    if (!is_on_ground) {
         switch (settings.autostrafe) {
             default:
             case SETT_OFF:
@@ -85,7 +86,8 @@ void bhop(usercmd_t* cmd) {
         }
     }
 
-    was_on_ground = (g.localplayer->flags & FL_ONGROUND) != 0;
+    was_on_ground   = is_on_ground;
+    last_is_jumping = is_jumping;
 }
 
 void autorocketjump(usercmd_t* cmd) {
