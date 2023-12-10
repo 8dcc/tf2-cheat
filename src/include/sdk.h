@@ -5,13 +5,13 @@
 #include <stdbool.h>
 #include <wchar.h>
 
-#define STR(a, b) a##b
-#define PADSTR(n) STR(pad, n)
-#define PAD(n)    uint8_t PADSTR(__LINE__)[n]
+#define STR(A, B) A##B
+#define PADSTR(N) STR(pad, N)
+#define PAD(N)    uint8_t PADSTR(__LINE__)[N]
 
-#define METHOD(instance, method) instance->vmt->method(instance)
-#define METHOD_ARGS(instance, method, ...) \
-    instance->vmt->method(instance, __VA_ARGS__)
+#define METHOD(INSTANCE, METHOD) INSTANCE->vmt->METHOD(INSTANCE)
+#define METHOD_ARGS(INSTANCE, METHOD, ...) \
+    INSTANCE->vmt->METHOD(INSTANCE, __VA_ARGS__)
 
 /*----------------------------------------------------------------------------*/
 /* Forward declarations */
@@ -61,7 +61,7 @@ typedef struct {
     float x, y, z;
 } vec3_t;
 
-#define VEC_ZERO (vec3_t){ 0.f, 0.f, 0.f };
+#define VEC_ZERO ((vec3_t){ 0.f, 0.f, 0.f })
 
 typedef struct {
     float x, y, z, w;
