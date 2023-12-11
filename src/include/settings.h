@@ -88,6 +88,11 @@ typedef struct {
     int melee_keycode;
     int melee_off_spectated;
 
+    int automedigun;
+    int automedigun_silent;
+    float automedigun_smooth;
+    float automedigun_switch_time;
+
     /* Misc */
     int bhop;
     int autostrafe;
@@ -95,14 +100,15 @@ typedef struct {
     int nopush;
     int antiafk;
     int remove_scope;
+    int aa;
+    float aa_pitch;
+    float aa_yaw;
+    int aa_spin;
+    float aa_speed;
     int crits_melee;
     int crits_chance;
     int autostab;
     int anim_stab;
-    int automedigun;
-    int automedigun_silent;
-    float automedigun_smooth;
-    float automedigun_switch_time;
     int rocketjump;
     float rocketjump_deg;
     int watermark;
