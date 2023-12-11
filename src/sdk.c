@@ -59,6 +59,8 @@ static bool TraceFilterShouldHitEnt_IgnoreFriendly(TraceFilter* thisptr,
         return ent != thisptr->skip;
 
     /* If it's a friendly player or building, we can shoot through, so ignore */
+    /* FIXME: Can't shoot through medic's shield in MvM, and through open spawn
+     * doors. */
     switch (ent_class->class_id) {
         case CClass_CTFPlayer:
         case CClass_CObjectSentrygun:
