@@ -124,6 +124,7 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
     nopush();
     autobackstab(cmd);
     thirdperson();
+    spinbot(cmd);
     bhop(cmd);
 
     pred_start(cmd);
