@@ -110,7 +110,9 @@ typedef struct {
     PAD(4 * 3);
     vec3_t (*EyePosition)(Entity*); /* 194 */
     vec3_t* (*EyeAngles)(Entity*);  /* 195 */
-    PAD(4 * 95);
+    PAD(4 * 12);
+    void (*ThirdPersonSwitch)(Entity*, bool bThirdperson); /* 208 */
+    PAD(4 * 82);
     Weapon* (*GetWeapon)(Entity*); /* 291 */
     PAD(4 * 10);
     vec3_t (*GetShootPos)(Entity*); /* 302 */
