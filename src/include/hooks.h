@@ -44,6 +44,7 @@ DECL_HOOK_EXTERN(void, LevelShutdown, BaseClient*);
 DECL_HOOK_EXTERN(void, LevelInitPostEntity, BaseClient*);
 DECL_HOOK_EXTERN(void, FrameStageNotify, BaseClient*, ClientFrameStage_t);
 DECL_HOOK_EXTERN(bool, CreateMove, ClientMode*, float, usercmd_t*);
+DECL_HOOK_EXTERN(void, OverrideView, ClientMode*, ViewSetup*);
 DECL_HOOK_EXTERN(void, Paint, EngineVGui*, uint32_t);
 DECL_HOOK_EXTERN(void, PaintTraverse, IPanel*, VPanel, bool, bool);
 DECL_HOOK_EXTERN(void, DrawModelExecute, ModelRender*, const DrawModelState_t*,
