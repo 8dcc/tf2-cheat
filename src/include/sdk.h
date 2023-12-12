@@ -522,6 +522,10 @@ struct RenderView {
 typedef struct {
     PAD(4 * 8);
     usercmd_t* (*GetUserCmd)(CInput*, int sequence_number); /* 8 */
+    PAD(4 * 22);
+    int (*CAM_IsThirdPerson)(CInput*);  /* 31 */
+    void (*CAM_ToThirdPerson)(CInput*); /* 32 */
+    void (*CAM_ToFirstPerson)(CInput*); /* 33 */
 } VMT_CInput;
 
 struct CInput {
@@ -531,7 +535,9 @@ struct CInput {
 };
 
 typedef struct {
-    PAD(4 * 22);
+    PAD(4 * 17);
+    void (*OverrideView)(ClientMode*, ViewSetup* pSetup); /* 17 */
+    PAD(4 * 4);
     bool (*CreateMove)(ClientMode*, float flInputSampleTime, usercmd_t* cmd);
 } VMT_ClientMode;
 
