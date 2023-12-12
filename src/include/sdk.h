@@ -239,6 +239,7 @@ typedef struct {
     vec3_t m_vecAbsOrigin;
 } CMoveData;
 
+/* Make sure this struct is the right size. See CInput::GetUserCmd */
 typedef struct {
     void* vmt;
     int command_number;
@@ -275,7 +276,9 @@ typedef struct {
     PAD(4 * 2);
     void (*HudProcessInput)(BaseClient*, bool bActive); /* 10 */
     void (*HudUpdate)(BaseClient*, bool bActive);       /* 11 */
-    PAD(4 * 23);
+    PAD(4 * 2);
+    void (*IN_ActivateMouse)(BaseClient*); /* 14 */
+    PAD(4 * 20);
     void (*FrameStageNotify)(BaseClient*, ClientFrameStage_t curStage); /* 35 */
     PAD(4 * 23);
     bool (*GetPlayerView)(BaseClient*, ViewSetup* playerView); /* 59  */
@@ -530,8 +533,8 @@ typedef struct {
 
 struct CInput {
     VMT_CInput* vmt;
-    PAD(0xFC);
-    usercmd_t* m_pCommands; /* 0x100 */
+    PAD(0xF8);
+    usercmd_t* m_pCommands; /* 0xFC */
 };
 
 typedef struct {
