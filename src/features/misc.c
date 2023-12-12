@@ -178,25 +178,28 @@ void spectator_list(void) {
 
 /*----------------------------------------------------------------------------*/
 
-void thirdperson(void) {
-    static bool was_thirdperson = true;
+static inline void set_thirdperson(bool thirdperson) {
+    if (thirdperson)
+        METHOD(i_input, CAM_ToThirdPerson);
+    else
+        METHOD(i_input, CAM_ToFirstPerson);
 
+    METHOD_ARGS(g.localplayer, ThirdPersonSwitch, thirdperson);
+}
+
+void thirdperson(void) {
     if (!g.localplayer)
         return;
 
+    const bool is_third_person = METHOD(i_input, CAM_IsThirdPerson) != 0;
+
     /* Thirdperson only for localplayer since I just play casual and I can
      * change view when spectating :) */
-    if (!settings.thirdperson || !g.IsAlive) {
-        if (was_thirdperson) {
-            g.localplayer->nForceTauntCam = false;
-            was_thirdperson               = false;
-        }
+    if (is_third_person != settings.thirdperson)
+        set_thirdperson(settings.thirdperson);
 
-        return;
-    }
-
-    g.localplayer->nForceTauntCam = true;
-    was_thirdperson               = true;
+    /* NOTE: You could use `g.localplayer->nForceTauntCam', but it doens't show
+     * antiaim. */
 }
 
 /*----------------------------------------------------------------------------*/
@@ -240,7 +243,7 @@ void antiafk(usercmd_t* cmd) {
     /* If buttons have been zero for N seconds, move */
     if (c_globalvars->curtime - last_afk_time > AFK_TIME) {
         cmd->buttons |= (went_forward) ? IN_BACK : IN_FORWARD;
-        went_forward = !went_forward;
+        went_forward  = !went_forward;
         last_afk_time = 0.f;
     }
 }
