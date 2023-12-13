@@ -84,6 +84,12 @@ void h_LevelInitPostEntity(BaseClient* thisptr) {
 }
 
 void h_FrameStageNotify(BaseClient* thisptr, ClientFrameStage_t curStage) {
+    if (curStage == FRAME_RENDER_START) {
+        if (g.localplayer && settings.thirdperson_silent &&
+            !vec_is_zero(g.render_angles))
+            g.localplayer->v_angle = g.render_angles;
+    }
+
     ORIGINAL(FrameStageNotify, thisptr, curStage);
 
     switch (curStage) {
@@ -122,10 +128,10 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
         METHOD_ARGS(i_engine, SetViewAngles, &cmd->viewangles);
 
     nopush();
-    autobackstab(cmd);
     thirdperson();
     spinbot(cmd);
     bhop(cmd);
+    autobackstab(cmd);
 
     pred_start(cmd);
     {
@@ -138,9 +144,8 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
 
     antiafk(cmd);
 
-    correct_movement(cmd, old_angles);
-    vec_norm(&cmd->viewangles);
     ang_clamp(&cmd->viewangles);
+    correct_movement(cmd, old_angles);
 
     /* Did I choke in the last tick? */
     static bool did_choke = false;
@@ -163,6 +168,10 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
         *bSendPacket = true;
         did_choke    = false;
     }
+
+    /* Save real angles for renderning in FrameStageNotify(RENDER_START) */
+    if (*bSendPacket)
+        g.render_angles = cmd->viewangles;
 
     return false;
 }

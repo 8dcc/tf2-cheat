@@ -165,6 +165,9 @@ typedef struct {
     /* Updated in EngineVGui::Paint() -> spectator_list() */
     bool spectated_1st;
 
+    /* Updated in CreateMove and used in FrameStageNotify(FRAME_RENDER_START) */
+    vec3_t render_angles;
+
     /* Updated in features and used in CreateMove */
     bool psilent;
 } global_cache_t;
