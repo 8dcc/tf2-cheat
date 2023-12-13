@@ -63,25 +63,26 @@ Settings settings = {
     .automedigun_switch_time = 1.f,
 
     /* Misc */
-    .bhop           = false,
-    .autostrafe     = SETT_OFF,
-    .thirdperson    = false,
-    .nopush         = false,
-    .antiafk        = false,
-    .remove_scope   = false,
-    .aa             = false,
-    .aa_pitch       = 0.f,
-    .aa_yaw         = 0.f,
-    .aa_spin        = false,
-    .aa_speed       = 0.f,
-    .crits_melee    = false,
-    .crits_chance   = 100,
-    .autostab       = false,
-    .anim_stab      = false,
-    .rocketjump     = false,
-    .rocketjump_deg = 45.f,
-    .watermark      = true,
-    .speclist       = true,
+    .bhop               = false,
+    .autostrafe         = SETT_OFF,
+    .nopush             = false,
+    .antiafk            = false,
+    .remove_scope       = false,
+    .thirdperson        = false,
+    .thirdperson_silent = false,
+    .aa                 = false,
+    .aa_pitch           = 0.f,
+    .aa_yaw             = 0.f,
+    .aa_spin            = false,
+    .aa_speed           = 0.f,
+    .crits_melee        = false,
+    .crits_chance       = 100,
+    .autostab           = false,
+    .anim_stab          = false,
+    .rocketjump         = false,
+    .rocketjump_deg     = 45.f,
+    .watermark          = true,
+    .speclist           = true,
 
     /* Colors */
     .col_steam_friend_esp = (struct nk_colorf){ 0.21f, 0.77f, 0.23f, 1.f },
@@ -166,10 +167,11 @@ void save_config(const char* filename) {
     /* Misc */
     JSON_SETTINGS_WRITE_INT(json_cfg, bhop);
     JSON_SETTINGS_WRITE_INT(json_cfg, autostrafe);
-    JSON_SETTINGS_WRITE_INT(json_cfg, thirdperson);
     JSON_SETTINGS_WRITE_INT(json_cfg, nopush);
     JSON_SETTINGS_WRITE_INT(json_cfg, antiafk);
     JSON_SETTINGS_WRITE_INT(json_cfg, remove_scope);
+    JSON_SETTINGS_WRITE_INT(json_cfg, thirdperson);
+    JSON_SETTINGS_WRITE_INT(json_cfg, thirdperson_silent);
     JSON_SETTINGS_WRITE_INT(json_cfg, aa);
     JSON_SETTINGS_WRITE_FLOAT(json_cfg, aa_pitch);
     JSON_SETTINGS_WRITE_FLOAT(json_cfg, aa_yaw);
@@ -320,10 +322,11 @@ void load_config(const char* filename) {
     /* Misc */
     JSON_SETTINGS_READ_INT(json_cfg, bhop);
     JSON_SETTINGS_READ_INT(json_cfg, autostrafe);
-    JSON_SETTINGS_READ_INT(json_cfg, thirdperson);
     JSON_SETTINGS_READ_INT(json_cfg, nopush);
     JSON_SETTINGS_READ_INT(json_cfg, antiafk);
     JSON_SETTINGS_READ_INT(json_cfg, remove_scope);
+    JSON_SETTINGS_READ_INT(json_cfg, thirdperson);
+    JSON_SETTINGS_READ_INT(json_cfg, thirdperson_silent);
     JSON_SETTINGS_READ_INT(json_cfg, aa);
     JSON_SETTINGS_READ_FLOAT(json_cfg, aa_pitch);
     JSON_SETTINGS_READ_FLOAT(json_cfg, aa_yaw);

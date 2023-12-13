@@ -263,10 +263,16 @@ static inline void tab_misc(void) {
     nk_combobox(ctx, opts0, 3, &settings.autostrafe, 15, size0);
 
     nk_layout_row_dynamic(ctx, 15, 1);
-    nk_checkbox_label(ctx, "Thirdperson", &settings.thirdperson);
     nk_checkbox_label(ctx, "NoPush", &settings.nopush);
     nk_checkbox_label(ctx, "Anti-AFK", &settings.antiafk);
     nk_checkbox_label(ctx, "Remove sniper scope", &settings.remove_scope);
+
+    nk_layout_row_dynamic(ctx, 8, 1);
+    nk_spacing(ctx, 0); /* ----------------------------  */
+    nk_layout_row_dynamic(ctx, 15, 1);
+
+    nk_checkbox_label(ctx, "Thirdperson", &settings.thirdperson);
+    nk_checkbox_label(ctx, "Use network angles", &settings.thirdperson_silent);
 
     nk_layout_row_dynamic(ctx, 8, 1);
     nk_spacing(ctx, 0); /* ----------------------------  */
