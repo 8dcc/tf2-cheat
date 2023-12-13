@@ -478,7 +478,8 @@ struct MoveHelper {
 };
 
 typedef struct {
-    PAD(4 * 14);
+    PAD(4 * 13);
+    void (*GetLocalViewAngles)(IPrediction*, vec3_t* ang); /* 13 */
     void (*SetLocalViewAngles)(IPrediction*, vec3_t* ang); /* 14 */
     PAD(4 * 3);
     void (*RunCommand)(IPrediction*, Entity* player, usercmd_t* cmd,
