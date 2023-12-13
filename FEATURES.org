@@ -1,6 +1,4 @@
 + title : Features
-+ options : toc : nil
-+ startup : showeverything
 + author : 8dcc
 
 The cheat currently has the following features:
