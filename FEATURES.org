@@ -59,7 +59,7 @@ The cheat currently has the following features:
   - Anti-AFK
   - Remove sniper scope overlay
   - Spinbot
-    - Custom pitch and jaw
+    - Custom pitch and yaw
     - Spinbot with custom speed
   - Melee crithack
     - Custom chance percentage
