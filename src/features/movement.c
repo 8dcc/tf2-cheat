@@ -7,8 +7,6 @@
 #include "../include/util.h"
 #include "../include/math.h"
 
-static bool was_on_ground = false;
-
 static void autostrafe_legit(usercmd_t* cmd) {
     /* Check mouse x delta */
     if (cmd->mousedx < 0)
@@ -18,10 +16,6 @@ static void autostrafe_legit(usercmd_t* cmd) {
 }
 
 static void autostrafe_rage(usercmd_t* cmd) {
-    /* 2 consecutive ticks on ground, don't autostrafe */
-    if (was_on_ground && (g.localplayer->flags & FL_ONGROUND) != 0)
-        return;
-
     const vec3_t velocity = g.localplayer->velocity;
     const float speed     = vec_len2d(velocity);
 
@@ -64,28 +58,32 @@ void bhop(usercmd_t* cmd) {
         g.localplayer->m_nWaterLevel > WL_Feet)
         return;
 
-    const bool is_jumping = (cmd->buttons & IN_JUMP) != 0;
+    static bool was_jumping = false;
+    const bool is_jumping   = (cmd->buttons & IN_JUMP) != 0;
+    const bool is_on_ground = (g.localplayer->flags & FL_ONGROUND) != 0;
 
-    /* TODO: Because we disable jumping mid-air, this blocks scout's double
-     * jump. I tried SEOwned's method, but it only works ~1/5 of the time */
-    if (!(g.localplayer->flags & FL_ONGROUND))
+    /* NOTE: We need `was_jumping' for scout's double-jump */
+    if (!is_on_ground && was_jumping) {
         cmd->buttons &= ~IN_JUMP;
 
-    if (is_jumping) {
-        switch (settings.autostrafe) {
-            default:
-            case SETT_OFF:
-                break;
-            case SETT_LEGIT:
-                autostrafe_legit(cmd);
-                break;
-            case SETT_RAGE:
-                autostrafe_rage(cmd);
-                break;
+        /* Only autostrafe when not double-jumping and when holding space
+         * mid-air */
+        if (is_jumping) {
+            switch (settings.autostrafe) {
+                default:
+                case SETT_OFF:
+                    break;
+                case SETT_LEGIT:
+                    autostrafe_legit(cmd);
+                    break;
+                case SETT_RAGE:
+                    autostrafe_rage(cmd);
+                    break;
+            }
         }
     }
 
-    was_on_ground = (g.localplayer->flags & FL_ONGROUND) != 0;
+    was_jumping = is_jumping;
 }
 
 void autorocketjump(usercmd_t* cmd) {
