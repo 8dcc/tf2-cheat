@@ -5,13 +5,13 @@
 #include <stdbool.h>
 #include <wchar.h>
 
-#define STR(a, b) a##b
-#define PADSTR(n) STR(pad, n)
-#define PAD(n)    uint8_t PADSTR(__LINE__)[n]
+#define STR(A, B) A##B
+#define PADSTR(N) STR(pad, N)
+#define PAD(N)    uint8_t PADSTR(__LINE__)[N]
 
-#define METHOD(instance, method) instance->vmt->method(instance)
-#define METHOD_ARGS(instance, method, ...) \
-    instance->vmt->method(instance, __VA_ARGS__)
+#define METHOD(INSTANCE, METHOD) INSTANCE->vmt->METHOD(INSTANCE)
+#define METHOD_ARGS(INSTANCE, METHOD, ...) \
+    INSTANCE->vmt->METHOD(INSTANCE, __VA_ARGS__)
 
 /*----------------------------------------------------------------------------*/
 /* Forward declarations */
@@ -61,7 +61,7 @@ typedef struct {
     float x, y, z;
 } vec3_t;
 
-#define VEC_ZERO (vec3_t){ 0.f, 0.f, 0.f };
+#define VEC_ZERO ((vec3_t){ 0.f, 0.f, 0.f })
 
 typedef struct {
     float x, y, z, w;
@@ -239,6 +239,7 @@ typedef struct {
     vec3_t m_vecAbsOrigin;
 } CMoveData;
 
+/* Make sure this struct is the right size. See CInput::GetUserCmd */
 typedef struct {
     void* vmt;
     int command_number;
@@ -275,7 +276,9 @@ typedef struct {
     PAD(4 * 2);
     void (*HudProcessInput)(BaseClient*, bool bActive); /* 10 */
     void (*HudUpdate)(BaseClient*, bool bActive);       /* 11 */
-    PAD(4 * 23);
+    PAD(4 * 2);
+    void (*IN_ActivateMouse)(BaseClient*); /* 14 */
+    PAD(4 * 20);
     void (*FrameStageNotify)(BaseClient*, ClientFrameStage_t curStage); /* 35 */
     PAD(4 * 23);
     bool (*GetPlayerView)(BaseClient*, ViewSetup* playerView); /* 59  */
@@ -475,7 +478,8 @@ struct MoveHelper {
 };
 
 typedef struct {
-    PAD(4 * 14);
+    PAD(4 * 13);
+    void (*GetLocalViewAngles)(IPrediction*, vec3_t* ang); /* 13 */
     void (*SetLocalViewAngles)(IPrediction*, vec3_t* ang); /* 14 */
     PAD(4 * 3);
     void (*RunCommand)(IPrediction*, Entity* player, usercmd_t* cmd,
@@ -526,8 +530,8 @@ typedef struct {
 
 struct CInput {
     VMT_CInput* vmt;
-    PAD(0xFC);
-    usercmd_t* m_pCommands; /* 0x100 */
+    PAD(0xF8);
+    usercmd_t* m_pCommands; /* 0xFC */
 };
 
 typedef struct {

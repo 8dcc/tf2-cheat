@@ -35,20 +35,20 @@ Settings settings = {
     .hand_chams    = false,
 
     /* Aim */
-    .aimbot             = false,
-    .aim_fov            = 0.f,
-    .aim_smooth         = 1.f,
-    .aim_deg_threshold  = 1.f,
-    .aim_hitbox         = SETT_HITBOX_HEAD,
-    .aim_silent         = false,
-    .aim_on_key         = false,
-    .aim_keycode        = DEFAULT_AIMBOT_KEY,
-    .aim_target_invis   = false,
-    .aim_target_invul   = false,
-    .aim_autoscope      = false,
-    .aim_off_unscoped   = false,
-    .aim_off_spectated  = false,
-    .aim_draw_fov       = false,
+    .aimbot            = false,
+    .aim_fov           = 0.f,
+    .aim_smooth        = 1.f,
+    .aim_deg_threshold = 1.f,
+    .aim_hitbox        = SETT_HITBOX_HEAD,
+    .aim_silent        = false,
+    .aim_on_key        = false,
+    .aim_keycode       = DEFAULT_AIMBOT_KEY,
+    .aim_target_invis  = false,
+    .aim_target_invul  = false,
+    .aim_autoscope     = false,
+    .aim_off_unscoped  = false,
+    .aim_off_spectated = false,
+    .aim_draw_fov      = false,
 
     .meleebot            = false,
     .melee_silent        = false,
@@ -57,25 +57,32 @@ Settings settings = {
     .melee_keycode       = DEFAULT_MELEEBOT_KEY,
     .melee_off_spectated = false,
 
-    /* Misc */
-    .bhop                    = false,
-    .autostrafe              = SETT_OFF,
-    .thirdperson             = false,
-    .nopush                  = false,
-    .antiafk                 = false,
-    .remove_scope            = false,
-    .crits_melee             = false,
-    .crits_chance            = 100,
-    .autostab                = false,
-    .anim_stab               = false,
     .automedigun             = false,
     .automedigun_silent      = false,
     .automedigun_smooth      = 0.f,
     .automedigun_switch_time = 1.f,
-    .rocketjump              = false,
-    .rocketjump_deg          = 45.f,
-    .watermark               = true,
-    .speclist                = true,
+
+    /* Misc */
+    .bhop               = false,
+    .autostrafe         = SETT_OFF,
+    .nopush             = false,
+    .antiafk            = false,
+    .remove_scope       = false,
+    .thirdperson        = false,
+    .thirdperson_silent = false,
+    .aa                 = false,
+    .aa_pitch           = 0.f,
+    .aa_yaw             = 0.f,
+    .aa_spin            = false,
+    .aa_speed           = 0.f,
+    .crits_melee        = false,
+    .crits_chance       = 100,
+    .autostab           = false,
+    .anim_stab          = false,
+    .rocketjump         = false,
+    .rocketjump_deg     = 45.f,
+    .watermark          = true,
+    .speclist           = true,
 
     /* Colors */
     .col_steam_friend_esp = (struct nk_colorf){ 0.21f, 0.77f, 0.23f, 1.f },
@@ -152,22 +159,28 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_INT(json_cfg, melee_on_key);
     JSON_SETTINGS_WRITE_INT(json_cfg, melee_keycode);
     JSON_SETTINGS_WRITE_INT(json_cfg, melee_off_spectated);
-
-    /* Misc */
-    JSON_SETTINGS_WRITE_INT(json_cfg, bhop);
-    JSON_SETTINGS_WRITE_INT(json_cfg, autostrafe);
-    JSON_SETTINGS_WRITE_INT(json_cfg, thirdperson);
-    JSON_SETTINGS_WRITE_INT(json_cfg, nopush);
-    JSON_SETTINGS_WRITE_INT(json_cfg, antiafk);
-    JSON_SETTINGS_WRITE_INT(json_cfg, remove_scope);
-    JSON_SETTINGS_WRITE_INT(json_cfg, crits_melee);
-    JSON_SETTINGS_WRITE_INT(json_cfg, crits_chance);
-    JSON_SETTINGS_WRITE_INT(json_cfg, autostab);
-    JSON_SETTINGS_WRITE_INT(json_cfg, anim_stab);
     JSON_SETTINGS_WRITE_INT(json_cfg, automedigun);
     JSON_SETTINGS_WRITE_INT(json_cfg, automedigun_silent);
     JSON_SETTINGS_WRITE_FLOAT(json_cfg, automedigun_smooth);
     JSON_SETTINGS_WRITE_FLOAT(json_cfg, automedigun_switch_time);
+
+    /* Misc */
+    JSON_SETTINGS_WRITE_INT(json_cfg, bhop);
+    JSON_SETTINGS_WRITE_INT(json_cfg, autostrafe);
+    JSON_SETTINGS_WRITE_INT(json_cfg, nopush);
+    JSON_SETTINGS_WRITE_INT(json_cfg, antiafk);
+    JSON_SETTINGS_WRITE_INT(json_cfg, remove_scope);
+    JSON_SETTINGS_WRITE_INT(json_cfg, thirdperson);
+    JSON_SETTINGS_WRITE_INT(json_cfg, thirdperson_silent);
+    JSON_SETTINGS_WRITE_INT(json_cfg, aa);
+    JSON_SETTINGS_WRITE_FLOAT(json_cfg, aa_pitch);
+    JSON_SETTINGS_WRITE_FLOAT(json_cfg, aa_yaw);
+    JSON_SETTINGS_WRITE_INT(json_cfg, aa_spin);
+    JSON_SETTINGS_WRITE_FLOAT(json_cfg, aa_speed);
+    JSON_SETTINGS_WRITE_INT(json_cfg, crits_melee);
+    JSON_SETTINGS_WRITE_INT(json_cfg, crits_chance);
+    JSON_SETTINGS_WRITE_INT(json_cfg, autostab);
+    JSON_SETTINGS_WRITE_INT(json_cfg, anim_stab);
     JSON_SETTINGS_WRITE_INT(json_cfg, rocketjump);
     JSON_SETTINGS_WRITE_FLOAT(json_cfg, rocketjump_deg);
     JSON_SETTINGS_WRITE_INT(json_cfg, watermark);
@@ -301,22 +314,28 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_INT(json_cfg, melee_on_key);
     JSON_SETTINGS_READ_INT(json_cfg, melee_keycode);
     JSON_SETTINGS_READ_INT(json_cfg, melee_off_spectated);
-
-    /* Misc */
-    JSON_SETTINGS_READ_INT(json_cfg, bhop);
-    JSON_SETTINGS_READ_INT(json_cfg, autostrafe);
-    JSON_SETTINGS_READ_INT(json_cfg, thirdperson);
-    JSON_SETTINGS_READ_INT(json_cfg, nopush);
-    JSON_SETTINGS_READ_INT(json_cfg, antiafk);
-    JSON_SETTINGS_READ_INT(json_cfg, remove_scope);
-    JSON_SETTINGS_READ_INT(json_cfg, crits_melee);
-    JSON_SETTINGS_READ_INT(json_cfg, crits_chance);
-    JSON_SETTINGS_READ_INT(json_cfg, autostab);
-    JSON_SETTINGS_READ_INT(json_cfg, anim_stab);
     JSON_SETTINGS_READ_INT(json_cfg, automedigun);
     JSON_SETTINGS_READ_INT(json_cfg, automedigun_silent);
     JSON_SETTINGS_READ_FLOAT(json_cfg, automedigun_smooth);
     JSON_SETTINGS_READ_FLOAT(json_cfg, automedigun_switch_time);
+
+    /* Misc */
+    JSON_SETTINGS_READ_INT(json_cfg, bhop);
+    JSON_SETTINGS_READ_INT(json_cfg, autostrafe);
+    JSON_SETTINGS_READ_INT(json_cfg, nopush);
+    JSON_SETTINGS_READ_INT(json_cfg, antiafk);
+    JSON_SETTINGS_READ_INT(json_cfg, remove_scope);
+    JSON_SETTINGS_READ_INT(json_cfg, thirdperson);
+    JSON_SETTINGS_READ_INT(json_cfg, thirdperson_silent);
+    JSON_SETTINGS_READ_INT(json_cfg, aa);
+    JSON_SETTINGS_READ_FLOAT(json_cfg, aa_pitch);
+    JSON_SETTINGS_READ_FLOAT(json_cfg, aa_yaw);
+    JSON_SETTINGS_READ_INT(json_cfg, aa_spin);
+    JSON_SETTINGS_READ_FLOAT(json_cfg, aa_speed);
+    JSON_SETTINGS_READ_INT(json_cfg, crits_melee);
+    JSON_SETTINGS_READ_INT(json_cfg, crits_chance);
+    JSON_SETTINGS_READ_INT(json_cfg, autostab);
+    JSON_SETTINGS_READ_INT(json_cfg, anim_stab);
     JSON_SETTINGS_READ_INT(json_cfg, rocketjump);
     JSON_SETTINGS_READ_FLOAT(json_cfg, rocketjump_deg);
     JSON_SETTINGS_READ_INT(json_cfg, watermark);

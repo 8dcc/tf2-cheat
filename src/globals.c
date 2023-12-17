@@ -96,6 +96,17 @@ static inline CGlobalVars* get_globalvars(void) {
     return ret;
 }
 
+static inline CInput* get_input(void) {
+    const int byte_offset = 1;
+
+    /* Needs to run after get_clientmode() */
+    void* func_ptr = i_baseclient->vmt->IN_ActivateMouse;
+    void* input    = *(void**)(func_ptr + byte_offset); /* 04 D2 F9 01 */
+    CInput* ret    = *(CInput**)input;
+
+    return ret;
+}
+
 static inline bool get_sigs(void) {
     /* NOTE: Signature scanning and pointer functions can be a bit messy. Keep
      * in mind that RELATIVE2ABSOLUTE() dereferences the pointer once */
@@ -117,9 +128,6 @@ static inline bool get_sigs(void) {
      * NOTE: We don't use RELATIVE2ABSOLUTE() since it's an absolute address */
     GET_SIGNATURE(pat_ClientState, ENGINE_SO, SIG_ClientState);
     c_clientstate = *(CClientState**)(pat_ClientState + 3);
-
-    GET_SIGNATURE(pat_CInput, CLIENT_SO, SIG_CInput);
-    i_input = *(CInput**)(pat_CInput + 1);
 
     /* CBaseEntity::SetPredictionRandomSeed() */
     GET_SIGNATURE(pat_SetPredictionRandomSeed, CLIENT_SO,
@@ -174,13 +182,19 @@ bool globals_init(void) {
     /* Other interfaces */
     i_clientmode = get_clientmode();
     if (!i_clientmode || !i_clientmode->vmt) {
-        ERR("Couldn't load i_clientmodebms");
+        ERR("Couldn't load i_clientmode");
         return false;
     }
 
     c_globalvars = get_globalvars();
     if (!c_globalvars) {
         ERR("Couldn't load c_globalvars");
+        return false;
+    }
+
+    i_input = get_input();
+    if (!i_input) {
+        ERR("Couldn't load i_input");
         return false;
     }
 
@@ -191,6 +205,7 @@ bool globals_init(void) {
     CLONE_VMT(IPanel, i_panel);
     CLONE_VMT(ModelRender, i_modelrender);
     CLONE_VMT(IPrediction, i_prediction);
+    CLONE_VMT(CInput, i_input);
 
     dlclose(h_client);
     dlclose(h_engine);

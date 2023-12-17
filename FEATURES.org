@@ -45,6 +45,10 @@ The cheat currently has the following features:
   - Swing prediction
   - Auto-attack on key (=PgUp=)*
   - Disable if spectated in 1st person
+- Automedigun (automatically heal the best target)
+    - pSilent
+    - Custom smoothing
+    - Custom time before switching targets
 - Misc
   - BunnyHop
   - Autostrafe
@@ -52,15 +56,15 @@ The cheat currently has the following features:
     - Rage
   - Thirdperson
   - NoPush (no teammate collision)
+  - Anti-AFK
   - Remove sniper scope overlay
+  - Spinbot
+    - Custom pitch and yaw
+    - Spinbot with custom speed
   - Melee crithack
     - Custom chance percentage
   - Spy's auto-backstab
-  - Automedigun (automatically heal the best target)
-    - pSilent
-    - Custom smoothing
-    - Custom time before switching targets
-  - Soldier's auto-rocketjump (On Mouse2)
+  - Soldier's auto-rocketjump (on Mouse2)
     - Pitch degrees when moving
   - Spectator list
   - Watermark

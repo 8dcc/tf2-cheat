@@ -140,7 +140,10 @@ struct Entity {
     vec3_t vecPunchAngle; /* 0xE6C */
     PAD(0xD0);
     int m_iObjectMode; /* 0xF48 */
-    PAD(0x218);
+    PAD(0x1C4);
+    vec3_t v_angle; /* 0x1110, From CPlayerState. See `player->pl.v_angle' in
+                       CPrediction::GetLocalViewAngles() */
+    PAD(0x48);
     usercmd_t* m_pCurrentCommand; /* 0x1164, see CPrediction::StartCommand() */
     PAD(0xCC);
     int nTickBase; /* 0x1234 */
@@ -154,7 +157,9 @@ struct Entity {
     int m_nPlayerCondEx4; /* 0x19B0 */
     PAD(0x18);
     int condition_bits; /* 0x19CC */
-    PAD(0x434);
+    PAD(0x418);
+    bool m_bAllowMoveDuringTaunt; /* 0x1DE8 */
+    PAD(0x18);
     int nForceTauntCam; /* 0x1E04 */
 };
 

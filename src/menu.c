@@ -222,10 +222,8 @@ static inline void tab_aim(void) {
     nk_layout_row_dynamic(ctx, 15, 1);
     nk_checkbox_label(ctx, "Silent", &settings.aim_silent);
     nk_checkbox_label(ctx, "On key", &settings.aim_on_key);
-    nk_checkbox_label(ctx, "Target invulnerable",
-                      &settings.aim_target_invul);
-    nk_checkbox_label(ctx, "Target non-visible",
-                      &settings.aim_target_invis);
+    nk_checkbox_label(ctx, "Target invulnerable", &settings.aim_target_invul);
+    nk_checkbox_label(ctx, "Target non-visible", &settings.aim_target_invis);
     nk_checkbox_label(ctx, "Auto-scope", &settings.aim_autoscope);
     nk_checkbox_label(ctx, "Disable if unscoped", &settings.aim_off_unscoped);
     nk_checkbox_label(ctx, "Disable if spectated", &settings.aim_off_spectated);
@@ -241,6 +239,17 @@ static inline void tab_aim(void) {
     nk_checkbox_label(ctx, "On key", &settings.melee_on_key);
     nk_checkbox_label(ctx, "Disable if spectated",
                       &settings.melee_off_spectated);
+
+    nk_layout_row_dynamic(ctx, 8, 1);
+    nk_spacing(ctx, 0); /* ----------------------------  */
+    nk_layout_row_dynamic(ctx, 15, 1);
+
+    nk_checkbox_label(ctx, "Automedigun", &settings.automedigun);
+    nk_checkbox_label(ctx, "Silent", &settings.automedigun_silent);
+    SLIDER_FLOAT("Medigun smoothing", 1.f, settings.automedigun_smooth, 100.f,
+                 0.5f);
+    SLIDER_FLOAT("Target switch time", 0.f, settings.automedigun_switch_time,
+                 5.f, 0.1f);
 }
 
 static inline void tab_misc(void) {
@@ -254,10 +263,26 @@ static inline void tab_misc(void) {
     nk_combobox(ctx, opts0, 3, &settings.autostrafe, 15, size0);
 
     nk_layout_row_dynamic(ctx, 15, 1);
-    nk_checkbox_label(ctx, "Thirdperson", &settings.thirdperson);
     nk_checkbox_label(ctx, "NoPush", &settings.nopush);
     nk_checkbox_label(ctx, "Anti-AFK", &settings.antiafk);
     nk_checkbox_label(ctx, "Remove sniper scope", &settings.remove_scope);
+
+    nk_layout_row_dynamic(ctx, 8, 1);
+    nk_spacing(ctx, 0); /* ----------------------------  */
+    nk_layout_row_dynamic(ctx, 15, 1);
+
+    nk_checkbox_label(ctx, "Thirdperson", &settings.thirdperson);
+    nk_checkbox_label(ctx, "Use network angles", &settings.thirdperson_silent);
+
+    nk_layout_row_dynamic(ctx, 8, 1);
+    nk_spacing(ctx, 0); /* ----------------------------  */
+    nk_layout_row_dynamic(ctx, 15, 1);
+
+    nk_checkbox_label(ctx, "Anti-aim", &settings.aa);
+    SLIDER_FLOAT("Pitch", -89.f, settings.aa_pitch, 89.f, 1.f);
+    SLIDER_FLOAT("Yaw", -180.f, settings.aa_yaw, 180.f, 1.f);
+    nk_checkbox_label(ctx, "Spinbot", &settings.aa_spin);
+    SLIDER_FLOAT("Spinbot speed", 0.f, settings.aa_speed, 100.f, 0.5f);
 
     nk_layout_row_dynamic(ctx, 8, 1);
     nk_spacing(ctx, 0); /* ----------------------------  */
@@ -272,17 +297,6 @@ static inline void tab_misc(void) {
 
     nk_checkbox_label(ctx, "Autobackstab", &settings.autostab);
     nk_checkbox_label(ctx, "Only check animation", &settings.anim_stab);
-
-    nk_layout_row_dynamic(ctx, 8, 1);
-    nk_spacing(ctx, 0); /* ----------------------------  */
-    nk_layout_row_dynamic(ctx, 15, 1);
-
-    nk_checkbox_label(ctx, "Automedigun", &settings.automedigun);
-    nk_checkbox_label(ctx, "Silent", &settings.automedigun_silent);
-    SLIDER_FLOAT("Medigun smoothing", 1.f, settings.automedigun_smooth, 100.f,
-                 0.5f);
-    SLIDER_FLOAT("Target switch time", 0.f, settings.automedigun_switch_time,
-                 5.f, 0.1f);
 
     nk_layout_row_dynamic(ctx, 8, 1);
     nk_spacing(ctx, 0); /* ----------------------------  */

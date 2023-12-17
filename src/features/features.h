@@ -23,6 +23,9 @@ void meleebot(usercmd_t* cmd);
 /* src/features/aim/medigun.c */
 void automedigun(usercmd_t* cmd);
 
+/* src/features/antiaim.c */
+void spinbot(usercmd_t* cmd);
+
 /* src/features/movement.c */
 void bhop(usercmd_t* cmd);
 void autorocketjump(usercmd_t* cmd);

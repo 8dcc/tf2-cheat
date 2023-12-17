@@ -37,11 +37,6 @@
     "C7 04 24 ? ? ? ? E8 ? ? ? ? C7 04 24 ? ? ? ? 89 44 24 04 E8 ? ? ? ? A1 " \
     "? ? ? ?"
 
-/* CConfirmDialog::GetResFile (Also in C_BasePlayer::GetToolRecordingState) */
-#define SIG_CInput                                                            \
-    "A1 ? ? ? ? 8B 10 89 04 24 FF 92 ? ? ? ? BA ? ? ? ? C9 84 C0 B8 ? ? ? ? " \
-    "0F 44 D0 89 D0 C3"
-
 /* CPrediction::RunCommand -> CPrediction::StartCommand -> SetPse..RandomSeed */
 #define SIG_SetPredictionRandomSeed                                           \
     "75 7C 31 FF E8 ? ? ? ? 89 B3 ? ? ? ? 89 34 24 E8 ? ? ? ? 89 F8 89 1D ? " \
@@ -169,6 +164,9 @@ typedef struct {
 
     /* Updated in EngineVGui::Paint() -> spectator_list() */
     bool spectated_1st;
+
+    /* Updated in CreateMove and used in FrameStageNotify(FRAME_RENDER_START) */
+    vec3_t render_angles;
 
     /* Updated in features and used in CreateMove */
     bool psilent;

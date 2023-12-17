@@ -143,6 +143,11 @@ void autorocketjump(usercmd_t* cmd) {
 }
 
 void correct_movement(usercmd_t* cmd, vec3_t old_angles) {
+    /* Don't correct movement if we are taunting with antiaim disabled */
+    if (!g.localplayer ||
+        (!settings.aa && g.localplayer->m_bAllowMoveDuringTaunt))
+        return;
+
     float old_y = old_angles.y + (old_angles.y < 0 ? 360 : 0);
     float new_y = cmd->viewangles.y + (cmd->viewangles.y < 0 ? 360 : 0);
     float delta = (new_y < old_y) ? fabsf(new_y - old_y)

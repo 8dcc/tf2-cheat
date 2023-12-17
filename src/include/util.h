@@ -25,7 +25,7 @@
     } while (0)
 
 #define VEC_PRINT(VEC) \
-    printf("(%3.2f, %3.2f, %3.2f)", (VEC).x, (VEC).y, (VEC).z)
+    printf("%s: (%3.2f, %3.2f, %3.2f)\n", #VEC, (VEC).x, (VEC).y, (VEC).z)
 
 /* Location of address + Size of offset + Offset */
 #define RELATIVE2ABSOLUTE(ADDR) (void*)((void*)(ADDR) + 4 + *(uint32_t*)(ADDR))
