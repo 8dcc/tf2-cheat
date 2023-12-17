@@ -71,8 +71,9 @@ void bhop(usercmd_t* cmd) {
 
     if (last_is_jumping && !is_on_ground)
         cmd->buttons &= ~IN_JUMP;
-
-    if (!is_on_ground) {
+    
+    /* Changed to is_jumping from is_on_ground to only call autostrafer when holding space bar */
+    if (!is_jumping) {
         switch (settings.autostrafe) {
             default:
             case SETT_OFF:
