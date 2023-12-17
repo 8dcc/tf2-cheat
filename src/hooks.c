@@ -85,8 +85,8 @@ void h_LevelInitPostEntity(BaseClient* thisptr) {
 
 void h_FrameStageNotify(BaseClient* thisptr, ClientFrameStage_t curStage) {
     if (curStage == FRAME_RENDER_START) {
-        if (g.localplayer && settings.thirdperson_silent &&
-            !vec_is_zero(g.render_angles))
+        if (g.localplayer && settings.thirdperson &&
+            settings.thirdperson_silent && !vec_is_zero(g.render_angles))
             g.localplayer->v_angle = g.render_angles;
     }
 
