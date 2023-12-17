@@ -7,8 +7,6 @@
 #include "../include/util.h"
 #include "../include/math.h"
 
-static bool was_on_ground = false;
-
 static void autostrafe_legit(usercmd_t* cmd) {
     /* Check mouse x delta */
     if (cmd->mousedx < 0)
@@ -18,10 +16,6 @@ static void autostrafe_legit(usercmd_t* cmd) {
 }
 
 static void autostrafe_rage(usercmd_t* cmd) {
-    /* 2 consecutive ticks on ground, don't autostrafe */
-    if (was_on_ground && (g.localplayer->flags & FL_ONGROUND) != 0)
-        return;
-
     const vec3_t velocity = g.localplayer->velocity;
     const float speed     = vec_len2d(velocity);
 
@@ -64,16 +58,16 @@ void bhop(usercmd_t* cmd) {
         g.localplayer->m_nWaterLevel > WL_Feet)
         return;
 
-    /* Added last_is_jumping check to fix scout's double jump*/
-    static bool last_is_jumping = false;
-    const bool is_jumping       = (cmd->buttons & IN_JUMP) != 0;
-    const bool is_on_ground     = (g.localplayer->flags & FL_ONGROUND) != 0;
+    static bool was_jumping = false;
+    const bool is_jumping   = (cmd->buttons & IN_JUMP) != 0;
+    const bool is_on_ground = (g.localplayer->flags & FL_ONGROUND) != 0;
 
-    if (last_is_jumping && !is_on_ground)
+    /* NOTE: We need `was_jumping' for scout's double-jump */
+    if (!is_on_ground && was_jumping)
         cmd->buttons &= ~IN_JUMP;
-    
-    /* Changed to is_jumping from is_on_ground to only call autostrafer when holding space bar */
-    if (is_jumping) {
+
+    /* Only autostrafe when holding space mid-air */
+    if (!is_on_ground && is_jumping) {
         switch (settings.autostrafe) {
             default:
             case SETT_OFF:
@@ -87,8 +81,7 @@ void bhop(usercmd_t* cmd) {
         }
     }
 
-    was_on_ground   = is_on_ground;
-    last_is_jumping = is_jumping;
+    was_jumping = is_jumping;
 }
 
 void autorocketjump(usercmd_t* cmd) {
