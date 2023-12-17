@@ -63,21 +63,23 @@ void bhop(usercmd_t* cmd) {
     const bool is_on_ground = (g.localplayer->flags & FL_ONGROUND) != 0;
 
     /* NOTE: We need `was_jumping' for scout's double-jump */
-    if (!is_on_ground && was_jumping)
+    if (!is_on_ground && was_jumping) {
         cmd->buttons &= ~IN_JUMP;
 
-    /* Only autostrafe when holding space mid-air */
-    if (!is_on_ground && is_jumping) {
-        switch (settings.autostrafe) {
-            default:
-            case SETT_OFF:
-                break;
-            case SETT_LEGIT:
-                autostrafe_legit(cmd);
-                break;
-            case SETT_RAGE:
-                autostrafe_rage(cmd);
-                break;
+        /* Only autostrafe when not double-jumping and when holding space
+         * mid-air */
+        if (is_jumping) {
+            switch (settings.autostrafe) {
+                default:
+                case SETT_OFF:
+                    break;
+                case SETT_LEGIT:
+                    autostrafe_legit(cmd);
+                    break;
+                case SETT_RAGE:
+                    autostrafe_rage(cmd);
+                    break;
+            }
         }
     }
 
