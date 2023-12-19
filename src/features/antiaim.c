@@ -13,6 +13,17 @@ void spinbot(usercmd_t* cmd) {
     if (GetMoveType(g.localplayer) != MOVETYPE_WALK)
         return;
 
+    /* Don't enable in water */
+    if (g.localplayer->flags & FL_INWATER || g.localplayer->flags & FL_SWIM ||
+        g.localplayer->m_nWaterLevel > WL_Feet)
+        return;
+
+    /* User is manually shooting, disable for that tick */
+    const bool using_melee = METHOD(g.localweapon, GetSlot) == WPN_SLOT_MELEE;
+    if ((using_melee && melee_dealing_damage(cmd)) ||
+        (!using_melee && can_shoot() && cmd->buttons & IN_ATTACK))
+        return;
+
     /* Make static so spinbot angles persist over calls */
     static float spin_yaw = 0.f;
 
@@ -28,6 +39,9 @@ void spinbot(usercmd_t* cmd) {
     } else {
         /* Add fixed amount to current angles */
         cmd->viewangles.y += settings.aa_yaw;
+
+        /* Reset spin yaw */
+        spin_yaw = cmd->viewangles.y;
     }
 
     ang_clamp(&cmd->viewangles);

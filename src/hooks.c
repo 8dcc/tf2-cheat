@@ -129,12 +129,12 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
 
     nopush();
     thirdperson();
-    spinbot(cmd);
     bhop(cmd);
     autobackstab(cmd);
 
     pred_start(cmd);
     {
+        spinbot(cmd);
         meleebot(cmd);
         aimbot(cmd);
         automedigun(cmd);

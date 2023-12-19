@@ -159,16 +159,19 @@ void* find_sig(const char* module, const char* pattern) {
 
 bool can_shoot(void) {
     /* NOTE: g.localplayer and g.localweapon should be checked by the caller */
+    /* NOTE: This should be called from prediction since curtime is changed
+     * there. */
+    /* TODO: Add g.in_prediction, if outside pred, calculate curtime locally. */
     return g.localplayer->flNextAttack <= c_globalvars->curtime &&
            g.localweapon->flNextPrimaryAttack <= c_globalvars->curtime;
 }
 
-/* We are done with the swing animation, and we are dealing damage */
 bool melee_dealing_damage(usercmd_t* cmd) {
     if (METHOD(g.localweapon, GetWeaponId) == TF_WEAPON_KNIFE)
         return (cmd->buttons & IN_ATTACK) && can_shoot();
 
-    /* Credits: SEOwned (and afaik to KGB as well) */
+    /* We are done with the swing animation, and we are dealing damage on this
+     * tick. Credits: SEOwned (and afaik to KGB as well) */
     return fabs(g.localweapon->smackTime - c_globalvars->curtime) <
            c_globalvars->interval_per_tick * 2.0f;
 }
