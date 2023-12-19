@@ -8,16 +8,13 @@ void autobackstab(usercmd_t* cmd) {
     if (!settings.autostab || !g.localplayer || !g.localweapon || !g.IsAlive)
         return;
 
-    /* Also use autobackstab with the Holiday punch */
-    if (g.localweapon->m_iItemDefinitionIndex != Heavy_t_TheHolidayPunch) {
-        if (METHOD(g.localweapon, GetWeaponId) != TF_WEAPON_KNIFE)
-            return;
+    if (METHOD(g.localweapon, GetWeaponId) != TF_WEAPON_KNIFE)
+        return;
 
-        /* If setting, only check bReadyToBackstab, skip TraceHull */
-        if (settings.anim_stab && g.localweapon->bReadyToBackstab) {
-            cmd->buttons |= IN_ATTACK;
-            return;
-        }
+    /* If setting, only check bReadyToBackstab, skip TraceHull */
+    if (settings.anim_stab && g.localweapon->bReadyToBackstab) {
+        cmd->buttons |= IN_ATTACK;
+        return;
     }
 
     const float swing_range = METHOD(g.localweapon, GetSwingRange);
@@ -240,7 +237,7 @@ void antiafk(usercmd_t* cmd) {
     /* If buttons have been zero for N seconds, move */
     if (c_globalvars->curtime - last_afk_time > AFK_TIME) {
         cmd->buttons |= (went_forward) ? IN_BACK : IN_FORWARD;
-        went_forward = !went_forward;
+        went_forward  = !went_forward;
         last_afk_time = 0.f;
     }
 }
