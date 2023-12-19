@@ -1,7 +1,7 @@
-#+ title : Features
-#+ options : toc : nil
-#+ startup : showeverything
-#+ author : 8dcc
+#+TITLE:   Features
+#+OPTIONS: toc:nil
+#+STARTUP: showeverything
+#+AUTHOR:  8dcc
 
 The cheat currently has the following features:
 - ESP
