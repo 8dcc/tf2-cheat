@@ -163,6 +163,16 @@ bool can_shoot(void) {
            g.localweapon->flNextPrimaryAttack <= c_globalvars->curtime;
 }
 
+/* We are done with the swing animation, and we are dealing damage */
+bool melee_dealing_damage(usercmd_t* cmd) {
+    if (METHOD(g.localweapon, GetWeaponId) == TF_WEAPON_KNIFE)
+        return (cmd->buttons & IN_ATTACK) && can_shoot();
+
+    /* Credits: SEOwned (and afaik to KGB as well) */
+    return fabs(g.localweapon->smackTime - c_globalvars->curtime) <
+           c_globalvars->interval_per_tick * 2.0f;
+}
+
 vec3_t center_of_hitbox(studiohdr_t* studio, matrix3x4_t* bonemat, int set,
                         int idx) {
     studiobbox_t* bbox = studiohdr_pHitbox(studio, set, idx);

@@ -53,6 +53,7 @@ size_t vmt_size(void* vmt);
 void* find_sig(const char* module, const byte* ida_pattern);
 
 bool can_shoot(void);
+bool melee_dealing_damage(usercmd_t* cmd);
 vec3_t center_of_hitbox(studiohdr_t* studio, matrix3x4_t* bonemat, int set,
                         int idx);
 vec3_t velocity_to_ang(vec3_t vel);

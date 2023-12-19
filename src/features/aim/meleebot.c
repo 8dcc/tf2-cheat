@@ -83,15 +83,6 @@ static inline bool attack_key(usercmd_t* cmd) {
         return cmd->buttons & IN_ATTACK;
 }
 
-static bool melee_attacking(usercmd_t* cmd) {
-    if (METHOD(g.localweapon, GetWeaponId) == TF_WEAPON_KNIFE)
-        return (cmd->buttons & IN_ATTACK) && can_shoot();
-
-    /* Credits: SEOwned (and afaik to KGB as well) */
-    return fabs(g.localweapon->smackTime - c_globalvars->curtime) <
-           c_globalvars->interval_per_tick * 2.0f;
-}
-
 static bool in_swing_range(vec3_t start, vec3_t end, Entity* target) {
     static vec3_t swing_mins = { -18.0f, -18.0f, -18.0f };
     static vec3_t swing_maxs = { 18.0f, 18.0f, 18.0f };
@@ -236,7 +227,7 @@ void meleebot(usercmd_t* cmd) {
 
     /* If we are actually going to deal damage in this tick (attack animation is
      * over), look to the target */
-    if (melee_attacking(cmd)) {
+    if (melee_dealing_damage(cmd)) {
         /* We have no smoothing for meleebot */
         cmd->viewangles = target_angle;
         g.psilent       = true;
