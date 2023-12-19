@@ -26,23 +26,40 @@ void spinbot(usercmd_t* cmd) {
 
     /* Make static so spinbot angles persist over calls */
     static float spin_yaw = 0.f;
+    float final_yaw       = cmd->viewangles.y;
 
-    /* Fixed pitch */
-    cmd->viewangles.x = settings.aa_pitch;
-
-    if (settings.aa_spin) {
+    if (settings.aa_spin && settings.aa_speed > 0.f) {
         /* Spinbot */
         spin_yaw += settings.aa_speed / 4;
         if (spin_yaw > 180.f)
             spin_yaw -= 360.f;
-        cmd->viewangles.y = spin_yaw;
+
+        final_yaw = spin_yaw;
     } else {
         /* Add fixed amount to current angles */
-        cmd->viewangles.y += settings.aa_yaw;
+        final_yaw += settings.aa_yaw;
 
         /* Reset spin yaw */
         spin_yaw = cmd->viewangles.y;
     }
 
+    /* Desync */
+    if (!bSendPacket)
+        final_yaw += 58.f;
+
+    /* Set fixed pitch and yaw we just calculated */
+    cmd->viewangles.x = settings.aa_pitch;
+    cmd->viewangles.y = final_yaw;
+
     ang_clamp(&cmd->viewangles);
+
+    /* Micromovement for updating the LBY */
+    if (fabsf(cmd->sidemove) < 5.0f) {
+        if (cmd->buttons & IN_DUCK)
+            /* We are ducking, make the movement bigger */
+            cmd->sidemove = (cmd->tick_count & 1) ? 3.25f : -3.25f;
+        else
+            /* Otherwise, make it normal */
+            cmd->sidemove = (cmd->tick_count & 1) ? 1.1f : -1.1f;
+    }
 }
