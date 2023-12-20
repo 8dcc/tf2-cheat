@@ -271,6 +271,14 @@ static inline void tab_misc(void) {
     nk_spacing(ctx, 0); /* ----------------------------  */
     nk_layout_row_dynamic(ctx, 15, 1);
 
+    nk_checkbox_label(ctx, "Custom FOV", &settings.custom_fov);
+    SLIDER_FLOAT("Degrees", 60.f, settings.custom_fov_deg, 130.f, 2.f);
+    nk_checkbox_label(ctx, "Override when scoped", &settings.custom_fov_scoped);
+
+    nk_layout_row_dynamic(ctx, 8, 1);
+    nk_spacing(ctx, 0); /* ----------------------------  */
+    nk_layout_row_dynamic(ctx, 15, 1);
+
     nk_checkbox_label(ctx, "Thirdperson", &settings.thirdperson);
     nk_checkbox_label(ctx, "Use network angles", &settings.thirdperson_silent);
 
@@ -280,7 +288,7 @@ static inline void tab_misc(void) {
 
     nk_checkbox_label(ctx, "Anti-aim", &settings.aa);
     SLIDER_FLOAT("Pitch", -89.f, settings.aa_pitch, 89.f, 1.f);
-    SLIDER_FLOAT("Yaw", -180.f, settings.aa_yaw, 180.f, 1.f);
+    SLIDER_FLOAT("Yaw", -180.f, settings.aa_yaw, 180.f, 2.f);
     nk_checkbox_label(ctx, "Spinbot", &settings.aa_spin);
     SLIDER_FLOAT("Spinbot speed", 0.f, settings.aa_speed, 100.f, 0.5f);
 

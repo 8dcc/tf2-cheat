@@ -68,6 +68,9 @@ Settings settings = {
     .nopush             = false,
     .antiafk            = false,
     .remove_scope       = false,
+    .custom_fov         = false,
+    .custom_fov_deg     = 90.f,
+    .custom_fov_scoped  = false,
     .thirdperson        = false,
     .thirdperson_silent = false,
     .aa                 = false,
@@ -170,6 +173,9 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_INT(json_cfg, nopush);
     JSON_SETTINGS_WRITE_INT(json_cfg, antiafk);
     JSON_SETTINGS_WRITE_INT(json_cfg, remove_scope);
+    JSON_SETTINGS_WRITE_INT(json_cfg, custom_fov);
+    JSON_SETTINGS_WRITE_FLOAT(json_cfg, custom_fov_deg);
+    JSON_SETTINGS_WRITE_INT(json_cfg, custom_fov_scoped);
     JSON_SETTINGS_WRITE_INT(json_cfg, thirdperson);
     JSON_SETTINGS_WRITE_INT(json_cfg, thirdperson_silent);
     JSON_SETTINGS_WRITE_INT(json_cfg, aa);
@@ -325,6 +331,9 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_INT(json_cfg, nopush);
     JSON_SETTINGS_READ_INT(json_cfg, antiafk);
     JSON_SETTINGS_READ_INT(json_cfg, remove_scope);
+    JSON_SETTINGS_READ_INT(json_cfg, custom_fov);
+    JSON_SETTINGS_READ_FLOAT(json_cfg, custom_fov_deg);
+    JSON_SETTINGS_READ_INT(json_cfg, custom_fov_scoped);
     JSON_SETTINGS_READ_INT(json_cfg, thirdperson);
     JSON_SETTINGS_READ_INT(json_cfg, thirdperson_silent);
     JSON_SETTINGS_READ_INT(json_cfg, aa);

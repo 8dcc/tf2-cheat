@@ -101,6 +101,9 @@ typedef struct {
     int nopush;
     int antiafk;
     int remove_scope;
+    int custom_fov;
+    float custom_fov_deg;
+    int custom_fov_scoped;
     int aa;
     float aa_pitch;
     float aa_yaw;
