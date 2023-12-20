@@ -93,30 +93,32 @@ typedef struct {
     float automedigun_smooth;
     float automedigun_switch_time;
 
-    /* Misc */
-    int bhop;
-    int autostrafe;
-    int thirdperson;
-    int thirdperson_network;
-    int nopush;
-    int antiafk;
+    /* Visuals */
     int remove_scope;
     int custom_fov;
     float custom_fov_deg;
     int custom_fov_scoped;
+    int thirdperson;
+    int thirdperson_network;
+    int watermark;
+    int speclist;
+
+    /* Misc */
+    int bhop;
+    int autostrafe;
     int aa;
     float aa_pitch;
     float aa_yaw;
     int aa_spin;
     float aa_speed;
+    int rocketjump;
+    float rocketjump_deg;
     int crits_melee;
     int crits_chance;
     int autostab;
     int anim_stab;
-    int rocketjump;
-    float rocketjump_deg;
-    int watermark;
-    int speclist;
+    int nopush;
+    int antiafk;
 
     /* Colors */
     struct nk_colorf col_steam_friend_esp;
