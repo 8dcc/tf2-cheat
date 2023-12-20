@@ -198,6 +198,19 @@ void thirdperson(void) {
 
 /*----------------------------------------------------------------------------*/
 
+void custom_fov(ViewSetup* pSetup) {
+    if (!settings.custom_fov || !g.localplayer || !g.IsAlive)
+        return;
+
+    /* We don't want to overwrite when scoped, ad we are scoped */
+    if (!settings.custom_fov_scoped && InCond(g.localplayer, TF_COND_ZOOMED))
+        return;
+
+    pSetup->fov = settings.custom_fov_deg;
+}
+
+/*----------------------------------------------------------------------------*/
+
 void nopush(void) {
     static ConVar* pushaway = NULL;
 

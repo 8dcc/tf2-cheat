@@ -35,6 +35,7 @@ void correct_movement(usercmd_t* cmd, vec3_t old_angles);
 void autobackstab(usercmd_t* cmd);
 void spectator_list(void);
 void thirdperson(void);
+void custom_fov(ViewSetup* pSetup);
 void nopush(void);
 void antiafk(usercmd_t* cmd);
 
