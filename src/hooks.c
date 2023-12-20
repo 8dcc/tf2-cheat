@@ -86,9 +86,11 @@ void h_LevelInitPostEntity(BaseClient* thisptr) {
 }
 
 void h_FrameStageNotify(BaseClient* thisptr, ClientFrameStage_t curStage) {
+    /* On FRAME_RENDER_START, if we want to use network angles for thirdperson,
+     * set them before calling the original FrameStageNotify. */
     if (curStage == FRAME_RENDER_START) {
         if (g.localplayer && settings.thirdperson &&
-            settings.thirdperson_silent && !vec_is_zero(g.render_angles))
+            settings.thirdperson_network && !vec_is_zero(g.render_angles))
             g.localplayer->v_angle = g.render_angles;
     }
 

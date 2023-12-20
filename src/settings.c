@@ -63,29 +63,29 @@ Settings settings = {
     .automedigun_switch_time = 1.f,
 
     /* Misc */
-    .bhop               = false,
-    .autostrafe         = SETT_OFF,
-    .nopush             = false,
-    .antiafk            = false,
-    .remove_scope       = false,
-    .custom_fov         = false,
-    .custom_fov_deg     = 90.f,
-    .custom_fov_scoped  = false,
-    .thirdperson        = false,
-    .thirdperson_silent = false,
-    .aa                 = false,
-    .aa_pitch           = 0.f,
-    .aa_yaw             = 0.f,
-    .aa_spin            = false,
-    .aa_speed           = 0.f,
-    .crits_melee        = false,
-    .crits_chance       = 100,
-    .autostab           = false,
-    .anim_stab          = false,
-    .rocketjump         = false,
-    .rocketjump_deg     = 45.f,
-    .watermark          = true,
-    .speclist           = true,
+    .bhop                = false,
+    .autostrafe          = SETT_OFF,
+    .nopush              = false,
+    .antiafk             = false,
+    .remove_scope        = false,
+    .custom_fov          = false,
+    .custom_fov_deg      = 90.f,
+    .custom_fov_scoped   = false,
+    .thirdperson         = false,
+    .thirdperson_network = false,
+    .aa                  = false,
+    .aa_pitch            = 0.f,
+    .aa_yaw              = 0.f,
+    .aa_spin             = false,
+    .aa_speed            = 0.f,
+    .crits_melee         = false,
+    .crits_chance        = 100,
+    .autostab            = false,
+    .anim_stab           = false,
+    .rocketjump          = false,
+    .rocketjump_deg      = 45.f,
+    .watermark           = true,
+    .speclist            = true,
 
     /* Colors */
     .col_steam_friend_esp = (struct nk_colorf){ 0.21f, 0.77f, 0.23f, 1.f },
@@ -177,7 +177,7 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_FLOAT(json_cfg, custom_fov_deg);
     JSON_SETTINGS_WRITE_INT(json_cfg, custom_fov_scoped);
     JSON_SETTINGS_WRITE_INT(json_cfg, thirdperson);
-    JSON_SETTINGS_WRITE_INT(json_cfg, thirdperson_silent);
+    JSON_SETTINGS_WRITE_INT(json_cfg, thirdperson_network);
     JSON_SETTINGS_WRITE_INT(json_cfg, aa);
     JSON_SETTINGS_WRITE_FLOAT(json_cfg, aa_pitch);
     JSON_SETTINGS_WRITE_FLOAT(json_cfg, aa_yaw);
@@ -335,7 +335,7 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_FLOAT(json_cfg, custom_fov_deg);
     JSON_SETTINGS_READ_INT(json_cfg, custom_fov_scoped);
     JSON_SETTINGS_READ_INT(json_cfg, thirdperson);
-    JSON_SETTINGS_READ_INT(json_cfg, thirdperson_silent);
+    JSON_SETTINGS_READ_INT(json_cfg, thirdperson_network);
     JSON_SETTINGS_READ_INT(json_cfg, aa);
     JSON_SETTINGS_READ_FLOAT(json_cfg, aa_pitch);
     JSON_SETTINGS_READ_FLOAT(json_cfg, aa_yaw);

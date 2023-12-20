@@ -97,7 +97,7 @@ typedef struct {
     int bhop;
     int autostrafe;
     int thirdperson;
-    int thirdperson_silent;
+    int thirdperson_network;
     int nopush;
     int antiafk;
     int remove_scope;

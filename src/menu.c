@@ -269,7 +269,7 @@ static inline void tab_visuals(void) {
     nk_layout_row_dynamic(ctx, 15, 1);
 
     nk_checkbox_label(ctx, "Thirdperson", &settings.thirdperson);
-    nk_checkbox_label(ctx, "Use network angles", &settings.thirdperson_silent);
+    nk_checkbox_label(ctx, "Use network angles", &settings.thirdperson_network);
 
     nk_layout_row_dynamic(ctx, 8, 1);
     nk_spacing(ctx, 0); /* ----------------------------  */
