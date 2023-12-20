@@ -49,27 +49,31 @@ The cheat currently has the following features:
     - pSilent
     - Custom smoothing
     - Custom time before switching targets
+- Misc visuals
+  - Remove sniper scope overlay
+  - Custom FOV
+    - Apply when scoped
+  - Thirdperson
+    - Client or network angles (for displaying AA, silent aim, etc.)
+  - Watermark
+  - Spectator list
 - Misc
   - BunnyHop
   - Autostrafe
     - Legit
     - Rage
-  - Thirdperson
-  - NoPush (no teammate collision)
-  - Anti-AFK
-  - Remove sniper scope overlay
-  - Spinbot
+  - Anti-aim
     - Custom pitch and yaw
     - Spinbot with custom speed
+  - Auto-rocketjump (on Mouse2)
+    - Pitch degrees when moving
   - Melee crithack
     - Custom chance percentage
   - Spy's auto-backstab
-  - Soldier's auto-rocketjump (on Mouse2)
-    - Pitch degrees when moving
-  - Spectator list
-  - Watermark
+  - NoPush (no teammate collision)
+  - Anti-AFK
 - Custom colors for most settings
-- Config system
+- JSON config system
 
 * Notes
 - All the "Player" settings also apply to MvM bots.
