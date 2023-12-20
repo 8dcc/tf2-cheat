@@ -14,6 +14,7 @@ DECL_HOOK(LevelShutdown);
 DECL_HOOK(LevelInitPostEntity);
 DECL_HOOK(FrameStageNotify);
 DECL_HOOK(CreateMove);
+DECL_HOOK(OverrideView);
 DECL_HOOK(Paint);
 DECL_HOOK(PaintTraverse);
 DECL_HOOK(DrawModelExecute);
@@ -30,6 +31,7 @@ bool hooks_init(void) {
     VMT_HOOK(i_baseclient, LevelInitPostEntity);
     VMT_HOOK(i_baseclient, FrameStageNotify);
     VMT_HOOK(i_clientmode, CreateMove);
+    VMT_HOOK(i_clientmode, OverrideView);
     VMT_HOOK(i_enginevgui, Paint);
     VMT_HOOK(i_panel, PaintTraverse);
     VMT_HOOK(i_modelrender, DrawModelExecute);
@@ -174,6 +176,14 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
         g.render_angles = cmd->viewangles;
 
     return false;
+}
+
+/*----------------------------------------------------------------------------*/
+
+void h_OverrideView(ClientMode* thisptr, ViewSetup* pSetup) {
+    custom_fov(pSetup);
+
+    ORIGINAL(OverrideView, thisptr, pSetup);
 }
 
 /*----------------------------------------------------------------------------*/
