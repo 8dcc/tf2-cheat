@@ -252,20 +252,9 @@ static inline void tab_aim(void) {
                  5.f, 0.1f);
 }
 
-static inline void tab_misc(void) {
+static inline void tab_visuals(void) {
     nk_layout_row_dynamic(ctx, 15, 1);
-    nk_checkbox_label(ctx, "Bhop", &settings.bhop);
-
-    nk_layout_row_dynamic(ctx, 18, 2);
-    static const char* opts0[] = { "Off", "Legit", "Rage" };
-    struct nk_vec2 size0       = { COMBO_DROP_W, 200 };
-    nk_label(ctx, "Autostrafe", NK_TEXT_LEFT);
-    nk_combobox(ctx, opts0, 3, &settings.autostrafe, 15, size0);
-
-    nk_layout_row_dynamic(ctx, 15, 1);
-    nk_checkbox_label(ctx, "NoPush", &settings.nopush);
-    nk_checkbox_label(ctx, "Anti-AFK", &settings.antiafk);
-    nk_checkbox_label(ctx, "Remove sniper scope", &settings.remove_scope);
+    nk_checkbox_label(ctx, "Remove scope overlay", &settings.remove_scope);
 
     nk_layout_row_dynamic(ctx, 8, 1);
     nk_spacing(ctx, 0); /* ----------------------------  */
@@ -286,11 +275,37 @@ static inline void tab_misc(void) {
     nk_spacing(ctx, 0); /* ----------------------------  */
     nk_layout_row_dynamic(ctx, 15, 1);
 
+    nk_checkbox_label(ctx, "Watermark", &settings.watermark);
+    nk_checkbox_label(ctx, "Spectator list", &settings.speclist);
+}
+
+static inline void tab_misc(void) {
+    nk_layout_row_dynamic(ctx, 15, 1);
+    nk_checkbox_label(ctx, "Bhop", &settings.bhop);
+
+    nk_layout_row_dynamic(ctx, 18, 2);
+    static const char* opts0[] = { "Off", "Legit", "Rage" };
+    struct nk_vec2 size0       = { COMBO_DROP_W, 200 };
+    nk_label(ctx, "Autostrafe", NK_TEXT_LEFT);
+    nk_combobox(ctx, opts0, 3, &settings.autostrafe, 15, size0);
+
+    nk_layout_row_dynamic(ctx, 8, 1);
+    nk_spacing(ctx, 0); /* ----------------------------  */
+    nk_layout_row_dynamic(ctx, 15, 1);
+
     nk_checkbox_label(ctx, "Anti-aim", &settings.aa);
     SLIDER_FLOAT("Pitch", -89.f, settings.aa_pitch, 89.f, 1.f);
     SLIDER_FLOAT("Yaw", -180.f, settings.aa_yaw, 180.f, 2.f);
     nk_checkbox_label(ctx, "Spinbot", &settings.aa_spin);
     SLIDER_FLOAT("Spinbot speed", 0.f, settings.aa_speed, 100.f, 0.5f);
+
+    nk_layout_row_dynamic(ctx, 8, 1);
+    nk_spacing(ctx, 0); /* ----------------------------  */
+    nk_layout_row_dynamic(ctx, 15, 1);
+
+    nk_checkbox_label(ctx, "Autorocketjump (mouse2)", &settings.rocketjump);
+    SLIDER_FLOAT("Degrees when moving", 25.f, settings.rocketjump_deg, 89.f,
+                 0.5f);
 
     nk_layout_row_dynamic(ctx, 8, 1);
     nk_spacing(ctx, 0); /* ----------------------------  */
@@ -310,16 +325,8 @@ static inline void tab_misc(void) {
     nk_spacing(ctx, 0); /* ----------------------------  */
     nk_layout_row_dynamic(ctx, 15, 1);
 
-    nk_checkbox_label(ctx, "Autorocketjump (mouse2)", &settings.rocketjump);
-    SLIDER_FLOAT("Degrees when moving", 25.f, settings.rocketjump_deg, 89.f,
-                 0.5f);
-
-    nk_layout_row_dynamic(ctx, 8, 1);
-    nk_spacing(ctx, 0); /* ----------------------------  */
-    nk_layout_row_dynamic(ctx, 15, 1);
-
-    nk_checkbox_label(ctx, "Watermark", &settings.watermark);
-    nk_checkbox_label(ctx, "Spectator list", &settings.speclist);
+    nk_checkbox_label(ctx, "NoPush", &settings.nopush);
+    nk_checkbox_label(ctx, "Anti-AFK", &settings.antiafk);
 }
 
 static inline void tab_colors(void) {
@@ -440,13 +447,14 @@ void menu_render(void) {
 
     if (nk_begin(ctx, "Enoch", nk_rect(MENU_X, MENU_Y, MENU_W, MENU_H),
                  MENU_FLAGS)) {
-        nk_layout_row_dynamic(ctx, 20, 5);
+        nk_layout_row_dynamic(ctx, 20, 6);
 
         ADD_TAB(0, "ESP");
         ADD_TAB(1, "Aim");
-        ADD_TAB(2, "Misc");
-        ADD_TAB(3, "Colors");
-        ADD_TAB(4, "Config");
+        ADD_TAB(2, "Visuals");
+        ADD_TAB(3, "Misc");
+        ADD_TAB(4, "Colors");
+        ADD_TAB(5, "Config");
 
         nk_layout_row_dynamic(ctx, 5, 1);
         nk_spacing(ctx, 0); /* ----------------------------  */
@@ -460,12 +468,15 @@ void menu_render(void) {
                 tab_aim();
                 break;
             case 2:
-                tab_misc();
+                tab_visuals();
                 break;
             case 3:
-                tab_colors();
+                tab_misc();
                 break;
             case 4:
+                tab_colors();
+                break;
+            case 5:
                 tab_config();
                 break;
         }

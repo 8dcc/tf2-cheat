@@ -24,8 +24,8 @@
 
 #define MENU_X 100
 #define MENU_Y 100
-#define MENU_W 400
-#define MENU_H 535
+#define MENU_W 450
+#define MENU_H 525
 
 #define WATERMARK_X 5
 #define WATERMARK_Y 5
