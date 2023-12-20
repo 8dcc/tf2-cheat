@@ -262,7 +262,7 @@ static inline void tab_visuals(void) {
 
     nk_checkbox_label(ctx, "Custom FOV", &settings.custom_fov);
     SLIDER_FLOAT("Degrees", 60.f, settings.custom_fov_deg, 130.f, 2.f);
-    nk_checkbox_label(ctx, "Override when scoped", &settings.custom_fov_scoped);
+    nk_checkbox_label(ctx, "Apply when scoped", &settings.custom_fov_scoped);
 
     nk_layout_row_dynamic(ctx, 8, 1);
     nk_spacing(ctx, 0); /* ----------------------------  */
