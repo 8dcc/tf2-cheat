@@ -61,6 +61,7 @@ float add_offset_to_yaw(float jaw, float offset);
 float sub_offset_to_yaw(float jaw, float offset);
 
 rgba_t col_scale(rgba_t c, float factor);
+rgba_t hue2rgba(float h);
 void draw_text(int x, int y, bool center, HFont f, rgba_t c, const char* str);
 void get_text_size(HFont f, const char* str, int* w, int* h);
 void convert_player_name(char* dst, const char* src);

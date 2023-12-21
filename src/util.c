@@ -254,6 +254,35 @@ rgba_t col_scale(rgba_t c, float factor) {
         return c;
 }
 
+rgba_t hue2rgba(float h) {
+    const float prime = fmodf(h / 60.f, 6);
+    const float x     = 1 - fabsf(fmodf(prime, 2) - 1);
+
+    rgba_t ret = { .r = 0, .g = 0, .b = 0, .a = 255 };
+
+    if (prime >= 0 && prime < 1) {
+        ret.r = 255;
+        ret.g = (uint8_t)(x * 0xFF);
+    } else if (prime < 2) {
+        ret.g = 255;
+        ret.r = (uint8_t)(x * 0xFF);
+    } else if (prime < 3) {
+        ret.g = 255;
+        ret.b = (uint8_t)(x * 0xFF);
+    } else if (prime < 4) {
+        ret.b = 255;
+        ret.g = (uint8_t)(x * 0xFF);
+    } else if (prime < 5) {
+        ret.b = 255;
+        ret.r = (uint8_t)(x * 0xFF);
+    } else if (prime < 6) {
+        ret.r = 255;
+        ret.b = (uint8_t)(x * 0xFF);
+    }
+
+    return ret;
+}
+
 void draw_text(int x, int y, bool center, HFont f, rgba_t c, const char* str) {
     static wchar_t wstr[512] = { '\0' };
     swprintf(wstr, 511, L"%hs", (char*)str);
