@@ -70,6 +70,7 @@ Settings settings = {
     .thirdperson         = false,
     .thirdperson_network = false,
     .draw_velocity       = false,
+    .draw_velocity_jump  = false,
     .draw_velocity_vert  = false,
     .draw_velocity_pos   = 51.f,
     .watermark           = true,
@@ -180,6 +181,7 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_INT(json_cfg, thirdperson);
     JSON_SETTINGS_WRITE_INT(json_cfg, thirdperson_network);
     JSON_SETTINGS_WRITE_INT(json_cfg, draw_velocity);
+    JSON_SETTINGS_WRITE_INT(json_cfg, draw_velocity_jump);
     JSON_SETTINGS_WRITE_INT(json_cfg, draw_velocity_vert);
     JSON_SETTINGS_WRITE_INT(json_cfg, draw_velocity_pos);
     JSON_SETTINGS_WRITE_INT(json_cfg, watermark);
@@ -343,6 +345,7 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_INT(json_cfg, thirdperson);
     JSON_SETTINGS_READ_INT(json_cfg, thirdperson_network);
     JSON_SETTINGS_READ_INT(json_cfg, draw_velocity);
+    JSON_SETTINGS_READ_INT(json_cfg, draw_velocity_jump);
     JSON_SETTINGS_READ_INT(json_cfg, draw_velocity_vert);
     JSON_SETTINGS_READ_INT(json_cfg, draw_velocity_pos);
     JSON_SETTINGS_READ_INT(json_cfg, watermark);

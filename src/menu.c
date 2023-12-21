@@ -276,6 +276,7 @@ static inline void tab_visuals(void) {
     nk_layout_row_dynamic(ctx, 15, 1);
 
     nk_checkbox_label(ctx, "Show velocity", &settings.draw_velocity);
+    nk_checkbox_label(ctx, "Show jump velocity", &settings.draw_velocity_jump);
     nk_checkbox_label(ctx, "Show vertical velocity", &settings.draw_velocity_vert);
     SLIDER_FLOAT("Position", 0.f, settings.draw_velocity_pos, 100.f, 0.1f);
 
