@@ -69,6 +69,9 @@ Settings settings = {
     .custom_fov_scoped   = false,
     .thirdperson         = false,
     .thirdperson_network = false,
+    .draw_velocity       = false,
+    .draw_velocity_vert  = false,
+    .draw_velocity_pos   = 0.f,
     .watermark           = true,
     .speclist            = true,
 
@@ -176,6 +179,9 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_INT(json_cfg, custom_fov_scoped);
     JSON_SETTINGS_WRITE_INT(json_cfg, thirdperson);
     JSON_SETTINGS_WRITE_INT(json_cfg, thirdperson_network);
+    JSON_SETTINGS_WRITE_INT(json_cfg, draw_velocity);
+    JSON_SETTINGS_WRITE_INT(json_cfg, draw_velocity_vert);
+    JSON_SETTINGS_WRITE_INT(json_cfg, draw_velocity_pos);
     JSON_SETTINGS_WRITE_INT(json_cfg, watermark);
     JSON_SETTINGS_WRITE_INT(json_cfg, speclist);
 
@@ -336,6 +342,9 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_INT(json_cfg, custom_fov_scoped);
     JSON_SETTINGS_READ_INT(json_cfg, thirdperson);
     JSON_SETTINGS_READ_INT(json_cfg, thirdperson_network);
+    JSON_SETTINGS_READ_INT(json_cfg, draw_velocity);
+    JSON_SETTINGS_READ_INT(json_cfg, draw_velocity_vert);
+    JSON_SETTINGS_READ_INT(json_cfg, draw_velocity_pos);
     JSON_SETTINGS_READ_INT(json_cfg, watermark);
     JSON_SETTINGS_READ_INT(json_cfg, speclist);
 

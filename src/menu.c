@@ -275,6 +275,14 @@ static inline void tab_visuals(void) {
     nk_spacing(ctx, 0); /* ----------------------------  */
     nk_layout_row_dynamic(ctx, 15, 1);
 
+    nk_checkbox_label(ctx, "Show velocity", &settings.draw_velocity);
+    nk_checkbox_label(ctx, "Show vertical velocity", &settings.draw_velocity_vert);
+    SLIDER_FLOAT("Position", 0.f, settings.draw_velocity_pos, 100.f, 0.1f);
+
+    nk_layout_row_dynamic(ctx, 8, 1);
+    nk_spacing(ctx, 0); /* ----------------------------  */
+    nk_layout_row_dynamic(ctx, 15, 1);
+
     nk_checkbox_label(ctx, "Watermark", &settings.watermark);
     nk_checkbox_label(ctx, "Spectator list", &settings.speclist);
 }

@@ -100,6 +100,9 @@ typedef struct {
     int custom_fov_scoped;
     int thirdperson;
     int thirdperson_network;
+    int draw_velocity;
+    int draw_velocity_vert;
+    float draw_velocity_pos;
     int watermark;
     int speclist;
 
