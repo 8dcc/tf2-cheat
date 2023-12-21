@@ -168,6 +168,9 @@ typedef struct {
     /* Updated in CreateMove and used in FrameStageNotify(FRAME_RENDER_START) */
     vec3_t render_angles;
 
+    /* Updated in CreateMove and used in draw_velocity() */
+    vec3_t localvelocity;
+
     /* Updated in features and used in CreateMove */
     bool psilent;
 } global_cache_t;

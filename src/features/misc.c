@@ -175,6 +175,52 @@ void spectator_list(void) {
 
 /*----------------------------------------------------------------------------*/
 
+#define VELOCITY_LINE_H 14
+
+static inline rgba_t speed2col(float speed) {
+    if (speed > 900.f)
+        speed = 900.f;
+    const rgba_t converted = hue2rgba(speed / 1024.f * 280.f);
+    return col_scale(converted, 1.2);
+}
+
+void draw_velocity(void) {
+    if (!g.localplayer || !g.IsInGame || !g.IsAlive)
+        return;
+
+    static char txt_speed[] = "9999999999";
+
+    int screen_w, screen_h;
+    METHOD_ARGS(i_engine, GetScreenSize, &screen_w, &screen_h);
+
+    int text_x = screen_w / 2;
+    int text_y = (float)screen_h * (settings.draw_velocity_pos / 100.f);
+
+    /* TODO: Draw "V: " before text (numx - numw/2 - txtw) */
+
+    if (settings.draw_velocity) {
+        const float cur_speed = vec_len2d(g.localvelocity);
+        rgba_t speed_col      = speed2col(cur_speed);
+
+        sprintf(txt_speed, "%d", (int)cur_speed);
+        draw_text(text_x, text_y, true, g_fonts.main.id, speed_col, txt_speed);
+
+        text_y += VELOCITY_LINE_H;
+    }
+
+    /* TODO: Draw jump speeds and color for improvements */
+
+    if (settings.draw_velocity_vert) {
+        const float cur_speed = ABS(g.localvelocity.z);
+        rgba_t speed_col      = speed2col(cur_speed);
+
+        sprintf(txt_speed, "%d", (int)cur_speed);
+        draw_text(text_x, text_y, true, g_fonts.main.id, speed_col, txt_speed);
+    }
+}
+
+/*----------------------------------------------------------------------------*/
+
 void thirdperson(void) {
     static bool was_thirdperson = true;
 
@@ -199,7 +245,7 @@ void thirdperson(void) {
 /*----------------------------------------------------------------------------*/
 
 void custom_fov(ViewSetup* pSetup) {
-    if (!settings.custom_fov || !g.localplayer || !g.IsAlive)
+    if (!settings.custom_fov || !g.localplayer || !g.IsInGame || !g.IsAlive)
         return;
 
     /* We don't want to overwrite when scoped, ad we are scoped */
