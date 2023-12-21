@@ -189,9 +189,27 @@ static inline Networkable* GetNetworkable(Entity* ent) {
     return (Networkable*)((uint32_t)ent + 0x8);
 }
 
-/* Got the offset from the top of CBaseEntity::VPhysicsUpdate() */
 static inline int GetMoveType(Entity* ent) {
-    return *(int*)((uint32_t)ent + 0x194);
+    /* Got the offset from the top of CBaseEntity::VPhysicsUpdate() */
+    const int offset = 0x194;
+    return *(int*)((uint32_t)ent + offset);
+}
+
+/* NOTE: Caller should check if `ent' is a CTFGrenadePipebombProjectile */
+static inline bool IsStickyBomb(Entity* ent) {
+    /* CTFGrenadePipebombProjectile->m_iType */
+    const int offset  = 0x8DC;
+    int pipebomb_type = *(int*)((uint32_t)ent + offset);
+
+    /* Normal sticky or jumper sticky */
+    return pipebomb_type == TF_GL_MODE_REMOTE_DETONATE ||
+           pipebomb_type == TF_GL_MODE_REMOTE_DETONATE_PRACTICE;
+}
+
+static inline CBaseHandle GetThrowerHandle(Entity* ent) {
+    /* CBaseGrenade->m_hThrower */
+    const int offset = 0x8B4;
+    return *(CBaseHandle*)((uint32_t)ent + offset);
 }
 
 static inline const char* GetClassName(Entity* ent) {
