@@ -177,6 +177,10 @@ void spectator_list(void) {
 
 #define VELOCITY_LINE_H 14
 
+static vec3_t localvelocity    = VEC_ZERO;
+static float localvelocity_len = 0.f;
+static float jump_velocity = 0.f, old_jump_velocity = 0.f;
+
 static inline rgba_t speed2col(float speed) {
     if (speed > 900.f)
         speed = 900.f;
@@ -184,11 +188,41 @@ static inline rgba_t speed2col(float speed) {
     return col_scale(converted, 1.2);
 }
 
-void draw_velocity(void) {
-    if (!g.localplayer || !g.IsInGame || !g.IsAlive)
+void store_velocity(void) {
+    if (!g.localplayer || !g.IsInGame)
         return;
 
-    static char txt_speed[] = "9999999999";
+    Entity* local = g.IsAlive ? g.localplayer
+                              : METHOD(g.localplayer, GetObserverTarget);
+    if (!local)
+        return;
+
+    localvelocity     = local->velocity;
+    localvelocity_len = vec_len2d(localvelocity);
+
+    static bool was_on_ground = false;
+    const bool is_on_ground   = (g.localplayer->flags & FL_ONGROUND) != 0;
+
+    /* If we are too slow, reset jump velocities. Otherwise, every tick we start
+     * a jump, update them. */
+    if (localvelocity_len <= 30.f) {
+        old_jump_velocity = 0.f;
+        jump_velocity     = 0.f;
+    } else if (was_on_ground && !is_on_ground) {
+        old_jump_velocity = jump_velocity;
+        jump_velocity     = localvelocity_len;
+    }
+
+    was_on_ground = is_on_ground;
+}
+
+void draw_velocity(void) {
+    if (!g.localplayer || !g.IsInGame)
+        return;
+
+    static const rgba_t white = (rgba_t){ 220, 220, 220, 255 };
+    static char txt_speed[]   = "9999999999";
+    const HFont font          = g_fonts.main.id;
 
     int screen_w, screen_h;
     METHOD_ARGS(i_engine, GetScreenSize, &screen_w, &screen_h);
@@ -196,26 +230,77 @@ void draw_velocity(void) {
     int text_x = screen_w / 2;
     int text_y = (float)screen_h * (settings.draw_velocity_pos / 100.f);
 
-    /* TODO: Draw "V: " before text (numx - numw/2 - txtw) */
+    /* X position when drawing "999". Used as base position for "S:" prefixes */
+    int three_digits_x, three_digits_h;
+    get_text_size(font, "999", &three_digits_x, &three_digits_h);
+    three_digits_x = text_x - (three_digits_x / 2);
 
     if (settings.draw_velocity) {
-        const float cur_speed = vec_len2d(g.localvelocity);
-        rgba_t speed_col      = speed2col(cur_speed);
+        rgba_t speed_col = speed2col(localvelocity_len);
 
-        sprintf(txt_speed, "%d", (int)cur_speed);
-        draw_text(text_x, text_y, true, g_fonts.main.id, speed_col, txt_speed);
+        /* Convert speed to string */
+        sprintf(txt_speed, "%d", (int)localvelocity_len);
+
+        int text_w, text_h;
+        get_text_size(font, txt_speed, &text_w, &text_h);
+
+        /* Draw current speed centered */
+        text_x -= (text_w / 2);
+        draw_text(text_x, text_y, false, font, speed_col, txt_speed);
+
+        /* For "S: " prefix */
+        int prefix_w, prefix_h;
+        get_text_size(font, "S: ", &prefix_w, &prefix_h);
+
+        /* If number is bigger than "999", adapt */
+        int prefix_x = (text_x < three_digits_x) ? text_x - prefix_w
+                                                 : three_digits_x - prefix_w;
+        draw_text(prefix_x, text_y, false, font, white, "S: ");
+
+        if (settings.draw_velocity_jump && jump_velocity > 0.f) {
+            rgba_t speed_col = (jump_velocity > old_jump_velocity)
+                                 ? (rgba_t){ 49, 235, 52, 255 }
+                                 : (rgba_t){ 247, 57, 57, 255 };
+
+            text_x += text_w;
+            draw_text(text_x, text_y, false, font, white, " (");
+            get_text_size(font, " (", &text_w, &text_h);
+            text_x += text_w;
+
+            sprintf(txt_speed, "%d", (int)jump_velocity);
+            draw_text(text_x, text_y, false, font, speed_col, txt_speed);
+            get_text_size(font, txt_speed, &text_w, &text_h);
+            text_x += text_w;
+
+            draw_text(text_x, text_y, false, font, white, ")");
+        }
 
         text_y += VELOCITY_LINE_H;
     }
 
-    /* TODO: Draw jump speeds and color for improvements */
-
     if (settings.draw_velocity_vert) {
-        const float cur_speed = ABS(g.localvelocity.z);
-        rgba_t speed_col      = speed2col(cur_speed);
+        const float vert_vel = ABS(localvelocity.z);
+        rgba_t speed_col     = speed2col(vert_vel);
 
-        sprintf(txt_speed, "%d", (int)cur_speed);
-        draw_text(text_x, text_y, true, g_fonts.main.id, speed_col, txt_speed);
+        text_x = screen_w / 2;
+
+        sprintf(txt_speed, "%d", (int)vert_vel);
+
+        int text_w, text_h;
+        get_text_size(font, txt_speed, &text_w, &text_h);
+
+        /* Draw current speed centered */
+        text_x -= (text_w / 2);
+        draw_text(text_x, text_y, false, g_fonts.main.id, speed_col, txt_speed);
+
+        /* Draw "V: " prefix */
+        int prefix_w, prefix_h;
+        get_text_size(font, "V: ", &prefix_w, &prefix_h);
+
+        /* If number is bigger than "999", adapt */
+        int prefix_x = (text_x < three_digits_x) ? text_x - prefix_w
+                                                 : three_digits_x - prefix_w;
+        draw_text(prefix_x, text_y, false, font, white, "V: ");
     }
 }
 

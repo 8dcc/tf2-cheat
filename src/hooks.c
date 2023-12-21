@@ -131,10 +131,6 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
     if (ret)
         METHOD_ARGS(i_engine, SetViewAngles, &cmd->viewangles);
 
-    /* Update some CreateMove globals here */
-    g.localvelocity = (g.localplayer) ? g.localplayer->velocity : VEC_ZERO;
-
-    /* CreateMove features */
     nopush();
     thirdperson();
     bhop(cmd);
@@ -151,6 +147,7 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
     pred_end();
 
     antiafk(cmd);
+    store_velocity();
 
     ang_clamp(&cmd->viewangles);
     correct_movement(cmd, old_angles);
