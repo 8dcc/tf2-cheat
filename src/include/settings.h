@@ -117,6 +117,9 @@ typedef struct {
     float aa_speed;
     int rocketjump;
     float rocketjump_deg;
+    int auto_detonate;
+    int auto_detonate_self;
+    float auto_detonate_dist;
     int crits_melee;
     int crits_chance;
     int autostab;

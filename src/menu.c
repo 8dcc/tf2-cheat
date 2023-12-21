@@ -277,7 +277,8 @@ static inline void tab_visuals(void) {
 
     nk_checkbox_label(ctx, "Show velocity", &settings.draw_velocity);
     nk_checkbox_label(ctx, "Show jump velocity", &settings.draw_velocity_jump);
-    nk_checkbox_label(ctx, "Show vertical velocity", &settings.draw_velocity_vert);
+    nk_checkbox_label(ctx, "Show vertical velocity",
+                      &settings.draw_velocity_vert);
     SLIDER_FLOAT("Position", 0.f, settings.draw_velocity_pos, 100.f, 0.1f);
 
     nk_layout_row_dynamic(ctx, 8, 1);
@@ -315,6 +316,17 @@ static inline void tab_misc(void) {
     nk_checkbox_label(ctx, "Autorocketjump (mouse2)", &settings.rocketjump);
     SLIDER_FLOAT("Degrees when moving", 25.f, settings.rocketjump_deg, 89.f,
                  0.5f);
+
+    nk_layout_row_dynamic(ctx, 8, 1);
+    nk_spacing(ctx, 0); /* ----------------------------  */
+    nk_layout_row_dynamic(ctx, 15, 1);
+
+    nk_checkbox_label(ctx, "Auto-detonate stickybombs",
+                      &settings.auto_detonate);
+    nk_checkbox_label(ctx, "Apply to local player",
+                      &settings.auto_detonate_self);
+    SLIDER_FLOAT("Target distance", 20.f, settings.auto_detonate_dist, 180.f,
+                 1.f);
 
     nk_layout_row_dynamic(ctx, 8, 1);
     nk_spacing(ctx, 0); /* ----------------------------  */

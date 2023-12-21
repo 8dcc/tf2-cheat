@@ -77,21 +77,24 @@ Settings settings = {
     .speclist            = true,
 
     /* Misc */
-    .bhop           = false,
-    .autostrafe     = SETT_OFF,
-    .aa             = false,
-    .aa_pitch       = 0.f,
-    .aa_yaw         = 0.f,
-    .aa_spin        = false,
-    .aa_speed       = 0.f,
-    .rocketjump     = false,
-    .rocketjump_deg = 45.f,
-    .crits_melee    = false,
-    .crits_chance   = 100,
-    .autostab       = false,
-    .anim_stab      = false,
-    .nopush         = false,
-    .antiafk        = false,
+    .bhop               = false,
+    .autostrafe         = SETT_OFF,
+    .aa                 = false,
+    .aa_pitch           = 0.f,
+    .aa_yaw             = 0.f,
+    .aa_spin            = false,
+    .aa_speed           = 0.f,
+    .rocketjump         = false,
+    .rocketjump_deg     = 45.f,
+    .auto_detonate      = false,
+    .auto_detonate_self = false,
+    .auto_detonate_dist = 120.f,
+    .crits_melee        = false,
+    .crits_chance       = 100,
+    .autostab           = false,
+    .anim_stab          = false,
+    .nopush             = false,
+    .antiafk            = false,
 
     /* Colors */
     .col_steam_friend_esp = (struct nk_colorf){ 0.21f, 0.77f, 0.23f, 1.f },
@@ -197,6 +200,9 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_FLOAT(json_cfg, aa_speed);
     JSON_SETTINGS_WRITE_INT(json_cfg, rocketjump);
     JSON_SETTINGS_WRITE_FLOAT(json_cfg, rocketjump_deg);
+    JSON_SETTINGS_WRITE_INT(json_cfg, auto_detonate);
+    JSON_SETTINGS_WRITE_INT(json_cfg, auto_detonate_self);
+    JSON_SETTINGS_WRITE_FLOAT(json_cfg, auto_detonate_dist);
     JSON_SETTINGS_WRITE_INT(json_cfg, crits_melee);
     JSON_SETTINGS_WRITE_INT(json_cfg, crits_chance);
     JSON_SETTINGS_WRITE_INT(json_cfg, autostab);
@@ -361,6 +367,9 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_FLOAT(json_cfg, aa_speed);
     JSON_SETTINGS_READ_INT(json_cfg, rocketjump);
     JSON_SETTINGS_READ_FLOAT(json_cfg, rocketjump_deg);
+    JSON_SETTINGS_READ_INT(json_cfg, auto_detonate);
+    JSON_SETTINGS_READ_INT(json_cfg, auto_detonate_self);
+    JSON_SETTINGS_READ_FLOAT(json_cfg, auto_detonate_dist);
     JSON_SETTINGS_READ_INT(json_cfg, crits_melee);
     JSON_SETTINGS_READ_INT(json_cfg, crits_chance);
     JSON_SETTINGS_READ_INT(json_cfg, autostab);
