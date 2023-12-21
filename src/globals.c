@@ -199,13 +199,13 @@ bool globals_init(void) {
     }
 
     /* Needed for write permission on the VMTs. Macro declared in globals.h */
-    CLONE_VMT(BaseClient, i_baseclient);
-    CLONE_VMT(ClientMode, i_clientmode);
-    CLONE_VMT(EngineVGui, i_enginevgui);
-    CLONE_VMT(IPanel, i_panel);
-    CLONE_VMT(ModelRender, i_modelrender);
-    CLONE_VMT(IPrediction, i_prediction);
-    CLONE_VMT(CInput, i_input);
+    CLONE_VMT(i_baseclient);
+    CLONE_VMT(i_clientmode);
+    CLONE_VMT(i_enginevgui);
+    CLONE_VMT(i_panel);
+    CLONE_VMT(i_modelrender);
+    CLONE_VMT(i_prediction);
+    CLONE_VMT(i_input);
 
     dlclose(h_client);
     dlclose(h_engine);
@@ -233,12 +233,12 @@ bool globals_init(void) {
 
 bool resore_vtables(void) {
     /* Restore original VTables when unloading. Macro declared in globals.h */
-    RESTORE_VMT(BaseClient, i_baseclient);
-    RESTORE_VMT(ClientMode, i_clientmode);
-    RESTORE_VMT(EngineVGui, i_enginevgui);
-    RESTORE_VMT(IPanel, i_panel);
-    RESTORE_VMT(ModelRender, i_modelrender);
-    RESTORE_VMT(IPrediction, i_prediction);
+    RESTORE_VMT(i_baseclient);
+    RESTORE_VMT(i_clientmode);
+    RESTORE_VMT(i_enginevgui);
+    RESTORE_VMT(i_panel);
+    RESTORE_VMT(i_modelrender);
+    RESTORE_VMT(i_prediction);
 
     return true;
 }

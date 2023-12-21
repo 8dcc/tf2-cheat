@@ -65,37 +65,40 @@
  * nVMTi_* | new vmt pointer allocated by us
  * c_*     | class ptr with no VMT
  */
-#define DECL_INTF(type, name)        \
-    type* i_##name           = NULL; \
-    VMT_##type* oVMTi_##name = NULL; \
-    VMT_##type* nVMTi_##name = NULL;
+#define DECL_INTF(INTF, NAME)        \
+    INTF* i_##NAME           = NULL; \
+    VMT_##INTF* oVMTi_##NAME = NULL; \
+    VMT_##INTF* nVMTi_##NAME = NULL;
 
-#define DECL_INTF_EXTERN(type, name) \
-    extern type* i_##name;           \
-    extern VMT_##type* oVMTi_##name; \
-    extern VMT_##type* nVMTi_##name;
+#define DECL_INTF_EXTERN(INTF, NAME) \
+    extern INTF* i_##NAME;           \
+    extern VMT_##INTF* oVMTi_##NAME; \
+    extern VMT_##INTF* nVMTi_##NAME;
 
-#define DECL_CLASS(type, name) type* c_##name = NULL;
+#define DECL_CLASS(CLASS, INSTANCE) CLASS* c_##INSTANCE = NULL;
 
-#define DECL_CLASS_EXTERN(type, name) extern type* c_##name;
+#define DECL_CLASS_EXTERN(CLASS, INSTANCE) extern CLASS* c_##INSTANCE;
 
-#define DECL_SDL_FUNC(retType, name, ...)     \
-    typedef retType (*name##_t)(__VA_ARGS__); \
-    extern name##_t* name##Ptr;
+#define DECL_SDL_FUNC(RET_TYPE, NAME, ...)     \
+    typedef RET_TYPE (*NAME##_t)(__VA_ARGS__); \
+    extern NAME##_t* NAME##Ptr;
 
-#define CLONE_VMT(class, name)                                                \
-    oVMT##name = name->vmt;                                                   \
-    nVMT##name = malloc(vmt_size(name->vmt));                                 \
-    if (!nVMT##name) {                                                        \
-        fprintf(stderr, "CLONE_VMT: Could not allocate vmt for %s\n", #name); \
-        return false;                                                         \
-    }                                                                         \
-    memcpy(nVMT##name, name->vmt, vmt_size(name->vmt));                       \
-    name->vmt = nVMT##name;
+#define CLONE_VMT(INSTANCE)                                           \
+    oVMT##INSTANCE = INSTANCE->vmt;                                   \
+    nVMT##INSTANCE = malloc(vmt_size(INSTANCE->vmt));                 \
+    if (!nVMT##INSTANCE) {                                            \
+        fprintf(stderr, "CLONE_VMT: Could not allocate vmt for %s\n", \
+                #INSTANCE);                                           \
+        return false;                                                 \
+    }                                                                 \
+    memcpy(nVMT##INSTANCE, INSTANCE->vmt, vmt_size(INSTANCE->vmt));   \
+    INSTANCE->vmt = nVMT##INSTANCE;
 
-#define RESTORE_VMT(class, name) \
-    name->vmt = oVMT##name;      \
-    free(nVMT##name);
+#define RESTORE_VMT(INSTANCE)           \
+    if (INSTANCE) {                     \
+        INSTANCE->vmt = oVMT##INSTANCE; \
+        free(nVMT##INSTANCE);           \
+    }
 
 /*----------------------------------------------------------------------------*/
 /* Structs */
