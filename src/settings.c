@@ -71,7 +71,7 @@ Settings settings = {
     .thirdperson_network = false,
     .draw_velocity       = false,
     .draw_velocity_vert  = false,
-    .draw_velocity_pos   = 0.f,
+    .draw_velocity_pos   = 51.f,
     .watermark           = true,
     .speclist            = true,
 
