@@ -55,6 +55,9 @@ The cheat currently has the following features:
     - Apply when scoped
   - Thirdperson
     - Client or network angles (for displaying AA, silent aim, etc.)
+  - Show velocity
+    - Show at jumps
+    - Show vertical speed
   - Watermark
   - Spectator list
 - Misc
