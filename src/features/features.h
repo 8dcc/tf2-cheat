@@ -31,13 +31,15 @@ void bhop(usercmd_t* cmd);
 void autorocketjump(usercmd_t* cmd);
 void correct_movement(usercmd_t* cmd, vec3_t old_angles);
 
-/* src/features/misc.c */
-void autobackstab(usercmd_t* cmd);
+/* src/features/visuals.c */
 void spectator_list(void);
 void store_velocity(void);
 void draw_velocity(void);
 void thirdperson(void);
 void custom_fov(ViewSetup* pSetup);
+
+/* src/features/misc.c */
+void autobackstab(usercmd_t* cmd);
 void nopush(void);
 void antiafk(usercmd_t* cmd);
 

@@ -158,9 +158,11 @@ typedef struct {
     int MaxClients;
     int MaxEntities;
     VMatrix w2s_vmatrix;
-    Entity* ents[2049];
     Entity* localplayer;
     Weapon* localweapon;
+    /* NOTE: Only stores non-null and non-dormant entities. For players, also
+     * disards dead players. See cache_update() */
+    Entity* ents[2049];
 
     /* Updated in EngineVGui::Paint() -> spectator_list() */
     bool spectated_1st;
