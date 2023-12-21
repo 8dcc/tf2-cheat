@@ -1284,6 +1284,14 @@ enum ETFItemDefIndex {
     Misc_t_Saxxy                                      = 423,
 };
 
+/* Grenade Launcher modes (for pipebombs) */
+enum {
+    TF_GL_MODE_REGULAR = 0,
+    TF_GL_MODE_REMOTE_DETONATE,
+    TF_GL_MODE_REMOTE_DETONATE_PRACTICE,
+    TF_GL_MODE_CANNONBALL,
+};
+
 /* CBaseHandle */
 #define MAX_EDICT_BITS        11
 #define MAX_EDICTS            (1 << MAX_EDICT_BITS)
