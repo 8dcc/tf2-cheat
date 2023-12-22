@@ -110,7 +110,7 @@ static bool can_detonate(int ent_idx, int item_def_index) {
 
 static void clear_detonated_stickies(int item_def_index) {
     const float arm_time =
-      (item_def_index == Demoman_s_TheQuickiebombLauncher) ? 0.6f : 0.8f;
+      (item_def_index == Demoman_s_TheQuickiebombLauncher) ? 0.5f : 0.7f;
 
     /* New position in the `stickies' array for the non-armed stickies */
     int new_last = -1;
