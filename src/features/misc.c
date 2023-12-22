@@ -70,6 +70,12 @@ void autobackstab(usercmd_t* cmd) {
 
 /*----------------------------------------------------------------------------*/
 
+#define CLEAR_STICKIES_AND_RETURN() \
+    {                               \
+        last_sticky = -1;           \
+        return;                     \
+    }
+
 #define MAX_STICKIES 8
 
 typedef struct {
@@ -84,7 +90,7 @@ static bool can_detonate(int ent_idx, int item_def_index) {
     float spawn_time = 0.f;
 
     /* Check if we saved the spawn time of this sticky */
-    for (int i = 0; i < last_sticky; i++) {
+    for (int i = 0; i <= last_sticky; i++) {
         if (stickies[i].idx == ent_idx) {
             spawn_time = stickies[i].spawn_time;
             break;
@@ -104,19 +110,19 @@ static bool can_detonate(int ent_idx, int item_def_index) {
 
     /* Return true if N seconds have passed since spawn time */
     const float arm_time =
-      (item_def_index == Demoman_s_TheQuickiebombLauncher) ? 0.5f : 0.7f;
+      (item_def_index == Demoman_s_TheQuickiebombLauncher) ? 0.6f : 0.8f;
     return c_globalvars->curtime >= spawn_time + arm_time;
 }
 
 static void clear_detonated_stickies(int item_def_index) {
     const float arm_time =
-      (item_def_index == Demoman_s_TheQuickiebombLauncher) ? 0.5f : 0.7f;
+      (item_def_index == Demoman_s_TheQuickiebombLauncher) ? 0.6f : 0.8f;
 
     /* New position in the `stickies' array for the non-armed stickies */
     int new_last = -1;
 
     /* Iterate array, only save the stickies that are not fully armed */
-    for (int i = 0; i < last_sticky; i++)
+    for (int i = 0; i <= last_sticky; i++)
         if (c_globalvars->curtime < stickies[i].spawn_time + arm_time)
             stickies[++new_last] = stickies[i];
 
@@ -127,22 +133,35 @@ static void clear_detonated_stickies(int item_def_index) {
 void auto_detonate_stickies(usercmd_t* cmd) {
     if (!settings.auto_detonate || !g.localplayer || !g.localweapon ||
         !g.IsAlive)
-        return;
+        CLEAR_STICKIES_AND_RETURN();
 
-    /* Invalid slot */
-    const int wpn_slot = METHOD(g.localweapon, GetSlot);
-    if (wpn_slot != WPN_SLOT_SECONDARY)
-        return;
+    /* Get weapon in second slot. We have to iterate because the index in
+     * `m_hMyWeapons' is not always one (if we use boots, for example). We can't
+     * use g.ents[] since it's not a valid player. */
+    Weapon* secondary = NULL;
 
-    /* TODO: Check if we have launcher in slot 2, instead of checking if it's
-     * the current weapon. */
-    /* Invalid secondary type */
-    const int wpn_id = METHOD(g.localweapon, GetWeaponId);
-    if (wpn_id != TF_WEAPON_PIPEBOMBLAUNCHER)
-        return;
+    for (int i = 0; i <= 2; i++) {
+        const CBaseHandle handle = g.localplayer->m_hMyWeapons[i];
+        const int idx            = CBaseHandle_GetEntryIndex(handle);
+        Weapon* cur_weapon =
+          (Weapon*)METHOD_ARGS(i_entitylist, GetClientEntity, idx);
+        if (!cur_weapon)
+            CLEAR_STICKIES_AND_RETURN();
+
+        /* Check if we have launcher in second slot */
+        const int cur_weapon_id = METHOD(cur_weapon, GetWeaponId);
+        if (cur_weapon_id == TF_WEAPON_PIPEBOMBLAUNCHER) {
+            secondary = cur_weapon;
+            break;
+        }
+    }
+
+    /* We didn't find a valid TF_WEAPON_PIPEBOMBLAUNCHER in our weapons */
+    if (!secondary)
+        CLEAR_STICKIES_AND_RETURN();
 
     /* Used in previous 2 functions to check the arm time of the stickies */
-    const int wpn_item_def_idx = g.localweapon->m_iItemDefinitionIndex;
+    const int wpn_item_def_idx = secondary->m_iItemDefinitionIndex;
 
     /* Iterate entities, searching for stickies */
     for (int i = g.MaxClients + 1; i < g.MaxEntities; i++) {
@@ -178,7 +197,7 @@ void auto_detonate_stickies(usercmd_t* cmd) {
 
         /* Current entity is one of our stickies, check if it's close enough to
          * an enemy. */
-        for (int j = 1; j < g.MaxClients; j++) {
+        for (int j = 1; j <= g.MaxClients; j++) {
             Entity* player = g.ents[j];
             if (!player)
                 continue;
@@ -206,12 +225,12 @@ void auto_detonate_stickies(usercmd_t* cmd) {
             /* Is there anything between the sticky and the target? */
             if (is_enemy_visible(sticky_pos, player_pos, player)) {
                 cmd->buttons |= IN_ATTACK2;
-                goto done;
+                clear_detonated_stickies(wpn_item_def_idx);
+                return;
             }
         }
     }
 
-done:
     if (cmd->buttons & IN_ATTACK2)
         clear_detonated_stickies(wpn_item_def_idx);
 }
