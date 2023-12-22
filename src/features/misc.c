@@ -137,11 +137,15 @@ void auto_detonate_stickies(usercmd_t* cmd) {
             /* TODO: If scotish resistance, look to the sticky entity with
              * g.pSilent */
 
-            /* If it's close enough, detonate */
+            /* Is it close enough? */
             const vec3_t player_pos = GetCenter(player);
             const float distance    = vec_len(vec_sub(sticky_pos, player_pos));
 
-            if (distance < settings.auto_detonate_dist) {
+            if (distance > settings.auto_detonate_dist)
+                continue;
+
+            /* Is there anything between the sticky and the target? */
+            if (is_enemy_visible(sticky_pos, player_pos, player)) {
                 cmd->buttons |= IN_ATTACK2;
                 return;
             }
