@@ -74,7 +74,7 @@ elif [[ "$1" == "debug" ]]; then
     rm "$tmp_libpath"
 else
     # Im still thinking of a way to reload cheat while using temp library
-    # so for now i'll remove it for now.
+    # so i'll remove it for now.
     gdb -n -q -batch                                       \
         -ex "attach $pid"                                  \
         -ex "set \$dlopen = (void* (*)(char*, int))dlopen" \
