@@ -70,6 +70,60 @@ void autobackstab(usercmd_t* cmd) {
 
 /*----------------------------------------------------------------------------*/
 
+#define MAX_STICKIES 8
+
+typedef struct {
+    int idx;
+    float spawn_time;
+} SpawnData;
+
+static SpawnData stickies[MAX_STICKIES];
+static int last_sticky = -1;
+
+static bool can_detonate(int ent_idx, int item_def_index) {
+    float spawn_time = 0.f;
+
+    /* Check if we saved the spawn time of this sticky */
+    for (int i = 0; i < last_sticky; i++) {
+        if (stickies[i].idx == ent_idx) {
+            spawn_time = stickies[i].spawn_time;
+            break;
+        }
+    }
+
+    /* Did not find spawn time for sticky, store it just spawned */
+    if (spawn_time == 0.f) {
+        if (last_sticky < MAX_STICKIES - 1) {
+            stickies[++last_sticky] = (SpawnData){
+                .idx        = ent_idx,
+                .spawn_time = c_globalvars->curtime,
+            };
+        }
+        return false;
+    }
+
+    /* Return true if N seconds have passed since spawn time */
+    const float arm_time =
+      (item_def_index == Demoman_s_TheQuickiebombLauncher) ? 0.5f : 0.7f;
+    return c_globalvars->curtime >= spawn_time + arm_time;
+}
+
+static void clear_detonated_stickies(int item_def_index) {
+    const float arm_time =
+      (item_def_index == Demoman_s_TheQuickiebombLauncher) ? 0.6f : 0.8f;
+
+    /* New position in the `stickies' array for the non-armed stickies */
+    int new_last = -1;
+
+    /* Iterate array, only save the stickies that are not fully armed */
+    for (int i = 0; i < last_sticky; i++)
+        if (c_globalvars->curtime < stickies[i].spawn_time + arm_time)
+            stickies[++new_last] = stickies[i];
+
+    /* Update number of stickies in array */
+    last_sticky = new_last;
+}
+
 void auto_detonate_stickies(usercmd_t* cmd) {
     if (!settings.auto_detonate || !g.localplayer || !g.localweapon ||
         !g.IsAlive)
@@ -86,6 +140,9 @@ void auto_detonate_stickies(usercmd_t* cmd) {
     const int wpn_id = METHOD(g.localweapon, GetWeaponId);
     if (wpn_id != TF_WEAPON_PIPEBOMBLAUNCHER)
         return;
+
+    /* Used in previous 2 functions to check the arm time of the stickies */
+    const int wpn_item_def_idx = g.localweapon->m_iItemDefinitionIndex;
 
     /* Iterate entities, searching for stickies */
     for (int i = g.MaxClients + 1; i < g.MaxEntities; i++) {
@@ -112,7 +169,9 @@ void auto_detonate_stickies(usercmd_t* cmd) {
         if (thrower_idx != g.localidx)
             continue;
 
-        /* TODO: Check if the sticky is ready to be detonated */
+        /* Check if the sticky is armed */
+        if (!can_detonate(i, wpn_item_def_idx))
+            continue;
 
         /* Valid sticky. Calculate position once. */
         const vec3_t sticky_pos = *METHOD(sticky, WorldSpaceCenter);
@@ -147,10 +206,14 @@ void auto_detonate_stickies(usercmd_t* cmd) {
             /* Is there anything between the sticky and the target? */
             if (is_enemy_visible(sticky_pos, player_pos, player)) {
                 cmd->buttons |= IN_ATTACK2;
-                return;
+                goto done;
             }
         }
     }
+
+done:
+    if (cmd->buttons & IN_ATTACK2)
+        clear_detonated_stickies(wpn_item_def_idx);
 }
 
 /*----------------------------------------------------------------------------*/
