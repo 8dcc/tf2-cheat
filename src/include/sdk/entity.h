@@ -138,8 +138,10 @@ struct Entity {
     int flags; /* 0x36C */
     PAD(0x8E4);
     float flNextAttack; /* 0xC54 */
-    PAD(0x214);
-    vec3_t vecPunchAngle; /* 0xE6C */
+    PAD(0x84);
+    CBaseHandle m_hMyWeapons[MAX_WEAPONS]; /* 0xCDC */
+    PAD(0xD0);                             /* Starts at 0xD9C */
+    vec3_t vecPunchAngle;                  /* 0xE6C */
     PAD(0xD0);
     int m_iObjectMode; /* 0xF48 */
     PAD(0x1C4);

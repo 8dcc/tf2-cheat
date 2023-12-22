@@ -1300,6 +1300,11 @@ enum {
 #define ENT_ENTRY_MASK        (NUM_ENT_ENTRIES - 1)
 #define INVALID_EHANDLE_INDEX 0xFFFFFFFF
 
+#define MAX_WEAPON_SLOTS     6  /* hud item selection slots */
+#define MAX_WEAPON_POSITIONS 20 /* max number of items within a slot */
+#define MAX_ITEM_TYPES       6  /* hud item selection slots */
+#define MAX_WEAPONS          48 /* Max number of weapons available */
+
 enum ETFClass {
     CLASS_NONE = 0,
     CLASS_SCOUT,
