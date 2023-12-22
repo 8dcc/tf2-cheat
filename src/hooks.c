@@ -143,6 +143,7 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
         aimbot(cmd);
         automedigun(cmd);
         autorocketjump(cmd);
+        auto_detonate_stickies(cmd);
     }
     pred_end();
 

@@ -70,7 +70,84 @@ void autobackstab(usercmd_t* cmd) {
 
 /*----------------------------------------------------------------------------*/
 
-/* TODO: Auto-detonate stickies */
+void auto_detonate_stickies(usercmd_t* cmd) {
+    if (!settings.auto_detonate || !g.localplayer || !g.localweapon ||
+        !g.IsAlive)
+        return;
+
+    /* Invalid slot */
+    const int wpn_slot = METHOD(g.localweapon, GetSlot);
+    if (wpn_slot != WPN_SLOT_SECONDARY)
+        return;
+
+    /* TODO: Check if we have launcher in slot 2, instead of checking if it's
+     * the current weapon. */
+    /* Invalid secondary type */
+    const int wpn_id = METHOD(g.localweapon, GetWeaponId);
+    if (wpn_id != TF_WEAPON_PIPEBOMBLAUNCHER)
+        return;
+
+    /* Iterate entities, searching for stickies */
+    for (int i = g.MaxClients + 1; i < g.MaxEntities; i++) {
+        Entity* sticky = g.ents[i];
+        if (!sticky)
+            continue;
+
+        Networkable* sticky_net   = GetNetworkable(sticky);
+        ClientClass* sticky_class = METHOD(sticky_net, GetClientClass);
+        if (!sticky_class)
+            continue;
+
+        /* CTFGrenadePipebombProjectile means both stickies and pipebombs */
+        if (sticky_class->class_id != CClass_CTFGrenadePipebombProjectile)
+            continue;
+
+        /* Is it a sticky or a pipebomb? */
+        if (!IsStickyBomb(sticky))
+            continue;
+
+        /* Are we the owner of the stickybomb? */
+        CBaseHandle thrower_handle = GetThrowerHandle(sticky);
+        const int thrower_idx      = CBaseHandle_GetEntryIndex(thrower_handle);
+        if (thrower_idx != g.localidx)
+            continue;
+
+        /* TODO: Check if the sticky is ready to be detonated */
+
+        /* Valid sticky. Calculate position once. */
+        const vec3_t sticky_pos = *METHOD(sticky, WorldSpaceCenter);
+
+        /* Current entity is one of our stickies, check if it's close enough to
+         * an enemy. */
+        for (int j = 1; j < g.MaxClients; j++) {
+            Entity* player = g.ents[j];
+            if (!player)
+                continue;
+
+            /* If we are the current player, just check if we want to detonate
+             * ourselves. Otherwise, also make sure the player is a vulnerable
+             * enemy. */
+            if (j == g.localidx) {
+                if (!settings.auto_detonate_self)
+                    continue;
+            } else if (IsTeammate(player) || IsInvulnerable(player)) {
+                continue;
+            }
+
+            /* TODO: If scotish resistance, look to the sticky entity with
+             * g.pSilent */
+
+            /* If it's close enough, detonate */
+            const vec3_t player_pos = GetCenter(player);
+            const float distance    = vec_len(vec_sub(sticky_pos, player_pos));
+
+            if (distance < settings.auto_detonate_dist) {
+                cmd->buttons |= IN_ATTACK2;
+                return;
+            }
+        }
+    }
+}
 
 /*----------------------------------------------------------------------------*/
 

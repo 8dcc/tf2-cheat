@@ -40,6 +40,7 @@ void custom_fov(ViewSetup* pSetup);
 
 /* src/features/misc.c */
 void autobackstab(usercmd_t* cmd);
+void auto_detonate_stickies(usercmd_t* cmd);
 void nopush(void);
 void antiafk(usercmd_t* cmd);
 
