@@ -40,7 +40,7 @@ if [[ "$1" == "unload" ]] && [[ ! -z "$2" ]]; then
     # While unloading use the right library path
     tmp_libpath="$2"
 else
-    # Generate new temp directory file
+    # Generate temp library path
     tmp_libpath="/tmp/libgl"
     tmp_libpath+=$(head /dev/urandom | tr -dc 'a-z0-9' | head -c 4)
     tmp_libpath+=".so"
