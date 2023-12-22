@@ -26,6 +26,9 @@ void automedigun(usercmd_t* cmd);
 /* src/features/antiaim.c */
 void spinbot(usercmd_t* cmd);
 
+/* src/features/auto_detonate_stickies.c */
+void auto_detonate_stickies(usercmd_t* cmd);
+
 /* src/features/movement.c */
 void bhop(usercmd_t* cmd);
 void autorocketjump(usercmd_t* cmd);
@@ -40,7 +43,6 @@ void custom_fov(ViewSetup* pSetup);
 
 /* src/features/misc.c */
 void autobackstab(usercmd_t* cmd);
-void auto_detonate_stickies(usercmd_t* cmd);
 void nopush(void);
 void antiafk(usercmd_t* cmd);
 
