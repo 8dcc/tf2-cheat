@@ -193,6 +193,24 @@ vec3_t center_of_hitbox(studiohdr_t* studio, matrix3x4_t* bonemat, int set,
     };
 }
 
+bool is_visible(vec3_t start, vec3_t end, Entity* target, bool ignore_friendly) {
+    /* We initialize with a custom ShouldHitEntity() for ignoring teammates */
+    TraceFilter filter;
+    if (ignore_friendly)
+        TraceFilterInit_IgnoreFriendly(&filter, g.localplayer);
+    else
+        TraceFilterInit(&filter, g.localplayer);
+
+    Ray_t ray;
+    RayInit(&ray, start, end);
+
+    Trace_t trace;
+    METHOD_ARGS(i_enginetrace, TraceRay, &ray, MASK_SHOT | CONTENTS_GRATE,
+                &filter, &trace);
+
+    return trace.entity == target || trace.fraction > 0.97f;
+}
+
 vec3_t velocity_to_ang(vec3_t vel) {
     if (vel.y == 0.f && vel.x == 0.f) {
         if (vel.z > 0.f)

@@ -56,6 +56,17 @@ bool can_shoot(void);
 bool melee_dealing_damage(usercmd_t* cmd);
 vec3_t center_of_hitbox(studiohdr_t* studio, matrix3x4_t* bonemat, int set,
                         int idx);
+
+bool is_visible(vec3_t start, vec3_t end, Entity* target, bool ignore_friendly);
+
+static inline bool is_teammate_visible(vec3_t s, vec3_t e, Entity* t) {
+    return is_visible(s, e, t, false);
+}
+
+static inline bool is_enemy_visible(vec3_t s, vec3_t e, Entity* t) {
+    return is_visible(s, e, t, true);
+}
+
 vec3_t velocity_to_ang(vec3_t vel);
 float add_offset_to_yaw(float jaw, float offset);
 float sub_offset_to_yaw(float jaw, float offset);

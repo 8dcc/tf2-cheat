@@ -9,21 +9,6 @@
 /* If we are looking X degrees away from the desired angle, start healing */
 #define AIM_DEGREE_THRESHOD 3.f
 
-/* Different from the one in aimbot.c */
-static bool is_visible(vec3_t start, vec3_t end, Entity* target) {
-    TraceFilter filter;
-    TraceFilterInit(&filter, g.localplayer);
-
-    Ray_t ray;
-    RayInit(&ray, start, end);
-
-    Trace_t trace;
-    METHOD_ARGS(i_enginetrace, TraceRay, &ray, MASK_SHOT | CONTENTS_GRATE,
-                &filter, &trace);
-
-    return trace.entity == target || trace.fraction > 0.97f;
-}
-
 static Entity* get_best_target(vec3_t local_shoot_pos) {
     /* These vars are used to store the best target across iterations */
     Entity* best_ent            = NULL;
@@ -59,7 +44,7 @@ static Entity* get_best_target(vec3_t local_shoot_pos) {
             continue;
 
         /* We can't heal him */
-        if (!is_visible(local_shoot_pos, ent_center, ent))
+        if (!is_teammate_visible(local_shoot_pos, ent_center, ent))
             continue;
 
         /* Health percentage relative to the max health after healing */

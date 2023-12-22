@@ -59,24 +59,6 @@ static vec3_t get_hitbox_pos(Entity* ent, int hitbox_idx) {
     return center_of_hitbox(hdr, bones, HITBOX_SET, hitbox_idx);
 }
 
-static bool is_visible(vec3_t start, vec3_t end, Entity* target) {
-    if (settings.aim_target_invis)
-        return true;
-
-    /* We initialize with a custom ShouldHitEntity() for ignoring teammates */
-    TraceFilter filter;
-    TraceFilterInit_IgnoreFriendly(&filter, g.localplayer);
-
-    Ray_t ray;
-    RayInit(&ray, start, end);
-
-    Trace_t trace;
-    METHOD_ARGS(i_enginetrace, TraceRay, &ray, MASK_SHOT | CONTENTS_GRATE,
-                &filter, &trace);
-
-    return trace.entity == target || trace.fraction > 0.97f;
-}
-
 static vec3_t get_closest_fov(vec3_t viewangles) {
     /* Compensate aim punch */
     viewangles.x += g.localplayer->vecPunchAngle.x;
@@ -108,7 +90,8 @@ static vec3_t get_closest_fov(vec3_t viewangles) {
                 continue;
 
             /* We can't see current hitbox */
-            if (!is_visible(local_eyes, target_pos, ent))
+            if (!settings.aim_target_invis &&
+                !is_enemy_visible(local_eyes, target_pos, ent))
                 continue;
 
             const vec3_t enemy_angle =
