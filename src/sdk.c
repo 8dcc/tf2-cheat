@@ -69,6 +69,8 @@ static bool TraceFilterShouldHitEnt_IgnoreFriendly(TraceFilter* thisptr,
             if (IsTeammate(ent))
                 return false;
             break;
+        case CClass_CTFGrenadePipebombProjectile:
+            return false;
         default:
             break;
     }
