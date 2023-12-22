@@ -77,7 +77,7 @@ $ sudo ./injector.sh
 ...
 
 Done. Unload cheat using:
-./inject.sh unload ..
+./inject.sh unload ...
 #+end_src
 
 * Screenshots
