@@ -62,7 +62,7 @@ Simply clone the repository and build the project using =make=.
 #+begin_src console
 $ git clone https://github.com/8dcc/tf2-cheat
 $ cd tf2-cheat
-$ make
+$ make -j$(nproc)
 ...
 #+end_src
 
