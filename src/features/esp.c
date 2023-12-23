@@ -78,7 +78,7 @@ static inline bool get_bbox(Entity* ent, int* x, int* y, int* w, int* h) {
 
 static inline void skeleton_esp(Renderable* rend, matrix3x4_t* bones,
                                 rgba_t col) {
-    if (!settings.skeleton_esp)
+    if (!settings.esp_skeleton)
         return;
 
     if (!METHOD_ARGS(rend, SetupBones, bones, MAXSTUDIOBONES,
@@ -127,22 +127,11 @@ static inline void building_esp(Entity* ent, const char* str, rgba_t friend_col,
                                 rgba_t enemy_col) {
     const bool teammate = IsTeammate(ent);
 
-    /* Should we render this turret's team? */
-    switch (settings.building_esp) {
-        case SETT_ENEMY:
-            if (teammate)
-                return;
-            break;
-        case SETT_FRIENDLY:
-            if (!teammate)
-                return;
-            break;
-        case SETT_ALL:
-            break;
-        default:
-        case SETT_OFF:
-            return;
-    }
+    /* Should we render this building's team? */
+    if (settings.esp_building != SETT_ALL &&
+        ((settings.esp_building == SETT_FRIEND && !teammate) ||
+         (settings.esp_building == SETT_ENEMY && teammate)))
+        return;
 
     static int x, y, w, h;
     if (!get_bbox(ent, &x, &y, &w, &h))
@@ -151,11 +140,11 @@ static inline void building_esp(Entity* ent, const char* str, rgba_t friend_col,
     rgba_t col = teammate ? friend_col : enemy_col;
 
     /* Building box ESP */
-    if (settings.building_box_esp)
+    if (settings.esp_building_box)
         OUTLINED_BOX(x, y, w, h, col);
 
     /* Building health ESP */
-    if (settings.building_hp_esp) {
+    if (settings.esp_building_hp) {
         const int hp     = METHOD(ent, GetHealth);
         const int max_hp = METHOD(ent, GetMaxHealth);
 
@@ -188,7 +177,7 @@ static inline void building_esp(Entity* ent, const char* str, rgba_t friend_col,
     }
 
     /* Building type ESP (string function parameter passed from esp) */
-    if (settings.building_name_esp)
+    if (settings.esp_building_name)
         draw_text(x + w / 2, y + h + 1, true, g_fonts.main.id, col, str);
 }
 
@@ -207,24 +196,23 @@ static inline void generic_ent_name(Entity* ent, const char* str, rgba_t col) {
 /*----------------------------------------------------------------------------*/
 
 void esp(void) {
-    if (settings.player_esp == SETT_OFF && settings.building_esp == SETT_OFF &&
-        settings.sticky_esp == SETT_OFF && !settings.ammobox_esp &&
-        !settings.healthpack_esp)
+    if (settings.esp_player == SETT_OFF && settings.esp_building == SETT_OFF &&
+        settings.esp_sticky == SETT_OFF && !settings.esp_ammobox &&
+        !settings.esp_healthpack)
         return;
 
     if (!g.localplayer)
         return;
 
-    /* TODO: Rename local vars */
-    rgba_t player_steam_friend_col = NK2COL(settings.col_steam_friend_esp);
-    rgba_t player_friend_col       = NK2COL(settings.col_friend_esp);
-    rgba_t player_enemy_col        = NK2COL(settings.col_enemy_esp);
-    rgba_t build_friend_col        = NK2COL(settings.col_friend_build);
-    rgba_t build_enemy_col         = NK2COL(settings.col_enemy_build);
-    rgba_t sticky_friend_col       = NK2COL(settings.col_sticky_friend_esp);
-    rgba_t sticky_enemy_col        = NK2COL(settings.col_sticky_enemy_esp);
-    rgba_t ammobox_col             = NK2COL(settings.col_ammobox_esp);
-    rgba_t healthpack_col          = NK2COL(settings.col_healthpack_esp);
+    rgba_t col_player_steam_friend = NK2COL(settings.col_esp_steam_friend);
+    rgba_t col_player_friend       = NK2COL(settings.col_esp_friend);
+    rgba_t col_player_enemy        = NK2COL(settings.col_esp_enemy);
+    rgba_t col_build_friend        = NK2COL(settings.col_esp_friend_build);
+    rgba_t col_build_enemy         = NK2COL(settings.col_esp_enemy_build);
+    rgba_t col_sticky_friend       = NK2COL(settings.col_esp_sticky_friend);
+    rgba_t col_sticky_enemy        = NK2COL(settings.col_esp_sticky_enemy);
+    rgba_t col_ammobox             = NK2COL(settings.col_esp_ammobox);
+    rgba_t col_healthpack          = NK2COL(settings.col_esp_healthpack);
 
     /* For bounding box */
     static int x, y, w, h;
@@ -261,23 +249,23 @@ void esp(void) {
         switch (ent_class->class_id) {
             case CClass_CTFPlayer: {
                 /* Don't render ESP for the spectated player */
-                if (settings.player_esp == SETT_OFF || i == spectated_idx)
+                if (settings.esp_player == SETT_OFF || i == spectated_idx)
                     continue;
 
                 const bool teammate = IsTeammate(ent);
 
                 /* We don't want to render this team */
-                if (settings.player_esp != SETT_ALL &&
-                    ((settings.player_esp == SETT_FRIENDLY && !teammate) ||
-                     (settings.player_esp == SETT_ENEMY && teammate)))
+                if (settings.esp_player != SETT_ALL &&
+                    ((settings.esp_player == SETT_FRIEND && !teammate) ||
+                     (settings.esp_player == SETT_ENEMY && teammate)))
                     continue;
 
                 if (!get_bbox(ent, &x, &y, &w, &h))
                     continue;
 
-                rgba_t col = IsSteamFriend(ent) ? player_steam_friend_col
-                             : teammate         ? player_friend_col
-                                                : player_enemy_col;
+                rgba_t col = IsSteamFriend(ent) ? col_player_steam_friend
+                             : teammate         ? col_player_friend
+                                                : col_player_enemy;
 
                 /*------------------------------------------------------------*/
                 /* Player skeleton ESP */
@@ -287,13 +275,13 @@ void esp(void) {
                 /*------------------------------------------------------------*/
                 /* Player box ESP */
 
-                if (settings.player_box_esp)
+                if (settings.esp_player_box)
                     OUTLINED_BOX(x, y, w, h, col);
 
                 /*------------------------------------------------------------*/
                 /* Player health ESP */
 
-                if (settings.player_health_esp) {
+                if (settings.esp_player_health) {
                     const int hp     = METHOD(ent, GetHealth);
                     const int max_hp = METHOD(ent, GetMaxHealth);
 
@@ -314,11 +302,11 @@ void esp(void) {
                                 hpx + hpw, hpbar_y + hpbar_h);
 
                     /* Health text */
-                    const int hpbar_x = (settings.player_box_esp) ? hpx - 2
+                    const int hpbar_x = (settings.esp_player_box) ? hpx - 2
                                                                   : hpx;
                     static char hp_txt[5];
                     sprintf(hp_txt, "%d", hp);
-                    draw_text(hpbar_x, hpy - 13, !settings.player_box_esp,
+                    draw_text(hpbar_x, hpy - 13, !settings.esp_player_box,
                               g_fonts.small.id, (rgba_t){ 34, 193, 41, col.a },
                               hp_txt);
                 }
@@ -329,7 +317,7 @@ void esp(void) {
                 int infopos_x = x + w / 2;
                 int infopos_y = y + h + 2;
 
-                if (settings.player_name_esp) {
+                if (settings.esp_player_name) {
                     player_info_t pinfo;
                     METHOD_ARGS(i_engine, GetPlayerInfo, i, &pinfo);
 
@@ -347,7 +335,7 @@ void esp(void) {
                 /*------------------------------------------------------------*/
                 /* Player class ESP */
 
-                if (settings.player_class_esp) {
+                if (settings.esp_player_class) {
                     draw_text(infopos_x, infopos_y, true, g_fonts.main.id, col,
                               GetClassName(ent));
 
@@ -358,7 +346,7 @@ void esp(void) {
                 /*------------------------------------------------------------*/
                 /* Player weapon ESP */
 
-                if (settings.player_weapon_esp) {
+                if (settings.esp_player_weapon) {
                     Weapon* weapon = METHOD(ent, GetWeapon);
 
                     if (weapon) {
@@ -385,37 +373,37 @@ void esp(void) {
             }
 
             case CClass_CObjectSentrygun: {
-                if (settings.building_esp_type == SETT_BTYPE_ALL ||
-                    settings.building_esp_type == SETT_BTYPE_SENTRY)
-                    building_esp(ent, "Sentry", build_friend_col,
-                                 build_enemy_col);
+                if (settings.esp_building_type == SETT_BTYPE_ALL ||
+                    settings.esp_building_type == SETT_BTYPE_SENTRY)
+                    building_esp(ent, "Sentry", col_build_friend,
+                                 col_build_enemy);
 
                 break;
             }
 
             case CClass_CObjectDispenser: {
-                if (settings.building_esp_type == SETT_BTYPE_ALL ||
-                    settings.building_esp_type == SETT_BTYPE_DISPENSER)
-                    building_esp(ent, "Dispenser", build_friend_col,
-                                 build_enemy_col);
+                if (settings.esp_building_type == SETT_BTYPE_ALL ||
+                    settings.esp_building_type == SETT_BTYPE_DISPENSER)
+                    building_esp(ent, "Dispenser", col_build_friend,
+                                 col_build_enemy);
 
                 break;
             }
 
             case CClass_CObjectTeleporter: {
-                if (settings.building_esp_type == SETT_BTYPE_ALL ||
-                    settings.building_esp_type == SETT_BTYPE_TELEPORTER) {
+                if (settings.esp_building_type == SETT_BTYPE_ALL ||
+                    settings.esp_building_type == SETT_BTYPE_TELEPORTER) {
                     const char* name = (ent->m_iObjectMode == 0)
                                          ? "Teleporter entry"
                                          : "Teleporter exit";
-                    building_esp(ent, name, build_friend_col, build_enemy_col);
+                    building_esp(ent, name, col_build_friend, col_build_enemy);
                 }
 
                 break;
             }
 
             case CClass_CTFGrenadePipebombProjectile: {
-                if (settings.sticky_esp == SETT_OFF || !IsStickyBomb(ent))
+                if (settings.esp_sticky == SETT_OFF || !IsStickyBomb(ent))
                     break;
 
                 /* Get player that owns the stiky. We could render other info */
@@ -428,29 +416,29 @@ void esp(void) {
                 const bool teammate = IsTeammate(thrower);
 
                 /* We don't want to render this team */
-                if (settings.sticky_esp != SETT_ALL &&
-                    ((settings.sticky_esp == SETT_FRIENDLY && !teammate) ||
-                     (settings.sticky_esp == SETT_ENEMY && teammate)))
+                if (settings.esp_sticky != SETT_ALL &&
+                    ((settings.esp_sticky == SETT_FRIEND && !teammate) ||
+                     (settings.esp_sticky == SETT_ENEMY && teammate)))
                     continue;
 
-                rgba_t sticky_col = teammate ? sticky_friend_col
-                                             : sticky_enemy_col;
+                rgba_t col_sticky = teammate ? col_sticky_friend
+                                             : col_sticky_enemy;
 
-                generic_ent_name(ent, "Sticky", sticky_col);
+                generic_ent_name(ent, "Sticky", col_sticky);
                 break;
             }
 
             case CClass_CTFAmmoPack: {
                 /* Dropped ammo, not the normal ammo boxes */
-                if (settings.ammobox_esp)
-                    generic_ent_name(ent, "Ammo", ammobox_col);
+                if (settings.esp_ammobox)
+                    generic_ent_name(ent, "Ammo", col_ammobox);
                 break;
             }
 
             case CClass_CCurrencyPack: {
                 /* MvM money. Not adding another option/color for this shit */
-                if (settings.ammobox_esp)
-                    generic_ent_name(ent, "Currency", ammobox_col);
+                if (settings.esp_ammobox)
+                    generic_ent_name(ent, "Currency", col_ammobox);
                 break;
             }
 
@@ -460,26 +448,26 @@ void esp(void) {
 
                 bool drawed_health = false;
 
-                if (settings.healthpack_esp) {
+                if (settings.esp_healthpack) {
                     /* Check that this model is in the healthpack range */
                     for (int j = MDLIDX_MEDKIT_SMALL;
                          j <= MDLIDX_MUSHROOM_LARGE; j++) {
                         /* Compare against our model cache.
                          * See cache_get_model_idx() */
                         if (ent->model_idx == g.mdl_idx[j]) {
-                            generic_ent_name(ent, "Health", healthpack_col);
+                            generic_ent_name(ent, "Health", col_healthpack);
                             drawed_health = true;
                             break;
                         }
                     }
                 }
 
-                if (!drawed_health && settings.ammobox_esp) {
+                if (!drawed_health && settings.esp_ammobox) {
                     /* Check that this model is in the ammopack range */
                     for (int j = MDLIDX_AMMOPACK_SMALL;
                          j <= MDLIDX_AMMOPACK_SMALL_BDAY; j++) {
                         if (ent->model_idx == g.mdl_idx[j]) {
-                            generic_ent_name(ent, "Ammo", ammobox_col);
+                            generic_ent_name(ent, "Ammo", col_ammobox);
                             break;
                         }
                     }
@@ -490,23 +478,23 @@ void esp(void) {
             }
 
             case CClass_CTFTankBoss: {
-                if (settings.player_esp != SETT_ALL &&
-                    settings.player_esp != SETT_ENEMY)
+                if (settings.esp_player != SETT_ALL &&
+                    settings.esp_player != SETT_ENEMY)
                     continue;
 
                 if (!get_bbox(ent, &x, &y, &w, &h))
                     continue;
 
                 /* Only working settings for MvM tanks are box and name esp */
-                if (settings.player_box_esp)
-                    OUTLINED_BOX(x, y, w, h, player_enemy_col);
+                if (settings.esp_player_box)
+                    OUTLINED_BOX(x, y, w, h, col_player_enemy);
 
-                if (settings.player_name_esp || settings.player_class_esp) {
+                if (settings.esp_player_name || settings.esp_player_class) {
                     int infopos_x = x + w / 2;
                     int infopos_y = y + h + 2;
 
                     draw_text(infopos_x, infopos_y, true, g_fonts.main.id,
-                              player_enemy_col, "Tank");
+                              col_player_enemy, "Tank");
                 }
 
                 /* end: case CClass_CTFTankBoss */

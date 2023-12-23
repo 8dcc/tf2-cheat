@@ -41,7 +41,7 @@ void chams(ModelRender* thisptr, const DrawModelState_t* state,
     if (!mdl)
         return;
 
-    if ((settings.player_chams != SETT_OFF || settings.local_chams) &&
+    if ((settings.chams_player != SETT_OFF || settings.chams_local) &&
         strstr(mdl->name, "models/player")) {
         if (pInfo->entity_index < 1 || pInfo->entity_index >= g.MaxClients)
             return;
@@ -52,27 +52,27 @@ void chams(ModelRender* thisptr, const DrawModelState_t* state,
 
         /* Localplayer chams (thirdperson) if enabled */
         if (g.localidx == pInfo->entity_index) {
-            if (settings.local_chams)
-                override_material(false, false, settings.col_local_chams,
+            if (settings.chams_local)
+                override_material(false, false, settings.col_chams_local,
                                   "debug/debugambientcube");
 
             return;
         }
 
         /* Next part is for non-local player chams */
-        if (settings.player_chams == SETT_OFF)
+        if (settings.chams_player == SETT_OFF)
             return;
 
         const bool teammate = IsTeammate(ent);
 
         /* Are chams enabled for this player's team? */
-        if (settings.player_chams == SETT_OFF ||
-            (settings.player_chams == SETT_ENEMY && teammate) ||
-            (settings.player_chams == SETT_FRIENDLY && !teammate))
+        if (settings.chams_player != SETT_ALL &&
+            ((settings.chams_player == SETT_ENEMY && teammate) ||
+             (settings.chams_player == SETT_FRIEND && !teammate)))
             return;
 
-        struct nk_colorf vis_col = teammate ? settings.col_friend_chams
-                                            : settings.col_enemy_chams;
+        struct nk_colorf vis_col = teammate ? settings.col_chams_friend
+                                            : settings.col_chams_enemy;
 
         /* Invisible player chams */
         if (settings.chams_ignorez) {
@@ -93,14 +93,14 @@ void chams(ModelRender* thisptr, const DrawModelState_t* state,
     /* NOTE: We need to check arms and weapons in this order because the arms
      * model contains "weapons/c_" */
     if (strstr(mdl->name, "arms")) {
-        if (!settings.hand_chams)
+        if (!settings.chams_hand)
             return;
 
-        override_material(HAND_IGNOREZ, HAND_WIREFRAME, settings.col_hand_chams,
+        override_material(HAND_IGNOREZ, HAND_WIREFRAME, settings.col_chams_hand,
                           "debug/debugambientcube");
         return;
     } else if (strstr(mdl->name, "weapons/c")) {
-        if (!settings.weapon_chams)
+        if (!settings.chams_weapon)
             return;
 
 #if 0
@@ -118,7 +118,7 @@ void chams(ModelRender* thisptr, const DrawModelState_t* state,
             return;
 #endif
 
-        override_material(WPN_IGNOREZ, WPN_WIREFRAME, settings.col_weapon_chams,
+        override_material(WPN_IGNOREZ, WPN_WIREFRAME, settings.col_chams_weapon,
                           "debug/debugambientcube");
         return;
     }

@@ -22,9 +22,9 @@ enum ESettingsRage {
 };
 
 enum ESettingsFriendly {
-    SETT_FRIENDLY = 1,
-    SETT_ENEMY    = 2,
-    SETT_ALL      = 3,
+    SETT_FRIEND = 1,
+    SETT_ENEMY  = 2,
+    SETT_ALL    = 3,
 };
 
 enum ESettingsBuildings {
@@ -42,31 +42,30 @@ enum ESettingsHitboxes {
 };
 
 typedef struct {
-    /* TODO: Rename */
     /* ESP */
-    int player_esp;
-    int player_box_esp;
-    int skeleton_esp;
-    int player_health_esp;
-    int player_name_esp;
-    int player_class_esp;
-    int player_weapon_esp;
+    int esp_player;
+    int esp_player_box;
+    int esp_skeleton;
+    int esp_player_health;
+    int esp_player_name;
+    int esp_player_class;
+    int esp_player_weapon;
 
-    int building_esp;
-    int building_esp_type;
-    int building_box_esp;
-    int building_hp_esp;
-    int building_name_esp;
+    int esp_building;
+    int esp_building_type;
+    int esp_building_box;
+    int esp_building_hp;
+    int esp_building_name;
 
-    int sticky_esp;
-    int ammobox_esp;
-    int healthpack_esp;
+    int esp_sticky;
+    int esp_ammobox;
+    int esp_healthpack;
 
-    int player_chams;
+    int chams_player;
     int chams_ignorez;
-    int local_chams;
-    int weapon_chams;
-    int hand_chams;
+    int chams_local;
+    int chams_weapon;
+    int chams_hand;
 
     /* Aim */
     int aimbot;
@@ -131,21 +130,21 @@ typedef struct {
     int antiafk;
 
     /* Colors */
-    struct nk_colorf col_steam_friend_esp;
-    struct nk_colorf col_friend_esp;
-    struct nk_colorf col_enemy_esp;
-    struct nk_colorf col_enemy_build;
-    struct nk_colorf col_friend_build;
-    struct nk_colorf col_sticky_friend_esp;
-    struct nk_colorf col_sticky_enemy_esp;
-    struct nk_colorf col_ammobox_esp;
-    struct nk_colorf col_healthpack_esp;
+    struct nk_colorf col_esp_steam_friend;
+    struct nk_colorf col_esp_friend;
+    struct nk_colorf col_esp_enemy;
+    struct nk_colorf col_esp_enemy_build;
+    struct nk_colorf col_esp_friend_build;
+    struct nk_colorf col_esp_sticky_friend;
+    struct nk_colorf col_esp_sticky_enemy;
+    struct nk_colorf col_esp_ammobox;
+    struct nk_colorf col_esp_healthpack;
 
-    struct nk_colorf col_friend_chams;
-    struct nk_colorf col_enemy_chams;
-    struct nk_colorf col_local_chams;
-    struct nk_colorf col_weapon_chams;
-    struct nk_colorf col_hand_chams;
+    struct nk_colorf col_chams_friend;
+    struct nk_colorf col_chams_enemy;
+    struct nk_colorf col_chams_local;
+    struct nk_colorf col_chams_weapon;
+    struct nk_colorf col_chams_hand;
 
     struct nk_colorf col_aim_fov;
 } Settings;
