@@ -193,6 +193,23 @@ static inline void generic_ent_name(Entity* ent, const char* str, rgba_t col) {
     draw_text(screen.x, screen.y - y_offset, true, g_fonts.small.id, col, str);
 }
 
+const rgba_t get_color_by_teamnum(const int teamnum) {
+    const rgba_t col_red_team = NK2COL(settings.col_red_team);
+    const rgba_t col_blu_team = NK2COL(settings.col_blu_team);
+    static const struct nk_colorf nk_col_gray_team =
+      (struct nk_colorf){ 0.63f, 0.63f, 0.63f, 1.f };
+    const rgba_t col_unknown_team = NK2COL(nk_col_gray_team);
+
+    switch (teamnum) {
+        case RED_TEAM:
+            return col_red_team;
+        case BLU_TEAM:
+            return col_blu_team;
+        default:
+            return col_unknown_team;
+    }
+}
+
 /*----------------------------------------------------------------------------*/
 
 void esp(void) {
@@ -231,6 +248,8 @@ void esp(void) {
             spectated_idx = METHOD(spectated, GetIndex);
     }
 
+    const int our_teamnum = METHOD(g.localplayer, GetTeamNumber);
+
     /* Iterate all entities */
     for (int i = 1; i < g.MaxEntities; i++) {
         if (i == g.localidx)
@@ -252,20 +271,23 @@ void esp(void) {
                 if (settings.esp_player == SETT_OFF || i == spectated_idx)
                     continue;
 
-                const bool teammate = IsTeammate(ent);
+                const int ent_teamnum  = METHOD(ent, GetTeamNumber);
+                const bool is_teammate = our_teamnum == ent_teamnum;
 
                 /* We don't want to render this team */
                 if (settings.esp_player != SETT_ALL &&
-                    ((settings.esp_player == SETT_FRIEND && !teammate) ||
-                     (settings.esp_player == SETT_ENEMY && teammate)))
+                    ((settings.esp_player == SETT_FRIEND && !is_teammate) ||
+                     (settings.esp_player == SETT_ENEMY && is_teammate)))
                     continue;
 
                 if (!get_bbox(ent, &x, &y, &w, &h))
                     continue;
 
                 rgba_t col = IsSteamFriend(ent) ? col_player_steam_friend
-                             : teammate         ? col_player_friend
-                                                : col_player_enemy;
+                             : settings.esp_use_team_color
+                               ? get_color_by_teamnum(ent_teamnum)
+                             : is_teammate ? col_player_friend
+                                           : col_player_enemy;
 
                 /*------------------------------------------------------------*/
                 /* Player skeleton ESP */

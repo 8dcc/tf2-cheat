@@ -11,13 +11,14 @@
 /* Global settings */
 Settings settings = {
     /* ESP */
-    .esp_player        = SETT_OFF,
-    .esp_player_box    = false,
-    .esp_skeleton      = false,
-    .esp_player_health = false,
-    .esp_player_name   = false,
-    .esp_player_class  = false,
-    .esp_player_weapon = false,
+    .esp_player         = SETT_OFF,
+    .esp_use_team_color = true,
+    .esp_player_box     = false,
+    .esp_skeleton       = false,
+    .esp_player_health  = false,
+    .esp_player_name    = false,
+    .esp_player_class   = false,
+    .esp_player_weapon  = false,
 
     .esp_building      = SETT_OFF,
     .esp_building_type = SETT_BTYPE_ALL,
@@ -98,6 +99,8 @@ Settings settings = {
     .antiafk            = false,
 
     /* Colors */
+    .col_red_team          = (struct nk_colorf){ 0.62f, 0.19f, 0.18f, 1.f },
+    .col_blu_team          = (struct nk_colorf){ 0.22f, 0.36f, 0.47f, 1.f },
     .col_esp_steam_friend  = (struct nk_colorf){ 0.21f, 0.77f, 0.23f, 1.f },
     .col_esp_friend        = (struct nk_colorf){ 0.05f, 0.47f, 0.95f, 1.f },
     .col_esp_enemy         = (struct nk_colorf){ 0.95f, 0.10f, 0.09f, 1.f },
@@ -134,6 +137,7 @@ void save_config(const char* filename) {
 
     /* Esp */
     JSON_SETTINGS_WRITE_INT(json_cfg, esp_player);
+    JSON_SETTINGS_WRITE_INT(json_cfg, esp_use_team_color);
     JSON_SETTINGS_WRITE_INT(json_cfg, esp_player_box);
     JSON_SETTINGS_WRITE_INT(json_cfg, esp_skeleton);
     JSON_SETTINGS_WRITE_INT(json_cfg, esp_player_health);
@@ -215,6 +219,8 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_INT(json_cfg, antiafk);
 
     /* Cols */
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_red_team);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_blu_team);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_steam_friend);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_friend);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_enemy);
@@ -304,6 +310,7 @@ void load_config(const char* filename) {
 
     /* Esp */
     JSON_SETTINGS_READ_INT(json_cfg, esp_player);
+    JSON_SETTINGS_WRITE_INT(json_cfg, esp_use_team_color);
     JSON_SETTINGS_READ_INT(json_cfg, esp_player_box);
     JSON_SETTINGS_READ_INT(json_cfg, esp_skeleton);
     JSON_SETTINGS_READ_INT(json_cfg, esp_player_health);
@@ -385,6 +392,8 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_INT(json_cfg, antiafk);
 
     /* Colors */
+    JSON_SETTINGS_READ_COL(json_cfg, col_red_team);
+    JSON_SETTINGS_READ_COL(json_cfg, col_blu_team);
     JSON_SETTINGS_READ_COL(json_cfg, col_esp_steam_friend);
     JSON_SETTINGS_READ_COL(json_cfg, col_esp_friend);
     JSON_SETTINGS_READ_COL(json_cfg, col_esp_enemy);

@@ -5,6 +5,9 @@
 #include <stdbool.h>
 #include <wchar.h>
 
+#define RED_TEAM 2
+#define BLU_TEAM 3
+
 #define STR(A, B) A##B
 #define PADSTR(N) STR(pad, N)
 #define PAD(N)    uint8_t PADSTR(__LINE__)[N]

@@ -44,6 +44,7 @@ enum ESettingsHitboxes {
 typedef struct {
     /* ESP */
     int esp_player;
+    int esp_use_team_color;
     int esp_player_box;
     int esp_skeleton;
     int esp_player_health;
@@ -130,6 +131,8 @@ typedef struct {
     int antiafk;
 
     /* Colors */
+    struct nk_colorf col_red_team;
+    struct nk_colorf col_blu_team;
     struct nk_colorf col_esp_steam_friend;
     struct nk_colorf col_esp_friend;
     struct nk_colorf col_esp_enemy;

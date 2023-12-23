@@ -154,6 +154,7 @@ static inline void tab_esp(void) {
     nk_combobox(ctx, opts0, 4, &settings.esp_player, 15, size0);
 
     nk_layout_row_dynamic(ctx, 15, 1);
+    nk_checkbox_label(ctx, "Use team color", &settings.esp_use_team_color);
     nk_checkbox_label(ctx, "Player box", &settings.esp_player_box);
     nk_checkbox_label(ctx, "Player skeleton", &settings.esp_skeleton);
     nk_checkbox_label(ctx, "Player health", &settings.esp_player_health);
@@ -357,6 +358,16 @@ static inline void tab_misc(void) {
 }
 
 static inline void tab_colors(void) {
+    /* Team colors */
+    nk_layout_row_dynamic(ctx, 15, 2);
+    nk_label(ctx, "RED team", NK_TEXT_CENTERED);
+    nk_label(ctx, "BLU team", NK_TEXT_CENTERED);
+    nk_layout_row_dynamic(ctx, 100, 2);
+    settings.col_red_team =
+      nk_color_picker(ctx, settings.col_red_team, NK_RGBA);
+    settings.col_blu_team =
+      nk_color_picker(ctx, settings.col_blu_team, NK_RGBA);
+
     /* Esp colors */
     nk_layout_row_dynamic(ctx, 15, 2);
     nk_label(ctx, "Friendly player ESP", NK_TEXT_CENTERED);
