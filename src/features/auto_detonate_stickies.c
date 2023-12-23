@@ -95,17 +95,15 @@ void auto_detonate_stickies(usercmd_t* cmd) {
         return;
 
     /* Get weapon in second slot. We have to iterate because the index in
-     * `m_hMyWeapons' is not always one (if we use boots, for example). We can't
-     * use g.ents[] since it's not a valid player. */
+     * `m_hMyWeapons' is not always one (if we use boots, for example). */
     Weapon* secondary = NULL;
 
     for (int i = 0; i <= 2; i++) {
         const CBaseHandle handle = g.localplayer->m_hMyWeapons[i];
         const int idx            = CBaseHandle_GetEntryIndex(handle);
-        Weapon* cur_weapon =
-          (Weapon*)METHOD_ARGS(i_entitylist, GetClientEntity, idx);
+        Weapon* cur_weapon       = (Weapon*)g.ents[idx];
         if (!cur_weapon)
-            CLEAR_SPAWN_CACHE_AND_RETURN();
+            continue;
 
         /* Check if we have launcher in second slot */
         const int cur_weapon_id = METHOD(cur_weapon, GetWeaponId);
