@@ -20,21 +20,24 @@ Settings settings = {
     .esp_player_class   = false,
     .esp_player_weapon  = false,
 
-    .esp_building      = SETT_OFF,
-    .esp_building_type = SETT_BTYPE_ALL,
-    .esp_building_box  = false,
-    .esp_building_hp   = false,
-    .esp_building_name = false,
+    .esp_building                = SETT_OFF,
+    .esp_building_use_team_color = true,
+    .esp_building_type           = SETT_BTYPE_ALL,
+    .esp_building_box            = false,
+    .esp_building_hp             = false,
+    .esp_building_name           = false,
 
-    .esp_sticky     = false,
-    .esp_ammobox    = false,
-    .esp_healthpack = false,
+    .esp_sticky                = false,
+    .esp_sticky_use_team_color = true,
+    .esp_ammobox               = false,
+    .esp_healthpack            = false,
 
-    .chams_player  = SETT_OFF,
-    .chams_ignorez = false,
-    .chams_local   = false,
-    .chams_weapon  = false,
-    .chams_hand    = false,
+    .chams_player                = SETT_OFF,
+    .chams_player_use_team_color = true,
+    .chams_ignorez               = false,
+    .chams_local                 = false,
+    .chams_weapon                = false,
+    .chams_hand                  = false,
 
     /* Aim */
     .aimbot            = false,
@@ -145,14 +148,17 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_INT(json_cfg, esp_player_class);
     JSON_SETTINGS_WRITE_INT(json_cfg, esp_player_weapon);
     JSON_SETTINGS_WRITE_INT(json_cfg, esp_building);
+    JSON_SETTINGS_WRITE_INT(json_cfg, esp_building_use_team_color);
     JSON_SETTINGS_WRITE_INT(json_cfg, esp_building_type);
     JSON_SETTINGS_WRITE_INT(json_cfg, esp_building_box);
     JSON_SETTINGS_WRITE_INT(json_cfg, esp_building_hp);
     JSON_SETTINGS_WRITE_INT(json_cfg, esp_building_name);
     JSON_SETTINGS_WRITE_INT(json_cfg, esp_sticky);
+    JSON_SETTINGS_WRITE_INT(json_cfg, esp_sticky_use_team_color);
     JSON_SETTINGS_WRITE_INT(json_cfg, esp_ammobox);
     JSON_SETTINGS_WRITE_INT(json_cfg, esp_healthpack);
     JSON_SETTINGS_WRITE_INT(json_cfg, chams_player);
+    JSON_SETTINGS_WRITE_INT(json_cfg, chams_player_use_team_color);
     JSON_SETTINGS_WRITE_INT(json_cfg, chams_ignorez);
     JSON_SETTINGS_WRITE_INT(json_cfg, chams_local);
     JSON_SETTINGS_WRITE_INT(json_cfg, chams_weapon);
@@ -318,14 +324,17 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_INT(json_cfg, esp_player_class);
     JSON_SETTINGS_READ_INT(json_cfg, esp_player_weapon);
     JSON_SETTINGS_READ_INT(json_cfg, esp_building);
+    JSON_SETTINGS_READ_INT(json_cfg, esp_building_use_team_color);
     JSON_SETTINGS_READ_INT(json_cfg, esp_building_type);
     JSON_SETTINGS_READ_INT(json_cfg, esp_building_box);
     JSON_SETTINGS_READ_INT(json_cfg, esp_building_hp);
     JSON_SETTINGS_READ_INT(json_cfg, esp_building_name);
     JSON_SETTINGS_READ_INT(json_cfg, esp_sticky);
+    JSON_SETTINGS_READ_INT(json_cfg, esp_sticky_use_team_color);
     JSON_SETTINGS_READ_INT(json_cfg, esp_ammobox);
     JSON_SETTINGS_READ_INT(json_cfg, esp_healthpack);
     JSON_SETTINGS_READ_INT(json_cfg, chams_player);
+    JSON_SETTINGS_READ_INT(json_cfg, chams_player_use_team_color);
     JSON_SETTINGS_READ_INT(json_cfg, chams_ignorez);
     JSON_SETTINGS_READ_INT(json_cfg, chams_local);
     JSON_SETTINGS_READ_INT(json_cfg, chams_weapon);

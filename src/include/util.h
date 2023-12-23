@@ -48,6 +48,9 @@
 
 /*----------------------------------------------------------------------------*/
 
+const struct nk_colorf get_nkcolor_by_teamnum(const int teamnum);
+const rgba_t get_color_by_teamnum(const int teamnum);
+
 void* get_interface(void* handle, const char* name);
 size_t vmt_size(void* vmt);
 void* find_sig(const char* module, const byte* ida_pattern);

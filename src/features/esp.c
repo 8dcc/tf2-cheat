@@ -18,6 +18,28 @@
 
 /*----------------------------------------------------------------------------*/
 
+/* TODO: Place this in util.c so we don't have to keep 2 versions of the same
+ * function in chams.c and esp.c  */
+const struct nk_colorf get_nkcolor_by_teamnum_zxc(const int teamnum) {
+    const struct nk_colorf nk_col_red_team = settings.col_red_team;
+    const struct nk_colorf nk_col_blu_team = settings.col_blu_team;
+    static const struct nk_colorf nk_col_gray_team =
+      (struct nk_colorf){ 0.63f, 0.63f, 0.63f, 1.f };
+
+    switch (teamnum) {
+        case RED_TEAM:
+            return nk_col_red_team;
+        case BLU_TEAM:
+            return nk_col_blu_team;
+        default:
+            return nk_col_gray_team;
+    }
+}
+
+const rgba_t get_color_by_teamnum(const int teamnum) {
+    return NK2COL(get_nkcolor_by_teamnum_zxc(teamnum));
+}
+
 static inline bool get_bbox(Entity* ent, int* x, int* y, int* w, int* h) {
     Collideable* collideable = METHOD(ent, GetCollideable);
     if (!collideable)
@@ -125,19 +147,27 @@ static inline void skeleton_esp(Renderable* rend, matrix3x4_t* bones,
 
 static inline void building_esp(Entity* ent, const char* str, rgba_t friend_col,
                                 rgba_t enemy_col) {
-    const bool teammate = IsTeammate(ent);
+    if (!g.localplayer)
+        return;
+
+    const int our_teamnum  = METHOD(g.localplayer, GetTeamNumber);
+    const int ent_teamnum  = METHOD(ent, GetTeamNumber);
+    const bool is_teammate = our_teamnum == ent_teamnum;
 
     /* Should we render this building's team? */
     if (settings.esp_building != SETT_ALL &&
-        ((settings.esp_building == SETT_FRIEND && !teammate) ||
-         (settings.esp_building == SETT_ENEMY && teammate)))
+        ((settings.esp_building == SETT_FRIEND && !is_teammate) ||
+         (settings.esp_building == SETT_ENEMY && is_teammate)))
         return;
 
     static int x, y, w, h;
     if (!get_bbox(ent, &x, &y, &w, &h))
         return;
 
-    rgba_t col = teammate ? friend_col : enemy_col;
+    rgba_t col = settings.esp_building_use_team_color
+                   ? get_color_by_teamnum(ent_teamnum)
+                 : is_teammate ? friend_col
+                               : enemy_col;
 
     /* Building box ESP */
     if (settings.esp_building_box)
@@ -191,23 +221,6 @@ static inline void generic_ent_name(Entity* ent, const char* str, rgba_t col) {
     /* Subtract half the font height to center vertically as well */
     const int y_offset = g_fonts.small.tall / 2;
     draw_text(screen.x, screen.y - y_offset, true, g_fonts.small.id, col, str);
-}
-
-const rgba_t get_color_by_teamnum(const int teamnum) {
-    const rgba_t col_red_team = NK2COL(settings.col_red_team);
-    const rgba_t col_blu_team = NK2COL(settings.col_blu_team);
-    static const struct nk_colorf nk_col_gray_team =
-      (struct nk_colorf){ 0.63f, 0.63f, 0.63f, 1.f };
-    const rgba_t col_unknown_team = NK2COL(nk_col_gray_team);
-
-    switch (teamnum) {
-        case RED_TEAM:
-            return col_red_team;
-        case BLU_TEAM:
-            return col_blu_team;
-        default:
-            return col_unknown_team;
-    }
 }
 
 /*----------------------------------------------------------------------------*/
@@ -435,16 +448,19 @@ void esp(void) {
                 if (!thrower)
                     continue;
 
-                const bool teammate = IsTeammate(thrower);
+                const int ent_teamnum  = METHOD(ent, GetTeamNumber);
+                const bool is_teammate = our_teamnum == ent_teamnum;
 
                 /* We don't want to render this team */
                 if (settings.esp_sticky != SETT_ALL &&
-                    ((settings.esp_sticky == SETT_FRIEND && !teammate) ||
-                     (settings.esp_sticky == SETT_ENEMY && teammate)))
+                    ((settings.esp_sticky == SETT_FRIEND && !is_teammate) ||
+                     (settings.esp_sticky == SETT_ENEMY && is_teammate)))
                     continue;
 
-                rgba_t col_sticky = teammate ? col_sticky_friend
-                                             : col_sticky_enemy;
+                rgba_t col_sticky = settings.esp_sticky_use_team_color
+                                      ? get_color_by_teamnum(ent_teamnum)
+                                    : is_teammate ? col_sticky_friend
+                                                  : col_sticky_enemy;
 
                 generic_ent_name(ent, "Sticky", col_sticky);
                 break;

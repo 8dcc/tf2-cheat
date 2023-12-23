@@ -193,7 +193,8 @@ vec3_t center_of_hitbox(studiohdr_t* studio, matrix3x4_t* bonemat, int set,
     };
 }
 
-bool is_visible(vec3_t start, vec3_t end, Entity* target, bool ignore_friendly) {
+bool is_visible(vec3_t start, vec3_t end, Entity* target,
+                bool ignore_friendly) {
     /* We initialize with a custom ShouldHitEntity() for ignoring teammates */
     TraceFilter filter;
     if (ignore_friendly)

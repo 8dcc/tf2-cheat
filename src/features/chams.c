@@ -12,6 +12,24 @@
 
 /*----------------------------------------------------------------------------*/
 
+/* TODO: Place this in util.c so we don't have to keep 2 versions of the same
+ * function in chams.c and esp.c  */
+const struct nk_colorf get_nkcolor_by_teamnum(const int teamnum) {
+    const struct nk_colorf nk_col_red_team = settings.col_red_team;
+    const struct nk_colorf nk_col_blu_team = settings.col_blu_team;
+    static const struct nk_colorf nk_col_gray_team =
+      (struct nk_colorf){ 0.63f, 0.63f, 0.63f, 1.f };
+
+    switch (teamnum) {
+        case RED_TEAM:
+            return nk_col_red_team;
+        case BLU_TEAM:
+            return nk_col_blu_team;
+        default:
+            return nk_col_gray_team;
+    }
+}
+
 static void override_material(bool ignorez, bool wireframe,
                               struct nk_colorf col, const char* mat_name) {
     IMaterial* material = METHOD_ARGS(i_materialsystem, FindMaterial, mat_name,
@@ -63,16 +81,20 @@ void chams(ModelRender* thisptr, const DrawModelState_t* state,
         if (settings.chams_player == SETT_OFF)
             return;
 
-        const bool teammate = IsTeammate(ent);
+        const int our_teamnum  = METHOD(g.localplayer, GetTeamNumber);
+        const int ent_teamnum  = METHOD(ent, GetTeamNumber);
+        const bool is_teammate = our_teamnum == ent_teamnum;
 
         /* Are chams enabled for this player's team? */
         if (settings.chams_player != SETT_ALL &&
-            ((settings.chams_player == SETT_ENEMY && teammate) ||
-             (settings.chams_player == SETT_FRIEND && !teammate)))
+            ((settings.chams_player == SETT_ENEMY && is_teammate) ||
+             (settings.chams_player == SETT_FRIEND && !is_teammate)))
             return;
 
-        struct nk_colorf vis_col = teammate ? settings.col_chams_friend
-                                            : settings.col_chams_enemy;
+        struct nk_colorf vis_col = settings.chams_player_use_team_color
+                                     ? get_nkcolor_by_teamnum(ent_teamnum)
+                                   : is_teammate ? settings.col_chams_friend
+                                                 : settings.col_chams_enemy;
 
         /* Invisible player chams */
         if (settings.chams_ignorez) {
