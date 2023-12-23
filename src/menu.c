@@ -183,8 +183,14 @@ static inline void tab_esp(void) {
 
     nk_layout_row_dynamic(ctx, 8, 1);
     nk_spacing(ctx, 0); /* ----------------------------  */
-    nk_layout_row_dynamic(ctx, 15, 1);
+    nk_layout_row_dynamic(ctx, 18, 2);
 
+    static const char* opts3[] = { "Off", "Friendly", "Enemies", "All" };
+    struct nk_vec2 size3       = { COMBO_DROP_W, 200 };
+    nk_label(ctx, "Stickybomb ESP", NK_TEXT_LEFT);
+    nk_combobox(ctx, opts3, 4, &settings.sticky_esp, 15, size3);
+
+    nk_layout_row_dynamic(ctx, 15, 1);
     nk_checkbox_label(ctx, "Ammo box ESP", &settings.ammobox_esp);
     nk_checkbox_label(ctx, "Healing items ESP", &settings.healthpack_esp);
 
@@ -192,10 +198,10 @@ static inline void tab_esp(void) {
     nk_spacing(ctx, 0); /* ----------------------------  */
     nk_layout_row_dynamic(ctx, 18, 2);
 
-    static const char* opts3[] = { "Off", "Friendly", "Enemies", "All" };
-    struct nk_vec2 size3       = { COMBO_DROP_W, 200 };
+    static const char* opts4[] = { "Off", "Friendly", "Enemies", "All" };
+    struct nk_vec2 size4       = { COMBO_DROP_W, 200 };
     nk_label(ctx, "Player chams", NK_TEXT_LEFT);
-    nk_combobox(ctx, opts3, 4, &settings.player_chams, 15, size3);
+    nk_combobox(ctx, opts4, 4, &settings.player_chams, 15, size4);
 
     nk_layout_row_dynamic(ctx, 15, 1);
     nk_checkbox_label(ctx, "Invisible player chams", &settings.chams_ignorez);
@@ -369,6 +375,15 @@ static inline void tab_colors(void) {
       nk_color_picker(ctx, settings.col_friend_build, NK_RGBA);
     settings.col_enemy_build =
       nk_color_picker(ctx, settings.col_enemy_build, NK_RGBA);
+
+    nk_layout_row_dynamic(ctx, 15, 2);
+    nk_label(ctx, "Friendly sticky ESP", NK_TEXT_CENTERED);
+    nk_label(ctx, "Enemy sticky ESP", NK_TEXT_CENTERED);
+    nk_layout_row_dynamic(ctx, 100, 2);
+    settings.col_sticky_friend_esp =
+      nk_color_picker(ctx, settings.col_sticky_friend_esp, NK_RGBA);
+    settings.col_sticky_enemy_esp =
+      nk_color_picker(ctx, settings.col_sticky_enemy_esp, NK_RGBA);
 
     nk_layout_row_dynamic(ctx, 15, 2);
     nk_label(ctx, "Ammo boxes ESP", NK_TEXT_CENTERED);

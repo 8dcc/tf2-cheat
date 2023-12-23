@@ -14,33 +14,35 @@
 #define DEFAULT_AIMBOT_KEY   NK_KEY_SCROLL_UP
 #define DEFAULT_MELEEBOT_KEY NK_KEY_SCROLL_UP
 
-enum settings_rage {
-    SETT_OFF   = 0,
+#define SETT_OFF 0
+
+enum ESettingsRage {
     SETT_LEGIT = 1,
     SETT_RAGE  = 2,
 };
 
-enum settings_friendly {
+enum ESettingsFriendly {
     SETT_FRIENDLY = 1,
     SETT_ENEMY    = 2,
     SETT_ALL      = 3,
 };
 
-enum settings_building_type {
+enum ESettingsBuildings {
     SETT_BTYPE_ALL        = 0,
     SETT_BTYPE_SENTRY     = 1,
     SETT_BTYPE_DISPENSER  = 2,
     SETT_BTYPE_TELEPORTER = 3,
 };
 
-enum settings_selected_hitbox {
-    SETT_HITBOX_HEAD = 0,
-    SETT_HITBOX_TORSO,
-    SETT_HITBOX_ARMS,
-    SETT_HITBOX_LEGS,
+enum ESettingsHitboxes {
+    SETT_HITBOX_HEAD  = 0,
+    SETT_HITBOX_TORSO = 1,
+    SETT_HITBOX_ARMS  = 2,
+    SETT_HITBOX_LEGS  = 3,
 };
 
 typedef struct {
+    /* TODO: Rename */
     /* ESP */
     int player_esp;
     int player_box_esp;
@@ -56,6 +58,7 @@ typedef struct {
     int building_hp_esp;
     int building_name_esp;
 
+    int sticky_esp;
     int ammobox_esp;
     int healthpack_esp;
 
@@ -133,6 +136,8 @@ typedef struct {
     struct nk_colorf col_enemy_esp;
     struct nk_colorf col_enemy_build;
     struct nk_colorf col_friend_build;
+    struct nk_colorf col_sticky_friend_esp;
+    struct nk_colorf col_sticky_enemy_esp;
     struct nk_colorf col_ammobox_esp;
     struct nk_colorf col_healthpack_esp;
 
