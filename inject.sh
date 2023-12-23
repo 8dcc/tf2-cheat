@@ -30,9 +30,11 @@ if [[ $cozettevector -lt 1 ]]; then
 fi
 
 old_tmp_libpath_txt="/tmp/hl2_linux_${pid}_enoch.txt"
-old_tmp_libpath=$(head -n 1 "$old_tmp_libpath_txt")
-if [[ -z "$old_tmp_libpath" && "$old_tmp_libpath" != "" ]]; then
-    echo "inject.sh: old_tmp_libpath: $old_tmp_libpath"
+if [[ -f "old_tmp_libpath_txt" ]]; then
+    old_tmp_libpath=$(head -n 1 "$old_tmp_libpath_txt")
+    if [[ -z "$old_tmp_libpath" && "$old_tmp_libpath" != "" ]]; then
+        echo "inject.sh: old_tmp_libpath: $old_tmp_libpath"
+    fi
 fi
 
 tmp_libpath=""
@@ -50,6 +52,7 @@ echo "inject.sh: Our cheat library is located at $tmp_libpath"
 
 # Used to echo each command. For debugging.
 #set -x
+
 if [[ "$1" == "unload" ]] && [[ ! -z "$tmp_libpath" ]]; then
     # Unloading
     gdb -n -q -batch                                        \
@@ -79,7 +82,10 @@ elif [[ "$1" == "debug" ]]; then
         -ex "continue" # Comment this line for manual debug
 
     set +x
-    echo -e "\nEnoch loaded. Unload cheat using:\n$0 unload $tmp_libpath"
+
+    echo -e "\nEnoch loaded. Unload cheat using:"
+    echo -e "$0 unload $tmp_libpath"
+
     rm "$tmp_libpath"
     echo "$tmp_libpath" > "$old_tmp_libpath_txt"
 else
@@ -118,7 +124,10 @@ else
     fi
 
     set +x
-    echo -e "\nEnoch loaded. Unload cheat using:\n$0 unload $tmp_libpath"
+
+    echo -e "\nEnoch loaded. Unload cheat using:"
+    echo -e "$0 unload $tmp_libpath"
+
     rm "$tmp_libpath"
     echo "$tmp_libpath" > "$old_tmp_libpath_txt"
 fi
