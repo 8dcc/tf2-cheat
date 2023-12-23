@@ -199,7 +199,9 @@ static inline void generic_ent_name(Entity* ent, const char* str, rgba_t col) {
     if (!world_to_screen(center, &screen))
         return;
 
-    draw_text(screen.x, screen.y, true, g_fonts.small.id, col, str);
+    /* Subtract half the font height to center vertically as well */
+    const int y_offset = g_fonts.small.tall / 2;
+    draw_text(screen.x, screen.y - y_offset, true, g_fonts.small.id, col, str);
 }
 
 /*----------------------------------------------------------------------------*/
