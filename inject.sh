@@ -30,7 +30,7 @@ if [[ $cozettevector -lt 1 ]]; then
 fi
 
 old_tmp_libpath_txt="/tmp/hl2_linux_${pid}_enoch.txt"
-if [[ -f "old_tmp_libpath_txt" ]]; then
+if [[ -f "$old_tmp_libpath_txt" ]]; then
     old_tmp_libpath=$(head -n 1 "$old_tmp_libpath_txt")
     if [[ -z "$old_tmp_libpath" && "$old_tmp_libpath" != "" ]]; then
         echo "inject.sh: old_tmp_libpath: $old_tmp_libpath"
