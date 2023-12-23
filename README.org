@@ -71,12 +71,13 @@ $ make -j$(nproc)
 Uses the [[https://www.gnu.org/savannah-checkouts/gnu/gdb/index.html][gdb]] debugger for injecting the library.
 
 #+begin_src console
-$ ./injector.sh
+$ sudo ./injector.sh
 [sudo] password for username:
 
 ...
 
-Enoch loaded!
+Done. Unload cheat using:
+./inject.sh unload ...
 #+end_src
 
 * Screenshots
