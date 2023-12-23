@@ -247,7 +247,7 @@ static inline vec3_t GetCenter(Entity* ent) {
     vec3_t mins = *METHOD(collideable, ObbMins);
     vec3_t maxs = *METHOD(collideable, ObbMaxs);
 
-    vec3_t ret = ent->m_vecOrigin;
+    vec3_t ret = *METHOD(ent, GetAbsOrigin);
     ret.z += (mins.z + maxs.z) / 2.0f;
 
     return ret;
