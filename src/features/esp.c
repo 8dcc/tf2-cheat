@@ -16,11 +16,6 @@
         METHOD_ARGS(i_surface, DrawRect, x, y, x + w, y + h);                 \
     }
 
-#define GENERIC_ENT_NAME(ent, name, col) \
-    if (!get_bbox(ent, &x, &y, &w, &h))  \
-        continue;                        \
-    draw_text(x + w / 2, y + w / 2, true, g_fonts.small.id, col, name);
-
 /*----------------------------------------------------------------------------*/
 
 static inline bool get_bbox(Entity* ent, int* x, int* y, int* w, int* h) {
@@ -197,21 +192,35 @@ static inline void building_esp(Entity* ent, const char* str, rgba_t friend_col,
         draw_text(x + w / 2, y + h + 1, true, g_fonts.main.id, col, str);
 }
 
+static inline void generic_ent_name(Entity* ent, const char* str, rgba_t col) {
+    vec3_t center = GetCenter(ent);
+
+    vec2_t screen;
+    if (!world_to_screen(center, &screen))
+        return;
+
+    draw_text(screen.x, screen.y, true, g_fonts.small.id, col, str);
+}
+
 /*----------------------------------------------------------------------------*/
 
 void esp(void) {
     if (settings.player_esp == SETT_OFF && settings.building_esp == SETT_OFF &&
-        !settings.ammobox_esp && !settings.healthpack_esp)
+        settings.sticky_esp == SETT_OFF && !settings.ammobox_esp &&
+        !settings.healthpack_esp)
         return;
 
     if (!g.localplayer)
         return;
 
+    /* TODO: Rename local vars */
     rgba_t player_steam_friend_col = NK2COL(settings.col_steam_friend_esp);
     rgba_t player_friend_col       = NK2COL(settings.col_friend_esp);
     rgba_t player_enemy_col        = NK2COL(settings.col_enemy_esp);
     rgba_t build_friend_col        = NK2COL(settings.col_friend_build);
     rgba_t build_enemy_col         = NK2COL(settings.col_enemy_build);
+    rgba_t sticky_friend_col       = NK2COL(settings.col_sticky_friend_esp);
+    rgba_t sticky_enemy_col        = NK2COL(settings.col_sticky_enemy_esp);
     rgba_t ammobox_col             = NK2COL(settings.col_ammobox_esp);
     rgba_t healthpack_col          = NK2COL(settings.col_healthpack_esp);
 
@@ -250,27 +259,16 @@ void esp(void) {
         switch (ent_class->class_id) {
             case CClass_CTFPlayer: {
                 /* Don't render ESP for the spectated player */
-                if (i == spectated_idx)
+                if (settings.player_esp == SETT_OFF || i == spectated_idx)
                     continue;
 
                 const bool teammate = IsTeammate(ent);
 
-                /* Should we render this player's team? */
-                switch (settings.player_esp) {
-                    case SETT_ENEMY:
-                        if (teammate)
-                            continue;
-                        break;
-                    case SETT_FRIENDLY:
-                        if (!teammate)
-                            continue;
-                        break;
-                    case SETT_ALL:
-                        break;
-                    default:
-                    case SETT_OFF:
-                        continue;
-                }
+                /* We don't want to render this team */
+                if (settings.player_esp != SETT_ALL &&
+                    ((settings.player_esp == SETT_FRIENDLY && !teammate) ||
+                     (settings.player_esp == SETT_ENEMY && teammate)))
+                    continue;
 
                 if (!get_bbox(ent, &x, &y, &w, &h))
                     continue;
@@ -414,19 +412,43 @@ void esp(void) {
                 break;
             }
 
+            case CClass_CTFGrenadePipebombProjectile: {
+                if (settings.sticky_esp == SETT_OFF || !IsStickyBomb(ent))
+                    break;
+
+                /* Get player that owns the stiky. We could render other info */
+                CBaseHandle thrower_handle = GetThrowerHandle(ent);
+                int thrower_idx = CBaseHandle_GetEntryIndex(thrower_handle);
+                Entity* thrower = g.ents[thrower_idx];
+                if (!thrower)
+                    continue;
+
+                const bool teammate = IsTeammate(thrower);
+
+                /* We don't want to render this team */
+                if (settings.sticky_esp != SETT_ALL &&
+                    ((settings.sticky_esp == SETT_FRIENDLY && !teammate) ||
+                     (settings.sticky_esp == SETT_ENEMY && teammate)))
+                    continue;
+
+                rgba_t sticky_col = teammate ? sticky_friend_col
+                                             : sticky_enemy_col;
+
+                generic_ent_name(ent, "Sticky", sticky_col);
+                break;
+            }
+
             case CClass_CTFAmmoPack: {
                 /* Dropped ammo, not the normal ammo boxes */
-                if (settings.ammobox_esp) {
-                    GENERIC_ENT_NAME(ent, "Ammo", ammobox_col);
-                }
+                if (settings.ammobox_esp)
+                    generic_ent_name(ent, "Ammo", ammobox_col);
                 break;
             }
 
             case CClass_CCurrencyPack: {
-                /* I am not adding another option/color for this shit */
-                if (settings.ammobox_esp) {
-                    GENERIC_ENT_NAME(ent, "Currency", ammobox_col);
-                }
+                /* MvM money. Not adding another option/color for this shit */
+                if (settings.ammobox_esp)
+                    generic_ent_name(ent, "Currency", ammobox_col);
                 break;
             }
 
@@ -434,27 +456,28 @@ void esp(void) {
                 /* Ammo boxes and healing items are all CBaseAnimating, so we
                  * need to check the model */
 
-                bool drawn = false;
+                bool drawed_health = false;
 
-                if (!drawn && settings.healthpack_esp) {
+                if (settings.healthpack_esp) {
                     /* Check that this model is in the healthpack range */
                     for (int j = MDLIDX_MEDKIT_SMALL;
                          j <= MDLIDX_MUSHROOM_LARGE; j++) {
+                        /* Compare against our model cache.
+                         * See cache_get_model_idx() */
                         if (ent->model_idx == g.mdl_idx[j]) {
-                            GENERIC_ENT_NAME(ent, "Health", healthpack_col);
-                            drawn = true;
+                            generic_ent_name(ent, "Health", healthpack_col);
+                            drawed_health = true;
                             break;
                         }
                     }
                 }
 
-                if (!drawn && settings.ammobox_esp) {
-                    /* Check that this model is in the healthpack range */
+                if (!drawed_health && settings.ammobox_esp) {
+                    /* Check that this model is in the ammopack range */
                     for (int j = MDLIDX_AMMOPACK_SMALL;
                          j <= MDLIDX_AMMOPACK_SMALL_BDAY; j++) {
                         if (ent->model_idx == g.mdl_idx[j]) {
-                            GENERIC_ENT_NAME(ent, "Ammo", ammobox_col);
-                            drawn = true;
+                            generic_ent_name(ent, "Ammo", ammobox_col);
                             break;
                         }
                     }
