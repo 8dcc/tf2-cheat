@@ -46,9 +46,12 @@ The cheat currently has the following features:
   - Auto-attack on key (=PgUp=)*
   - Disable if spectated in 1st person
 - Automedigun (automatically heal the best target)
-    - pSilent
-    - Custom smoothing
-    - Custom time before switching targets
+  - pSilent
+  - Custom smoothing
+  - Custom time before switching targets
+- Auto-detonate stickies
+  - Also apply to ourselves
+  - Custom distance for detonating
 - Misc visuals
   - Remove sniper scope overlay
   - Custom FOV

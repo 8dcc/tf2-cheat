@@ -11,28 +11,29 @@
 /* Global settings */
 Settings settings = {
     /* ESP */
-    .player_esp        = SETT_OFF,
-    .player_box_esp    = false,
-    .skeleton_esp      = false,
-    .player_health_esp = false,
-    .player_name_esp   = false,
-    .player_class_esp  = false,
-    .player_weapon_esp = false,
+    .esp_player        = SETT_OFF,
+    .esp_player_box    = false,
+    .esp_skeleton      = false,
+    .esp_player_health = false,
+    .esp_player_name   = false,
+    .esp_player_class  = false,
+    .esp_player_weapon = false,
 
-    .building_esp      = SETT_OFF,
-    .building_esp_type = SETT_BTYPE_ALL,
-    .building_box_esp  = false,
-    .building_hp_esp   = false,
-    .building_name_esp = false,
+    .esp_building      = SETT_OFF,
+    .esp_building_type = SETT_BTYPE_ALL,
+    .esp_building_box  = false,
+    .esp_building_hp   = false,
+    .esp_building_name = false,
 
-    .ammobox_esp    = false,
-    .healthpack_esp = false,
+    .esp_sticky     = false,
+    .esp_ammobox    = false,
+    .esp_healthpack = false,
 
-    .player_chams  = SETT_OFF,
+    .chams_player  = SETT_OFF,
     .chams_ignorez = false,
-    .local_chams   = false,
-    .weapon_chams  = false,
-    .hand_chams    = false,
+    .chams_local   = false,
+    .chams_weapon  = false,
+    .chams_hand    = false,
 
     /* Aim */
     .aimbot            = false,
@@ -97,19 +98,21 @@ Settings settings = {
     .antiafk            = false,
 
     /* Colors */
-    .col_steam_friend_esp = (struct nk_colorf){ 0.21f, 0.77f, 0.23f, 1.f },
-    .col_friend_esp       = (struct nk_colorf){ 0.05f, 0.47f, 0.95f, 1.f },
-    .col_enemy_esp        = (struct nk_colorf){ 0.95f, 0.10f, 0.09f, 1.f },
-    .col_friend_build     = (struct nk_colorf){ 0.29f, 0.07f, 0.54f, 1.f },
-    .col_enemy_build      = (struct nk_colorf){ 0.90f, 0.31f, 0.00f, 1.f },
-    .col_ammobox_esp      = (struct nk_colorf){ 0.55f, 0.43f, 0.38f, 1.f },
-    .col_healthpack_esp   = (struct nk_colorf){ 0.40f, 0.73f, 0.41f, 1.f },
+    .col_esp_steam_friend  = (struct nk_colorf){ 0.21f, 0.77f, 0.23f, 1.f },
+    .col_esp_friend        = (struct nk_colorf){ 0.05f, 0.47f, 0.95f, 1.f },
+    .col_esp_enemy         = (struct nk_colorf){ 0.95f, 0.10f, 0.09f, 1.f },
+    .col_esp_friend_build  = (struct nk_colorf){ 0.29f, 0.07f, 0.54f, 1.f },
+    .col_esp_enemy_build   = (struct nk_colorf){ 0.90f, 0.31f, 0.00f, 1.f },
+    .col_esp_sticky_friend = (struct nk_colorf){ 0.05f, 0.47f, 0.95f, 1.f },
+    .col_esp_sticky_enemy  = (struct nk_colorf){ 0.95f, 0.10f, 0.09f, 1.f },
+    .col_esp_ammobox       = (struct nk_colorf){ 0.55f, 0.43f, 0.38f, 1.f },
+    .col_esp_healthpack    = (struct nk_colorf){ 0.40f, 0.73f, 0.41f, 1.f },
 
-    .col_friend_chams = (struct nk_colorf){ 0.47f, 0.77f, 0.90f, 1.f },
-    .col_enemy_chams  = (struct nk_colorf){ 0.87f, 0.34f, 0.34f, 1.f },
-    .col_local_chams  = (struct nk_colorf){ 0.88f, 0.74f, 0.90f, 1.f },
-    .col_weapon_chams = (struct nk_colorf){ 0.80f, 0.57f, 0.84f, 1.f },
-    .col_hand_chams   = (struct nk_colorf){ 0.88f, 0.74f, 0.90f, 1.f },
+    .col_chams_friend = (struct nk_colorf){ 0.47f, 0.77f, 0.90f, 1.f },
+    .col_chams_enemy  = (struct nk_colorf){ 0.87f, 0.34f, 0.34f, 1.f },
+    .col_chams_local  = (struct nk_colorf){ 0.88f, 0.74f, 0.90f, 1.f },
+    .col_chams_weapon = (struct nk_colorf){ 0.80f, 0.57f, 0.84f, 1.f },
+    .col_chams_hand   = (struct nk_colorf){ 0.88f, 0.74f, 0.90f, 1.f },
 
     .col_aim_fov = (struct nk_colorf){ 0.80f, 0.80f, 0.80f, 0.30f },
 };
@@ -130,25 +133,26 @@ void save_config(const char* filename) {
         SAVE_ABORT("save_config: error creating main json object\n");
 
     /* Esp */
-    JSON_SETTINGS_WRITE_INT(json_cfg, player_esp);
-    JSON_SETTINGS_WRITE_INT(json_cfg, player_box_esp);
-    JSON_SETTINGS_WRITE_INT(json_cfg, skeleton_esp);
-    JSON_SETTINGS_WRITE_INT(json_cfg, player_health_esp);
-    JSON_SETTINGS_WRITE_INT(json_cfg, player_name_esp);
-    JSON_SETTINGS_WRITE_INT(json_cfg, player_class_esp);
-    JSON_SETTINGS_WRITE_INT(json_cfg, player_weapon_esp);
-    JSON_SETTINGS_WRITE_INT(json_cfg, building_esp);
-    JSON_SETTINGS_WRITE_INT(json_cfg, building_esp_type);
-    JSON_SETTINGS_WRITE_INT(json_cfg, building_box_esp);
-    JSON_SETTINGS_WRITE_INT(json_cfg, building_hp_esp);
-    JSON_SETTINGS_WRITE_INT(json_cfg, building_name_esp);
-    JSON_SETTINGS_WRITE_INT(json_cfg, ammobox_esp);
-    JSON_SETTINGS_WRITE_INT(json_cfg, healthpack_esp);
-    JSON_SETTINGS_WRITE_INT(json_cfg, player_chams);
+    JSON_SETTINGS_WRITE_INT(json_cfg, esp_player);
+    JSON_SETTINGS_WRITE_INT(json_cfg, esp_player_box);
+    JSON_SETTINGS_WRITE_INT(json_cfg, esp_skeleton);
+    JSON_SETTINGS_WRITE_INT(json_cfg, esp_player_health);
+    JSON_SETTINGS_WRITE_INT(json_cfg, esp_player_name);
+    JSON_SETTINGS_WRITE_INT(json_cfg, esp_player_class);
+    JSON_SETTINGS_WRITE_INT(json_cfg, esp_player_weapon);
+    JSON_SETTINGS_WRITE_INT(json_cfg, esp_building);
+    JSON_SETTINGS_WRITE_INT(json_cfg, esp_building_type);
+    JSON_SETTINGS_WRITE_INT(json_cfg, esp_building_box);
+    JSON_SETTINGS_WRITE_INT(json_cfg, esp_building_hp);
+    JSON_SETTINGS_WRITE_INT(json_cfg, esp_building_name);
+    JSON_SETTINGS_WRITE_INT(json_cfg, esp_sticky);
+    JSON_SETTINGS_WRITE_INT(json_cfg, esp_ammobox);
+    JSON_SETTINGS_WRITE_INT(json_cfg, esp_healthpack);
+    JSON_SETTINGS_WRITE_INT(json_cfg, chams_player);
     JSON_SETTINGS_WRITE_INT(json_cfg, chams_ignorez);
-    JSON_SETTINGS_WRITE_INT(json_cfg, local_chams);
-    JSON_SETTINGS_WRITE_INT(json_cfg, weapon_chams);
-    JSON_SETTINGS_WRITE_INT(json_cfg, hand_chams);
+    JSON_SETTINGS_WRITE_INT(json_cfg, chams_local);
+    JSON_SETTINGS_WRITE_INT(json_cfg, chams_weapon);
+    JSON_SETTINGS_WRITE_INT(json_cfg, chams_hand);
 
     /* Aim */
     JSON_SETTINGS_WRITE_INT(json_cfg, aimbot);
@@ -211,18 +215,20 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_INT(json_cfg, antiafk);
 
     /* Cols */
-    JSON_SETTINGS_WRITE_COL(json_cfg, col_steam_friend_esp);
-    JSON_SETTINGS_WRITE_COL(json_cfg, col_friend_esp);
-    JSON_SETTINGS_WRITE_COL(json_cfg, col_enemy_esp);
-    JSON_SETTINGS_WRITE_COL(json_cfg, col_friend_build);
-    JSON_SETTINGS_WRITE_COL(json_cfg, col_enemy_build);
-    JSON_SETTINGS_WRITE_COL(json_cfg, col_ammobox_esp);
-    JSON_SETTINGS_WRITE_COL(json_cfg, col_healthpack_esp);
-    JSON_SETTINGS_WRITE_COL(json_cfg, col_friend_chams);
-    JSON_SETTINGS_WRITE_COL(json_cfg, col_enemy_chams);
-    JSON_SETTINGS_WRITE_COL(json_cfg, col_local_chams);
-    JSON_SETTINGS_WRITE_COL(json_cfg, col_weapon_chams);
-    JSON_SETTINGS_WRITE_COL(json_cfg, col_hand_chams);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_steam_friend);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_friend);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_enemy);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_friend_build);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_enemy_build);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_sticky_friend);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_sticky_enemy);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_ammobox);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_healthpack);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_chams_friend);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_chams_enemy);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_chams_local);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_chams_weapon);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_chams_hand);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_aim_fov);
 
     /* Convert filled json object to string */
@@ -297,25 +303,26 @@ void load_config(const char* filename) {
         LOAD_PRINT_ERROR();
 
     /* Esp */
-    JSON_SETTINGS_READ_INT(json_cfg, player_esp);
-    JSON_SETTINGS_READ_INT(json_cfg, player_box_esp);
-    JSON_SETTINGS_READ_INT(json_cfg, skeleton_esp);
-    JSON_SETTINGS_READ_INT(json_cfg, player_health_esp);
-    JSON_SETTINGS_READ_INT(json_cfg, player_name_esp);
-    JSON_SETTINGS_READ_INT(json_cfg, player_class_esp);
-    JSON_SETTINGS_READ_INT(json_cfg, player_weapon_esp);
-    JSON_SETTINGS_READ_INT(json_cfg, building_esp);
-    JSON_SETTINGS_READ_INT(json_cfg, building_esp_type);
-    JSON_SETTINGS_READ_INT(json_cfg, building_box_esp);
-    JSON_SETTINGS_READ_INT(json_cfg, building_hp_esp);
-    JSON_SETTINGS_READ_INT(json_cfg, building_name_esp);
-    JSON_SETTINGS_READ_INT(json_cfg, ammobox_esp);
-    JSON_SETTINGS_READ_INT(json_cfg, healthpack_esp);
-    JSON_SETTINGS_READ_INT(json_cfg, player_chams);
+    JSON_SETTINGS_READ_INT(json_cfg, esp_player);
+    JSON_SETTINGS_READ_INT(json_cfg, esp_player_box);
+    JSON_SETTINGS_READ_INT(json_cfg, esp_skeleton);
+    JSON_SETTINGS_READ_INT(json_cfg, esp_player_health);
+    JSON_SETTINGS_READ_INT(json_cfg, esp_player_name);
+    JSON_SETTINGS_READ_INT(json_cfg, esp_player_class);
+    JSON_SETTINGS_READ_INT(json_cfg, esp_player_weapon);
+    JSON_SETTINGS_READ_INT(json_cfg, esp_building);
+    JSON_SETTINGS_READ_INT(json_cfg, esp_building_type);
+    JSON_SETTINGS_READ_INT(json_cfg, esp_building_box);
+    JSON_SETTINGS_READ_INT(json_cfg, esp_building_hp);
+    JSON_SETTINGS_READ_INT(json_cfg, esp_building_name);
+    JSON_SETTINGS_READ_INT(json_cfg, esp_sticky);
+    JSON_SETTINGS_READ_INT(json_cfg, esp_ammobox);
+    JSON_SETTINGS_READ_INT(json_cfg, esp_healthpack);
+    JSON_SETTINGS_READ_INT(json_cfg, chams_player);
     JSON_SETTINGS_READ_INT(json_cfg, chams_ignorez);
-    JSON_SETTINGS_READ_INT(json_cfg, local_chams);
-    JSON_SETTINGS_READ_INT(json_cfg, weapon_chams);
-    JSON_SETTINGS_READ_INT(json_cfg, hand_chams);
+    JSON_SETTINGS_READ_INT(json_cfg, chams_local);
+    JSON_SETTINGS_READ_INT(json_cfg, chams_weapon);
+    JSON_SETTINGS_READ_INT(json_cfg, chams_hand);
 
     /* Aim */
     JSON_SETTINGS_READ_INT(json_cfg, aimbot);
@@ -378,18 +385,20 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_INT(json_cfg, antiafk);
 
     /* Colors */
-    JSON_SETTINGS_READ_COL(json_cfg, col_steam_friend_esp);
-    JSON_SETTINGS_READ_COL(json_cfg, col_friend_esp);
-    JSON_SETTINGS_READ_COL(json_cfg, col_enemy_esp);
-    JSON_SETTINGS_READ_COL(json_cfg, col_friend_build);
-    JSON_SETTINGS_READ_COL(json_cfg, col_enemy_build);
-    JSON_SETTINGS_READ_COL(json_cfg, col_ammobox_esp);
-    JSON_SETTINGS_READ_COL(json_cfg, col_healthpack_esp);
-    JSON_SETTINGS_READ_COL(json_cfg, col_friend_chams);
-    JSON_SETTINGS_READ_COL(json_cfg, col_enemy_chams);
-    JSON_SETTINGS_READ_COL(json_cfg, col_local_chams);
-    JSON_SETTINGS_READ_COL(json_cfg, col_weapon_chams);
-    JSON_SETTINGS_READ_COL(json_cfg, col_hand_chams);
+    JSON_SETTINGS_READ_COL(json_cfg, col_esp_steam_friend);
+    JSON_SETTINGS_READ_COL(json_cfg, col_esp_friend);
+    JSON_SETTINGS_READ_COL(json_cfg, col_esp_enemy);
+    JSON_SETTINGS_READ_COL(json_cfg, col_esp_friend_build);
+    JSON_SETTINGS_READ_COL(json_cfg, col_esp_enemy_build);
+    JSON_SETTINGS_READ_COL(json_cfg, col_esp_sticky_friend);
+    JSON_SETTINGS_READ_COL(json_cfg, col_esp_sticky_enemy);
+    JSON_SETTINGS_READ_COL(json_cfg, col_esp_ammobox);
+    JSON_SETTINGS_READ_COL(json_cfg, col_esp_healthpack);
+    JSON_SETTINGS_READ_COL(json_cfg, col_chams_friend);
+    JSON_SETTINGS_READ_COL(json_cfg, col_chams_enemy);
+    JSON_SETTINGS_READ_COL(json_cfg, col_chams_local);
+    JSON_SETTINGS_READ_COL(json_cfg, col_chams_weapon);
+    JSON_SETTINGS_READ_COL(json_cfg, col_chams_hand);
     JSON_SETTINGS_READ_COL(json_cfg, col_aim_fov);
 
     free(json_cfg_str);
