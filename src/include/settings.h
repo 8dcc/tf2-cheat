@@ -51,6 +51,7 @@ typedef struct {
     int esp_player_name;
     int esp_player_class;
     int esp_player_weapon;
+    int esp_ignore_invisible;
 
     int esp_building;
     int esp_building_use_team_color;
@@ -72,6 +73,10 @@ typedef struct {
     int chams_hand;
 
     /* Aim */
+    int aim_target_steam_friends;
+    int aim_target_invisible;
+    int aim_target_invul;
+
     int aimbot;
     float aim_fov;
     float aim_smooth;
@@ -80,8 +85,7 @@ typedef struct {
     int aim_silent;
     int aim_on_key;
     int aim_keycode;
-    int aim_target_invis;
-    int aim_target_invul;
+    int aim_ignore_walls;
     int aim_autoscope;
     int aim_off_unscoped;
     int aim_off_spectated;

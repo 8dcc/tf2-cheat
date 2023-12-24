@@ -11,14 +11,15 @@
 /* Global settings */
 Settings settings = {
     /* ESP */
-    .esp_player         = SETT_OFF,
-    .esp_use_team_color = false,
-    .esp_player_box     = false,
-    .esp_skeleton       = false,
-    .esp_player_health  = false,
-    .esp_player_name    = false,
-    .esp_player_class   = false,
-    .esp_player_weapon  = false,
+    .esp_player           = SETT_OFF,
+    .esp_use_team_color   = false,
+    .esp_player_box       = false,
+    .esp_skeleton         = false,
+    .esp_player_health    = false,
+    .esp_player_name      = false,
+    .esp_player_class     = false,
+    .esp_player_weapon    = false,
+    .esp_ignore_invisible = false,
 
     .esp_building                = SETT_OFF,
     .esp_building_use_team_color = false,
@@ -40,6 +41,10 @@ Settings settings = {
     .chams_hand                  = false,
 
     /* Aim */
+    .aim_target_steam_friends = false,
+    .aim_target_invisible     = false,
+    .aim_target_invul         = false,
+
     .aimbot            = false,
     .aim_fov           = 0.f,
     .aim_smooth        = 1.f,
@@ -48,8 +53,7 @@ Settings settings = {
     .aim_silent        = false,
     .aim_on_key        = false,
     .aim_keycode       = DEFAULT_AIMBOT_KEY,
-    .aim_target_invis  = false,
-    .aim_target_invul  = false,
+    .aim_ignore_walls  = false,
     .aim_autoscope     = false,
     .aim_off_unscoped  = false,
     .aim_off_spectated = false,
@@ -147,6 +151,7 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_INT(json_cfg, esp_player_name);
     JSON_SETTINGS_WRITE_INT(json_cfg, esp_player_class);
     JSON_SETTINGS_WRITE_INT(json_cfg, esp_player_weapon);
+    JSON_SETTINGS_WRITE_INT(json_cfg, esp_ignore_invisible);
     JSON_SETTINGS_WRITE_INT(json_cfg, esp_building);
     JSON_SETTINGS_WRITE_INT(json_cfg, esp_building_use_team_color);
     JSON_SETTINGS_WRITE_INT(json_cfg, esp_building_type);
@@ -165,6 +170,9 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_INT(json_cfg, chams_hand);
 
     /* Aim */
+    JSON_SETTINGS_WRITE_INT(json_cfg, aim_target_steam_friends);
+    JSON_SETTINGS_WRITE_INT(json_cfg, aim_target_invisible);
+    JSON_SETTINGS_WRITE_INT(json_cfg, aim_target_invul);
     JSON_SETTINGS_WRITE_INT(json_cfg, aimbot);
     JSON_SETTINGS_WRITE_FLOAT(json_cfg, aim_fov);
     JSON_SETTINGS_WRITE_FLOAT(json_cfg, aim_smooth);
@@ -173,8 +181,7 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_silent);
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_on_key);
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_keycode);
-    JSON_SETTINGS_WRITE_INT(json_cfg, aim_target_invis);
-    JSON_SETTINGS_WRITE_INT(json_cfg, aim_target_invul);
+    JSON_SETTINGS_WRITE_INT(json_cfg, aim_ignore_walls);
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_autoscope);
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_off_unscoped);
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_off_spectated);
@@ -323,6 +330,7 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_INT(json_cfg, esp_player_name);
     JSON_SETTINGS_READ_INT(json_cfg, esp_player_class);
     JSON_SETTINGS_READ_INT(json_cfg, esp_player_weapon);
+    JSON_SETTINGS_READ_INT(json_cfg, esp_ignore_invisible);
     JSON_SETTINGS_READ_INT(json_cfg, esp_building);
     JSON_SETTINGS_READ_INT(json_cfg, esp_building_use_team_color);
     JSON_SETTINGS_READ_INT(json_cfg, esp_building_type);
@@ -341,6 +349,9 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_INT(json_cfg, chams_hand);
 
     /* Aim */
+    JSON_SETTINGS_READ_INT(json_cfg, aim_target_steam_friends);
+    JSON_SETTINGS_READ_INT(json_cfg, aim_target_invisible);
+    JSON_SETTINGS_READ_INT(json_cfg, aim_target_invul);
     JSON_SETTINGS_READ_INT(json_cfg, aimbot);
     JSON_SETTINGS_READ_FLOAT(json_cfg, aim_fov);
     JSON_SETTINGS_READ_FLOAT(json_cfg, aim_smooth);
@@ -349,8 +360,7 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_INT(json_cfg, aim_silent);
     JSON_SETTINGS_READ_INT(json_cfg, aim_on_key);
     JSON_SETTINGS_READ_INT(json_cfg, aim_keycode);
-    JSON_SETTINGS_READ_INT(json_cfg, aim_target_invis);
-    JSON_SETTINGS_READ_INT(json_cfg, aim_target_invul);
+    JSON_SETTINGS_READ_INT(json_cfg, aim_ignore_walls);
     JSON_SETTINGS_READ_INT(json_cfg, aim_autoscope);
     JSON_SETTINGS_READ_INT(json_cfg, aim_off_unscoped);
     JSON_SETTINGS_READ_INT(json_cfg, aim_off_spectated);

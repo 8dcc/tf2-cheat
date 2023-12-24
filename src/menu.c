@@ -161,6 +161,7 @@ static inline void tab_esp(void) {
     nk_checkbox_label(ctx, "Player name", &settings.esp_player_name);
     nk_checkbox_label(ctx, "Player class", &settings.esp_player_class);
     nk_checkbox_label(ctx, "Player weapon", &settings.esp_player_weapon);
+    nk_checkbox_label(ctx, "Ignore invisible", &settings.esp_ignore_invisible);
 
     nk_layout_row_dynamic(ctx, 8, 1);
     nk_spacing(ctx, 0); /* ----------------------------  */
@@ -219,6 +220,15 @@ static inline void tab_esp(void) {
 
 static inline void tab_aim(void) {
     nk_layout_row_dynamic(ctx, 15, 1);
+    nk_checkbox_label(ctx, "Target steam friends",
+                      &settings.aim_target_steam_friends);
+    nk_checkbox_label(ctx, "Target invisible", &settings.aim_target_invisible);
+    nk_checkbox_label(ctx, "Target invulnerable", &settings.aim_target_invul);
+
+    nk_layout_row_dynamic(ctx, 8, 1);
+    nk_spacing(ctx, 0); /* ----------------------------  */
+    nk_layout_row_dynamic(ctx, 15, 1);
+
     nk_checkbox_label(ctx, "Aimbot", &settings.aimbot);
 
     SLIDER_FLOAT("Aimbot FOV", 0.f, settings.aim_fov, 180.f, 0.5f);
@@ -235,8 +245,7 @@ static inline void tab_aim(void) {
     nk_layout_row_dynamic(ctx, 15, 1);
     nk_checkbox_label(ctx, "Silent", &settings.aim_silent);
     nk_checkbox_label(ctx, "On key", &settings.aim_on_key);
-    nk_checkbox_label(ctx, "Target invulnerable", &settings.aim_target_invul);
-    nk_checkbox_label(ctx, "Target non-visible", &settings.aim_target_invis);
+    nk_checkbox_label(ctx, "Ignore walls", &settings.aim_ignore_walls);
     nk_checkbox_label(ctx, "Auto-scope", &settings.aim_autoscope);
     nk_checkbox_label(ctx, "Disable if unscoped", &settings.aim_off_unscoped);
     nk_checkbox_label(ctx, "Disable if spectated", &settings.aim_off_spectated);
