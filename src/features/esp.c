@@ -274,6 +274,10 @@ void esp(void) {
                      (settings.esp_player == SETT_ENEMY && is_teammate)))
                     continue;
 
+                /* We don't want to render invisible spies */
+                if (settings.esp_ignore_invisible && IsInvisible(ent))
+                    continue;
+
                 if (!get_bbox(ent, &x, &y, &w, &h))
                     continue;
 

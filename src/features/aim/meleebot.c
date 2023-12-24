@@ -113,6 +113,15 @@ static vec3_t get_melee_angle(void) {
         if (!ent || IsTeammate(ent))
             continue;
 
+        if (!settings.aim_target_invul && IsInvulnerable(ent))
+            continue;
+
+        if (!settings.aim_target_steam_friends && IsSteamFriend(ent))
+            continue;
+
+        if (!settings.aim_target_invisible && IsInvisible(ent))
+            continue;
+
         /* Use the center of the entity's collision box */
         vec3_t target_pos = GetCenter(ent);
         if (vec_is_zero(target_pos))

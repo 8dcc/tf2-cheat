@@ -103,8 +103,8 @@ void auto_detonate_stickies(usercmd_t* cmd) {
         if (!CBaseHandle_IsValid(handle))
             continue;
 
-        const int idx            = CBaseHandle_GetEntryIndex(handle);
-        Weapon* cur_weapon       = (Weapon*)g.ents[idx];
+        const int idx      = CBaseHandle_GetEntryIndex(handle);
+        Weapon* cur_weapon = (Weapon*)g.ents[idx];
         if (!cur_weapon)
             continue;
 
@@ -150,7 +150,7 @@ void auto_detonate_stickies(usercmd_t* cmd) {
         if (!CBaseHandle_IsValid(thrower_handle))
             continue;
 
-        const int thrower_idx      = CBaseHandle_GetEntryIndex(thrower_handle);
+        const int thrower_idx = CBaseHandle_GetEntryIndex(thrower_handle);
         if (thrower_idx != g.localidx)
             continue;
 
@@ -197,8 +197,15 @@ void auto_detonate_stickies(usercmd_t* cmd) {
             if (j == g.localidx) {
                 if (!settings.auto_detonate_self)
                     continue;
-            } else if (IsTeammate(player) || IsInvulnerable(player)) {
-                continue;
+            } else {
+                if (IsTeammate(player))
+                    continue;
+
+                if (!settings.aim_target_invul && IsInvulnerable(player))
+                    continue;
+
+                if (!settings.aim_target_invisible && IsInvisible(player))
+                    continue;
             }
 
             /* TODO: If scotish resistance, look to the sticky entity with

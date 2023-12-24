@@ -81,6 +81,12 @@ static vec3_t get_closest_fov(vec3_t viewangles) {
         if (!settings.aim_target_invul && IsInvulnerable(ent))
             continue;
 
+        if (!settings.aim_target_steam_friends && IsSteamFriend(ent))
+            continue;
+
+        if (!settings.aim_target_invisible && IsInvisible(ent))
+            continue;
+
         int minhitbox = 0, maxhitbox = 0;
         setting_to_hitboxes(settings.aim_hitbox, &minhitbox, &maxhitbox);
 
@@ -90,7 +96,7 @@ static vec3_t get_closest_fov(vec3_t viewangles) {
                 continue;
 
             /* We can't see current hitbox */
-            if (!settings.aim_target_invis &&
+            if (!settings.aim_ignore_walls &&
                 !is_enemy_visible(local_eyes, target_pos, ent))
                 continue;
 
