@@ -24,8 +24,8 @@ void spectator_list(void) {
     int spec_x = 0, spec_y = 0;
     METHOD_ARGS(i_engine, GetScreenSize, &spec_x, &spec_y);
 
-    spec_y = spec_y / 2 + 10;
     spec_x = 5;
+    spec_y = (float)spec_y * (settings.speclist_height / 100.f);
 
     bool first_spectator = true;
 

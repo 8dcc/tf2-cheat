@@ -84,6 +84,7 @@ Settings settings = {
     .draw_velocity_pos   = 51.f,
     .watermark           = true,
     .speclist            = true,
+    .speclist_height     = 50.f,
 
     /* Misc */
     .bhop               = false,
@@ -210,6 +211,7 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_INT(json_cfg, draw_velocity_pos);
     JSON_SETTINGS_WRITE_INT(json_cfg, watermark);
     JSON_SETTINGS_WRITE_INT(json_cfg, speclist);
+    JSON_SETTINGS_WRITE_FLOAT(json_cfg, speclist);
 
     /* Misc */
     JSON_SETTINGS_WRITE_INT(json_cfg, bhop);
@@ -389,6 +391,7 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_INT(json_cfg, draw_velocity_pos);
     JSON_SETTINGS_READ_INT(json_cfg, watermark);
     JSON_SETTINGS_READ_INT(json_cfg, speclist);
+    JSON_SETTINGS_READ_FLOAT(json_cfg, speclist_height);
 
     /* Misc */
     JSON_SETTINGS_READ_INT(json_cfg, bhop);

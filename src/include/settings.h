@@ -116,6 +116,7 @@ typedef struct {
     float draw_velocity_pos;
     int watermark;
     int speclist;
+    float speclist_height;
 
     /* Misc */
     int bhop;

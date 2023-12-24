@@ -309,6 +309,8 @@ static inline void tab_visuals(void) {
 
     nk_checkbox_label(ctx, "Watermark", &settings.watermark);
     nk_checkbox_label(ctx, "Spectator list", &settings.speclist);
+    SLIDER_FLOAT("Spectator list height", 0.f, settings.speclist_height, 100.f,
+                 0.1f);
 }
 
 static inline void tab_misc(void) {
