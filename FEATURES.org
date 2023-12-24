@@ -20,6 +20,7 @@ The cheat currently has the following features:
     - Box
     - Health
     - Name (type of building)
+  - Stickybomb ESP
   - Ammo box ESP
   - Healing items ESP
 - Chams
