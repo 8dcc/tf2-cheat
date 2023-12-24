@@ -14,6 +14,7 @@ The cheat currently has the following features:
     - Name
     - Player class
     - Weapon
+    - Ignore invisible spies
   - Building ESP
     - Toggle friends only/enemies only/all
     - Toggle building types
@@ -35,8 +36,7 @@ The cheat currently has the following features:
   - Custom hitboxes
   - Silent
   - Auto-shoot on key (=PgUp=)*
-  - Target invulnerable
-  - Target non-visible (behind walls)
+  - Ignore walls
   - Auto-scope
   - Disable if unscoped
   - Disable if spectated in 1st person
@@ -46,6 +46,10 @@ The cheat currently has the following features:
   - Swing prediction
   - Auto-attack on key (=PgUp=)*
   - Disable if spectated in 1st person
+- Common settings for aimbot/meleebot
+  - Ignore invulnerable players (uber, bonk, etc.)
+  - Ignore steam friends
+  - Ignore invisible spies
 - Automedigun (automatically heal the best target)
   - pSilent
   - Custom smoothing
