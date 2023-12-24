@@ -323,7 +323,7 @@ void load_config(const char* filename) {
 
     /* Esp */
     JSON_SETTINGS_READ_INT(json_cfg, esp_player);
-    JSON_SETTINGS_WRITE_INT(json_cfg, esp_use_team_color);
+    JSON_SETTINGS_READ_INT(json_cfg, esp_use_team_color);
     JSON_SETTINGS_READ_INT(json_cfg, esp_player_box);
     JSON_SETTINGS_READ_INT(json_cfg, esp_skeleton);
     JSON_SETTINGS_READ_INT(json_cfg, esp_player_health);
