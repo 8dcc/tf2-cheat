@@ -371,6 +371,8 @@ typedef struct {
     PAD(4 * 23);
     void (*DrawCircle)(MatSurface*, int x, int y, int radius,
                        int segments); /* 99 */
+    PAD(4 * 11);
+    void (*OnScreenSizeChanged)(MatSurface*, int nOldWidth, int nOldHeight);
 } VMT_MatSurface;
 
 struct MatSurface {
