@@ -12,7 +12,7 @@
 Settings settings = {
     /* ESP */
     .esp_player         = SETT_OFF,
-    .esp_use_team_color = true,
+    .esp_use_team_color = false,
     .esp_player_box     = false,
     .esp_skeleton       = false,
     .esp_player_health  = false,
