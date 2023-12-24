@@ -436,8 +436,8 @@ void esp(void) {
                 if (!thrower)
                     continue;
 
-                const int ent_teamnum  = METHOD(ent, GetTeamNumber);
-                const bool is_teammate = our_teamnum == ent_teamnum;
+                const int ent_teamnum  = METHOD(thrower, GetTeamNumber);
+                const bool is_teammate = (our_teamnum == ent_teamnum);
 
                 /* We don't want to render this team */
                 if (settings.esp_sticky != SETT_ALL &&
