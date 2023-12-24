@@ -289,4 +289,15 @@ static inline bool IsInvulnerable(Entity* ent) {
            InCond(ent, TF_COND_PHASE);
 }
 
+static inline bool IsInvisible(Entity* ent) {
+    if (InCond(ent, TF_COND_BURNING) || InCond(ent, TF_COND_BURNING_PYRO) ||
+        InCond(ent, TF_COND_MAD_MILK) || InCond(ent, TF_COND_URINE))
+        return false;
+
+    /* CTFPlayer->m_flInvisChangeCompleteTime - 0x8 */
+    const int invis_offset = 0x1A14;
+    float m_flInvisibility = *(float*)((uint32_t)ent + invis_offset);
+    return m_flInvisibility >= 1.f;
+}
+
 #endif /* SDK_ENTITY_H_ */
