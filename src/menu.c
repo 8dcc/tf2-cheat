@@ -369,10 +369,10 @@ static inline void tab_colors(void) {
     nk_label(ctx, "RED team", NK_TEXT_CENTERED);
     nk_label(ctx, "BLU team", NK_TEXT_CENTERED);
     nk_layout_row_dynamic(ctx, 100, 2);
-    settings.col_red_team =
-      nk_color_picker(ctx, settings.col_red_team, NK_RGBA);
-    settings.col_blu_team =
-      nk_color_picker(ctx, settings.col_blu_team, NK_RGBA);
+    settings.col_team_red =
+      nk_color_picker(ctx, settings.col_team_red, NK_RGBA);
+    settings.col_team_blu =
+      nk_color_picker(ctx, settings.col_team_blu, NK_RGBA);
 
     /* Esp colors */
     nk_layout_row_dynamic(ctx, 15, 2);

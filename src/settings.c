@@ -102,8 +102,8 @@ Settings settings = {
     .antiafk            = false,
 
     /* Colors */
-    .col_red_team          = (struct nk_colorf){ 0.62f, 0.19f, 0.18f, 1.f },
-    .col_blu_team          = (struct nk_colorf){ 0.22f, 0.36f, 0.47f, 1.f },
+    .col_team_red          = (struct nk_colorf){ 0.62f, 0.19f, 0.18f, 1.f },
+    .col_team_blu          = (struct nk_colorf){ 0.22f, 0.36f, 0.47f, 1.f },
     .col_esp_steam_friend  = (struct nk_colorf){ 0.21f, 0.77f, 0.23f, 1.f },
     .col_esp_friend        = (struct nk_colorf){ 0.05f, 0.47f, 0.95f, 1.f },
     .col_esp_enemy         = (struct nk_colorf){ 0.95f, 0.10f, 0.09f, 1.f },
@@ -224,9 +224,9 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_INT(json_cfg, nopush);
     JSON_SETTINGS_WRITE_INT(json_cfg, antiafk);
 
-    /* Cols */
-    JSON_SETTINGS_WRITE_COL(json_cfg, col_red_team);
-    JSON_SETTINGS_WRITE_COL(json_cfg, col_blu_team);
+    /* Colors */
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_team_red);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_team_blu);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_steam_friend);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_friend);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_enemy);
@@ -401,8 +401,8 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_INT(json_cfg, antiafk);
 
     /* Colors */
-    JSON_SETTINGS_READ_COL(json_cfg, col_red_team);
-    JSON_SETTINGS_READ_COL(json_cfg, col_blu_team);
+    JSON_SETTINGS_READ_COL(json_cfg, col_team_red);
+    JSON_SETTINGS_READ_COL(json_cfg, col_team_blu);
     JSON_SETTINGS_READ_COL(json_cfg, col_esp_steam_friend);
     JSON_SETTINGS_READ_COL(json_cfg, col_esp_friend);
     JSON_SETTINGS_READ_COL(json_cfg, col_esp_enemy);

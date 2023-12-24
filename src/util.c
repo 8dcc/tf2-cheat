@@ -305,10 +305,10 @@ rgba_t hue2rgba(float h) {
 
 struct nk_colorf get_team_color(int teamnum) {
     switch (teamnum) {
-        case RED_TEAM:
-            return settings.col_red_team;
-        case BLU_TEAM:
-            return settings.col_blu_team;
+        case TEAM_RED:
+            return settings.col_team_red;
+        case TEAM_BLU:
+            return settings.col_team_blu;
         default:
             /* Unknown team: gray */
             return (struct nk_colorf){ 0.63f, 0.63f, 0.63f, 1.f };

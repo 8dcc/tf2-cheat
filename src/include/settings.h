@@ -134,8 +134,8 @@ typedef struct {
     int antiafk;
 
     /* Colors */
-    struct nk_colorf col_red_team;
-    struct nk_colorf col_blu_team;
+    struct nk_colorf col_team_red;
+    struct nk_colorf col_team_blu;
     struct nk_colorf col_esp_steam_friend;
     struct nk_colorf col_esp_friend;
     struct nk_colorf col_esp_enemy;
