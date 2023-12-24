@@ -125,19 +125,24 @@ static inline void skeleton_esp(Renderable* rend, matrix3x4_t* bones,
 
 static inline void building_esp(Entity* ent, const char* str, rgba_t friend_col,
                                 rgba_t enemy_col) {
-    const bool teammate = IsTeammate(ent);
+    const int our_teamnum  = METHOD(g.localplayer, GetTeamNumber);
+    const int ent_teamnum  = METHOD(ent, GetTeamNumber);
+    const bool is_teammate = (our_teamnum == ent_teamnum);
 
     /* Should we render this building's team? */
     if (settings.esp_building != SETT_ALL &&
-        ((settings.esp_building == SETT_FRIEND && !teammate) ||
-         (settings.esp_building == SETT_ENEMY && teammate)))
+        ((settings.esp_building == SETT_FRIEND && !is_teammate) ||
+         (settings.esp_building == SETT_ENEMY && is_teammate)))
         return;
 
     static int x, y, w, h;
     if (!get_bbox(ent, &x, &y, &w, &h))
         return;
 
-    rgba_t col = teammate ? friend_col : enemy_col;
+    rgba_t col = settings.esp_building_use_team_color
+                   ? NK2COL(get_team_color(ent_teamnum))
+                 : is_teammate ? friend_col
+                               : enemy_col;
 
     /* Building box ESP */
     if (settings.esp_building_box)
@@ -220,20 +225,28 @@ void esp(void) {
     /* For skeleton ESP */
     static matrix3x4_t bones[MAXSTUDIOBONES];
 
-    /* If we are dead, get the index of the spectated entity. If it's a player,
-     * we don't render his ESP. */
-    int spectated_idx = 0;
+    /* If we are dead, get the spectated player so we know his team, and we
+     * don't render his ESP. */
+    Entity* local_or_spectated = NULL;
     if (!g.IsAlive) {
         const int obs_mode = METHOD(g.localplayer, GetObserverMode);
-        Entity* spectated  = METHOD(g.localplayer, GetObserverTarget);
-        if ((obs_mode == OBS_MODE_IN_EYE || obs_mode == OBS_MODE_CHASE) &&
-            spectated)
-            spectated_idx = METHOD(spectated, GetIndex);
+
+        /* We are spectating in 1st or 3rd person */
+        if ((obs_mode == OBS_MODE_IN_EYE || obs_mode == OBS_MODE_CHASE))
+            local_or_spectated = METHOD(g.localplayer, GetObserverTarget);
     }
+
+    /* We are not spectating a valid player, use ourselves */
+    if (local_or_spectated == NULL)
+        local_or_spectated = g.localplayer;
+
+    /* Calculate once */
+    const int local_idx   = METHOD(local_or_spectated, GetIndex);
+    const int our_teamnum = METHOD(local_or_spectated, GetTeamNumber);
 
     /* Iterate all entities */
     for (int i = 1; i < g.MaxEntities; i++) {
-        if (i == g.localidx)
+        if (i == local_idx)
             continue;
 
         Entity* ent      = g.ents[i];
@@ -249,23 +262,26 @@ void esp(void) {
         switch (ent_class->class_id) {
             case CClass_CTFPlayer: {
                 /* Don't render ESP for the spectated player */
-                if (settings.esp_player == SETT_OFF || i == spectated_idx)
+                if (settings.esp_player == SETT_OFF)
                     continue;
 
-                const bool teammate = IsTeammate(ent);
+                const int ent_teamnum  = METHOD(ent, GetTeamNumber);
+                const bool is_teammate = (our_teamnum == ent_teamnum);
 
                 /* We don't want to render this team */
                 if (settings.esp_player != SETT_ALL &&
-                    ((settings.esp_player == SETT_FRIEND && !teammate) ||
-                     (settings.esp_player == SETT_ENEMY && teammate)))
+                    ((settings.esp_player == SETT_FRIEND && !is_teammate) ||
+                     (settings.esp_player == SETT_ENEMY && is_teammate)))
                     continue;
 
                 if (!get_bbox(ent, &x, &y, &w, &h))
                     continue;
 
                 rgba_t col = IsSteamFriend(ent) ? col_player_steam_friend
-                             : teammate         ? col_player_friend
-                                                : col_player_enemy;
+                             : settings.esp_use_team_color
+                               ? NK2COL(get_team_color(ent_teamnum))
+                             : is_teammate ? col_player_friend
+                                           : col_player_enemy;
 
                 /*------------------------------------------------------------*/
                 /* Player skeleton ESP */
@@ -413,16 +429,19 @@ void esp(void) {
                 if (!thrower)
                     continue;
 
-                const bool teammate = IsTeammate(thrower);
+                const int ent_teamnum  = METHOD(ent, GetTeamNumber);
+                const bool is_teammate = our_teamnum == ent_teamnum;
 
                 /* We don't want to render this team */
                 if (settings.esp_sticky != SETT_ALL &&
-                    ((settings.esp_sticky == SETT_FRIEND && !teammate) ||
-                     (settings.esp_sticky == SETT_ENEMY && teammate)))
+                    ((settings.esp_sticky == SETT_FRIEND && !is_teammate) ||
+                     (settings.esp_sticky == SETT_ENEMY && is_teammate)))
                     continue;
 
-                rgba_t col_sticky = teammate ? col_sticky_friend
-                                             : col_sticky_enemy;
+                rgba_t col_sticky = settings.esp_sticky_use_team_color
+                                      ? NK2COL(get_team_color(ent_teamnum))
+                                    : is_teammate ? col_sticky_friend
+                                                  : col_sticky_enemy;
 
                 generic_ent_name(ent, "Sticky", col_sticky);
                 break;

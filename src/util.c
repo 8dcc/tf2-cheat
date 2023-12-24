@@ -11,6 +11,7 @@
 #include "include/util.h"
 #include "include/math.h"
 #include "include/globals.h"
+#include "include/settings.h"
 
 void* get_interface(void* handle, const char* name) {
     if (!handle) {
@@ -193,7 +194,8 @@ vec3_t center_of_hitbox(studiohdr_t* studio, matrix3x4_t* bonemat, int set,
     };
 }
 
-bool is_visible(vec3_t start, vec3_t end, Entity* target, bool ignore_friendly) {
+bool is_visible(vec3_t start, vec3_t end, Entity* target,
+                bool ignore_friendly) {
     /* We initialize with a custom ShouldHitEntity() for ignoring teammates */
     TraceFilter filter;
     if (ignore_friendly)
@@ -299,6 +301,18 @@ rgba_t hue2rgba(float h) {
     }
 
     return ret;
+}
+
+struct nk_colorf get_team_color(int teamnum) {
+    switch (teamnum) {
+        case TEAM_RED:
+            return settings.col_team_red;
+        case TEAM_BLU:
+            return settings.col_team_blu;
+        default:
+            /* Unknown team: gray */
+            return (struct nk_colorf){ 0.63f, 0.63f, 0.63f, 1.f };
+    }
 }
 
 void draw_text(int x, int y, bool center, HFont f, rgba_t c, const char* str) {

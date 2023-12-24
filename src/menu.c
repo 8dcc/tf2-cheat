@@ -154,6 +154,7 @@ static inline void tab_esp(void) {
     nk_combobox(ctx, opts0, 4, &settings.esp_player, 15, size0);
 
     nk_layout_row_dynamic(ctx, 15, 1);
+    nk_checkbox_label(ctx, "Use team color", &settings.esp_use_team_color);
     nk_checkbox_label(ctx, "Player box", &settings.esp_player_box);
     nk_checkbox_label(ctx, "Player skeleton", &settings.esp_skeleton);
     nk_checkbox_label(ctx, "Player health", &settings.esp_player_health);
@@ -177,6 +178,8 @@ static inline void tab_esp(void) {
     nk_combobox(ctx, opts2, 4, &settings.esp_building_type, 15, size2);
 
     nk_layout_row_dynamic(ctx, 15, 1);
+    nk_checkbox_label(ctx, "Use team color",
+                      &settings.esp_building_use_team_color);
     nk_checkbox_label(ctx, "Building box", &settings.esp_building_box);
     nk_checkbox_label(ctx, "Building health", &settings.esp_building_hp);
     nk_checkbox_label(ctx, "Building name", &settings.esp_building_name);
@@ -189,6 +192,8 @@ static inline void tab_esp(void) {
     struct nk_vec2 size3       = { COMBO_DROP_W, 200 };
     nk_label(ctx, "Stickybomb ESP", NK_TEXT_LEFT);
     nk_combobox(ctx, opts3, 4, &settings.esp_sticky, 15, size3);
+    nk_checkbox_label(ctx, "Use team color",
+                      &settings.esp_sticky_use_team_color);
 
     nk_layout_row_dynamic(ctx, 15, 1);
     nk_checkbox_label(ctx, "Ammo box ESP", &settings.esp_ammobox);
@@ -204,6 +209,8 @@ static inline void tab_esp(void) {
     nk_combobox(ctx, opts4, 4, &settings.chams_player, 15, size4);
 
     nk_layout_row_dynamic(ctx, 15, 1);
+    nk_checkbox_label(ctx, "Use team color",
+                      &settings.chams_player_use_team_color);
     nk_checkbox_label(ctx, "Invisible player chams", &settings.chams_ignorez);
     nk_checkbox_label(ctx, "Thirdperson chams", &settings.chams_local);
     nk_checkbox_label(ctx, "Weapon chams", &settings.chams_weapon);
@@ -357,6 +364,16 @@ static inline void tab_misc(void) {
 }
 
 static inline void tab_colors(void) {
+    /* Team colors */
+    nk_layout_row_dynamic(ctx, 15, 2);
+    nk_label(ctx, "RED team", NK_TEXT_CENTERED);
+    nk_label(ctx, "BLU team", NK_TEXT_CENTERED);
+    nk_layout_row_dynamic(ctx, 100, 2);
+    settings.col_team_red =
+      nk_color_picker(ctx, settings.col_team_red, NK_RGBA);
+    settings.col_team_blu =
+      nk_color_picker(ctx, settings.col_team_blu, NK_RGBA);
+
     /* Esp colors */
     nk_layout_row_dynamic(ctx, 15, 2);
     nk_label(ctx, "Friendly player ESP", NK_TEXT_CENTERED);

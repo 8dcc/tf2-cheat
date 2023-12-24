@@ -63,16 +63,20 @@ void chams(ModelRender* thisptr, const DrawModelState_t* state,
         if (settings.chams_player == SETT_OFF)
             return;
 
-        const bool teammate = IsTeammate(ent);
+        const int our_teamnum  = METHOD(g.localplayer, GetTeamNumber);
+        const int ent_teamnum  = METHOD(ent, GetTeamNumber);
+        const bool is_teammate = (our_teamnum == ent_teamnum);
 
         /* Are chams enabled for this player's team? */
         if (settings.chams_player != SETT_ALL &&
-            ((settings.chams_player == SETT_ENEMY && teammate) ||
-             (settings.chams_player == SETT_FRIEND && !teammate)))
+            ((settings.chams_player == SETT_ENEMY && is_teammate) ||
+             (settings.chams_player == SETT_FRIEND && !is_teammate)))
             return;
 
-        struct nk_colorf vis_col = teammate ? settings.col_chams_friend
-                                            : settings.col_chams_enemy;
+        struct nk_colorf vis_col = settings.chams_player_use_team_color
+                                     ? get_team_color(ent_teamnum)
+                                   : is_teammate ? settings.col_chams_friend
+                                                 : settings.col_chams_enemy;
 
         /* Invisible player chams */
         if (settings.chams_ignorez) {
