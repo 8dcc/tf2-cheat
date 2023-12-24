@@ -86,8 +86,9 @@ Done. Unload cheat using:
 *Note:* Some screenshots might be a bit outdated.
 #+end_quote
 
-[[https://user-images.githubusercontent.com/29655971/265290801-9b34dbde-1685-4eed-807a-5f02aa2ed3f9.png]]
-[[https://user-images.githubusercontent.com/29655971/265290886-9fc02d5b-c5fa-4192-89ed-4583fc971b29.png]]
-[[https://user-images.githubusercontent.com/29655971/265290891-7ab9c730-bbfa-44eb-85de-f0ef2da0fa5a.png]]
-[[https://user-images.githubusercontent.com/29655971/265290894-93b668c0-cdd6-477d-a9cf-3816690e23a7.png]]
-[[https://user-images.githubusercontent.com/29655971/265290898-099a3c5e-ad80-4028-8cb8-1663e53644d7.png]]
+[[https://github.com/8dcc/tf2-cheat/assets/29655971/6b8ab549-335e-4c36-b98a-da484b1a5c48]]
+[[https://github.com/8dcc/tf2-cheat/assets/29655971/e3bd95d0-b5e8-4217-9856-e62b59f143e9]]
+[[https://github.com/8dcc/tf2-cheat/assets/29655971/bd9c2b6b-8165-4aec-b4e7-f54c39965a94]]
+[[https://github.com/8dcc/tf2-cheat/assets/29655971/72796611-6302-468a-afa5-7e765ddced4d]]
+[[https://github.com/8dcc/tf2-cheat/assets/29655971/789eca45-6c34-4a90-8816-c2c22f35e0f3]]
+[[https://github.com/8dcc/tf2-cheat/assets/29655971/100c76ec-f95f-4ddf-82bf-ea6187fd3066]]
