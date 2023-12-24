@@ -21,19 +21,19 @@ Settings settings = {
     .esp_player_weapon  = false,
 
     .esp_building                = SETT_OFF,
-    .esp_building_use_team_color = true,
+    .esp_building_use_team_color = false,
     .esp_building_type           = SETT_BTYPE_ALL,
     .esp_building_box            = false,
     .esp_building_hp             = false,
     .esp_building_name           = false,
 
     .esp_sticky                = false,
-    .esp_sticky_use_team_color = true,
+    .esp_sticky_use_team_color = false,
     .esp_ammobox               = false,
     .esp_healthpack            = false,
 
     .chams_player                = SETT_OFF,
-    .chams_player_use_team_color = true,
+    .chams_player_use_team_color = false,
     .chams_ignorez               = false,
     .chams_local                 = false,
     .chams_weapon                = false,
