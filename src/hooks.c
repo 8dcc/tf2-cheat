@@ -20,6 +20,7 @@ DECL_HOOK(PaintTraverse);
 DECL_HOOK(DrawModelExecute);
 DECL_HOOK(RunCommand);
 DECL_HOOK(GetUserCmd);
+DECL_HOOK(OnScreenSizeChanged);
 
 SwapWindow_t ho_SwapWindow = NULL;
 PollEvent_t ho_PollEvent   = NULL;
@@ -37,6 +38,7 @@ bool hooks_init(void) {
     VMT_HOOK(i_modelrender, DrawModelExecute);
     VMT_HOOK(i_prediction, RunCommand);
     VMT_HOOK(i_input, GetUserCmd);
+    VMT_HOOK(i_surface, OnScreenSizeChanged);
 
     HOOK_SDL(SwapWindow);
     HOOK_SDL(PollEvent);
@@ -314,6 +316,15 @@ usercmd_t* h_GetUserCmd(CInput* thisptr, int sequence_number) {
      * https://github.com/OthmanAba/TeamFortress2/blob/1b81dded673d49adebf4d0958e52236ecc28a956/tf2_src/game/client/in_main.cpp#L1405-L1408
      */
     return usercmd;
+}
+
+/*----------------------------------------------------------------------------*/
+
+void h_OnScreenSizeChanged(MatSurface* thisptr, int nOldWidth, int nOldHeight) {
+    ORIGINAL(OnScreenSizeChanged, thisptr, nOldWidth, nOldHeight);
+
+    /* Reload fonts */
+    fonts_init();
 }
 
 /*----------------------------------------------------------------------------*/

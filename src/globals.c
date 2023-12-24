@@ -149,6 +149,8 @@ static inline bool get_sigs(void) {
     return true;
 }
 
+/*----------------------------------------------------------------------------*/
+
 bool globals_init(void) {
     /* Handlers */
     GET_HANDLER(h_client, CLIENT_SO);
@@ -206,6 +208,7 @@ bool globals_init(void) {
     CLONE_VMT(i_modelrender);
     CLONE_VMT(i_prediction);
     CLONE_VMT(i_input);
+    CLONE_VMT(i_surface);
 
     dlclose(h_client);
     dlclose(h_engine);
@@ -239,6 +242,8 @@ bool resore_vtables(void) {
     RESTORE_VMT(i_panel);
     RESTORE_VMT(i_modelrender);
     RESTORE_VMT(i_prediction);
+    RESTORE_VMT(i_input);
+    RESTORE_VMT(i_surface);
 
     return true;
 }
