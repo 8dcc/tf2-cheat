@@ -48,9 +48,6 @@
 
 /*----------------------------------------------------------------------------*/
 
-const struct nk_colorf get_nkcolor_by_teamnum(const int teamnum);
-const rgba_t get_color_by_teamnum(const int teamnum);
-
 void* get_interface(void* handle, const char* name);
 size_t vmt_size(void* vmt);
 void* find_sig(const char* module, const byte* ida_pattern);
@@ -76,6 +73,8 @@ float sub_offset_to_yaw(float jaw, float offset);
 
 rgba_t col_scale(rgba_t c, float factor);
 rgba_t hue2rgba(float h);
+struct nk_colorf get_team_color(int teamnum);
+
 void draw_text(int x, int y, bool center, HFont f, rgba_t c, const char* str);
 void get_text_size(HFont f, const char* str, int* w, int* h);
 void convert_player_name(char* dst, const char* src);

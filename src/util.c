@@ -11,6 +11,7 @@
 #include "include/util.h"
 #include "include/math.h"
 #include "include/globals.h"
+#include "include/settings.h"
 
 void* get_interface(void* handle, const char* name) {
     if (!handle) {
@@ -300,6 +301,18 @@ rgba_t hue2rgba(float h) {
     }
 
     return ret;
+}
+
+struct nk_colorf get_team_color(int teamnum) {
+    switch (teamnum) {
+        case RED_TEAM:
+            return settings.col_red_team;
+        case BLU_TEAM:
+            return settings.col_blu_team;
+        default:
+            /* Unknown team: gray */
+            return (struct nk_colorf){ 0.63f, 0.63f, 0.63f, 1.f };
+    }
 }
 
 void draw_text(int x, int y, bool center, HFont f, rgba_t c, const char* str) {

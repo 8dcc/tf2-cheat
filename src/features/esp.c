@@ -18,28 +18,6 @@
 
 /*----------------------------------------------------------------------------*/
 
-/* TODO: Place this in util.c so we don't have to keep 2 versions of the same
- * function in chams.c and esp.c  */
-const struct nk_colorf get_nkcolor_by_teamnum_zxc(const int teamnum) {
-    const struct nk_colorf nk_col_red_team = settings.col_red_team;
-    const struct nk_colorf nk_col_blu_team = settings.col_blu_team;
-    static const struct nk_colorf nk_col_gray_team =
-      (struct nk_colorf){ 0.63f, 0.63f, 0.63f, 1.f };
-
-    switch (teamnum) {
-        case RED_TEAM:
-            return nk_col_red_team;
-        case BLU_TEAM:
-            return nk_col_blu_team;
-        default:
-            return nk_col_gray_team;
-    }
-}
-
-const rgba_t get_color_by_teamnum(const int teamnum) {
-    return NK2COL(get_nkcolor_by_teamnum_zxc(teamnum));
-}
-
 static inline bool get_bbox(Entity* ent, int* x, int* y, int* w, int* h) {
     Collideable* collideable = METHOD(ent, GetCollideable);
     if (!collideable)
@@ -147,12 +125,9 @@ static inline void skeleton_esp(Renderable* rend, matrix3x4_t* bones,
 
 static inline void building_esp(Entity* ent, const char* str, rgba_t friend_col,
                                 rgba_t enemy_col) {
-    if (!g.localplayer)
-        return;
-
     const int our_teamnum  = METHOD(g.localplayer, GetTeamNumber);
     const int ent_teamnum  = METHOD(ent, GetTeamNumber);
-    const bool is_teammate = our_teamnum == ent_teamnum;
+    const bool is_teammate = (our_teamnum == ent_teamnum);
 
     /* Should we render this building's team? */
     if (settings.esp_building != SETT_ALL &&
@@ -165,7 +140,7 @@ static inline void building_esp(Entity* ent, const char* str, rgba_t friend_col,
         return;
 
     rgba_t col = settings.esp_building_use_team_color
-                   ? get_color_by_teamnum(ent_teamnum)
+                   ? NK2COL(get_team_color(ent_teamnum))
                  : is_teammate ? friend_col
                                : enemy_col;
 
@@ -250,22 +225,28 @@ void esp(void) {
     /* For skeleton ESP */
     static matrix3x4_t bones[MAXSTUDIOBONES];
 
-    /* If we are dead, get the index of the spectated entity. If it's a player,
-     * we don't render his ESP. */
-    int spectated_idx = 0;
+    /* If we are dead, get the spectated player so we know his team, and we
+     * don't render his ESP. */
+    Entity* local_or_spectated = NULL;
     if (!g.IsAlive) {
         const int obs_mode = METHOD(g.localplayer, GetObserverMode);
-        Entity* spectated  = METHOD(g.localplayer, GetObserverTarget);
-        if ((obs_mode == OBS_MODE_IN_EYE || obs_mode == OBS_MODE_CHASE) &&
-            spectated)
-            spectated_idx = METHOD(spectated, GetIndex);
+
+        /* We are spectating in 1st or 3rd person */
+        if ((obs_mode == OBS_MODE_IN_EYE || obs_mode == OBS_MODE_CHASE))
+            local_or_spectated = METHOD(g.localplayer, GetObserverTarget);
     }
 
-    const int our_teamnum = METHOD(g.localplayer, GetTeamNumber);
+    /* We are not spectating a valid player, use ourselves */
+    if (local_or_spectated == NULL)
+        local_or_spectated = g.localplayer;
+
+    /* Calculate once */
+    const int local_idx   = METHOD(local_or_spectated, GetIndex);
+    const int our_teamnum = METHOD(local_or_spectated, GetTeamNumber);
 
     /* Iterate all entities */
     for (int i = 1; i < g.MaxEntities; i++) {
-        if (i == g.localidx)
+        if (i == local_idx)
             continue;
 
         Entity* ent      = g.ents[i];
@@ -281,11 +262,11 @@ void esp(void) {
         switch (ent_class->class_id) {
             case CClass_CTFPlayer: {
                 /* Don't render ESP for the spectated player */
-                if (settings.esp_player == SETT_OFF || i == spectated_idx)
+                if (settings.esp_player == SETT_OFF)
                     continue;
 
                 const int ent_teamnum  = METHOD(ent, GetTeamNumber);
-                const bool is_teammate = our_teamnum == ent_teamnum;
+                const bool is_teammate = (our_teamnum == ent_teamnum);
 
                 /* We don't want to render this team */
                 if (settings.esp_player != SETT_ALL &&
@@ -298,7 +279,7 @@ void esp(void) {
 
                 rgba_t col = IsSteamFriend(ent) ? col_player_steam_friend
                              : settings.esp_use_team_color
-                               ? get_color_by_teamnum(ent_teamnum)
+                               ? NK2COL(get_team_color(ent_teamnum))
                              : is_teammate ? col_player_friend
                                            : col_player_enemy;
 
@@ -458,7 +439,7 @@ void esp(void) {
                     continue;
 
                 rgba_t col_sticky = settings.esp_sticky_use_team_color
-                                      ? get_color_by_teamnum(ent_teamnum)
+                                      ? NK2COL(get_team_color(ent_teamnum))
                                     : is_teammate ? col_sticky_friend
                                                   : col_sticky_enemy;
 
