@@ -424,6 +424,9 @@ void esp(void) {
 
                 /* Get player that owns the stiky. We could render other info */
                 CBaseHandle thrower_handle = GetThrowerHandle(ent);
+                if (!CBaseHandle_IsValid(thrower_handle))
+                    continue;
+
                 int thrower_idx = CBaseHandle_GetEntryIndex(thrower_handle);
                 Entity* thrower = g.ents[thrower_idx];
                 if (!thrower)

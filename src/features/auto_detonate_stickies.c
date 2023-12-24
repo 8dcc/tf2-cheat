@@ -100,6 +100,9 @@ void auto_detonate_stickies(usercmd_t* cmd) {
 
     for (int i = 0; i <= 2; i++) {
         const CBaseHandle handle = g.localplayer->m_hMyWeapons[i];
+        if (!CBaseHandle_IsValid(handle))
+            continue;
+
         const int idx            = CBaseHandle_GetEntryIndex(handle);
         Weapon* cur_weapon       = (Weapon*)g.ents[idx];
         if (!cur_weapon)
@@ -144,6 +147,9 @@ void auto_detonate_stickies(usercmd_t* cmd) {
 
         /* Are we the owner of the stickybomb? */
         CBaseHandle thrower_handle = GetThrowerHandle(sticky);
+        if (!CBaseHandle_IsValid(thrower_handle))
+            continue;
+
         const int thrower_idx      = CBaseHandle_GetEntryIndex(thrower_handle);
         if (thrower_idx != g.localidx)
             continue;
