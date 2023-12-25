@@ -73,10 +73,10 @@ void chams(ModelRender* thisptr, const DrawModelState_t* state,
              (settings.chams_player == SETT_FRIEND && !is_teammate)))
             return;
 
-        struct nk_colorf vis_col = settings.chams_player_use_team_color
+        struct nk_colorf vis_col = (settings.chams_player_use_team_color)
                                      ? get_team_color(ent_teamnum)
-                                   : is_teammate ? settings.col_chams_friend
-                                                 : settings.col_chams_enemy;
+                                   : (is_teammate) ? settings.col_chams_friend
+                                                   : settings.col_chams_enemy;
 
         /* Invisible player chams */
         if (settings.chams_ignorez) {
@@ -104,11 +104,6 @@ void chams(ModelRender* thisptr, const DrawModelState_t* state,
                           "debug/debugambientcube");
         return;
     } else if (strstr(mdl->name, "weapons/c")) {
-        if (!settings.chams_weapon)
-            return;
-
-#if 0
-        /* TODO: Change weapon color depending on owner/only change viewmodel */
         Weapon* wpn = (Weapon*)g.ents[pInfo->entity_index];
         if (!wpn || !CBaseHandle_IsValid(wpn->hOwner))
             return;
@@ -120,12 +115,37 @@ void chams(ModelRender* thisptr, const DrawModelState_t* state,
         Entity* owner = g.ents[owner_idx];
         if (!owner)
             return;
-#endif
 
-        override_material(WPN_IGNOREZ, WPN_WIREFRAME, settings.col_chams_weapon,
-                          "debug/debugambientcube");
+        if (owner_idx == g.localidx) {
+            if (settings.chams_weapon) {
+                override_material(WPN_IGNOREZ, WPN_WIREFRAME,
+                                  settings.col_chams_weapon,
+                                  "debug/debugambientcube");
+            }
+        } else if (settings.chams_player) {
+            if (!g.localplayer || settings.chams_player == SETT_OFF)
+                return;
+
+            /* It's not our weapon, use the same color as the owner. */
+            const int our_teamnum  = METHOD(g.localplayer, GetTeamNumber);
+            const int ent_teamnum  = METHOD(owner, GetTeamNumber);
+            const bool is_teammate = (our_teamnum == ent_teamnum);
+
+            /* Are chams enabled for this player's team? */
+            if (settings.chams_player != SETT_ALL &&
+                ((settings.chams_player == SETT_ENEMY && is_teammate) ||
+                 (settings.chams_player == SETT_FRIEND && !is_teammate)))
+                return;
+
+            struct nk_colorf player_col = (settings.chams_player_use_team_color)
+                                            ? get_team_color(ent_teamnum)
+                                          : (is_teammate)
+                                            ? settings.col_chams_friend
+                                            : settings.col_chams_enemy;
+
+            override_material(WPN_IGNOREZ, WPN_WIREFRAME, player_col,
+                              "debug/debugambientcube");
+        }
         return;
     }
-
-    return;
 }
