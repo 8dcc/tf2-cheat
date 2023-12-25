@@ -73,6 +73,10 @@ void chams(ModelRender* thisptr, const DrawModelState_t* state,
              (settings.chams_player == SETT_FRIEND && !is_teammate)))
             return;
 
+        /* We don't want to render invisible enemy spies */
+        if (settings.esp_ignore_invisible && !is_teammate && IsInvisible(ent))
+            return;
+
         struct nk_colorf vis_col = (settings.chams_player_use_team_color)
                                      ? get_team_color(ent_teamnum)
                                    : (is_teammate) ? settings.col_chams_friend
