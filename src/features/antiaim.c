@@ -5,6 +5,28 @@
 #include "../include/globals.h"
 #include "../include/settings.h"
 
+static inline bool is_user_shooting(usercmd_t* cmd) {
+    const bool using_melee = METHOD(g.localweapon, GetSlot) == WPN_SLOT_MELEE;
+    if (using_melee)
+        return melee_dealing_damage(cmd);
+
+    if (!can_shoot())
+        return false;
+
+    static bool was_holding_attack = false;
+    const bool is_holding_attack   = cmd->buttons & IN_ATTACK;
+
+    const int weapon_id = METHOD(g.localweapon, GetWeaponId);
+    if (weapon_id == TF_WEAPON_SNIPERRIFLE_CLASSIC ||
+        weapon_id == TF_WEAPON_PIPEBOMBLAUNCHER) {
+        const bool ret     = (was_holding_attack && !is_holding_attack);
+        was_holding_attack = is_holding_attack;
+        return ret;
+    } else {
+        return is_holding_attack;
+    }
+}
+
 void spinbot(usercmd_t* cmd) {
     if (!settings.aa || !g.IsAlive || !g.localplayer)
         return;
@@ -19,9 +41,7 @@ void spinbot(usercmd_t* cmd) {
         return;
 
     /* User is manually shooting, disable for that tick */
-    const bool using_melee = METHOD(g.localweapon, GetSlot) == WPN_SLOT_MELEE;
-    if ((using_melee && melee_dealing_damage(cmd)) ||
-        (!using_melee && can_shoot() && cmd->buttons & IN_ATTACK))
+    if (is_user_shooting(cmd))
         return;
 
     /* Make static so spinbot angles persist over calls */
