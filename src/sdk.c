@@ -58,18 +58,21 @@ static bool TraceFilterShouldHitEnt_IgnoreFriendly(TraceFilter* thisptr,
     if (!ent_class)
         return ent != thisptr->skip;
 
-    /* If it's a friendly player or building, we can shoot through, so ignore */
-    /* FIXME: Can't shoot through medic's shield in MvM, and through open spawn
-     * doors. */
+    /* TODO: Can't shoot through medic's shield in MvM, print class in `default'
+     * block. */
     switch (ent_class->class_id) {
         case CClass_CTFPlayer:
         case CClass_CObjectSentrygun:
         case CClass_CObjectDispenser:
         case CClass_CObjectTeleporter:
+            /* If it's a friendly player or building, we can shoot through, so
+             * ignore */
             if (IsTeammate(ent))
                 return false;
             break;
         case CClass_CTFGrenadePipebombProjectile:
+        case CClass_CFuncRespawnRoomVisualizer:
+            /* Can shoot through friendly stickies, and open spawn doors */
             return false;
         default:
             break;
