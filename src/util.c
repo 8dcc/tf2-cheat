@@ -162,9 +162,14 @@ bool can_shoot(void) {
     /* NOTE: g.localplayer and g.localweapon should be checked by the caller */
     /* NOTE: This should be called from prediction since curtime is changed
      * there. */
-    /* TODO: Add g.in_prediction, if outside pred, calculate curtime locally. */
-    return g.localplayer->flNextAttack <= c_globalvars->curtime &&
-           g.localweapon->flNextPrimaryAttack <= c_globalvars->curtime;
+
+    /* If we are not in prediction, calculate the predicted curtime */
+    const float curtime = (g.in_prediction) ? c_globalvars->curtime
+                                            : g.localplayer->nTickBase *
+                                                c_globalvars->interval_per_tick;
+
+    return g.localplayer->flNextAttack <= curtime &&
+           g.localweapon->flNextPrimaryAttack <= curtime;
 }
 
 bool melee_dealing_damage(usercmd_t* cmd) {

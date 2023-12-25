@@ -52,6 +52,8 @@ void pred_start(usercmd_t* cmd) {
                 &movedata);
     METHOD_ARGS(i_gamemovement, ProcessMovement, g.localplayer, &movedata);
     METHOD_ARGS(i_prediction, FinishMove, g.localplayer, cmd, &movedata);
+
+    g.in_prediction = true;
 }
 
 void pred_end(void) {
@@ -71,4 +73,6 @@ void pred_end(void) {
     g.localplayer->flags                = old_flags;
     i_prediction->m_bInPrediction       = old_bInPrediction;
     i_prediction->m_bFirstTimePredicted = old_bFirstTimePredicted;
+
+    g.in_prediction = false;
 }

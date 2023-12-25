@@ -170,6 +170,9 @@ typedef struct {
     /* Updated in EngineVGui::Paint() -> spectator_list() */
     bool spectated_1st;
 
+    /* Updated in pred_start() and pred_end() */
+    bool in_prediction;
+
     /* Updated in CreateMove and used in FrameStageNotify(FRAME_RENDER_START) */
     vec3_t render_angles;
 
