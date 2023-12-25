@@ -274,8 +274,9 @@ void esp(void) {
                      (settings.esp_player == SETT_ENEMY && is_teammate)))
                     continue;
 
-                /* We don't want to render invisible spies */
-                if (settings.esp_ignore_invisible && IsInvisible(ent))
+                /* We don't want to render invisible enemy spies */
+                if (settings.esp_ignore_invisible && !is_teammate &&
+                    IsInvisible(ent))
                     continue;
 
                 if (!get_bbox(ent, &x, &y, &w, &h))
@@ -386,7 +387,9 @@ void esp(void) {
                  * InCond(ent, TF_COND_*), for example:
                  *   - ZOOMED
                  *   - DISGUISED
-                 *   - IsInvulnerable */
+                 *   - IsInvulnerable
+                 *   - IsInvisible
+                 */
 
                 /* end: case CClass_CTFPlayer */
                 break;
