@@ -216,7 +216,7 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_INT(json_cfg, clean_screenshots);
     JSON_SETTINGS_WRITE_INT(json_cfg, watermark);
     JSON_SETTINGS_WRITE_INT(json_cfg, speclist);
-    JSON_SETTINGS_WRITE_FLOAT(json_cfg, speclist);
+    JSON_SETTINGS_WRITE_FLOAT(json_cfg, speclist_height);
 
     /* Misc */
     JSON_SETTINGS_WRITE_INT(json_cfg, bhop);
