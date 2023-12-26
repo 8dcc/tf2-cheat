@@ -18,6 +18,10 @@
 static inline int fill_configs(char* config_list[MAX_CFGS]);
 static inline void free_configs(char* config_list[MAX_CFGS], int config_num);
 
+#define COLOR_PICKER_H 120
+#define COMBOBOX_H     17
+#define COMBO_DROP_W   ((MENU_W - 21) / 2 - 3)
+
 #define RESET_BUTTON_COLOR()                                           \
     ctx->style.button.normal.data.color = nk_rgba(50, 50, 50, 255);    \
     ctx->style.button.hover.data.color  = nk_rgba(40, 40, 40, 255);    \
@@ -52,7 +56,7 @@ static inline void free_configs(char* config_list[MAX_CFGS], int config_num);
         nk_label(ctx, tmpPtr, NK_TEXT_LEFT);                            \
         nk_slider_float(ctx, MIN, &SETTING, MAX, STEP);                 \
         free(tmpPtr);                                                   \
-    } while (0);
+    } while (0)
 
 #define SLIDER_INT(STRING, MIN, SETTING, MAX, STEP)                  \
     do {                                                             \
@@ -62,7 +66,9 @@ static inline void free_configs(char* config_list[MAX_CFGS], int config_num);
         nk_label(ctx, tmpPtr, NK_TEXT_LEFT);                         \
         nk_slider_int(ctx, MIN, &SETTING, MAX, STEP);                \
         free(tmpPtr);                                                \
-    } while (0);
+    } while (0)
+
+#define COLOR_PICKER(SETTING) SETTING = nk_color_picker(ctx, SETTING, NK_RGBA)
 
 /*----------------------------------------------------------------------------*/
 
@@ -144,10 +150,8 @@ static void set_style(void) {
 
 /*----------------------------------------------------------------------------*/
 
-#define COMBO_DROP_W 186
-
 static inline void tab_esp(void) {
-    nk_layout_row_dynamic(ctx, 18, 2);
+    nk_layout_row_dynamic(ctx, COMBOBOX_H, 2);
     static const char* opts0[] = { "Off", "Friendly", "Enemies", "All" };
     struct nk_vec2 size0       = { COMBO_DROP_W, 200 };
     nk_label(ctx, "Player ESP", NK_TEXT_LEFT);
@@ -166,7 +170,7 @@ static inline void tab_esp(void) {
 
     nk_layout_row_dynamic(ctx, 8, 1);
     nk_spacing(ctx, 0); /* ----------------------------  */
-    nk_layout_row_dynamic(ctx, 18, 2);
+    nk_layout_row_dynamic(ctx, COMBOBOX_H, 2);
 
     static const char* opts1[] = { "Off", "Friendly", "Enemies", "All" };
     struct nk_vec2 size1       = { COMBO_DROP_W, 200 };
@@ -188,7 +192,7 @@ static inline void tab_esp(void) {
 
     nk_layout_row_dynamic(ctx, 8, 1);
     nk_spacing(ctx, 0); /* ----------------------------  */
-    nk_layout_row_dynamic(ctx, 18, 2);
+    nk_layout_row_dynamic(ctx, COMBOBOX_H, 2);
 
     static const char* opts3[] = { "Off", "Friendly", "Enemies", "All" };
     struct nk_vec2 size3       = { COMBO_DROP_W, 200 };
@@ -197,7 +201,10 @@ static inline void tab_esp(void) {
     nk_checkbox_label(ctx, "Use team color",
                       &settings.esp_sticky_use_team_color);
 
+    nk_layout_row_dynamic(ctx, 8, 1);
+    nk_spacing(ctx, 0); /* ----------------------------  */
     nk_layout_row_dynamic(ctx, 15, 1);
+
     nk_checkbox_label(ctx, "Ammo box ESP", &settings.esp_ammobox);
     nk_checkbox_label(ctx, "Healing items ESP", &settings.esp_healthpack);
 }
@@ -220,7 +227,7 @@ static inline void tab_aim(void) {
     SLIDER_FLOAT("Degree threshold", 0.f, settings.aim_deg_threshold, 5.f,
                  0.1f);
 
-    nk_layout_row_dynamic(ctx, 18, 2);
+    nk_layout_row_dynamic(ctx, COMBOBOX_H, 2);
     static const char* opts0[] = { "Head", "Torso", "Arms", "Legs" };
     struct nk_vec2 size0       = { COMBO_DROP_W, 200 };
     nk_label(ctx, "Aimbot hitboxes", NK_TEXT_LEFT);
@@ -259,7 +266,7 @@ static inline void tab_aim(void) {
 }
 
 static inline void tab_visuals(void) {
-    nk_layout_row_dynamic(ctx, 18, 2);
+    nk_layout_row_dynamic(ctx, COMBOBOX_H, 2);
     static const char* opts1[] = { "Off", "Friendly", "Enemies", "All" };
     struct nk_vec2 size1       = { COMBO_DROP_W, 200 };
     nk_label(ctx, "Player chams", NK_TEXT_LEFT);
@@ -308,8 +315,6 @@ static inline void tab_visuals(void) {
     nk_spacing(ctx, 0); /* ----------------------------  */
     nk_layout_row_dynamic(ctx, 15, 1);
 
-    nk_checkbox_label(ctx, "Hide cheat in screenshots",
-                      &settings.clean_screenshots);
     nk_checkbox_label(ctx, "Watermark", &settings.watermark);
     nk_checkbox_label(ctx, "Spectator list", &settings.speclist);
     SLIDER_FLOAT("Spectator list height", 0.f, settings.speclist_height, 100.f,
@@ -320,7 +325,7 @@ static inline void tab_misc(void) {
     nk_layout_row_dynamic(ctx, 15, 1);
     nk_checkbox_label(ctx, "Bhop", &settings.bhop);
 
-    nk_layout_row_dynamic(ctx, 18, 2);
+    nk_layout_row_dynamic(ctx, COMBOBOX_H, 2);
     static const char* opts0[] = { "Off", "Legit", "Rage" };
     struct nk_vec2 size0       = { COMBO_DROP_W, 200 };
     nk_label(ctx, "Autostrafe", NK_TEXT_LEFT);
@@ -375,6 +380,8 @@ static inline void tab_misc(void) {
 
     nk_checkbox_label(ctx, "NoPush", &settings.nopush);
     nk_checkbox_label(ctx, "Anti-AFK", &settings.antiafk);
+    nk_checkbox_label(ctx, "Hide cheat in screenshots",
+                      &settings.clean_screenshots);
 }
 
 static inline void tab_colors(void) {
@@ -382,86 +389,68 @@ static inline void tab_colors(void) {
     nk_layout_row_dynamic(ctx, 15, 2);
     nk_label(ctx, "RED team", NK_TEXT_CENTERED);
     nk_label(ctx, "BLU team", NK_TEXT_CENTERED);
-    nk_layout_row_dynamic(ctx, 100, 2);
-    settings.col_team_red =
-      nk_color_picker(ctx, settings.col_team_red, NK_RGBA);
-    settings.col_team_blu =
-      nk_color_picker(ctx, settings.col_team_blu, NK_RGBA);
+    nk_layout_row_dynamic(ctx, COLOR_PICKER_H, 2);
+    COLOR_PICKER(settings.col_team_red);
+    COLOR_PICKER(settings.col_team_blu);
 
     /* Esp colors */
     nk_layout_row_dynamic(ctx, 15, 2);
     nk_label(ctx, "Friendly player ESP", NK_TEXT_CENTERED);
     nk_label(ctx, "Enemy player ESP", NK_TEXT_CENTERED);
-    nk_layout_row_dynamic(ctx, 100, 2);
-    settings.col_esp_friend =
-      nk_color_picker(ctx, settings.col_esp_friend, NK_RGBA);
-    settings.col_esp_enemy =
-      nk_color_picker(ctx, settings.col_esp_enemy, NK_RGBA);
+    nk_layout_row_dynamic(ctx, COLOR_PICKER_H, 2);
+    COLOR_PICKER(settings.col_esp_friend);
+    COLOR_PICKER(settings.col_esp_enemy);
 
     nk_layout_row_dynamic(ctx, 15, 2);
     nk_label(ctx, "Friendly building ESP", NK_TEXT_CENTERED);
     nk_label(ctx, "Enemy building ESP", NK_TEXT_CENTERED);
-    nk_layout_row_dynamic(ctx, 100, 2);
-    settings.col_esp_friend_build =
-      nk_color_picker(ctx, settings.col_esp_friend_build, NK_RGBA);
-    settings.col_esp_enemy_build =
-      nk_color_picker(ctx, settings.col_esp_enemy_build, NK_RGBA);
+    nk_layout_row_dynamic(ctx, COLOR_PICKER_H, 2);
+    COLOR_PICKER(settings.col_esp_friend_build);
+    COLOR_PICKER(settings.col_esp_enemy_build);
 
     nk_layout_row_dynamic(ctx, 15, 2);
     nk_label(ctx, "Friendly sticky ESP", NK_TEXT_CENTERED);
     nk_label(ctx, "Enemy sticky ESP", NK_TEXT_CENTERED);
-    nk_layout_row_dynamic(ctx, 100, 2);
-    settings.col_esp_sticky_friend =
-      nk_color_picker(ctx, settings.col_esp_sticky_friend, NK_RGBA);
-    settings.col_esp_sticky_enemy =
-      nk_color_picker(ctx, settings.col_esp_sticky_enemy, NK_RGBA);
+    nk_layout_row_dynamic(ctx, COLOR_PICKER_H, 2);
+    COLOR_PICKER(settings.col_esp_sticky_friend);
+    COLOR_PICKER(settings.col_esp_sticky_enemy);
 
     nk_layout_row_dynamic(ctx, 15, 2);
     nk_label(ctx, "Ammo boxes ESP", NK_TEXT_CENTERED);
     nk_label(ctx, "Healing items ESP", NK_TEXT_CENTERED);
-    nk_layout_row_dynamic(ctx, 100, 2);
-    settings.col_esp_ammobox =
-      nk_color_picker(ctx, settings.col_esp_ammobox, NK_RGBA);
-    settings.col_esp_healthpack =
-      nk_color_picker(ctx, settings.col_esp_healthpack, NK_RGBA);
+    nk_layout_row_dynamic(ctx, COLOR_PICKER_H, 2);
+    COLOR_PICKER(settings.col_esp_ammobox);
+    COLOR_PICKER(settings.col_esp_healthpack);
 
     nk_layout_row_dynamic(ctx, 15, 2);
     nk_label(ctx, "Steam friend ESP", NK_TEXT_CENTERED);
     nk_label(ctx, "Player condition ESP", NK_TEXT_CENTERED);
-    nk_layout_row_dynamic(ctx, 100, 2);
-    settings.col_esp_steam_friend =
-      nk_color_picker(ctx, settings.col_esp_steam_friend, NK_RGBA);
-    settings.col_esp_player_cond =
-      nk_color_picker(ctx, settings.col_esp_player_cond, NK_RGBA);
+    nk_layout_row_dynamic(ctx, COLOR_PICKER_H, 2);
+    COLOR_PICKER(settings.col_esp_steam_friend);
+    COLOR_PICKER(settings.col_esp_player_cond);
 
     /* Chams colors */
     nk_layout_row_dynamic(ctx, 15, 2);
     nk_label(ctx, "Friendly player chams", NK_TEXT_CENTERED);
     nk_label(ctx, "Enemy player chams", NK_TEXT_CENTERED);
-    nk_layout_row_dynamic(ctx, 100, 2);
-    settings.col_chams_friend =
-      nk_color_picker(ctx, settings.col_chams_friend, NK_RGBA);
-    settings.col_chams_enemy =
-      nk_color_picker(ctx, settings.col_chams_enemy, NK_RGBA);
+    nk_layout_row_dynamic(ctx, COLOR_PICKER_H, 2);
+    COLOR_PICKER(settings.col_chams_friend);
+    COLOR_PICKER(settings.col_chams_enemy);
 
     /* Misc colors */
     nk_layout_row_dynamic(ctx, 15, 2);
     nk_label(ctx, "Thirdperson chams", NK_TEXT_CENTERED);
     nk_label(ctx, "Weapon chams", NK_TEXT_CENTERED);
-    nk_layout_row_dynamic(ctx, 100, 2);
-    settings.col_chams_local =
-      nk_color_picker(ctx, settings.col_chams_local, NK_RGBA);
-    nk_layout_row_dynamic(ctx, 100, 2);
-    settings.col_chams_weapon =
-      nk_color_picker(ctx, settings.col_chams_weapon, NK_RGBA);
+    nk_layout_row_dynamic(ctx, COLOR_PICKER_H, 2);
+    COLOR_PICKER(settings.col_chams_local);
+    COLOR_PICKER(settings.col_chams_weapon);
 
     nk_layout_row_dynamic(ctx, 15, 2);
     nk_label(ctx, "Hand chams", NK_TEXT_CENTERED);
     nk_label(ctx, "Aimbot FOV circle", NK_TEXT_CENTERED);
-    nk_layout_row_dynamic(ctx, 100, 2);
-    settings.col_chams_hand =
-      nk_color_picker(ctx, settings.col_chams_hand, NK_RGBA);
-    settings.col_aim_fov = nk_color_picker(ctx, settings.col_aim_fov, NK_RGBA);
+    nk_layout_row_dynamic(ctx, COLOR_PICKER_H, 2);
+    COLOR_PICKER(settings.col_chams_hand);
+    COLOR_PICKER(settings.col_aim_fov);
 }
 
 static inline void tab_config(void) {
