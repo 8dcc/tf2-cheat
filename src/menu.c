@@ -161,6 +161,7 @@ static inline void tab_esp(void) {
     nk_checkbox_label(ctx, "Player name", &settings.esp_player_name);
     nk_checkbox_label(ctx, "Player class", &settings.esp_player_class);
     nk_checkbox_label(ctx, "Player weapon", &settings.esp_player_weapon);
+    nk_checkbox_label(ctx, "Player conditions", &settings.esp_player_cond);
     nk_checkbox_label(ctx, "Ignore invisible", &settings.esp_ignore_invisible);
 
     nk_layout_row_dynamic(ctx, 8, 1);
@@ -199,23 +200,6 @@ static inline void tab_esp(void) {
     nk_layout_row_dynamic(ctx, 15, 1);
     nk_checkbox_label(ctx, "Ammo box ESP", &settings.esp_ammobox);
     nk_checkbox_label(ctx, "Healing items ESP", &settings.esp_healthpack);
-
-    nk_layout_row_dynamic(ctx, 8, 1);
-    nk_spacing(ctx, 0); /* ----------------------------  */
-    nk_layout_row_dynamic(ctx, 18, 2);
-
-    static const char* opts4[] = { "Off", "Friendly", "Enemies", "All" };
-    struct nk_vec2 size4       = { COMBO_DROP_W, 200 };
-    nk_label(ctx, "Player chams", NK_TEXT_LEFT);
-    nk_combobox(ctx, opts4, 4, &settings.chams_player, 15, size4);
-
-    nk_layout_row_dynamic(ctx, 15, 1);
-    nk_checkbox_label(ctx, "Use team color",
-                      &settings.chams_player_use_team_color);
-    nk_checkbox_label(ctx, "Invisible player chams", &settings.chams_ignorez);
-    nk_checkbox_label(ctx, "Thirdperson chams", &settings.chams_local);
-    nk_checkbox_label(ctx, "Weapon chams", &settings.chams_weapon);
-    nk_checkbox_label(ctx, "Hand chams", &settings.chams_hand);
 }
 
 static inline void tab_aim(void) {
@@ -275,7 +259,24 @@ static inline void tab_aim(void) {
 }
 
 static inline void tab_visuals(void) {
+    nk_layout_row_dynamic(ctx, 18, 2);
+    static const char* opts1[] = { "Off", "Friendly", "Enemies", "All" };
+    struct nk_vec2 size1       = { COMBO_DROP_W, 200 };
+    nk_label(ctx, "Player chams", NK_TEXT_LEFT);
+    nk_combobox(ctx, opts1, 4, &settings.chams_player, 15, size1);
+
     nk_layout_row_dynamic(ctx, 15, 1);
+    nk_checkbox_label(ctx, "Use team color",
+                      &settings.chams_player_use_team_color);
+    nk_checkbox_label(ctx, "Ignore Z", &settings.chams_ignorez);
+    nk_checkbox_label(ctx, "Thirdperson chams", &settings.chams_local);
+    nk_checkbox_label(ctx, "Weapon chams", &settings.chams_weapon);
+    nk_checkbox_label(ctx, "Hand chams", &settings.chams_hand);
+
+    nk_layout_row_dynamic(ctx, 8, 1);
+    nk_spacing(ctx, 0); /* ----------------------------  */
+    nk_layout_row_dynamic(ctx, 15, 1);
+
     nk_checkbox_label(ctx, "Remove scope overlay", &settings.remove_scope);
 
     nk_layout_row_dynamic(ctx, 8, 1);
@@ -422,6 +423,15 @@ static inline void tab_colors(void) {
     settings.col_esp_healthpack =
       nk_color_picker(ctx, settings.col_esp_healthpack, NK_RGBA);
 
+    nk_layout_row_dynamic(ctx, 15, 2);
+    nk_label(ctx, "Steam friend ESP", NK_TEXT_CENTERED);
+    nk_label(ctx, "Player condition ESP", NK_TEXT_CENTERED);
+    nk_layout_row_dynamic(ctx, 100, 2);
+    settings.col_esp_steam_friend =
+      nk_color_picker(ctx, settings.col_esp_steam_friend, NK_RGBA);
+    settings.col_esp_player_cond =
+      nk_color_picker(ctx, settings.col_esp_player_cond, NK_RGBA);
+
     /* Chams colors */
     nk_layout_row_dynamic(ctx, 15, 2);
     nk_label(ctx, "Friendly player chams", NK_TEXT_CENTERED);
@@ -434,26 +444,21 @@ static inline void tab_colors(void) {
 
     /* Misc colors */
     nk_layout_row_dynamic(ctx, 15, 2);
-    nk_label(ctx, "Steam friend ESP", NK_TEXT_CENTERED);
     nk_label(ctx, "Thirdperson chams", NK_TEXT_CENTERED);
+    nk_label(ctx, "Weapon chams", NK_TEXT_CENTERED);
     nk_layout_row_dynamic(ctx, 100, 2);
-    settings.col_esp_steam_friend =
-      nk_color_picker(ctx, settings.col_esp_steam_friend, NK_RGBA);
     settings.col_chams_local =
       nk_color_picker(ctx, settings.col_chams_local, NK_RGBA);
-
-    nk_layout_row_dynamic(ctx, 15, 2);
-    nk_label(ctx, "Weapon chams", NK_TEXT_CENTERED);
-    nk_label(ctx, "Hand chams", NK_TEXT_CENTERED);
     nk_layout_row_dynamic(ctx, 100, 2);
     settings.col_chams_weapon =
       nk_color_picker(ctx, settings.col_chams_weapon, NK_RGBA);
-    settings.col_chams_hand =
-      nk_color_picker(ctx, settings.col_chams_hand, NK_RGBA);
 
     nk_layout_row_dynamic(ctx, 15, 2);
+    nk_label(ctx, "Hand chams", NK_TEXT_CENTERED);
     nk_label(ctx, "Aimbot FOV circle", NK_TEXT_CENTERED);
     nk_layout_row_dynamic(ctx, 100, 2);
+    settings.col_chams_hand =
+      nk_color_picker(ctx, settings.col_chams_hand, NK_RGBA);
     settings.col_aim_fov = nk_color_picker(ctx, settings.col_aim_fov, NK_RGBA);
 }
 

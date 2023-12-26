@@ -51,6 +51,7 @@ typedef struct {
     int esp_player_name;
     int esp_player_class;
     int esp_player_weapon;
+    int esp_player_cond;
     int esp_ignore_invisible;
 
     int esp_building;
@@ -144,6 +145,7 @@ typedef struct {
     struct nk_colorf col_esp_steam_friend;
     struct nk_colorf col_esp_friend;
     struct nk_colorf col_esp_enemy;
+    struct nk_colorf col_esp_player_cond;
     struct nk_colorf col_esp_enemy_build;
     struct nk_colorf col_esp_friend_build;
     struct nk_colorf col_esp_sticky_friend;
