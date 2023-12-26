@@ -300,4 +300,29 @@ static inline bool IsInvisible(Entity* ent) {
     return m_flInvisibility >= 1.f;
 }
 
+static inline bool IsCritBoosted(Entity* ent) {
+    return InCond(ent, TF_COND_CRITBOOSTED) ||
+           InCond(ent, TF_COND_CRITBOOSTED_BONUS_TIME) ||
+           InCond(ent, TF_COND_CRITBOOSTED_CARD_EFFECT) ||
+           InCond(ent, TF_COND_CRITBOOSTED_CTF_CAPTURE) ||
+           InCond(ent, TF_COND_CRITBOOSTED_FIRST_BLOOD) ||
+           InCond(ent, TF_COND_CRITBOOSTED_ON_KILL) ||
+           InCond(ent, TF_COND_CRITBOOSTED_PUMPKIN) ||
+           InCond(ent, TF_COND_CRITBOOSTED_RAGE_BUFF) ||
+           InCond(ent, TF_COND_CRITBOOSTED_RUNE_TEMP) ||
+           InCond(ent, TF_COND_CRITBOOSTED_USER_BUFF);
+}
+
+static inline bool IsMiniCritBoosted(Entity* ent) {
+    return InCond(ent, TF_COND_MINICRITBOOSTED_ON_KILL) ||
+           InCond(ent, TF_COND_NOHEALINGDAMAGEBUFF) ||
+           InCond(ent, TF_COND_ENERGY_BUFF);
+}
+
+static inline bool IsMarked(Entity* ent) {
+    /* We treat urine and mark as the same in ESP */
+    return InCond(ent, TF_COND_URINE) || InCond(ent, TF_COND_MARKEDFORDEATH) ||
+           InCond(ent, TF_COND_MARKEDFORDEATH_SILENT);
+}
+
 #endif /* SDK_ENTITY_H_ */
