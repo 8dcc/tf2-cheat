@@ -6,7 +6,7 @@ INJECTOR_FLAGS=
 
 MAIN_OBJS=main.c.o sdk.c.o globals.c.o hooks.c.o util.c.o settings.c.o menu.c.o
 DEPS_OBJS=cJSON/cJSON.c.o
-FEATURES_OBJS=esp.c.o chams.c.o aim/aimbot.c.o aim/meleebot.c.o aim/medigun.c.o antiaim.c.o movement.c.o misc.c.o visuals.c.o prediction.c.o auto_detonate_stickies.c.o
+FEATURES_OBJS=esp.c.o chams.c.o aim/aimbot.c.o aim/meleebot.c.o aim/medigun.c.o antiaim.c.o movement.c.o misc.c.o visuals.c.o prediction.c.o auto_detonate_stickies.c.o playerlist.c.o
 
 OBJS=$(addprefix obj/, $(MAIN_OBJS)) \
      $(addprefix obj/dependencies/, $(DEPS_OBJS)) \

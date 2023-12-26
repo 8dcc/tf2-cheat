@@ -12,6 +12,9 @@
 #define TEAM_RED 2
 #define TEAM_BLU 3
 
+#define MAXPLAYERS 100 + 1
+#define MAXENTITIES 2048 + 1
+
 /*----------------------------------------------------------------------------*/
 
 enum {

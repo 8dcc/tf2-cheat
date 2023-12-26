@@ -383,7 +383,7 @@ void cache_update(void) {
             Entity* ent      = METHOD_ARGS(i_entitylist, GetClientEntity, i);
             Networkable* net = GetNetworkable(ent);
 
-            if (!ent || METHOD(net, IsDormant) || !METHOD(ent, IsAlive))
+            if (!ent /*|| METHOD(net, IsDormant) || !METHOD(ent, IsAlive)*/)
                 continue;
 
             g.ents[i] = ent;

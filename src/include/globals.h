@@ -5,8 +5,10 @@
 #include <string.h> /* CLONE_VMT: memcpy */
 #include <stdlib.h> /* CLONE_VMT: malloc */
 #include <SDL2/SDL.h>
+#include "sdk/enums.h"
 #include "util.h"
 #include "sdk.h"
+#include "playerlist.h"
 
 /* Module names for handlers */
 #define CLIENT_SO         "./tf/bin/client.so"
@@ -165,7 +167,7 @@ typedef struct {
     Weapon* localweapon;
     /* NOTE: Only stores non-null and non-dormant entities. For players, also
      * disards dead players. See cache_update() */
-    Entity* ents[2049];
+    Entity* ents[MAXENTITIES];
 
     /* Updated in EngineVGui::Paint() -> spectator_list() */
     bool spectated_1st;
@@ -178,6 +180,9 @@ typedef struct {
 
     /* Updated in features and used in CreateMove */
     bool psilent;
+
+    /* */
+    player_list_player_t playerlist_players[MAXPLAYERS];
 } global_cache_t;
 
 /*----------------------------------------------------------------------------*/
