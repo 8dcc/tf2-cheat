@@ -83,6 +83,7 @@ Settings settings = {
     .draw_velocity_jump  = false,
     .draw_velocity_vert  = false,
     .draw_velocity_pos   = 51.f,
+    .clean_screenshots   = true,
     .watermark           = true,
     .speclist            = true,
     .speclist_height     = 50.f,
@@ -212,6 +213,7 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_INT(json_cfg, draw_velocity_jump);
     JSON_SETTINGS_WRITE_INT(json_cfg, draw_velocity_vert);
     JSON_SETTINGS_WRITE_INT(json_cfg, draw_velocity_pos);
+    JSON_SETTINGS_WRITE_INT(json_cfg, clean_screenshots);
     JSON_SETTINGS_WRITE_INT(json_cfg, watermark);
     JSON_SETTINGS_WRITE_INT(json_cfg, speclist);
     JSON_SETTINGS_WRITE_FLOAT(json_cfg, speclist);
@@ -394,6 +396,7 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_INT(json_cfg, draw_velocity_jump);
     JSON_SETTINGS_READ_INT(json_cfg, draw_velocity_vert);
     JSON_SETTINGS_READ_INT(json_cfg, draw_velocity_pos);
+    JSON_SETTINGS_READ_INT(json_cfg, clean_screenshots);
     JSON_SETTINGS_READ_INT(json_cfg, watermark);
     JSON_SETTINGS_READ_INT(json_cfg, speclist);
     JSON_SETTINGS_READ_FLOAT(json_cfg, speclist_height);

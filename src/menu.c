@@ -308,6 +308,8 @@ static inline void tab_visuals(void) {
     nk_spacing(ctx, 0); /* ----------------------------  */
     nk_layout_row_dynamic(ctx, 15, 1);
 
+    nk_checkbox_label(ctx, "Hide cheat in screenshots",
+                      &settings.clean_screenshots);
     nk_checkbox_label(ctx, "Watermark", &settings.watermark);
     nk_checkbox_label(ctx, "Spectator list", &settings.speclist);
     SLIDER_FLOAT("Spectator list height", 0.f, settings.speclist_height, 100.f,

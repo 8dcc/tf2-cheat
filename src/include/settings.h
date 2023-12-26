@@ -115,6 +115,7 @@ typedef struct {
     int draw_velocity_jump;
     int draw_velocity_vert;
     float draw_velocity_pos;
+    int clean_screenshots;
     int watermark;
     int speclist;
     float speclist_height;
