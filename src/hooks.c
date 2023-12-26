@@ -227,10 +227,16 @@ void h_Paint(EngineVGui* thisptr, uint32_t mode) {
 
 void h_PaintTraverse(IPanel* thisptr, VPanel panel, bool forcerepaint,
                      bool allowforce) {
+    if (settings.clean_screenshots && METHOD(i_engine, IsTakingScreenshot)) {
+        ORIGINAL(PaintTraverse, thisptr, panel, forcerepaint, allowforce);
+        return;
+    }
+
     const char* panel_name = METHOD_ARGS(i_panel, GetName, panel);
-    if (!panel_name)
-        return ORIGINAL(PaintTraverse, thisptr, panel, forcerepaint,
-                        allowforce);
+    if (!panel_name) {
+        ORIGINAL(PaintTraverse, thisptr, panel, forcerepaint, allowforce);
+        return;
+    }
 
     switch (hash_str(panel_name)) {
         case 0x47DE1CB6: /* hash_str("HudScope") */
@@ -258,6 +264,11 @@ void h_PaintTraverse(IPanel* thisptr, VPanel panel, bool forcerepaint,
 void h_DrawModelExecute(ModelRender* thisptr, const DrawModelState_t* state,
                         const ModelRenderInfo_t* pInfo,
                         matrix3x4_t* pCustomBoneToWorld) {
+    if (settings.clean_screenshots && METHOD(i_engine, IsTakingScreenshot)) {
+        ORIGINAL(DrawModelExecute, thisptr, state, pInfo, pCustomBoneToWorld);
+        return;
+    }
+
     /* Store original renderview colors */
     static float_rgba_t orig_col;
     METHOD_ARGS(i_renderview, GetColorModulation, &orig_col);

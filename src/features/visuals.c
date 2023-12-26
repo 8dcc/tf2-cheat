@@ -15,6 +15,9 @@ void spectator_list(void) {
     if (!settings.speclist || !g.localplayer || !g.IsInGame)
         return;
 
+    if (settings.clean_screenshots && METHOD(i_engine, IsTakingScreenshot))
+        return;
+
     /* If we are dead, display spectator list for the guy we are spectating */
     Entity* local = g.IsAlive ? g.localplayer
                               : METHOD(g.localplayer, GetObserverTarget);
@@ -159,6 +162,9 @@ void draw_velocity(void) {
     if (!g.localplayer || !g.IsInGame)
         return;
 
+    if (settings.clean_screenshots && METHOD(i_engine, IsTakingScreenshot))
+        return;
+
     /* Marked as invalid by store_velocity() */
     if (localvelocity_len == -1.f)
         return;
@@ -276,7 +282,10 @@ void custom_fov(ViewSetup* pSetup) {
     if (!settings.custom_fov || !g.localplayer || !g.IsInGame || !g.IsAlive)
         return;
 
-    /* We don't want to overwrite when scoped, ad we are scoped */
+    if (settings.clean_screenshots && METHOD(i_engine, IsTakingScreenshot))
+        return;
+
+    /* We don't want to overwrite when scoped, and we are scoped */
     if (!settings.custom_fov_scoped && InCond(g.localplayer, TF_COND_ZOOMED))
         return;
 

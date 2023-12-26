@@ -209,6 +209,9 @@ void esp(void) {
     if (!g.localplayer)
         return;
 
+    if (settings.clean_screenshots && METHOD(i_engine, IsTakingScreenshot))
+        return;
+
     rgba_t col_player_steam_friend = NK2COL(settings.col_esp_steam_friend);
     rgba_t col_player_friend       = NK2COL(settings.col_esp_friend);
     rgba_t col_player_enemy        = NK2COL(settings.col_esp_enemy);
