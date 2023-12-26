@@ -20,6 +20,10 @@ static Entity* get_best_target(vec3_t local_shoot_pos) {
         if (!ent || !IsTeammate(ent) || METHOD(ent, GetIndex) == g.localidx)
             continue;
 
+        /* We can't heal cloaked spies */
+        if (IsInvisible(ent))
+            continue;
+
         /* Entity center from collision box */
         vec3_t ent_center = GetCenter(ent);
         if (vec_is_zero(ent_center))
@@ -99,7 +103,7 @@ void automedigun(usercmd_t* cmd) {
         if (!CBaseHandle_IsValid(healed_handler))
             return;
 
-        const int healed_idx       = CBaseHandle_GetEntryIndex(healed_handler);
+        const int healed_idx = CBaseHandle_GetEntryIndex(healed_handler);
 
         /* If it's already the best possible target, hold it. Otherwise, release
          * attack so we can find the best target on the next tick. */
