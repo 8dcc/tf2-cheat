@@ -335,8 +335,9 @@ void esp(void) {
                 /*------------------------------------------------------------*/
                 /* Player name ESP */
 
-                int infopos_x = x + w / 2;
-                int infopos_y = y + h + 2;
+                int infopos_x   = x + w / 2;
+                int infopos_y   = y + h + 2;
+                rgba_t info_col = col;
 
                 if (settings.esp_player_name) {
                     player_info_t pinfo;
@@ -346,10 +347,10 @@ void esp(void) {
                     static char converted_name[MAX_PLAYER_NAME_LENGTH];
                     convert_player_name(converted_name, pinfo.name);
 
-                    draw_text(infopos_x, infopos_y, true, g_fonts.main.id, col,
-                              converted_name);
+                    draw_text(infopos_x, infopos_y, true, g_fonts.main.id,
+                              info_col, converted_name);
 
-                    col = col_scale(col, COL_SCALE);
+                    info_col = col_scale(info_col, COL_SCALE);
                     infopos_y += INFOPOS_LINE_H;
                 }
 
@@ -357,10 +358,10 @@ void esp(void) {
                 /* Player class ESP */
 
                 if (settings.esp_player_class) {
-                    draw_text(infopos_x, infopos_y, true, g_fonts.main.id, col,
-                              GetClassName(ent));
+                    draw_text(infopos_x, infopos_y, true, g_fonts.main.id,
+                              info_col, GetClassName(ent));
 
-                    col = col_scale(col, COL_SCALE);
+                    info_col = col_scale(info_col, COL_SCALE);
                     infopos_y += INFOPOS_LINE_H;
                 }
 
@@ -371,30 +372,103 @@ void esp(void) {
                     Weapon* weapon = METHOD(ent, GetWeapon);
 
                     if (weapon) {
-                        const char* wname = METHOD(weapon, GetName);
-                        if (!strncmp(wname, "tf_weapon_", 10))
-                            wname += 10;
+                        const char* wep_name = METHOD(weapon, GetName);
+                        if (!strncmp(wep_name, "tf_weapon_", 10))
+                            wep_name += 10;
 
                         draw_text(infopos_x, infopos_y, true, g_fonts.main.id,
-                                  col, wname);
+                                  info_col, wep_name);
 
-                        col = col_scale(col, COL_SCALE);
+                        info_col = col_scale(info_col, COL_SCALE);
                         infopos_y += INFOPOS_LINE_H;
                     }
                 }
 
-                /* NOTE: We could add other information to the ESP depending on
-                 * InCond(ent, TF_COND_*), for example:
-                 *   - ZOOMED
-                 *   - DISGUISED
-                 *   - IsInvulnerable
-                 *   - IsInvisible
-                 */
+                /*------------------------------------------------------------*/
+                /* Cond ESP */
+
+                if (settings.esp_player_cond) {
+                    int cond_x = x + w + 2;
+                    int cond_y = y + 1;
+                    int cond_h = 12;
+
+                    rgba_t cond_col = NK2COL(settings.col_esp_player_cond);
+                    const HFont cond_font = g_fonts.small.id;
+
+                    /* TODO: Uber ready? */
+
+                    if (IsInvulnerable(ent)) {
+                        draw_text(cond_x, cond_y, false, cond_font, cond_col,
+                                  "Invul.");
+                        cond_y += cond_h;
+                    }
+
+                    if (IsInvisible(ent)) {
+                        draw_text(cond_x, cond_y, false, cond_font, cond_col,
+                                  "Invis.");
+                        cond_y += cond_h;
+                    }
+
+                    if (InCond(ent, TF_COND_DISGUISED)) {
+                        draw_text(cond_x, cond_y, false, cond_font, cond_col,
+                                  "Disguised");
+                        cond_y += cond_h;
+                    }
+
+                    if (InCond(ent, TF_COND_TAUNTING)) {
+                        draw_text(cond_x, cond_y, false, cond_font, cond_col,
+                                  "Taunting");
+                        cond_y += cond_h;
+                    }
+
+                    if (IsCritBoosted(ent)) {
+                        draw_text(cond_x, cond_y, false, cond_font, cond_col,
+                                  "Crit");
+                        cond_y += cond_h;
+                    }
+
+                    if (IsMiniCritBoosted(ent)) {
+                        draw_text(cond_x, cond_y, false, cond_font, cond_col,
+                                  "Mini-Crit");
+                        cond_y += cond_h;
+                    }
+
+                    if (InCond(ent, TF_COND_ZOOMED)) {
+                        draw_text(cond_x, cond_y, false, cond_font, cond_col,
+                                  "Scoped");
+                        cond_y += cond_h;
+                    }
+
+                    if (IsMarked(ent)) {
+                        draw_text(cond_x, cond_y, false, cond_font, cond_col,
+                                  "Marked");
+                        cond_y += cond_h;
+                    }
+
+                    if (InCond(ent, TF_COND_MAD_MILK)) {
+                        draw_text(cond_x, cond_y, false, cond_font, cond_col,
+                                  "Mad Milk");
+                        cond_y += cond_h;
+                    }
+
+                    if (InCond(ent, TF_COND_BURNING)) {
+                        draw_text(cond_x, cond_y, false, cond_font, cond_col,
+                                  "Burning");
+                        cond_y += cond_h;
+                    }
+
+                    if (InCond(ent, TF_COND_BLEEDING)) {
+                        draw_text(cond_x, cond_y, false, cond_font, cond_col,
+                                  "Bleeding");
+                        cond_y += cond_h;
+                    }
+                }
 
                 /* end: case CClass_CTFPlayer */
                 break;
             }
 
+            /* TODO: We could mark buildings when TF_COND_SAPPED */
             case CClass_CObjectSentrygun: {
                 if (settings.esp_building_type == SETT_BTYPE_ALL ||
                     settings.esp_building_type == SETT_BTYPE_SENTRY)
