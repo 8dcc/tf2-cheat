@@ -115,8 +115,8 @@ Settings settings = {
     .col_esp_teammate        = (struct nk_colorf){ 0.05f, 0.47f, 0.95f, 1.f },
     .col_esp_enemy           = (struct nk_colorf){ 0.95f, 0.10f, 0.09f, 1.f },
     .col_esp_player_cond     = (struct nk_colorf){ 1.00f, 0.95f, 0.24f, 1.f },
-    .col_esp_teammate_build  = (struct nk_colorf){ 0.29f, 0.07f, 0.54f, 1.f },
-    .col_esp_enemy_build     = (struct nk_colorf){ 0.90f, 0.31f, 0.00f, 1.f },
+    .col_esp_build_teammate  = (struct nk_colorf){ 0.29f, 0.07f, 0.54f, 1.f },
+    .col_esp_build_enemy     = (struct nk_colorf){ 0.90f, 0.31f, 0.00f, 1.f },
     .col_esp_sticky_teammate = (struct nk_colorf){ 0.05f, 0.47f, 0.95f, 1.f },
     .col_esp_sticky_enemy    = (struct nk_colorf){ 0.95f, 0.10f, 0.09f, 1.f },
     .col_esp_ammobox         = (struct nk_colorf){ 0.55f, 0.43f, 0.38f, 1.f },
@@ -245,8 +245,8 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_teammate);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_enemy);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_player_cond);
-    JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_teammate_build);
-    JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_enemy_build);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_build_teammate);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_build_enemy);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_sticky_teammate);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_sticky_enemy);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_ammobox);
@@ -428,8 +428,8 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_COL(json_cfg, col_esp_teammate);
     JSON_SETTINGS_READ_COL(json_cfg, col_esp_enemy);
     JSON_SETTINGS_READ_COL(json_cfg, col_esp_player_cond);
-    JSON_SETTINGS_READ_COL(json_cfg, col_esp_teammate_build);
-    JSON_SETTINGS_READ_COL(json_cfg, col_esp_enemy_build);
+    JSON_SETTINGS_READ_COL(json_cfg, col_esp_build_teammate);
+    JSON_SETTINGS_READ_COL(json_cfg, col_esp_build_enemy);
     JSON_SETTINGS_READ_COL(json_cfg, col_esp_sticky_teammate);
     JSON_SETTINGS_READ_COL(json_cfg, col_esp_sticky_enemy);
     JSON_SETTINGS_READ_COL(json_cfg, col_esp_ammobox);

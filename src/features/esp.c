@@ -215,8 +215,8 @@ void esp(void) {
     rgba_t col_player_friend   = NK2COL(settings.col_esp_friend);
     rgba_t col_player_teammate = NK2COL(settings.col_esp_teammate);
     rgba_t col_player_enemy    = NK2COL(settings.col_esp_enemy);
-    rgba_t col_build_teammate  = NK2COL(settings.col_esp_teammate_build);
-    rgba_t col_build_enemy     = NK2COL(settings.col_esp_enemy_build);
+    rgba_t col_build_teammate  = NK2COL(settings.col_esp_build_teammate);
+    rgba_t col_build_enemy     = NK2COL(settings.col_esp_build_enemy);
     rgba_t col_sticky_teammate = NK2COL(settings.col_esp_sticky_teammate);
     rgba_t col_sticky_enemy    = NK2COL(settings.col_esp_sticky_enemy);
     rgba_t col_ammobox         = NK2COL(settings.col_esp_ammobox);
