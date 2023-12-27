@@ -147,8 +147,8 @@ typedef struct {
     struct nk_colorf col_esp_teammate;
     struct nk_colorf col_esp_enemy;
     struct nk_colorf col_esp_player_cond;
-    struct nk_colorf col_esp_enemy_build;
-    struct nk_colorf col_esp_teammate_build;
+    struct nk_colorf col_esp_build_enemy;
+    struct nk_colorf col_esp_build_teammate;
     struct nk_colorf col_esp_sticky_teammate;
     struct nk_colorf col_esp_sticky_enemy;
     struct nk_colorf col_esp_ammobox;
