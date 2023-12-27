@@ -132,7 +132,10 @@ void auto_detonate_stickies(usercmd_t* cmd) {
         if (!sticky)
             continue;
 
-        Networkable* sticky_net   = GetNetworkable(sticky);
+        Networkable* sticky_net = GetNetworkable(sticky);
+        if (METHOD(sticky_net, IsDormant))
+            continue;
+
         ClientClass* sticky_class = METHOD(sticky_net, GetClientClass);
         if (!sticky_class)
             continue;

@@ -50,6 +50,10 @@ void chams(ModelRender* thisptr, const DrawModelState_t* state,
         if (!g.localplayer || !ent)
             return;
 
+        Networkable* net = GetNetworkable(ent);
+        if (METHOD(net, IsDormant))
+            return;
+
         /* Localplayer chams (thirdperson) if enabled */
         if (g.localidx == pInfo->entity_index) {
             if (settings.chams_local)
@@ -109,7 +113,14 @@ void chams(ModelRender* thisptr, const DrawModelState_t* state,
         return;
     } else if (strstr(mdl->name, "weapons/c")) {
         Weapon* wpn = (Weapon*)g.ents[pInfo->entity_index];
-        if (!wpn || !CBaseHandle_IsValid(wpn->hOwner))
+        if (!wpn)
+            return;
+
+        Networkable* wpn_net = GetNetworkable(wpn);
+        if (METHOD(wpn_net, IsDormant))
+            return;
+
+        if (!CBaseHandle_IsValid(wpn->hOwner))
             return;
 
         const int owner_idx = CBaseHandle_GetEntryIndex(wpn->hOwner);
@@ -118,6 +129,10 @@ void chams(ModelRender* thisptr, const DrawModelState_t* state,
 
         Entity* owner = g.ents[owner_idx];
         if (!owner)
+            return;
+
+        Networkable* owner_net = GetNetworkable(owner);
+        if (METHOD(owner_net, IsDormant))
             return;
 
         if (owner_idx == g.localidx) {

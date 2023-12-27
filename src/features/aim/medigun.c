@@ -17,7 +17,14 @@ static Entity* get_best_target(vec3_t local_shoot_pos) {
     for (int i = 1; i <= g.MaxClients; i++) {
         Entity* ent = g.ents[i];
 
-        if (!ent || !IsTeammate(ent) || METHOD(ent, GetIndex) == g.localidx)
+        if (!ent || i == g.localidx)
+            continue;
+
+        if (!METHOD(ent, IsAlive) || !IsTeammate(ent))
+            continue;
+
+        Networkable* net = GetNetworkable(ent);
+        if (METHOD(net, IsDormant))
             continue;
 
         /* We can't heal cloaked spies */
