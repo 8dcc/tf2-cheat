@@ -112,14 +112,15 @@ void chams(ModelRender* thisptr, const DrawModelState_t* state,
                           "debug/debugambientcube");
         return;
     } else if (strstr(mdl->name, "weapons/c")) {
-        Weapon* wpn = (Weapon*)g.ents[pInfo->entity_index];
-        if (!wpn)
+        Entity* wpn_ent = g.ents[pInfo->entity_index];
+        if (!wpn_ent)
             return;
 
-        Networkable* wpn_net = GetNetworkable(wpn);
+        Networkable* wpn_net = GetNetworkable(wpn_ent);
         if (METHOD(wpn_net, IsDormant))
             return;
 
+        Weapon* wpn = (Weapon*)wpn_ent;
         if (!CBaseHandle_IsValid(wpn->hOwner))
             return;
 
