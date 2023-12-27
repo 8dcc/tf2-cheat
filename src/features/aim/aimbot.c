@@ -76,7 +76,7 @@ static vec3_t get_closest_fov(vec3_t viewangles) {
         Entity* ent                  = g.ents[i];
         plist_player_t* plist_player = &g.playerlist[i];
 
-        if (!ent || !plist_player || !plist_player->is_good)
+        if (!ent || !plist_player || !plist_player->is_valid)
             continue;
 
         /* TODO: Check for mp_friendlyfire for hitscan weapons */

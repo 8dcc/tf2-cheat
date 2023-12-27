@@ -588,7 +588,7 @@ void playerlist_render(void) {
 
             plist_player_t* player = &g.playerlist[i];
             Entity* ent            = g.ents[i];
-            if (!player || !player->is_good || !ent)
+            if (!player || !player->is_valid || !ent)
                 continue;
 
             nk_layout_row_dynamic(ctx, 15, 5);

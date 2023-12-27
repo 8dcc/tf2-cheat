@@ -21,7 +21,7 @@ typedef struct {
     bool is_ignored;
 
     /* Should be true before processing the struct */
-    bool is_good;
+    bool is_valid;
 } plist_player_t;
 
 /*----------------------------------------------------------------------------*/

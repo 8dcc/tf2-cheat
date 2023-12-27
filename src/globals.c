@@ -359,7 +359,7 @@ void cache_reset(void) {
     g.localweapon = NULL;
 
     for (int i = 0; i < (int)LENGTH(g.playerlist); i++)
-        g.playerlist[i].is_good = false;
+        g.playerlist[i].is_valid = false;
 
     for (int i = 0; i < (int)LENGTH(g.ents); i++)
         g.ents[i] = NULL;
@@ -388,7 +388,7 @@ void cache_update(void) {
             Entity* ent = METHOD_ARGS(i_entitylist, GetClientEntity, i);
 
             if (!ent) {
-                g.playerlist[i].is_good = false;
+                g.playerlist[i].is_valid = false;
                 continue;
             }
 
@@ -403,7 +403,7 @@ void cache_update(void) {
             /* Last player we stored at this index */
             plist_player_t* old_player = &g.playerlist[i];
 
-            if (old_player->is_good &&
+            if (old_player->is_valid &&
                 pinfo.userID == old_player->pinfo.userID) {
                 /* If this player is already stored in the playerlist, update
                  * the info that we just received. */
@@ -421,14 +421,14 @@ void cache_update(void) {
                     /* This setting is just temporary, don't read from DB */
                     .is_ignored = false,
 
-                    .is_good = true,
+                    .is_valid = true,
                 };
             }
         }
 
         /* Mark all unused player indexes as invalid in the playerlist */
         for (int i = g.MaxClients + 1; i < MAXPLAYERS; i++)
-            g.playerlist[i].is_good = false;
+            g.playerlist[i].is_valid = false;
 
         /* Then other entities */
         const int last_entity = MIN((int)LENGTH(g.ents) - 1, g.MaxEntities);

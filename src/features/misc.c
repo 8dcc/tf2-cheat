@@ -34,7 +34,7 @@ void autobackstab(usercmd_t* cmd) {
     for (int i = 1; i <= g.MaxClients; i++) {
         Entity* ent                  = g.ents[i];
         plist_player_t* plist_player = &g.playerlist[i];
-        if (!ent || !plist_player || !plist_player->is_good)
+        if (!ent || !plist_player || !plist_player->is_valid)
             continue;
 
         if (!METHOD(ent, IsAlive) || IsTeammate(ent))

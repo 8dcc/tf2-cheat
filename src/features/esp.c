@@ -270,7 +270,7 @@ void esp(void) {
         switch (ent_class->class_id) {
             case CClass_CTFPlayer: {
                 plist_player_t* plist_player = &g.playerlist[i];
-                if (!plist_player || !plist_player->is_good)
+                if (!plist_player || !plist_player->is_valid)
                     continue;
 
                 /* Don't render ESP for the spectated player */

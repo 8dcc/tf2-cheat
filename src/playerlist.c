@@ -9,7 +9,7 @@ void plist_print_all(usercmd_t* cmd) {
         plist_player_t* player = &g.playerlist[i];
 
         /* Check if player is valid before printing him */
-        if (!player || !player->is_good || player->pinfo.ishltv)
+        if (!player || !player->is_valid || player->pinfo.ishltv)
             continue;
 
         printf("PlayerList BEGIN: (TICK %d)\n", cmd->tick_count);

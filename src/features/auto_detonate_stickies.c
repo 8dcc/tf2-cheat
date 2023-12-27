@@ -192,7 +192,7 @@ void auto_detonate_stickies(usercmd_t* cmd) {
         for (int j = 1; j <= g.MaxClients; j++) {
             Entity* player               = g.ents[j];
             plist_player_t* plist_player = &g.playerlist[j];
-            if (!player || !plist_player || !plist_player->is_good)
+            if (!player || !plist_player || !plist_player->is_valid)
                 continue;
 
             if (!METHOD(player, IsAlive))

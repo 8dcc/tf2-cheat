@@ -111,7 +111,7 @@ static vec3_t get_melee_angle(void) {
         Entity* ent                  = g.ents[i];
         plist_player_t* plist_player = &g.playerlist[i];
 
-        if (!ent || !plist_player || !plist_player->is_good)
+        if (!ent || !plist_player || !plist_player->is_valid)
             continue;
 
         if (!METHOD(ent, IsAlive) || IsTeammate(ent))
