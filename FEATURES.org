@@ -14,6 +14,18 @@ The cheat currently has the following features:
     - Name
     - Player class
     - Weapon
+    - Conditions
+      - Invulnerable
+      - Invisible (cloaked)
+      - Disguised
+      - Taunting
+      - Crit boosted
+      - Mini-Crit boosted
+      - Scoped
+      - Marked (piss, etc.)
+      - Mad Milk
+      - Burning
+      - Bleeding
     - Ignore invisible spies
   - Building ESP
     - Toggle friends only/enemies only/all
@@ -83,6 +95,7 @@ The cheat currently has the following features:
   - Spy's auto-backstab
   - NoPush (no teammate collision)
   - Anti-AFK
+  - Disable cheat when taking steam screenshots
 - Custom colors for most settings
 - JSON config system
 

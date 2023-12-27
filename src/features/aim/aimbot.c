@@ -251,6 +251,9 @@ void draw_aim_fov(void) {
         !g.localweapon || !g.IsAlive)
         return;
 
+    if (settings.clean_screenshots && METHOD(i_engine, IsTakingScreenshot))
+        return;
+
     const int wpn_slot = METHOD(g.localweapon, GetSlot);
     if (wpn_slot != WPN_SLOT_PRIMARY && wpn_slot != WPN_SLOT_SECONDARY)
         return;

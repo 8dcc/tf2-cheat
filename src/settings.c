@@ -19,6 +19,7 @@ Settings settings = {
     .esp_player_name      = false,
     .esp_player_class     = false,
     .esp_player_weapon    = false,
+    .esp_player_cond      = false,
     .esp_ignore_invisible = false,
 
     .esp_building                = SETT_OFF,
@@ -82,6 +83,7 @@ Settings settings = {
     .draw_velocity_jump  = false,
     .draw_velocity_vert  = false,
     .draw_velocity_pos   = 51.f,
+    .clean_screenshots   = true,
     .watermark           = true,
     .speclist            = true,
     .speclist_height     = 50.f,
@@ -112,6 +114,7 @@ Settings settings = {
     .col_esp_steam_friend  = (struct nk_colorf){ 0.21f, 0.77f, 0.23f, 1.f },
     .col_esp_friend        = (struct nk_colorf){ 0.05f, 0.47f, 0.95f, 1.f },
     .col_esp_enemy         = (struct nk_colorf){ 0.95f, 0.10f, 0.09f, 1.f },
+    .col_esp_player_cond   = (struct nk_colorf){ 1.00f, 0.95f, 0.24f, 1.f },
     .col_esp_friend_build  = (struct nk_colorf){ 0.29f, 0.07f, 0.54f, 1.f },
     .col_esp_enemy_build   = (struct nk_colorf){ 0.90f, 0.31f, 0.00f, 1.f },
     .col_esp_sticky_friend = (struct nk_colorf){ 0.05f, 0.47f, 0.95f, 1.f },
@@ -152,6 +155,7 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_INT(json_cfg, esp_player_name);
     JSON_SETTINGS_WRITE_INT(json_cfg, esp_player_class);
     JSON_SETTINGS_WRITE_INT(json_cfg, esp_player_weapon);
+    JSON_SETTINGS_WRITE_INT(json_cfg, esp_player_cond);
     JSON_SETTINGS_WRITE_INT(json_cfg, esp_ignore_invisible);
     JSON_SETTINGS_WRITE_INT(json_cfg, esp_building);
     JSON_SETTINGS_WRITE_INT(json_cfg, esp_building_use_team_color);
@@ -209,9 +213,10 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_INT(json_cfg, draw_velocity_jump);
     JSON_SETTINGS_WRITE_INT(json_cfg, draw_velocity_vert);
     JSON_SETTINGS_WRITE_INT(json_cfg, draw_velocity_pos);
+    JSON_SETTINGS_WRITE_INT(json_cfg, clean_screenshots);
     JSON_SETTINGS_WRITE_INT(json_cfg, watermark);
     JSON_SETTINGS_WRITE_INT(json_cfg, speclist);
-    JSON_SETTINGS_WRITE_FLOAT(json_cfg, speclist);
+    JSON_SETTINGS_WRITE_FLOAT(json_cfg, speclist_height);
 
     /* Misc */
     JSON_SETTINGS_WRITE_INT(json_cfg, bhop);
@@ -239,6 +244,7 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_steam_friend);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_friend);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_enemy);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_player_cond);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_friend_build);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_enemy_build);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_sticky_friend);
@@ -332,6 +338,7 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_INT(json_cfg, esp_player_name);
     JSON_SETTINGS_READ_INT(json_cfg, esp_player_class);
     JSON_SETTINGS_READ_INT(json_cfg, esp_player_weapon);
+    JSON_SETTINGS_READ_INT(json_cfg, esp_player_cond);
     JSON_SETTINGS_READ_INT(json_cfg, esp_ignore_invisible);
     JSON_SETTINGS_READ_INT(json_cfg, esp_building);
     JSON_SETTINGS_READ_INT(json_cfg, esp_building_use_team_color);
@@ -389,6 +396,7 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_INT(json_cfg, draw_velocity_jump);
     JSON_SETTINGS_READ_INT(json_cfg, draw_velocity_vert);
     JSON_SETTINGS_READ_INT(json_cfg, draw_velocity_pos);
+    JSON_SETTINGS_READ_INT(json_cfg, clean_screenshots);
     JSON_SETTINGS_READ_INT(json_cfg, watermark);
     JSON_SETTINGS_READ_INT(json_cfg, speclist);
     JSON_SETTINGS_READ_FLOAT(json_cfg, speclist_height);
@@ -419,6 +427,7 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_COL(json_cfg, col_esp_steam_friend);
     JSON_SETTINGS_READ_COL(json_cfg, col_esp_friend);
     JSON_SETTINGS_READ_COL(json_cfg, col_esp_enemy);
+    JSON_SETTINGS_READ_COL(json_cfg, col_esp_player_cond);
     JSON_SETTINGS_READ_COL(json_cfg, col_esp_friend_build);
     JSON_SETTINGS_READ_COL(json_cfg, col_esp_enemy_build);
     JSON_SETTINGS_READ_COL(json_cfg, col_esp_sticky_friend);
