@@ -304,6 +304,8 @@ typedef struct {
     bool (*IsConnected)(EngineClient*); /* 27 */
     PAD(4 * 8);
     VMatrix* (*WorldToScreenMatrix)(EngineClient*); /* 36, not reliable */
+    PAD(4 * 48);
+    bool (*IsTakingScreenshot)(EngineClient*); /* 85 */
 } VMT_EngineClient;
 
 struct EngineClient {
