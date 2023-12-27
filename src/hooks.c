@@ -133,8 +133,8 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
     if (ret)
         METHOD_ARGS(i_engine, SetViewAngles, &cmd->viewangles);
 
-    playerlist_full_update();
-    playerlist_print_all();
+    // playerlist_full_update();
+    playerlist_print_all(cmd);
     nopush();
     thirdperson();
     bhop(cmd);

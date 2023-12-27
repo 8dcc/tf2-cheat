@@ -51,7 +51,6 @@ void pred_start(usercmd_t* cmd);
 void pred_end(void);
 
 /* src/features/playerlist.c */
-void playerlist_full_update();
-void playerlist_print_all();
+void playerlist_print_all(usercmd_t* cmd);
 
 #endif /* FEATURES_H_ */
