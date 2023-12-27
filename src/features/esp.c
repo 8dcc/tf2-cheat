@@ -295,7 +295,7 @@ void esp(void) {
                     continue;
 
                 rgba_t col = plist_is_friend(plist_player) ? col_player_friend
-                             : plist_is_any_rage(plist_player) ? col_player_rage
+                             : plist_is_rage(plist_player) ? col_player_rage
                              : settings.esp_use_team_color
                                ? NK2COL(get_team_color(ent_teamnum))
                              : is_teammate ? col_player_teammate

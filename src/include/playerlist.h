@@ -4,13 +4,10 @@
 #include "sdk.h"
 
 enum EPlayerListPlayerPreset {
-    UNSET  = 0,
-    FRIEND = 1,
-    /* Votekickers */
+    UNSET     = 0,
+    FRIEND    = 1,
     SOFT_RAGE = 2,
     RAGE      = 3,
-    /* Cheaters */
-    MAX_RAGE = 4
 };
 
 typedef struct {
@@ -40,8 +37,6 @@ static inline const char* plist_preset_name(enum EPlayerListPlayerPreset num) {
             return "Soft Rage";
         case RAGE:
             return "Rage";
-        case MAX_RAGE:
-            return "Max Rage";
     }
 }
 
@@ -49,9 +44,8 @@ static inline bool plist_is_friend(plist_player_t* player) {
     return player->is_steam_friend || player->preset == FRIEND;
 }
 
-static inline bool plist_is_any_rage(plist_player_t* player) {
-    return player->preset == SOFT_RAGE || player->preset == RAGE ||
-           player->preset == MAX_RAGE;
+static inline bool plist_is_rage(plist_player_t* player) {
+    return player->preset == SOFT_RAGE || player->preset == RAGE;
 }
 
 #endif /* PLAYERLIST_H_ */
