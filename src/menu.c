@@ -240,7 +240,7 @@ static inline void tab_aim(void) {
     static const char* opts1[] = { "Soft Rage", "Rage", "Max Rage" };
     struct nk_vec2 size1       = { COMBO_DROP_W, 200 };
     nk_label(ctx, "Aimbot prioritise starting with", NK_TEXT_LEFT);
-    nk_combobox(ctx, opts1, 4, &settings.aim_prio_rage_preset, 15, size1);
+    nk_combobox(ctx, opts1, 3, &settings.aim_prio_rage_preset, 15, size1);
 
     nk_layout_row_dynamic(ctx, 15, 1);
     nk_checkbox_label(ctx, "Silent", &settings.aim_silent);
