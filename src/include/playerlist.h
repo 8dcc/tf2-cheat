@@ -3,7 +3,7 @@
 
 #include "sdk.h"
 
-enum PLAYER_LIST_PLAYER_PRESET {
+enum EPlayerListPlayerPreset {
     UNSET  = 0,
     FRIEND = 1,
     /* Votekickers */
@@ -13,26 +13,27 @@ enum PLAYER_LIST_PLAYER_PRESET {
     MAX_RAGE = 4
 };
 
-#define PLAYER_LIST_PRESET_CCHAR_UNSET     "Unset";
-#define PLAYER_LIST_PRESET_CCHAR_FRIEND    "Friend";
-#define PLAYER_LIST_PRESET_CCHAR_SOFT_RAGE "Soft Rage";
-#define PLAYER_LIST_PRESET_CCHAR_RAGE      "Rage";
-#define PLAYER_LIST_PRESET_CCHAR_MAX_RAGE  "Max Rage";
+#define PLIST_PRESET_STR_UNSET     "Unset"
+#define PLIST_PRESET_STR_FRIEND    "Friend"
+#define PLIST_PRESET_STR_SOFT_RAGE "Soft Rage"
+#define PLIST_PRESET_STR_RAGE      "Rage"
+#define PLIST_PRESET_STR_MAX_RAGE  "Max Rage"
 
-const char* player_list_preset_to_const_char(
-  const enum PLAYER_LIST_PLAYER_PRESET preset);
+const char* plist_preset_to_str(enum EPlayerListPlayerPreset preset);
 
 typedef struct {
-    /* Updates every tick */
-    bool is_a_steam_friend;
-    // TODO: is_a_party_member
-    player_info_t player_info;
-    Entity* entity;
+    /* Updated every tick */
+    Entity* ent;
+    bool is_steam_friend;
+    player_info_t pinfo;
+    /* TODO: is_a_party_member */
+
     /* Can be set through playerlist menu */
-    bool should_be_ignored;
-    enum PLAYER_LIST_PLAYER_PRESET preset;
-    /* Check this before processing this struct */
+    bool is_ignored;
+    enum EPlayerListPlayerPreset preset;
+
+    /* Should be true before processing the struct */
     bool is_good;
-} player_list_player_t;
+} plist_player_t;
 
 #endif /* PLAYERLIST_H_ */
