@@ -79,7 +79,7 @@ void chams(ModelRender* thisptr, const DrawModelState_t* state,
 
         struct nk_colorf vis_col = (settings.chams_player_use_team_color)
                                      ? get_team_color(ent_teamnum)
-                                   : (is_teammate) ? settings.col_chams_friend
+                                   : (is_teammate) ? settings.col_chams_teammate
                                                    : settings.col_chams_enemy;
 
         /* Invisible player chams */
@@ -144,7 +144,7 @@ void chams(ModelRender* thisptr, const DrawModelState_t* state,
             struct nk_colorf player_col = (settings.chams_player_use_team_color)
                                             ? get_team_color(ent_teamnum)
                                           : (is_teammate)
-                                            ? settings.col_chams_friend
+                                            ? settings.col_chams_teammate
                                             : settings.col_chams_enemy;
 
             override_material(WPN_IGNOREZ, WPN_WIREFRAME, player_col,

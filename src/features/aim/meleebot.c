@@ -116,7 +116,7 @@ static vec3_t get_melee_angle(void) {
         if (!settings.aim_target_invul && IsInvulnerable(ent))
             continue;
 
-        if (!settings.aim_target_steam_friends && IsSteamFriend(ent))
+        if (!settings.aim_target_friends && IsSteamFriend(ent))
             continue;
 
         if (!settings.aim_target_invisible && IsInvisible(ent))

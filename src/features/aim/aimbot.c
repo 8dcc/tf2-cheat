@@ -73,15 +73,25 @@ static vec3_t get_closest_fov(vec3_t viewangles) {
     vec3_t best_angle = VEC_ZERO;
 
     for (int i = 1; i <= g.MaxClients; i++) {
-        Entity* ent = g.ents[i];
+        Entity* ent        = g.ents[i];
+        const int player_i = i - 1;
+        player_list_player_t* playerlist_player =
+          &g.playerlist_players[player_i];
 
-        if (!ent || IsTeammate(ent))
+        /* TODO: Check for mp_friendlyfire for hitscan weapons */
+        if (!ent || !playerlist_player || !playerlist_player->is_good ||
+            IsTeammate(ent))
             continue;
 
         if (!settings.aim_target_invul && IsInvulnerable(ent))
             continue;
 
-        if (!settings.aim_target_steam_friends && IsSteamFriend(ent))
+        if (playerlist_player->should_be_ignored)
+            continue;
+
+        if (!settings.aim_target_friends &&
+            (playerlist_player->is_a_steam_friend ||
+             playerlist_player->preset == FRIEND))
             continue;
 
         if (!settings.aim_target_invisible && IsInvisible(ent))

@@ -25,6 +25,7 @@ const char* player_list_preset_to_const_char(
 typedef struct {
     /* Updates every tick */
     bool is_a_steam_friend;
+    // TODO: is_a_party_member
     player_info_t player_info;
     Entity* entity;
     /* Can be set through playerlist menu */

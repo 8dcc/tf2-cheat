@@ -215,8 +215,7 @@ static inline void tab_esp(void) {
 
 static inline void tab_aim(void) {
     nk_layout_row_dynamic(ctx, 15, 1);
-    nk_checkbox_label(ctx, "Target steam friends",
-                      &settings.aim_target_steam_friends);
+    nk_checkbox_label(ctx, "Target friends", &settings.aim_target_friends);
     nk_checkbox_label(ctx, "Target invisible", &settings.aim_target_invisible);
     nk_checkbox_label(ctx, "Target invulnerable", &settings.aim_target_invul);
 
@@ -402,21 +401,21 @@ static inline void tab_colors(void) {
     nk_label(ctx, "Friendly player ESP", NK_TEXT_CENTERED);
     nk_label(ctx, "Enemy player ESP", NK_TEXT_CENTERED);
     nk_layout_row_dynamic(ctx, COLOR_PICKER_H, 2);
-    COLOR_PICKER(settings.col_esp_friend);
+    COLOR_PICKER(settings.col_esp_teammate);
     COLOR_PICKER(settings.col_esp_enemy);
 
     nk_layout_row_dynamic(ctx, 15, 2);
     nk_label(ctx, "Friendly building ESP", NK_TEXT_CENTERED);
     nk_label(ctx, "Enemy building ESP", NK_TEXT_CENTERED);
     nk_layout_row_dynamic(ctx, COLOR_PICKER_H, 2);
-    COLOR_PICKER(settings.col_esp_friend_build);
+    COLOR_PICKER(settings.col_esp_teammate_build);
     COLOR_PICKER(settings.col_esp_enemy_build);
 
     nk_layout_row_dynamic(ctx, 15, 2);
     nk_label(ctx, "Friendly sticky ESP", NK_TEXT_CENTERED);
     nk_label(ctx, "Enemy sticky ESP", NK_TEXT_CENTERED);
     nk_layout_row_dynamic(ctx, COLOR_PICKER_H, 2);
-    COLOR_PICKER(settings.col_esp_sticky_friend);
+    COLOR_PICKER(settings.col_esp_sticky_teammate);
     COLOR_PICKER(settings.col_esp_sticky_enemy);
 
     nk_layout_row_dynamic(ctx, 15, 2);
@@ -427,10 +426,10 @@ static inline void tab_colors(void) {
     COLOR_PICKER(settings.col_esp_healthpack);
 
     nk_layout_row_dynamic(ctx, 15, 2);
-    nk_label(ctx, "Steam friend ESP", NK_TEXT_CENTERED);
+    nk_label(ctx, "Friend ESP", NK_TEXT_CENTERED);
     nk_label(ctx, "Player condition ESP", NK_TEXT_CENTERED);
     nk_layout_row_dynamic(ctx, COLOR_PICKER_H, 2);
-    COLOR_PICKER(settings.col_esp_steam_friend);
+    COLOR_PICKER(settings.col_esp_friend);
     COLOR_PICKER(settings.col_esp_player_cond);
 
     /* Chams colors */
@@ -438,7 +437,7 @@ static inline void tab_colors(void) {
     nk_label(ctx, "Friendly player chams", NK_TEXT_CENTERED);
     nk_label(ctx, "Enemy player chams", NK_TEXT_CENTERED);
     nk_layout_row_dynamic(ctx, COLOR_PICKER_H, 2);
-    COLOR_PICKER(settings.col_chams_friend);
+    COLOR_PICKER(settings.col_chams_teammate);
     COLOR_PICKER(settings.col_chams_enemy);
 
     /* Misc colors */

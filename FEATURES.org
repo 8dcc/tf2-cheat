@@ -7,7 +7,7 @@ The cheat currently has the following features:
 - ESP
   - Player ESP
     - Toggle friends only/enemies only/all
-    - Different color for Steam friends
+    - Different color for friends
     - Box
     - Skeleton
     - Health
@@ -60,7 +60,7 @@ The cheat currently has the following features:
   - Disable if spectated in 1st person
 - Common settings for aimbot/meleebot
   - Ignore invulnerable players (uber, bonk, etc.)
-  - Ignore steam friends
+  - Ignore friends
   - Ignore invisible spies
 - Automedigun (automatically heal the best target)
   - pSilent

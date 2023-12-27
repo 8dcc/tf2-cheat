@@ -74,7 +74,7 @@ typedef struct {
     int chams_hand;
 
     /* Aim */
-    int aim_target_steam_friends;
+    int aim_target_friends;
     int aim_target_invisible;
     int aim_target_invul;
 
@@ -143,18 +143,18 @@ typedef struct {
     /* Colors */
     struct nk_colorf col_team_red;
     struct nk_colorf col_team_blu;
-    struct nk_colorf col_esp_steam_friend;
     struct nk_colorf col_esp_friend;
+    struct nk_colorf col_esp_teammate;
     struct nk_colorf col_esp_enemy;
     struct nk_colorf col_esp_player_cond;
     struct nk_colorf col_esp_enemy_build;
-    struct nk_colorf col_esp_friend_build;
-    struct nk_colorf col_esp_sticky_friend;
+    struct nk_colorf col_esp_teammate_build;
+    struct nk_colorf col_esp_sticky_teammate;
     struct nk_colorf col_esp_sticky_enemy;
     struct nk_colorf col_esp_ammobox;
     struct nk_colorf col_esp_healthpack;
 
-    struct nk_colorf col_chams_friend;
+    struct nk_colorf col_chams_teammate;
     struct nk_colorf col_chams_enemy;
     struct nk_colorf col_chams_local;
     struct nk_colorf col_chams_weapon;

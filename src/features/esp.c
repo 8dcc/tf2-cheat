@@ -212,15 +212,15 @@ void esp(void) {
     if (settings.clean_screenshots && METHOD(i_engine, IsTakingScreenshot))
         return;
 
-    rgba_t col_player_steam_friend = NK2COL(settings.col_esp_steam_friend);
-    rgba_t col_player_friend       = NK2COL(settings.col_esp_friend);
-    rgba_t col_player_enemy        = NK2COL(settings.col_esp_enemy);
-    rgba_t col_build_friend        = NK2COL(settings.col_esp_friend_build);
-    rgba_t col_build_enemy         = NK2COL(settings.col_esp_enemy_build);
-    rgba_t col_sticky_friend       = NK2COL(settings.col_esp_sticky_friend);
-    rgba_t col_sticky_enemy        = NK2COL(settings.col_esp_sticky_enemy);
-    rgba_t col_ammobox             = NK2COL(settings.col_esp_ammobox);
-    rgba_t col_healthpack          = NK2COL(settings.col_esp_healthpack);
+    rgba_t col_player_friend   = NK2COL(settings.col_esp_friend);
+    rgba_t col_player_teammate = NK2COL(settings.col_esp_teammate);
+    rgba_t col_player_enemy    = NK2COL(settings.col_esp_enemy);
+    rgba_t col_build_teammate  = NK2COL(settings.col_esp_teammate_build);
+    rgba_t col_build_enemy     = NK2COL(settings.col_esp_enemy_build);
+    rgba_t col_sticky_teammate = NK2COL(settings.col_esp_sticky_teammate);
+    rgba_t col_sticky_enemy    = NK2COL(settings.col_esp_sticky_enemy);
+    rgba_t col_ammobox         = NK2COL(settings.col_esp_ammobox);
+    rgba_t col_healthpack      = NK2COL(settings.col_esp_healthpack);
 
     /* For bounding box */
     static int x, y, w, h;
@@ -264,6 +264,12 @@ void esp(void) {
 
         switch (ent_class->class_id) {
             case CClass_CTFPlayer: {
+                const int player_i = i - 1;
+                player_list_player_t* playerlist_player =
+                  &g.playerlist_players[player_i];
+                if (!playerlist_player || !playerlist_player->is_good)
+                    continue;
+
                 /* Don't render ESP for the spectated player */
                 if (settings.esp_player == SETT_OFF)
                     continue;
@@ -285,10 +291,12 @@ void esp(void) {
                 if (!get_bbox(ent, &x, &y, &w, &h))
                     continue;
 
-                rgba_t col = IsSteamFriend(ent) ? col_player_steam_friend
+                rgba_t col = (playerlist_player->is_a_steam_friend ||
+                              playerlist_player->preset == FRIEND)
+                               ? col_player_friend
                              : settings.esp_use_team_color
                                ? NK2COL(get_team_color(ent_teamnum))
-                             : is_teammate ? col_player_friend
+                             : is_teammate ? col_player_teammate
                                            : col_player_enemy;
 
                 /*------------------------------------------------------------*/
@@ -475,7 +483,7 @@ void esp(void) {
             case CClass_CObjectSentrygun: {
                 if (settings.esp_building_type == SETT_BTYPE_ALL ||
                     settings.esp_building_type == SETT_BTYPE_SENTRY)
-                    building_esp(ent, "Sentry", col_build_friend,
+                    building_esp(ent, "Sentry", col_build_teammate,
                                  col_build_enemy);
 
                 break;
@@ -484,7 +492,7 @@ void esp(void) {
             case CClass_CObjectDispenser: {
                 if (settings.esp_building_type == SETT_BTYPE_ALL ||
                     settings.esp_building_type == SETT_BTYPE_DISPENSER)
-                    building_esp(ent, "Dispenser", col_build_friend,
+                    building_esp(ent, "Dispenser", col_build_teammate,
                                  col_build_enemy);
 
                 break;
@@ -496,7 +504,8 @@ void esp(void) {
                     const char* name = (ent->m_iObjectMode == 0)
                                          ? "Teleporter entry"
                                          : "Teleporter exit";
-                    building_esp(ent, name, col_build_friend, col_build_enemy);
+                    building_esp(ent, name, col_build_teammate,
+                                 col_build_enemy);
                 }
 
                 break;
@@ -527,7 +536,7 @@ void esp(void) {
 
                 rgba_t col_sticky = settings.esp_sticky_use_team_color
                                       ? NK2COL(get_team_color(ent_teamnum))
-                                    : is_teammate ? col_sticky_friend
+                                    : is_teammate ? col_build_teammate
                                                   : col_sticky_enemy;
 
                 generic_ent_name(ent, "Sticky", col_sticky);
