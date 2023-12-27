@@ -13,14 +13,6 @@ enum EPlayerListPlayerPreset {
     MAX_RAGE = 4
 };
 
-#define PLIST_PRESET_STR_UNSET     "Unset"
-#define PLIST_PRESET_STR_FRIEND    "Friend"
-#define PLIST_PRESET_STR_SOFT_RAGE "Soft Rage"
-#define PLIST_PRESET_STR_RAGE      "Rage"
-#define PLIST_PRESET_STR_MAX_RAGE  "Max Rage"
-
-const char* plist_preset_to_str(enum EPlayerListPlayerPreset preset);
-
 typedef struct {
     /* Updated every tick */
     player_info_t pinfo;
@@ -34,5 +26,23 @@ typedef struct {
     /* Should be true before processing the struct */
     bool is_good;
 } plist_player_t;
+
+/*----------------------------------------------------------------------------*/
+
+static inline const char* plist_preset_name(enum EPlayerListPlayerPreset num) {
+    switch (num) {
+        default:
+        case UNSET:
+            return "Unset";
+        case FRIEND:
+            return "Friend";
+        case SOFT_RAGE:
+            return "Soft Rage";
+        case RAGE:
+            return "Rage";
+        case MAX_RAGE:
+            return "Max Rage";
+    }
+}
 
 #endif /* PLAYERLIST_H_ */

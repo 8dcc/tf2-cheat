@@ -20,19 +20,3 @@ void plist_print_all(usercmd_t* cmd) {
         printf("PlayerList END: (TICK %d)\n\n", cmd->tick_count);
     }
 }
-
-const char* plist_preset_to_str(enum EPlayerListPlayerPreset preset) {
-    switch (preset) {
-        default:
-        case UNSET:
-            return PLIST_PRESET_STR_UNSET;
-        case FRIEND:
-            return PLIST_PRESET_STR_FRIEND;
-        case SOFT_RAGE:
-            return PLIST_PRESET_STR_SOFT_RAGE;
-        case RAGE:
-            return PLIST_PRESET_STR_RAGE;
-        case MAX_RAGE:
-            return PLIST_PRESET_STR_MAX_RAGE;
-    }
-}
