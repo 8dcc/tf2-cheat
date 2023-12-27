@@ -32,25 +32,24 @@ void autobackstab(usercmd_t* cmd) {
 
     /* Store hitbox position of closest enemy */
     for (int i = 1; i <= g.MaxClients; i++) {
-        Entity* ent = g.ents[i];
+        Entity* ent                  = g.ents[i];
+        plist_player_t* plist_player = &g.playerlist[i];
+        if (!ent || !plist_player || !plist_player->is_good ||
+            IsTeammate(ent) || !METHOD(ent, IsAlive))
+            continue;
 
-        const int player_i = i - 1;
-        player_list_player_t* playerlist_player =
-          &g.playerlist_players[player_i];
-
-        if (!ent || !playerlist_player || !playerlist_player->is_good ||
-            IsTeammate(ent))
+        Networkable* net = GetNetworkable(ent);
+        if (METHOD(net, IsDormant))
             continue;
 
         if (!settings.aim_target_invul && IsInvulnerable(ent))
             continue;
 
-        if (playerlist_player->should_be_ignored)
+        if (plist_player->is_ignored)
             continue;
 
         if (!settings.aim_target_friends &&
-            (playerlist_player->is_a_steam_friend ||
-             playerlist_player->preset == FRIEND))
+            (plist_player->is_steam_friend || plist_player->preset == FRIEND))
             continue;
 
         if (!settings.aim_target_invisible && IsInvisible(ent))

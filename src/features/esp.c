@@ -252,22 +252,24 @@ void esp(void) {
         if (i == local_idx)
             continue;
 
-        Entity* ent      = g.ents[i];
+        Entity* ent = g.ents[i];
+        if (!ent || !METHOD(ent, IsAlive))
+            continue;
+
         Networkable* net = GetNetworkable(ent);
-        Renderable* rend = GetRenderable(ent);
-        if (!ent)
+        if (METHOD(net, IsDormant))
             continue;
 
         ClientClass* ent_class = METHOD(net, GetClientClass);
         if (!ent_class)
             continue;
 
+        Renderable* rend = GetRenderable(ent);
+
         switch (ent_class->class_id) {
             case CClass_CTFPlayer: {
-                const int player_i = i - 1;
-                player_list_player_t* playerlist_player =
-                  &g.playerlist_players[player_i];
-                if (!playerlist_player || !playerlist_player->is_good)
+                plist_player_t* plist_player = &g.playerlist[i];
+                if (!plist_player || !plist_player->is_good)
                     continue;
 
                 /* Don't render ESP for the spectated player */
@@ -291,8 +293,8 @@ void esp(void) {
                 if (!get_bbox(ent, &x, &y, &w, &h))
                     continue;
 
-                rgba_t col = (playerlist_player->is_a_steam_friend ||
-                              playerlist_player->preset == FRIEND)
+                rgba_t col = (plist_player->is_steam_friend ||
+                              plist_player->preset == FRIEND)
                                ? col_player_friend
                              : settings.esp_use_team_color
                                ? NK2COL(get_team_color(ent_teamnum))

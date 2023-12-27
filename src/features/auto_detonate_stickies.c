@@ -187,12 +187,14 @@ void auto_detonate_stickies(usercmd_t* cmd) {
         /* Current entity is one of our stickies, check if it's close enough to
          * an enemy. */
         for (int j = 1; j <= g.MaxClients; j++) {
-            Entity* player = g.ents[j];
+            Entity* player               = g.ents[j];
+            plist_player_t* plist_player = &g.playerlist[j];
+            if (!player || !plist_player || !plist_player->is_good ||
+                IsTeammate(player) || !METHOD(player, IsAlive))
+                continue;
 
-            const int player_i = i - 1;
-            player_list_player_t* playerlist_player =
-              &g.playerlist_players[player_i];
-            if (!player || !playerlist_player || !playerlist_player->is_good)
+            Networkable* net = GetNetworkable(player);
+            if (METHOD(net, IsDormant))
                 continue;
 
             /* If we are the current player, just check if we want to detonate
@@ -208,12 +210,12 @@ void auto_detonate_stickies(usercmd_t* cmd) {
                 if (!settings.aim_target_invul && IsInvulnerable(player))
                     continue;
 
-                if (playerlist_player->should_be_ignored)
+                if (plist_player->is_ignored)
                     continue;
 
                 if (!settings.aim_target_friends &&
-                    (playerlist_player->is_a_steam_friend ||
-                     playerlist_player->preset == FRIEND))
+                    (plist_player->is_steam_friend ||
+                     plist_player->preset == FRIEND))
                     continue;
 
                 if (!settings.aim_target_invisible && IsInvisible(player))
