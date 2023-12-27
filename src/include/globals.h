@@ -165,9 +165,8 @@ typedef struct {
     VMatrix w2s_vmatrix;
     Entity* localplayer;
     Weapon* localweapon;
-    /* NOTE: Only stores non-null and non-dormant entities. For players, also
-     * disards dead players. See cache_update() */
-    Entity* ents[MAXENTITIES];
+    Entity* ents[MAXENTITIES]; /* NOTE: See cache_update() */
+    plist_player_t playerlist[MAXPLAYERS];
 
     /* Updated in EngineVGui::Paint() -> spectator_list() */
     bool spectated_1st;
@@ -180,9 +179,6 @@ typedef struct {
 
     /* Updated in features and used in CreateMove */
     bool psilent;
-
-    /* */
-    player_list_player_t playerlist_players[MAXPLAYERS];
 } global_cache_t;
 
 /*----------------------------------------------------------------------------*/

@@ -381,64 +381,50 @@ void cache_update(void) {
 
         /* First iterate players */
         for (int i = 1; i <= g.MaxClients; i++) {
-            const int player_i = i - 1;
-            Entity* ent        = METHOD_ARGS(i_entitylist, GetClientEntity, i);
-            Networkable* net   = GetNetworkable(ent);
+            Entity* ent = METHOD_ARGS(i_entitylist, GetClientEntity, i);
 
-            /* TODO: Remove IsDormant and IsAlive */
-            bool ignore_this_entity = false;
             if (!ent) {
-                /* "Removing" this player from playerlist */
-                g.playerlist_players[player_i].is_good = false;
+                g.playerlist[i].is_good = false;
                 continue;
-            } else if (METHOD(net, IsDormant) || !METHOD(ent, IsAlive)) {
-                /* Player is either dead or dormant, still add it to
-                 * playerlist */
-                ignore_this_entity = true;
             }
-            const bool is_a_steam_friend = IsSteamFriend(ent);
-            player_info_t player_info;
-            METHOD_ARGS(i_engine, GetPlayerInfo, i, &player_info);
 
-            player_list_player_t* old_playerlist_player =
-              &g.playerlist_players[player_i];
-            /* Check if already had a player on same index and its not invalid
-             * and its the same person */
-            if (old_playerlist_player->is_good &&
-                old_playerlist_player->player_info.userID != 0 &&
-                player_info.userID ==
-                  old_playerlist_player->player_info.userID) {
-                /* Update info about this player that we just received */
-                old_playerlist_player->is_a_steam_friend = is_a_steam_friend;
-                old_playerlist_player->player_info       = player_info;
-                /* Updating this just to be sure */
-                old_playerlist_player->entity = ent;
+            /* Store in global entity cache */
+            g.ents[i] = ent;
+
+            /* Information about this player for the playerlist */
+            const bool is_steam_friend = IsSteamFriend(ent);
+            player_info_t pinfo;
+            METHOD_ARGS(i_engine, GetPlayerInfo, i, &pinfo);
+
+            /* Last player we stored at this index */
+            plist_player_t* old_player = &g.playerlist[i];
+
+            if (old_player->is_good &&
+                pinfo.userID == old_player->pinfo.userID) {
+                /* If this player is already stored in the playerlist, update
+                 * the info that we just received. */
+                old_player->pinfo           = pinfo;
+                old_player->is_steam_friend = is_steam_friend;
             } else {
-                /* Update all info about this player */
-                g.playerlist_players[player_i] = (player_list_player_t){
-                    .is_a_steam_friend = is_a_steam_friend,
-                    .player_info       = player_info,
-                    .should_be_ignored = false,    // Should be always
-                                                   // false, we don't want
-                                                   // to store this info
-                    .preset = UNSET,               // TODO: Get
-                                                   // from
-                                                   // database
+                /* Otherwise, store all information */
+                g.playerlist[i] = (plist_player_t){
+                    .pinfo           = pinfo,
+                    .is_steam_friend = is_steam_friend,
+
+                    /* TODO: Get from database */
+                    .preset = UNSET,
+
+                    /* This setting is just temporary, don't read from DB */
+                    .is_ignored = false,
+
                     .is_good = true,
-                    .entity  = ent
                 };
             }
-            if (ignore_this_entity) {
-                continue;
-            }
-            g.ents[i] = ent;
         }
 
-        /* Iterate through non-connected players, added to make sure
-        that old players are not being used */
-        for (int i = g.MaxClients + 1; i < MAXPLAYERS; i++) {
-            g.playerlist_players[i].is_good = false;
-        }
+        /* Mark all unused player indexes as invalid in the playerlist */
+        for (int i = g.MaxClients + 1; i < MAXPLAYERS; i++)
+            g.playerlist[i].is_good = false;
 
         /* Then other entities */
         const int last_entity = MIN((int)LENGTH(g.ents) - 1, g.MaxEntities);
