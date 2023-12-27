@@ -23,7 +23,6 @@ const char* plist_preset_to_str(enum EPlayerListPlayerPreset preset);
 
 typedef struct {
     /* Updated every tick */
-    Entity* ent;
     player_info_t pinfo;
     bool is_steam_friend;
     /* TODO: is_a_party_member */
