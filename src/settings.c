@@ -4,6 +4,7 @@
 #include <sys/stat.h>  /* mkdir */
 #include <sys/types.h> /* mkdir*/
 #include "dependencies/cJSON/cJSON.h"
+#include "include/playerlist.h"
 #include "include/settings.h"
 
 /*----------------------------------------------------------------------------*/
@@ -46,19 +47,20 @@ Settings settings = {
     .aim_target_invisible = false,
     .aim_target_invul     = false,
 
-    .aimbot            = false,
-    .aim_fov           = 0.f,
-    .aim_smooth        = 1.f,
-    .aim_deg_threshold = 1.f,
-    .aim_hitbox        = SETT_HITBOX_HEAD,
-    .aim_silent        = false,
-    .aim_on_key        = false,
-    .aim_keycode       = DEFAULT_AIMBOT_KEY,
-    .aim_ignore_walls  = false,
-    .aim_autoscope     = false,
-    .aim_off_unscoped  = false,
-    .aim_off_spectated = false,
-    .aim_draw_fov      = false,
+    .aimbot               = false,
+    .aim_fov              = 0.f,
+    .aim_smooth           = 1.f,
+    .aim_deg_threshold    = 1.f,
+    .aim_hitbox           = SETT_HITBOX_HEAD,
+    .aim_prio_rage_preset = UNSET,
+    .aim_silent           = false,
+    .aim_on_key           = false,
+    .aim_keycode          = DEFAULT_AIMBOT_KEY,
+    .aim_ignore_walls     = false,
+    .aim_autoscope        = false,
+    .aim_off_unscoped     = false,
+    .aim_off_spectated    = false,
+    .aim_draw_fov         = false,
 
     .meleebot            = false,
     .melee_silent        = false,
@@ -112,6 +114,7 @@ Settings settings = {
     .col_team_red            = (struct nk_colorf){ 0.62f, 0.19f, 0.18f, 1.f },
     .col_team_blu            = (struct nk_colorf){ 0.22f, 0.36f, 0.47f, 1.f },
     .col_esp_friend          = (struct nk_colorf){ 0.21f, 0.77f, 0.23f, 1.f },
+    .col_esp_rage            = (struct nk_colorf){ 1.00f, 0.95f, 0.24f, 1.f },
     .col_esp_teammate        = (struct nk_colorf){ 0.05f, 0.47f, 0.95f, 1.f },
     .col_esp_enemy           = (struct nk_colorf){ 0.95f, 0.10f, 0.09f, 1.f },
     .col_esp_player_cond     = (struct nk_colorf){ 1.00f, 0.95f, 0.24f, 1.f },
@@ -183,6 +186,7 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_FLOAT(json_cfg, aim_smooth);
     JSON_SETTINGS_WRITE_FLOAT(json_cfg, aim_deg_threshold);
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_hitbox);
+    JSON_SETTINGS_WRITE_INT(json_cfg, aim_prio_rage_preset);
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_silent);
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_on_key);
     JSON_SETTINGS_WRITE_INT(json_cfg, aim_keycode);
@@ -242,6 +246,7 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_COL(json_cfg, col_team_red);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_team_blu);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_friend);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_rage);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_teammate);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_enemy);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_player_cond);
@@ -366,6 +371,7 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_FLOAT(json_cfg, aim_smooth);
     JSON_SETTINGS_READ_FLOAT(json_cfg, aim_deg_threshold);
     JSON_SETTINGS_READ_INT(json_cfg, aim_hitbox);
+    JSON_SETTINGS_READ_INT(json_cfg, aim_prio_rage_preset);
     JSON_SETTINGS_READ_INT(json_cfg, aim_silent);
     JSON_SETTINGS_READ_INT(json_cfg, aim_on_key);
     JSON_SETTINGS_READ_INT(json_cfg, aim_keycode);
@@ -425,6 +431,7 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_COL(json_cfg, col_team_red);
     JSON_SETTINGS_READ_COL(json_cfg, col_team_blu);
     JSON_SETTINGS_READ_COL(json_cfg, col_esp_friend);
+    JSON_SETTINGS_READ_COL(json_cfg, col_esp_rage);
     JSON_SETTINGS_READ_COL(json_cfg, col_esp_teammate);
     JSON_SETTINGS_READ_COL(json_cfg, col_esp_enemy);
     JSON_SETTINGS_READ_COL(json_cfg, col_esp_player_cond);

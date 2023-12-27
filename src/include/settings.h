@@ -83,6 +83,7 @@ typedef struct {
     float aim_smooth;
     float aim_deg_threshold;
     int aim_hitbox;
+    int aim_prio_rage_preset;
     int aim_silent;
     int aim_on_key;
     int aim_keycode;
@@ -144,6 +145,7 @@ typedef struct {
     struct nk_colorf col_team_red;
     struct nk_colorf col_team_blu;
     struct nk_colorf col_esp_friend;
+    struct nk_colorf col_esp_rage;
     struct nk_colorf col_esp_teammate;
     struct nk_colorf col_esp_enemy;
     struct nk_colorf col_esp_player_cond;

@@ -213,6 +213,7 @@ void esp(void) {
         return;
 
     rgba_t col_player_friend   = NK2COL(settings.col_esp_friend);
+    rgba_t col_player_rage     = NK2COL(settings.col_esp_rage);
     rgba_t col_player_teammate = NK2COL(settings.col_esp_teammate);
     rgba_t col_player_enemy    = NK2COL(settings.col_esp_enemy);
     rgba_t col_build_teammate  = NK2COL(settings.col_esp_build_teammate);
@@ -294,6 +295,7 @@ void esp(void) {
                     continue;
 
                 rgba_t col = plist_is_friend(plist_player) ? col_player_friend
+                             : plist_is_any_rage(plist_player) ? col_player_rage
                              : settings.esp_use_team_color
                                ? NK2COL(get_team_color(ent_teamnum))
                              : is_teammate ? col_player_teammate
