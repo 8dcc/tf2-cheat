@@ -357,6 +357,10 @@ void cache_reset(void) {
 
     g.localplayer = NULL;
     g.localweapon = NULL;
+
+    for (int i = 0; i < (int)LENGTH(g.playerlist); i++)
+        g.playerlist[i].is_good = false;
+
     for (int i = 0; i < (int)LENGTH(g.ents); i++)
         g.ents[i] = NULL;
 }
