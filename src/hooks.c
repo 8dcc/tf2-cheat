@@ -66,6 +66,10 @@ void h_LevelShutdown(BaseClient* thisptr) {
     /* Clear FrameStageNotify cache */
     cache_reset();
 
+    /* Mark playerlist as invalid */
+    for (int i = 0; i < (int)LENGTH(g.playerlist); i++)
+        g.playerlist[i].is_valid = false;
+
     /* Clear model index cache */
     for (int i = 0; i < MDLIDX_ARR_SZ; i++)
         g.mdl_idx[i] = -1;
