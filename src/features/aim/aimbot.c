@@ -76,23 +76,27 @@ static vec3_t get_closest_fov(vec3_t viewangles) {
         Entity* ent                  = g.ents[i];
         plist_player_t* plist_player = &g.playerlist[i];
 
+        if (!ent || !plist_player || !plist_player->is_good)
+            continue;
+
         /* TODO: Check for mp_friendlyfire for hitscan weapons */
-        if (!ent || !plist_player || !plist_player->is_good ||
-            IsTeammate(ent) || !METHOD(ent, IsAlive))
+        if (IsTeammate(ent))
+            continue;
+
+        if (!METHOD(ent, IsAlive))
             continue;
 
         Networkable* net = GetNetworkable(ent);
         if (METHOD(net, IsDormant))
             continue;
 
-        if (!settings.aim_target_invul && IsInvulnerable(ent))
-            continue;
-
         if (plist_player->is_ignored)
             continue;
 
-        if (!settings.aim_target_friends &&
-            (plist_player->is_steam_friend || plist_player->preset == FRIEND))
+        if (!settings.aim_target_invul && IsInvulnerable(ent))
+            continue;
+
+        if (!settings.aim_target_friends && plist_is_friend(plist_player))
             continue;
 
         if (!settings.aim_target_invisible && IsInvisible(ent))

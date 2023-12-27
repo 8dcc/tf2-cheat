@@ -45,4 +45,8 @@ static inline const char* plist_preset_name(enum EPlayerListPlayerPreset num) {
     }
 }
 
+static inline bool plist_is_friend(plist_player_t* player) {
+    return player->is_steam_friend || player->preset == FRIEND;
+}
+
 #endif /* PLAYERLIST_H_ */

@@ -108,15 +108,26 @@ static vec3_t get_melee_angle(void) {
 
     /* Store hitbox position of closest enemy */
     for (int i = 1; i <= g.MaxClients; i++) {
-        Entity* ent = g.ents[i];
+        Entity* ent                  = g.ents[i];
+        plist_player_t* plist_player = &g.playerlist[i];
 
-        if (!ent || IsTeammate(ent))
+        if (!ent || !plist_player || !plist_player->is_good)
+            continue;
+
+        if (!METHOD(ent, IsAlive) || IsTeammate(ent))
+            continue;
+
+        Networkable* net = GetNetworkable(ent);
+        if (METHOD(net, IsDormant))
+            continue;
+
+        if (plist_player->is_ignored)
             continue;
 
         if (!settings.aim_target_invul && IsInvulnerable(ent))
             continue;
 
-        if (!settings.aim_target_friends && IsSteamFriend(ent))
+        if (!settings.aim_target_friends && plist_is_friend(plist_player))
             continue;
 
         if (!settings.aim_target_invisible && IsInvisible(ent))

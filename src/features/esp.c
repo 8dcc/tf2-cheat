@@ -293,9 +293,7 @@ void esp(void) {
                 if (!get_bbox(ent, &x, &y, &w, &h))
                     continue;
 
-                rgba_t col = (plist_player->is_steam_friend ||
-                              plist_player->preset == FRIEND)
-                               ? col_player_friend
+                rgba_t col = plist_is_friend(plist_player) ? col_player_friend
                              : settings.esp_use_team_color
                                ? NK2COL(get_team_color(ent_teamnum))
                              : is_teammate ? col_player_teammate

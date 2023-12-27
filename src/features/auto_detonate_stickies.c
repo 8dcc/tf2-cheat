@@ -189,8 +189,10 @@ void auto_detonate_stickies(usercmd_t* cmd) {
         for (int j = 1; j <= g.MaxClients; j++) {
             Entity* player               = g.ents[j];
             plist_player_t* plist_player = &g.playerlist[j];
-            if (!player || !plist_player || !plist_player->is_good ||
-                IsTeammate(player) || !METHOD(player, IsAlive))
+            if (!player || !plist_player || !plist_player->is_good)
+                continue;
+
+            if (!METHOD(player, IsAlive))
                 continue;
 
             Networkable* net = GetNetworkable(player);
@@ -207,15 +209,14 @@ void auto_detonate_stickies(usercmd_t* cmd) {
                 if (IsTeammate(player))
                     continue;
 
-                if (!settings.aim_target_invul && IsInvulnerable(player))
-                    continue;
-
                 if (plist_player->is_ignored)
                     continue;
 
+                if (!settings.aim_target_invul && IsInvulnerable(player))
+                    continue;
+
                 if (!settings.aim_target_friends &&
-                    (plist_player->is_steam_friend ||
-                     plist_player->preset == FRIEND))
+                    plist_is_friend(plist_player))
                     continue;
 
                 if (!settings.aim_target_invisible && IsInvisible(player))
