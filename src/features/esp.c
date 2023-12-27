@@ -538,7 +538,7 @@ void esp(void) {
 
                 rgba_t col_sticky = settings.esp_sticky_use_team_color
                                       ? NK2COL(get_team_color(ent_teamnum))
-                                    : is_teammate ? col_build_teammate
+                                    : is_teammate ? col_sticky_teammate
                                                   : col_sticky_enemy;
 
                 generic_ent_name(ent, "Sticky", col_sticky);
