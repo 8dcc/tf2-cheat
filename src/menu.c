@@ -550,57 +550,53 @@ void menu_render(void) {
 /*----------------------------------------------------------------------------*/
 
 void playerlist_render(void) {
-    if (g.IsConnected) {
-        if (nk_begin(
-              ctx, "Playerlist",
-              nk_rect(PLAYERLIST_X, PLAYERLIST_Y, PLAYERLIST_W, PLAYERLIST_H),
-              PLAYERLIST_FLAGS)) {
+    if (!g.IsConnected)
+        return;
+
+    if (nk_begin(
+          ctx, "Playerlist",
+          nk_rect(PLAYERLIST_X, PLAYERLIST_Y, PLAYERLIST_W, PLAYERLIST_H),
+          PLAYERLIST_FLAGS)) {
+        /* Column names */
+        nk_layout_row_dynamic(ctx, 15, 5);
+        nk_label(ctx, "Player", NK_TEXT_CENTERED);
+        nk_label(ctx, "Class", NK_TEXT_CENTERED);
+        nk_label(ctx, "Preset", NK_TEXT_CENTERED);
+        nk_label(ctx, "Ignored", NK_TEXT_CENTERED);
+        nk_label(ctx, "Steam Friend", NK_TEXT_CENTERED);
+
+        /* TODO: Highlight titles more/add some kind of separator */
+
+        nk_layout_row_dynamic(ctx, 5, 1);
+        nk_spacing(ctx, 0); /* ----------------------------  */
+
+        static const char* preset_options[] = { "Unset", "Friend", "Soft Rage",
+                                                "Rage", "Max Rage" };
+        struct nk_vec2 drop_sz              = { COMBO_DROP_W, 200 };
+
+        /* Draw each row */
+        for (int i = 0; i < g.MaxClients; i++) {
+            /* Don't show local player, for now */
+            if (i == g.localidx)
+                continue;
+
+            plist_player_t* player = &g.playerlist[i];
+            Entity* ent            = g.ents[i];
+            if (!player || !player->is_good || !ent)
+                continue;
+
             nk_layout_row_dynamic(ctx, 15, 5);
-            nk_label(ctx, "Player", NK_TEXT_CENTERED);
-            nk_label(ctx, "Class", NK_TEXT_CENTERED);
-            nk_label(ctx, "Preset", NK_TEXT_CENTERED);
-            nk_label(ctx, "Ignored", NK_TEXT_CENTERED);
-            nk_label(ctx, "Steam Friend", NK_TEXT_CENTERED);
-            nk_layout_row_dynamic(ctx, 5, 1);
-            nk_spacing(ctx, 0); /* ----------------------------  */
-
-            static const char* playerlist_preset_options[] = {
-                "Unset", "Friend", "Soft Rage", "Rage", "Max Rage"
-            };
-            struct nk_vec2 size2 = { COMBO_DROP_W, 200 };
-            for (int i = 0; i < g.MaxClients; i++) {
-                const int ent_i = i + 1;
-                if (ent_i == g.localidx) {
-                    /* Don't render local player, might be an option in config
-                     * tho */
-                    continue;
-                }
-                const player_list_player_t* playerlist_player =
-                  &g.playerlist_players[i];
-                if (!playerlist_player || !playerlist_player->entity ||
-                    !playerlist_player->is_good) {
-                    continue;
-                }
-                nk_layout_row_dynamic(ctx, 15, 5);
-                nk_label(ctx, playerlist_player->player_info.name,
-                         NK_TEXT_CENTERED);
-                nk_label(ctx, GetClassName(playerlist_player->entity),
-                         NK_TEXT_CENTERED);
-                nk_combobox(ctx, playerlist_preset_options, 4,
-                            (int*)&playerlist_player->preset, 15, size2);
-                nk_checkbox_label(
-                  ctx, playerlist_player->should_be_ignored ? "true" : "false",
-                  (int*)&playerlist_player->should_be_ignored);
-                nk_label(
-                  ctx, playerlist_player->is_a_steam_friend ? "true" : "false",
-                  NK_TEXT_CENTERED);
-            }
+            nk_label(ctx, player->pinfo.name, NK_TEXT_CENTERED);
+            nk_label(ctx, GetClassName(ent), NK_TEXT_CENTERED);
+            nk_combobox(ctx, preset_options, 4, &player->preset, 15, drop_sz);
+            nk_checkbox_label(ctx, player->is_ignored ? "true" : "false",
+                              (int*)&player->is_ignored);
+            nk_label(ctx, player->is_steam_friend ? "true" : "false",
+                     NK_TEXT_CENTERED);
         }
-        nk_end(ctx);
     }
+    nk_end(ctx);
 }
-
-/*----------------------------------------------------------------------------*/
 
 /*----------------------------------------------------------------------------*/
 
