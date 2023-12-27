@@ -408,8 +408,8 @@ static inline void tab_colors(void) {
     nk_label(ctx, "Friendly building ESP", NK_TEXT_CENTERED);
     nk_label(ctx, "Enemy building ESP", NK_TEXT_CENTERED);
     nk_layout_row_dynamic(ctx, COLOR_PICKER_H, 2);
-    COLOR_PICKER(settings.col_esp_teammate_build);
-    COLOR_PICKER(settings.col_esp_enemy_build);
+    COLOR_PICKER(settings.col_esp_build_teammate);
+    COLOR_PICKER(settings.col_esp_build_enemy);
 
     nk_layout_row_dynamic(ctx, 15, 2);
     nk_label(ctx, "Friendly sticky ESP", NK_TEXT_CENTERED);
@@ -590,7 +590,7 @@ void playerlist_render(void) {
             nk_label(ctx, GetClassName(ent), NK_TEXT_CENTERED);
             nk_combobox(ctx, preset_options, 4, &player->preset, 15, drop_sz);
             nk_checkbox_label(ctx, player->is_ignored ? "true" : "false",
-                              (int*)&player->is_ignored);
+                              (nk_bool*)&player->is_ignored);
             nk_label(ctx, player->is_steam_friend ? "true" : "false",
                      NK_TEXT_CENTERED);
         }
