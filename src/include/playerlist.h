@@ -49,4 +49,9 @@ static inline bool plist_is_friend(plist_player_t* player) {
     return player->is_steam_friend || player->preset == FRIEND;
 }
 
+static inline bool plist_is_any_rage(plist_player_t* player) {
+    return player->preset == SOFT_RAGE || player->preset == RAGE ||
+           player->preset == MAX_RAGE;
+}
+
 #endif /* PLAYERLIST_H_ */
