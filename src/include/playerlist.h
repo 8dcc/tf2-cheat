@@ -24,13 +24,13 @@ const char* plist_preset_to_str(enum EPlayerListPlayerPreset preset);
 typedef struct {
     /* Updated every tick */
     Entity* ent;
-    bool is_steam_friend;
     player_info_t pinfo;
+    bool is_steam_friend;
     /* TODO: is_a_party_member */
 
     /* Can be set through playerlist menu */
+    int preset;
     bool is_ignored;
-    enum EPlayerListPlayerPreset preset;
 
     /* Should be true before processing the struct */
     bool is_good;
