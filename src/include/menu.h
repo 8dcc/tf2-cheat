@@ -22,6 +22,8 @@
 #define MAX_VERTEX_MEMORY  512 * 1024
 #define MAX_ELEMENT_MEMORY 128 * 1024
 
+/* TODO: Check if menu/playerlist is out of window size */
+
 #define MENU_X 100
 #define MENU_Y 100
 #define MENU_W 450
@@ -31,6 +33,11 @@
 #define WATERMARK_Y 5
 #define WATERMARK_W 115
 #define WATERMARK_H 20
+
+#define PLAYERLIST_X 700
+#define PLAYERLIST_Y 100
+#define PLAYERLIST_W 550
+#define PLAYERLIST_H 250
 
 #define SPECLIST_W 150
 #define SPECLIST_X 5
@@ -48,6 +55,7 @@ extern bool menu_open;
 
 bool menu_init(SDL_Window* window);
 void menu_render(void);
+void playerlist_render(void);
 void watermark_render(void);
 
 #endif /* MENU_H_ */

@@ -22,3 +22,19 @@ void playerlist_print_all(usercmd_t* cmd) {
         printf("PlayerList END: (TICK %d)", cmd->tick_count);
     }
 }
+
+const char* player_list_preset_to_const_char(
+  const enum PLAYER_LIST_PLAYER_PRESET preset) {
+    switch (preset) {
+        case UNSET:
+            return PLAYER_LIST_PRESET_CCHAR_UNSET;
+        case FRIEND:
+            return PLAYER_LIST_PRESET_CCHAR_FRIEND;
+        case SOFT_RAGE:
+            return PLAYER_LIST_PRESET_CCHAR_SOFT_RAGE;
+        case RAGE:
+            return PLAYER_LIST_PRESET_CCHAR_RAGE;
+        case MAX_RAGE:
+            return PLAYER_LIST_PRESET_CCHAR_MAX_RAGE;
+    }
+}

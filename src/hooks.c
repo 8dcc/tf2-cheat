@@ -134,7 +134,7 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
         METHOD_ARGS(i_engine, SetViewAngles, &cmd->viewangles);
 
     // playerlist_full_update();
-    playerlist_print_all(cmd);
+    // playerlist_print_all(cmd);
     nopush();
     thirdperson();
     bhop(cmd);
@@ -372,8 +372,10 @@ void h_SwapWindow(SDL_Window* window) {
         if (settings.watermark)
             watermark_render();
 
-        if (menu_open)
+        if (menu_open) {
             menu_render();
+            playerlist_render();
+        }
 
         nk_sdl_render(NK_ANTI_ALIASING_ON, MAX_VERTEX_MEMORY,
                       MAX_ELEMENT_MEMORY);

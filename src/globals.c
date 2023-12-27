@@ -411,6 +411,8 @@ void cache_update(void) {
                 /* Update info about this player that we just received */
                 old_playerlist_player->is_a_steam_friend = is_a_steam_friend;
                 old_playerlist_player->player_info       = player_info;
+                /* Updating this just to be sure */
+                old_playerlist_player->entity = ent;
             } else {
                 /* Update all info about this player */
                 g.playerlist_players[player_i] = (player_list_player_t){
@@ -422,7 +424,8 @@ void cache_update(void) {
                     .preset = UNSET,               // TODO: Get
                                                    // from
                                                    // database
-                    .is_good = true
+                    .is_good = true,
+                    .entity  = ent
                 };
             }
             if (ignore_this_entity) {
