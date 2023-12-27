@@ -568,32 +568,27 @@ void playerlist_render(void) {
                 "Unset", "Friend", "Soft Rage", "Rage", "Max Rage"
             };
             struct nk_vec2 size2 = { COMBO_DROP_W, 200 };
-            for (int i = 0; i < g.MaxClients; i++) {
-                const int ent_i = i + 1;
-                if (ent_i == g.localidx) {
+            for (int i = 1; i < g.MaxClients; i++) {
+                if (i == g.localidx) {
                     /* Don't render local player, might be an option in config
                      * tho */
                     continue;
                 }
-                const player_list_player_t* playerlist_player =
-                  &g.playerlist_players[i];
-                if (!playerlist_player || !playerlist_player->entity ||
-                    !playerlist_player->is_good) {
+                Entity* ent                  = g.ents[i];
+                plist_player_t* plist_player = &g.playerlist[i];
+                if (!ent || !plist_player || !plist_player->is_good) {
                     continue;
                 }
                 nk_layout_row_dynamic(ctx, 15, 5);
-                nk_label(ctx, playerlist_player->player_info.name,
-                         NK_TEXT_CENTERED);
-                nk_label(ctx, GetClassName(playerlist_player->entity),
-                         NK_TEXT_CENTERED);
+                nk_label(ctx, plist_player->pinfo.name, NK_TEXT_CENTERED);
+                nk_label(ctx, GetClassName(ent), NK_TEXT_CENTERED);
                 nk_combobox(ctx, playerlist_preset_options, 4,
-                            (int*)&playerlist_player->preset, 15, size2);
-                nk_checkbox_label(
-                  ctx, playerlist_player->should_be_ignored ? "true" : "false",
-                  (int*)&playerlist_player->should_be_ignored);
-                nk_label(
-                  ctx, playerlist_player->is_a_steam_friend ? "true" : "false",
-                  NK_TEXT_CENTERED);
+                            &plist_player->preset, 15, size2);
+                nk_checkbox_label(ctx,
+                                  plist_player->is_ignored ? "true" : "false",
+                                  (nk_bool*)&plist_player->is_ignored);
+                nk_label(ctx, plist_player->is_steam_friend ? "true" : "false",
+                         NK_TEXT_CENTERED);
             }
         }
         nk_end(ctx);
