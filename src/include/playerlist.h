@@ -48,4 +48,6 @@ static inline bool plist_is_rage(plist_player_t* player) {
     return player->preset == SOFT_RAGE || player->preset == RAGE;
 }
 
+void plist_print_all(void);
+
 #endif /* PLAYERLIST_H_ */
