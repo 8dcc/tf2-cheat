@@ -237,10 +237,10 @@ static inline void tab_aim(void) {
     nk_combobox(ctx, opts0, 4, &settings.aim_hitbox, 15, size0);
 
     nk_layout_row_dynamic(ctx, COMBOBOX_H, 2);
-    static const char* opts1[] = { "Soft Rage", "Rage", "Max Rage" };
+    static const char* opts1[] = { "Soft rage & Rage", "Rage" };
     struct nk_vec2 size1       = { COMBO_DROP_W, 200 };
-    nk_label(ctx, "Aimbot prioritise starting with", NK_TEXT_LEFT);
-    nk_combobox(ctx, opts1, 3, &settings.aim_prio_rage_preset, 15, size1);
+    nk_label(ctx, "Aimbot priority", NK_TEXT_LEFT);
+    nk_combobox(ctx, opts1, 2, &settings.aim_prio_rage_preset, 15, size1);
 
     nk_layout_row_dynamic(ctx, 15, 1);
     nk_checkbox_label(ctx, "Silent", &settings.aim_silent);
@@ -556,15 +556,11 @@ void menu_render(void) {
 /*----------------------------------------------------------------------------*/
 
 void playerlist_render(void) {
+    /* TODO: Don't render the menu if we are not connected/list is empty */
     if (nk_begin(
           ctx, "Playerlist",
           nk_rect(PLAYERLIST_X, PLAYERLIST_Y, PLAYERLIST_W, PLAYERLIST_H),
           PLAYERLIST_FLAGS)) {
-        if (!g.IsConnected) {
-            nk_end(ctx);
-            return;
-        }
-
         /* Column names */
         nk_layout_row_dynamic(ctx, 15, 5);
         nk_label(ctx, "Player", NK_TEXT_CENTERED);
@@ -588,6 +584,9 @@ void playerlist_render(void) {
         /* TODO: Fix width when the layout is finished */
         struct nk_vec2 drop_sz = { COMBO_DROP_W, 200 };
 
+        /* FIXME: Fix stuttering when rendering the items. It's related to the
+         * list itself. */
+
         /* Draw each row */
         for (int i = 0; i < g.MaxClients; i++) {
             /* Don't show local player, for now */
@@ -604,7 +603,7 @@ void playerlist_render(void) {
             nk_label(ctx, GetClassName(ent), NK_TEXT_CENTERED);
             nk_combobox(ctx, preset_options, 5, &player->preset, 15, drop_sz);
             nk_checkbox_label(ctx, player->is_ignored ? "true" : "false",
-                              (nk_bool*)&player->is_ignored);
+                              &player->is_ignored);
 
             /* TODO: Change color name instead of column */
             nk_label(ctx, player->is_steam_friend ? "true" : "false",

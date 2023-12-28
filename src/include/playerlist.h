@@ -13,15 +13,15 @@ enum EPlayerListPlayerPreset {
 typedef struct {
     /* Updated every tick */
     player_info_t pinfo;
-    bool is_steam_friend;
-    /* TODO: is_a_party_member */
+    int is_steam_friend;
+    /* TODO: is_party_member */
 
     /* Can be set through playerlist menu */
     int preset;
-    bool is_ignored;
+    int is_ignored;
 
     /* Should be true before processing the struct */
-    bool is_valid;
+    int is_valid;
 } plist_player_t;
 
 /*----------------------------------------------------------------------------*/
