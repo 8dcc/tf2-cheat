@@ -556,13 +556,15 @@ void menu_render(void) {
 /*----------------------------------------------------------------------------*/
 
 void playerlist_render(void) {
-    if (!g.IsConnected)
-        return;
-
     if (nk_begin(
           ctx, "Playerlist",
           nk_rect(PLAYERLIST_X, PLAYERLIST_Y, PLAYERLIST_W, PLAYERLIST_H),
           PLAYERLIST_FLAGS)) {
+        if (!g.IsConnected) {
+            nk_end(ctx);
+            return;
+        }
+
         /* Column names */
         nk_layout_row_dynamic(ctx, 15, 5);
         nk_label(ctx, "Player", NK_TEXT_CENTERED);
@@ -576,9 +578,15 @@ void playerlist_render(void) {
         nk_layout_row_dynamic(ctx, 5, 1);
         nk_spacing(ctx, 0); /* ----------------------------  */
 
-        static const char* preset_options[] = { "Unset", "Friend", "Soft Rage",
-                                                "Rage", "Max Rage" };
-        struct nk_vec2 drop_sz              = { COMBO_DROP_W, 200 };
+        static const char* preset_options[] = {
+            "Unset",
+            "Friend",
+            "Soft Rage",
+            "Rage",
+        };
+
+        /* TODO: Fix width when the layout is finished */
+        struct nk_vec2 drop_sz = { COMBO_DROP_W, 200 };
 
         /* Draw each row */
         for (int i = 0; i < g.MaxClients; i++) {
@@ -597,6 +605,8 @@ void playerlist_render(void) {
             nk_combobox(ctx, preset_options, 5, &player->preset, 15, drop_sz);
             nk_checkbox_label(ctx, player->is_ignored ? "true" : "false",
                               (nk_bool*)&player->is_ignored);
+
+            /* TODO: Change color name instead of column */
             nk_label(ctx, player->is_steam_friend ? "true" : "false",
                      NK_TEXT_CENTERED);
         }
