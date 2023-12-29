@@ -560,6 +560,7 @@ void menu_render(void) {
 /*----------------------------------------------------------------------------*/
 
 void playerlist_render(void) {
+    /* See g.ents[] note bellow */
     if (!METHOD(i_engine, IsConnected))
         return;
 
@@ -605,7 +606,7 @@ void playerlist_render(void) {
 
             nk_layout_row_dynamic(ctx, 15, 4);
             nk_label(ctx, player->pinfo.name, NK_TEXT_CENTERED);
-            nk_combobox(ctx, preset_options, 5, &player->preset, 15, drop_sz);
+            nk_combobox(ctx, preset_options, 4, &player->preset, 15, drop_sz);
 
             if (player->is_ignored)
                 SET_BUTTON_TEXT_COLOR(nk_rgba(76, 175, 80, 255));
