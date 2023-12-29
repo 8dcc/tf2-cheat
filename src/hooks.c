@@ -104,8 +104,10 @@ void h_FrameStageNotify(BaseClient* thisptr, ClientFrameStage_t curStage) {
 
     switch (curStage) {
         case FRAME_NET_UPDATE_START:
-            /* Reset because we don't want to cache a removed pointer */
-            cache_reset();
+            /* NOTE: We could reset the cache here, but since we are using it in
+             * playerlist_render(), and it's hooked to SDL (so it draws
+             * depending on the framerate), we could be drawing in a frame where
+             * the cache is cleared. */
             break;
         case FRAME_NET_UPDATE_END:
             /* Cache information for the rest of the cheat */

@@ -384,13 +384,13 @@ void cache_update(void) {
         for (int i = 1; i <= g.MaxClients; i++) {
             Entity* ent = METHOD_ARGS(i_entitylist, GetClientEntity, i);
 
+            /* Store in global entity cache */
+            g.ents[i] = ent;
+
             if (!ent) {
                 g.playerlist[i].is_valid = false;
                 continue;
             }
-
-            /* Store in global entity cache */
-            g.ents[i] = ent;
 
             /* Information about this player for the playerlist */
             const bool is_steam_friend = IsSteamFriend(ent);
@@ -433,9 +433,12 @@ void cache_update(void) {
             Entity* ent      = METHOD_ARGS(i_entitylist, GetClientEntity, i);
             Networkable* net = GetNetworkable(ent);
 
-            /* TODO: Remove IsDormant */
-            if (!ent || METHOD(net, IsDormant))
+            /* TODO: Remove this conditional entirelly once we know we are
+             * checking for IsDormant everywhere? */
+            if (ent && METHOD(net, IsDormant)) {
+                g.ents[i] = NULL;
                 continue;
+            }
 
             g.ents[i] = ent;
         }
