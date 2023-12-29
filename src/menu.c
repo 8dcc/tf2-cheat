@@ -26,17 +26,21 @@ static inline void free_configs(char* config_list[MAX_CFGS], int config_num);
 #define COMBOBOX_H     17
 #define COMBO_DROP_W   ((MENU_W - 21) / 2 - 3)
 
-#define RESET_BUTTON_COLOR()                                           \
-    ctx->style.button.normal.data.color = nk_rgba(50, 50, 50, 255);    \
-    ctx->style.button.hover.data.color  = nk_rgba(40, 40, 40, 255);    \
-    ctx->style.button.text_normal       = nk_rgba(175, 175, 175, 255); \
-    ctx->style.button.text_hover        = nk_rgba(175, 175, 175, 255); \
-    ctx->style.button.text_active       = nk_rgba(175, 175, 175, 255);
+#define RESET_BUTTON_COLOR()                                               \
+    do {                                                                   \
+        ctx->style.button.normal.data.color = nk_rgba(50, 50, 50, 255);    \
+        ctx->style.button.hover.data.color  = nk_rgba(40, 40, 40, 255);    \
+        ctx->style.button.text_normal       = nk_rgba(175, 175, 175, 255); \
+        ctx->style.button.text_hover        = nk_rgba(175, 175, 175, 255); \
+        ctx->style.button.text_active       = nk_rgba(175, 175, 175, 255); \
+    } while (0)
 
-#define SET_BUTTON_TEXT_COLOR(col)       \
-    ctx->style.button.text_normal = col; \
-    ctx->style.button.text_hover  = col; \
-    ctx->style.button.text_active = col;
+#define SET_BUTTON_TEXT_COLOR(col)           \
+    do {                                     \
+        ctx->style.button.text_normal = col; \
+        ctx->style.button.text_hover  = col; \
+        ctx->style.button.text_active = col; \
+    } while (0)
 
 #define CHECK_TAB_COLOR(idx)                                            \
     if (idx == cur_tab) {                                               \
@@ -556,15 +560,17 @@ void menu_render(void) {
 /*----------------------------------------------------------------------------*/
 
 void playerlist_render(void) {
-    /* TODO: Don't render the menu if we are not connected/list is empty */
+    if (!METHOD(i_engine, IsConnected))
+        return;
+
+    /* Don't render the menu if we are not connected */
     if (nk_begin(
           ctx, "Playerlist",
           nk_rect(PLAYERLIST_X, PLAYERLIST_Y, PLAYERLIST_W, PLAYERLIST_H),
           PLAYERLIST_FLAGS)) {
         /* Column names */
-        nk_layout_row_dynamic(ctx, 15, 5);
+        nk_layout_row_dynamic(ctx, 15, 4);
         nk_label(ctx, "Player", NK_TEXT_CENTERED);
-        nk_label(ctx, "Class", NK_TEXT_CENTERED);
         nk_label(ctx, "Preset", NK_TEXT_CENTERED);
         nk_label(ctx, "Ignored", NK_TEXT_CENTERED);
         nk_label(ctx, "Steam Friend", NK_TEXT_CENTERED);
@@ -584,29 +590,31 @@ void playerlist_render(void) {
         /* TODO: Fix width when the layout is finished */
         struct nk_vec2 drop_sz = { COMBO_DROP_W, 200 };
 
-        /* FIXME: Fix stuttering when rendering the items. It's related to the
-         * list itself. */
-
         /* Draw each row */
         for (int i = 0; i < g.MaxClients; i++) {
             /* Don't show local player, for now */
             if (i == g.localidx)
                 continue;
 
+            /* NOTE: We can't access entities from g.ents[] because we clear
+             * them in FRAME_NET_UPDATE_START and set them back in
+             * FRAME_NET_UPDATE_END. */
             plist_player_t* player = &g.playerlist[i];
-            Entity* ent            = g.ents[i];
-            if (!player || !player->is_valid || !ent)
+            if (!player->is_valid)
                 continue;
 
-            nk_layout_row_dynamic(ctx, 15, 5);
+            nk_layout_row_dynamic(ctx, 15, 4);
             nk_label(ctx, player->pinfo.name, NK_TEXT_CENTERED);
-            nk_label(ctx, GetClassName(ent), NK_TEXT_CENTERED);
             nk_combobox(ctx, preset_options, 5, &player->preset, 15, drop_sz);
-            nk_checkbox_label(ctx, player->is_ignored ? "true" : "false",
-                              &player->is_ignored);
+
+            if (player->is_ignored)
+                SET_BUTTON_TEXT_COLOR(nk_rgba(76, 175, 80, 255));
+            if (nk_button_label(ctx, player->is_ignored ? "True" : "False"))
+                player->is_ignored = !player->is_ignored;
+            RESET_BUTTON_COLOR();
 
             /* TODO: Change color name instead of column */
-            nk_label(ctx, player->is_steam_friend ? "true" : "false",
+            nk_label(ctx, player->is_steam_friend ? "True" : "False",
                      NK_TEXT_CENTERED);
         }
     }
