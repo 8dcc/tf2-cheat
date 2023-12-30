@@ -26,7 +26,7 @@
 #define GET_SIGNATURE(VAR, MODULE, SIG)            \
     void* VAR = find_sig(MODULE, SIG);             \
     if (!VAR) {                                    \
-        ERR("Coundn't match signature for " #SIG); \
+        ERR("Couldnt match signature for " #SIG); \
         return false;                              \
     }
 
