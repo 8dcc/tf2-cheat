@@ -70,7 +70,7 @@ void chams(ModelRender* thisptr, const DrawModelState_t* state,
         /* Are chams enabled for this player's team? */
         if (settings.chams_player != SETT_ALL &&
             ((settings.chams_player == SETT_ENEMY && is_teammate) ||
-             (settings.chams_player == SETT_FRIEND && !is_teammate)))
+             (settings.chams_player == SETT_TMATE && !is_teammate)))
             return;
 
         /* We don't want to render invisible enemy spies */
@@ -79,7 +79,7 @@ void chams(ModelRender* thisptr, const DrawModelState_t* state,
 
         struct nk_colorf vis_col = (settings.chams_player_use_team_color)
                                      ? get_team_color(ent_teamnum)
-                                   : (is_teammate) ? settings.col_chams_friend
+                                   : (is_teammate) ? settings.col_chams_tmate
                                                    : settings.col_chams_enemy;
 
         /* Invisible player chams */
@@ -138,13 +138,13 @@ void chams(ModelRender* thisptr, const DrawModelState_t* state,
             /* Are chams enabled for this player's team? */
             if (settings.chams_player != SETT_ALL &&
                 ((settings.chams_player == SETT_ENEMY && is_teammate) ||
-                 (settings.chams_player == SETT_FRIEND && !is_teammate)))
+                 (settings.chams_player == SETT_TMATE && !is_teammate)))
                 return;
 
             struct nk_colorf player_col = (settings.chams_player_use_team_color)
                                             ? get_team_color(ent_teamnum)
                                           : (is_teammate)
-                                            ? settings.col_chams_friend
+                                            ? settings.col_chams_tmate
                                             : settings.col_chams_enemy;
 
             override_material(WPN_IGNOREZ, WPN_WIREFRAME, player_col,

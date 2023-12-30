@@ -109,20 +109,20 @@ Settings settings = {
     .antiafk            = false,
 
     /* Colors */
-    .col_team_red          = (struct nk_colorf){ 0.62f, 0.19f, 0.18f, 1.f },
-    .col_team_blu          = (struct nk_colorf){ 0.22f, 0.36f, 0.47f, 1.f },
-    .col_esp_steam_friend  = (struct nk_colorf){ 0.21f, 0.77f, 0.23f, 1.f },
-    .col_esp_friend        = (struct nk_colorf){ 0.05f, 0.47f, 0.95f, 1.f },
-    .col_esp_enemy         = (struct nk_colorf){ 0.95f, 0.10f, 0.09f, 1.f },
-    .col_esp_player_cond   = (struct nk_colorf){ 1.00f, 0.95f, 0.24f, 1.f },
-    .col_esp_friend_build  = (struct nk_colorf){ 0.29f, 0.07f, 0.54f, 1.f },
-    .col_esp_enemy_build   = (struct nk_colorf){ 0.90f, 0.31f, 0.00f, 1.f },
-    .col_esp_sticky_friend = (struct nk_colorf){ 0.05f, 0.47f, 0.95f, 1.f },
-    .col_esp_sticky_enemy  = (struct nk_colorf){ 0.95f, 0.10f, 0.09f, 1.f },
-    .col_esp_ammobox       = (struct nk_colorf){ 0.55f, 0.43f, 0.38f, 1.f },
-    .col_esp_healthpack    = (struct nk_colorf){ 0.40f, 0.73f, 0.41f, 1.f },
+    .col_team_red         = (struct nk_colorf){ 0.62f, 0.19f, 0.18f, 1.f },
+    .col_team_blu         = (struct nk_colorf){ 0.22f, 0.36f, 0.47f, 1.f },
+    .col_esp_steam_friend = (struct nk_colorf){ 0.21f, 0.77f, 0.23f, 1.f },
+    .col_esp_tmate        = (struct nk_colorf){ 0.05f, 0.47f, 0.95f, 1.f },
+    .col_esp_enemy        = (struct nk_colorf){ 0.95f, 0.10f, 0.09f, 1.f },
+    .col_esp_player_cond  = (struct nk_colorf){ 1.00f, 0.95f, 0.24f, 1.f },
+    .col_esp_build_tmate  = (struct nk_colorf){ 0.29f, 0.07f, 0.54f, 1.f },
+    .col_esp_build_enemy  = (struct nk_colorf){ 0.90f, 0.31f, 0.00f, 1.f },
+    .col_esp_sticky_tmate = (struct nk_colorf){ 0.05f, 0.47f, 0.95f, 1.f },
+    .col_esp_sticky_enemy = (struct nk_colorf){ 0.95f, 0.10f, 0.09f, 1.f },
+    .col_esp_ammobox      = (struct nk_colorf){ 0.55f, 0.43f, 0.38f, 1.f },
+    .col_esp_healthpack   = (struct nk_colorf){ 0.40f, 0.73f, 0.41f, 1.f },
 
-    .col_chams_friend = (struct nk_colorf){ 0.47f, 0.77f, 0.90f, 1.f },
+    .col_chams_tmate  = (struct nk_colorf){ 0.47f, 0.77f, 0.90f, 1.f },
     .col_chams_enemy  = (struct nk_colorf){ 0.87f, 0.34f, 0.34f, 1.f },
     .col_chams_local  = (struct nk_colorf){ 0.88f, 0.74f, 0.90f, 1.f },
     .col_chams_weapon = (struct nk_colorf){ 0.80f, 0.57f, 0.84f, 1.f },
@@ -242,16 +242,16 @@ void save_config(const char* filename) {
     JSON_SETTINGS_WRITE_COL(json_cfg, col_team_red);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_team_blu);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_steam_friend);
-    JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_friend);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_tmate);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_enemy);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_player_cond);
-    JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_friend_build);
-    JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_enemy_build);
-    JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_sticky_friend);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_build_tmate);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_build_enemy);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_sticky_tmate);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_sticky_enemy);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_ammobox);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_esp_healthpack);
-    JSON_SETTINGS_WRITE_COL(json_cfg, col_chams_friend);
+    JSON_SETTINGS_WRITE_COL(json_cfg, col_chams_tmate);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_chams_enemy);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_chams_local);
     JSON_SETTINGS_WRITE_COL(json_cfg, col_chams_weapon);
@@ -425,16 +425,16 @@ void load_config(const char* filename) {
     JSON_SETTINGS_READ_COL(json_cfg, col_team_red);
     JSON_SETTINGS_READ_COL(json_cfg, col_team_blu);
     JSON_SETTINGS_READ_COL(json_cfg, col_esp_steam_friend);
-    JSON_SETTINGS_READ_COL(json_cfg, col_esp_friend);
+    JSON_SETTINGS_READ_COL(json_cfg, col_esp_tmate);
     JSON_SETTINGS_READ_COL(json_cfg, col_esp_enemy);
     JSON_SETTINGS_READ_COL(json_cfg, col_esp_player_cond);
-    JSON_SETTINGS_READ_COL(json_cfg, col_esp_friend_build);
-    JSON_SETTINGS_READ_COL(json_cfg, col_esp_enemy_build);
-    JSON_SETTINGS_READ_COL(json_cfg, col_esp_sticky_friend);
+    JSON_SETTINGS_READ_COL(json_cfg, col_esp_build_tmate);
+    JSON_SETTINGS_READ_COL(json_cfg, col_esp_build_enemy);
+    JSON_SETTINGS_READ_COL(json_cfg, col_esp_sticky_tmate);
     JSON_SETTINGS_READ_COL(json_cfg, col_esp_sticky_enemy);
     JSON_SETTINGS_READ_COL(json_cfg, col_esp_ammobox);
     JSON_SETTINGS_READ_COL(json_cfg, col_esp_healthpack);
-    JSON_SETTINGS_READ_COL(json_cfg, col_chams_friend);
+    JSON_SETTINGS_READ_COL(json_cfg, col_chams_tmate);
     JSON_SETTINGS_READ_COL(json_cfg, col_chams_enemy);
     JSON_SETTINGS_READ_COL(json_cfg, col_chams_local);
     JSON_SETTINGS_READ_COL(json_cfg, col_chams_weapon);

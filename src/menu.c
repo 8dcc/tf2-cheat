@@ -22,17 +22,21 @@ static inline void free_configs(char* config_list[MAX_CFGS], int config_num);
 #define COMBOBOX_H     17
 #define COMBO_DROP_W   ((MENU_W - 21) / 2 - 3)
 
-#define RESET_BUTTON_COLOR()                                           \
-    ctx->style.button.normal.data.color = nk_rgba(50, 50, 50, 255);    \
-    ctx->style.button.hover.data.color  = nk_rgba(40, 40, 40, 255);    \
-    ctx->style.button.text_normal       = nk_rgba(175, 175, 175, 255); \
-    ctx->style.button.text_hover        = nk_rgba(175, 175, 175, 255); \
-    ctx->style.button.text_active       = nk_rgba(175, 175, 175, 255);
+#define RESET_BUTTON_COLOR()                                               \
+    do {                                                                   \
+        ctx->style.button.normal.data.color = nk_rgba(50, 50, 50, 255);    \
+        ctx->style.button.hover.data.color  = nk_rgba(40, 40, 40, 255);    \
+        ctx->style.button.text_normal       = nk_rgba(175, 175, 175, 255); \
+        ctx->style.button.text_hover        = nk_rgba(175, 175, 175, 255); \
+        ctx->style.button.text_active       = nk_rgba(175, 175, 175, 255); \
+    } while (0)
 
-#define SET_BUTTON_TEXT_COLOR(col)       \
-    ctx->style.button.text_normal = col; \
-    ctx->style.button.text_hover  = col; \
-    ctx->style.button.text_active = col;
+#define SET_BUTTON_TEXT_COLOR(col)           \
+    do {                                     \
+        ctx->style.button.text_normal = col; \
+        ctx->style.button.text_hover  = col; \
+        ctx->style.button.text_active = col; \
+    } while (0)
 
 #define CHECK_TAB_COLOR(idx)                                            \
     if (idx == cur_tab) {                                               \
@@ -152,7 +156,7 @@ static void set_style(void) {
 
 static inline void tab_esp(void) {
     nk_layout_row_dynamic(ctx, COMBOBOX_H, 2);
-    static const char* opts0[] = { "Off", "Friendly", "Enemies", "All" };
+    static const char* opts0[] = { "Off", "Teammates", "Enemies", "All" };
     struct nk_vec2 size0       = { COMBO_DROP_W, 200 };
     nk_label(ctx, "Player ESP", NK_TEXT_LEFT);
     nk_combobox(ctx, opts0, 4, &settings.esp_player, 15, size0);
@@ -172,7 +176,7 @@ static inline void tab_esp(void) {
     nk_spacing(ctx, 0); /* ----------------------------  */
     nk_layout_row_dynamic(ctx, COMBOBOX_H, 2);
 
-    static const char* opts1[] = { "Off", "Friendly", "Enemies", "All" };
+    static const char* opts1[] = { "Off", "Teammates", "Enemies", "All" };
     struct nk_vec2 size1       = { COMBO_DROP_W, 200 };
     nk_label(ctx, "Building ESP", NK_TEXT_LEFT);
     nk_combobox(ctx, opts1, 4, &settings.esp_building, 15, size1);
@@ -194,7 +198,7 @@ static inline void tab_esp(void) {
     nk_spacing(ctx, 0); /* ----------------------------  */
     nk_layout_row_dynamic(ctx, COMBOBOX_H, 2);
 
-    static const char* opts3[] = { "Off", "Friendly", "Enemies", "All" };
+    static const char* opts3[] = { "Off", "Teammates", "Enemies", "All" };
     struct nk_vec2 size3       = { COMBO_DROP_W, 200 };
     nk_label(ctx, "Stickybomb ESP", NK_TEXT_LEFT);
     nk_combobox(ctx, opts3, 4, &settings.esp_sticky, 15, size3);
@@ -267,7 +271,7 @@ static inline void tab_aim(void) {
 
 static inline void tab_visuals(void) {
     nk_layout_row_dynamic(ctx, COMBOBOX_H, 2);
-    static const char* opts1[] = { "Off", "Friendly", "Enemies", "All" };
+    static const char* opts1[] = { "Off", "Teammates", "Enemies", "All" };
     struct nk_vec2 size1       = { COMBO_DROP_W, 200 };
     nk_label(ctx, "Player chams", NK_TEXT_LEFT);
     nk_combobox(ctx, opts1, 4, &settings.chams_player, 15, size1);
@@ -395,24 +399,24 @@ static inline void tab_colors(void) {
 
     /* Esp colors */
     nk_layout_row_dynamic(ctx, 15, 2);
-    nk_label(ctx, "Friendly player ESP", NK_TEXT_CENTERED);
+    nk_label(ctx, "Teammate player ESP", NK_TEXT_CENTERED);
     nk_label(ctx, "Enemy player ESP", NK_TEXT_CENTERED);
     nk_layout_row_dynamic(ctx, COLOR_PICKER_H, 2);
-    COLOR_PICKER(settings.col_esp_friend);
+    COLOR_PICKER(settings.col_esp_tmate);
     COLOR_PICKER(settings.col_esp_enemy);
 
     nk_layout_row_dynamic(ctx, 15, 2);
-    nk_label(ctx, "Friendly building ESP", NK_TEXT_CENTERED);
+    nk_label(ctx, "Teammate building ESP", NK_TEXT_CENTERED);
     nk_label(ctx, "Enemy building ESP", NK_TEXT_CENTERED);
     nk_layout_row_dynamic(ctx, COLOR_PICKER_H, 2);
-    COLOR_PICKER(settings.col_esp_friend_build);
-    COLOR_PICKER(settings.col_esp_enemy_build);
+    COLOR_PICKER(settings.col_esp_build_tmate);
+    COLOR_PICKER(settings.col_esp_build_enemy);
 
     nk_layout_row_dynamic(ctx, 15, 2);
-    nk_label(ctx, "Friendly sticky ESP", NK_TEXT_CENTERED);
+    nk_label(ctx, "Teammate sticky ESP", NK_TEXT_CENTERED);
     nk_label(ctx, "Enemy sticky ESP", NK_TEXT_CENTERED);
     nk_layout_row_dynamic(ctx, COLOR_PICKER_H, 2);
-    COLOR_PICKER(settings.col_esp_sticky_friend);
+    COLOR_PICKER(settings.col_esp_sticky_tmate);
     COLOR_PICKER(settings.col_esp_sticky_enemy);
 
     nk_layout_row_dynamic(ctx, 15, 2);
@@ -431,10 +435,10 @@ static inline void tab_colors(void) {
 
     /* Chams colors */
     nk_layout_row_dynamic(ctx, 15, 2);
-    nk_label(ctx, "Friendly player chams", NK_TEXT_CENTERED);
+    nk_label(ctx, "Teammate player chams", NK_TEXT_CENTERED);
     nk_label(ctx, "Enemy player chams", NK_TEXT_CENTERED);
     nk_layout_row_dynamic(ctx, COLOR_PICKER_H, 2);
-    COLOR_PICKER(settings.col_chams_friend);
+    COLOR_PICKER(settings.col_chams_tmate);
     COLOR_PICKER(settings.col_chams_enemy);
 
     /* Misc colors */

@@ -22,9 +22,9 @@ enum ESettingsRage {
 };
 
 enum ESettingsFriendly {
-    SETT_FRIEND = 1,
-    SETT_ENEMY  = 2,
-    SETT_ALL    = 3,
+    SETT_TMATE = 1,
+    SETT_ENEMY = 2,
+    SETT_ALL   = 3,
 };
 
 enum ESettingsBuildings {
@@ -144,17 +144,17 @@ typedef struct {
     struct nk_colorf col_team_red;
     struct nk_colorf col_team_blu;
     struct nk_colorf col_esp_steam_friend;
-    struct nk_colorf col_esp_friend;
+    struct nk_colorf col_esp_tmate;
     struct nk_colorf col_esp_enemy;
     struct nk_colorf col_esp_player_cond;
-    struct nk_colorf col_esp_enemy_build;
-    struct nk_colorf col_esp_friend_build;
-    struct nk_colorf col_esp_sticky_friend;
+    struct nk_colorf col_esp_build_tmate;
+    struct nk_colorf col_esp_build_enemy;
+    struct nk_colorf col_esp_sticky_tmate;
     struct nk_colorf col_esp_sticky_enemy;
     struct nk_colorf col_esp_ammobox;
     struct nk_colorf col_esp_healthpack;
 
-    struct nk_colorf col_chams_friend;
+    struct nk_colorf col_chams_tmate;
     struct nk_colorf col_chams_enemy;
     struct nk_colorf col_chams_local;
     struct nk_colorf col_chams_weapon;
