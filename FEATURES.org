@@ -101,7 +101,7 @@ The cheat currently has the following features:
 
 * Notes
 - All the "Player" settings also apply to MvM bots.
-- The degree threshold setting changes the ammount of degrees away from the
+- The degree threshold setting changes the amount of degrees away from the
   target that the cheat will consider as valid. This is used with smoothing to
   shoot a bit before reaching the target angle.
 - Currently the menu has no "Keybinds" option, so if you want to change the
