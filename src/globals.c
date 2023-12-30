@@ -390,7 +390,7 @@ void cache_update(void) {
         }
 
         /* Then other entities */
-        const int last_entity = MIN((int)LENGTH(g.ents) - 1, g.MaxEntities);
+        const int last_entity = MIN(MAX_ENTITIES, g.MaxEntities);
         for (int i = g.MaxClients + 1; i < last_entity; i++) {
             Entity* ent      = METHOD_ARGS(i_entitylist, GetClientEntity, i);
             Networkable* net = GetNetworkable(ent);

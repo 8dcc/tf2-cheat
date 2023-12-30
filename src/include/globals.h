@@ -165,7 +165,7 @@ typedef struct {
     Weapon* localweapon;
     /* NOTE: Only stores non-null and non-dormant entities. For players, also
      * disards dead players. See cache_update() */
-    Entity* ents[2049];
+    Entity* ents[MAX_ENTITIES];
 
     /* Updated in EngineVGui::Paint() -> spectator_list() */
     bool spectated_1st;

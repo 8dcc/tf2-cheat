@@ -4,10 +4,13 @@
 /* NOTE: This file is included from sdk.h and depends on its declarations */
 /* clang-format off */
 
+/*----------------------------------------------------------------------------*/
+
 /* Used for CInput.m_pCommands (for crithack) */
 #define MULTIPLAYER_BACKUP 90
 
-/*----------------------------------------------------------------------------*/
+/* Used as a compile-time size, g.MaxEntities should be used when possible. */
+#define MAX_ENTITIES 2048
 
 #define TEAM_RED 2
 #define TEAM_BLU 3
