@@ -47,8 +47,8 @@ DECL_HOOK_EXTERN(bool, CreateMove, ClientMode*, float, usercmd_t*);
 DECL_HOOK_EXTERN(void, OverrideView, ClientMode*, ViewSetup*);
 DECL_HOOK_EXTERN(void, Paint, EngineVGui*, uint32_t);
 DECL_HOOK_EXTERN(void, PaintTraverse, IPanel*, VPanel, bool, bool);
-DECL_HOOK_EXTERN(void, DrawModelExecute, ModelRender*, const DrawModelState_t*,
-                 const ModelRenderInfo_t*, matrix3x4_t*);
+DECL_HOOK_EXTERN(void, DrawModelExecute, ModelRender*, DrawModelState_t*,
+                 ModelRenderInfo_t*, matrix3x4_t*);
 DECL_HOOK_EXTERN(void, RunCommand, IPrediction*, Entity*, usercmd_t*,
                  MoveHelper*);
 DECL_HOOK_EXTERN(usercmd_t*, GetUserCmd, CInput*, int);

@@ -453,8 +453,8 @@ typedef struct {
     void (*ForcedMaterialOverride)(ModelRender*, IMaterial* newMaterial,
                                    int nOverrideType); /* 1 */
     PAD(4 * 17);
-    void (*DrawModelExecute)(ModelRender*, const DrawModelState_t* state,
-                             const ModelRenderInfo_t* pInfo,
+    void (*DrawModelExecute)(ModelRender*, DrawModelState_t* state,
+                             ModelRenderInfo_t* pInfo,
                              matrix3x4_t* pCustomBoneToWorld); /* 19 */
 } VMT_ModelRender;
 

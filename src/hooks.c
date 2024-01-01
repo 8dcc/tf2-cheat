@@ -261,9 +261,12 @@ void h_PaintTraverse(IPanel* thisptr, VPanel panel, bool forcerepaint,
 
 /*----------------------------------------------------------------------------*/
 
-void h_DrawModelExecute(ModelRender* thisptr, const DrawModelState_t* state,
-                        const ModelRenderInfo_t* pInfo,
+void h_DrawModelExecute(ModelRender* thisptr, DrawModelState_t* state,
+                        ModelRenderInfo_t* pInfo,
                         matrix3x4_t* pCustomBoneToWorld) {
+    if (settings.ps1_visuals)
+        state->m_lod = 5;
+
     if (settings.clean_screenshots && METHOD(i_engine, IsTakingScreenshot)) {
         ORIGINAL(DrawModelExecute, thisptr, state, pInfo, pCustomBoneToWorld);
         return;
