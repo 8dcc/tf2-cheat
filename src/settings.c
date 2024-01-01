@@ -34,13 +34,6 @@ Settings settings = {
     .esp_ammobox               = false,
     .esp_healthpack            = false,
 
-    .chams_player                = SETT_OFF,
-    .chams_player_use_team_color = false,
-    .chams_ignorez               = false,
-    .chams_local                 = false,
-    .chams_weapon                = false,
-    .chams_hand                  = false,
-
     /* Aim */
     .aim_target_steam_friends = false,
     .aim_target_invisible     = false,
@@ -73,7 +66,15 @@ Settings settings = {
     .automedigun_switch_time = 1.f,
 
     /* Visuals */
+    .chams_player                = SETT_OFF,
+    .chams_player_use_team_color = false,
+    .chams_ignorez               = false,
+    .chams_local                 = false,
+    .chams_weapon                = false,
+    .chams_hand                  = false,
+
     .remove_scope        = false,
+    .ps1_visuals         = false,
     .custom_fov          = false,
     .custom_fov_deg      = 90.f,
     .custom_fov_scoped   = false,
@@ -204,6 +205,7 @@ void save_config(const char* filename) {
 
     /* Visuals */
     JSON_SETTINGS_WRITE_INT(json_cfg, remove_scope);
+    JSON_SETTINGS_WRITE_INT(json_cfg, ps1_visuals);
     JSON_SETTINGS_WRITE_INT(json_cfg, custom_fov);
     JSON_SETTINGS_WRITE_FLOAT(json_cfg, custom_fov_deg);
     JSON_SETTINGS_WRITE_INT(json_cfg, custom_fov_scoped);
@@ -387,6 +389,7 @@ void load_config(const char* filename) {
 
     /* Visuals */
     JSON_SETTINGS_READ_INT(json_cfg, remove_scope);
+    JSON_SETTINGS_READ_INT(json_cfg, ps1_visuals);
     JSON_SETTINGS_READ_INT(json_cfg, custom_fov);
     JSON_SETTINGS_READ_FLOAT(json_cfg, custom_fov_deg);
     JSON_SETTINGS_READ_INT(json_cfg, custom_fov_scoped);

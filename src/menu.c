@@ -289,6 +289,7 @@ static inline void tab_visuals(void) {
     nk_layout_row_dynamic(ctx, 15, 1);
 
     nk_checkbox_label(ctx, "Remove scope overlay", &settings.remove_scope);
+    nk_checkbox_label(ctx, "Join the PS1 beta", &settings.ps1_visuals);
 
     nk_layout_row_dynamic(ctx, 8, 1);
     nk_spacing(ctx, 0); /* ----------------------------  */

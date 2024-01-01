@@ -66,13 +66,6 @@ typedef struct {
     int esp_ammobox;
     int esp_healthpack;
 
-    int chams_player;
-    int chams_player_use_team_color;
-    int chams_ignorez;
-    int chams_local;
-    int chams_weapon;
-    int chams_hand;
-
     /* Aim */
     int aim_target_steam_friends;
     int aim_target_invisible;
@@ -105,7 +98,15 @@ typedef struct {
     float automedigun_switch_time;
 
     /* Visuals */
+    int chams_player;
+    int chams_player_use_team_color;
+    int chams_ignorez;
+    int chams_local;
+    int chams_weapon;
+    int chams_hand;
+
     int remove_scope;
+    int ps1_visuals;
     int custom_fov;
     float custom_fov_deg;
     int custom_fov_scoped;
