@@ -1,3 +1,3 @@
-# Don't detect libs in language detection
-/src/dependencies/cJSON/* linguist-detectable=false
-/src/dependencies/nuklear/* linguist-detectable=false
+# Don't detect libs in GitHub's language detection
+/src/dependencies/cJSON/** linguist-detectable=false
+/src/dependencies/nuklear/** linguist-detectable=false
