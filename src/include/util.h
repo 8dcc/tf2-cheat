@@ -30,9 +30,9 @@
 /* Location of address + Size of offset + Offset */
 #define RELATIVE2ABSOLUTE(ADDR) (void*)((void*)(ADDR) + 4 + *(uint32_t*)(ADDR))
 
-/* Offset from dlopen() handler */
-#define GET_OFFSET(HANDLER, OFFSET) \
-    ((void*)(((struct link_map*)HANDLER)->l_addr) + OFFSET)
+/* Offset from dlopen() handle */
+#define GET_OFFSET(HANDLE, OFFSET) \
+    ((void*)(((struct link_map*)HANDLE)->l_addr) + OFFSET)
 
 #define LENGTH(ARR) (sizeof(ARR) / sizeof(ARR[0]))
 

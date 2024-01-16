@@ -46,7 +46,7 @@ static inline bool IsMedigunHealing(Weapon* w) {
     return *(bool*)((uint32_t)w + offset);
 }
 
-static inline CBaseHandle GetMedigunHealingHandler(Weapon* w) {
+static inline CBaseHandle GetMedigunHealingHandle(Weapon* w) {
     /* CWeaponMedigun->m_hHealingTarget */
     const size_t offset = 0xC28;
     return *(CBaseHandle*)((uint32_t)w + offset);

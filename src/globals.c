@@ -9,18 +9,18 @@
 #define SWAPWINDOW_OFFSET 0xFD648
 #define POLLEVENT_OFFSET  0xFCF64
 
-#define GET_HANDLER(VAR, STR)                         \
+#define GET_HANDLE(VAR, STR)                          \
     void* VAR = dlopen(STR, RTLD_LAZY | RTLD_NOLOAD); \
     if (!VAR) {                                       \
         ERR("Can't open " #VAR);                      \
         return false;                                 \
     }
 
-#define GET_INTERFACE(HANDLER, VAR, STR) \
-    VAR = get_interface(HANDLER, STR);   \
-    if (!VAR || !VAR->vmt) {             \
-        ERR("Can't load " #VAR);         \
-        return false;                    \
+#define GET_INTERFACE(HANDLE, VAR, STR) \
+    VAR = get_interface(HANDLE, STR);   \
+    if (!VAR || !VAR->vmt) {            \
+        ERR("Can't load " #VAR);        \
+        return false;                   \
     }
 
 #define GET_SIGNATURE(VAR, MODULE, SIG)            \
@@ -152,14 +152,14 @@ static inline bool get_sigs(void) {
 /*----------------------------------------------------------------------------*/
 
 bool globals_init(void) {
-    /* Handlers */
-    GET_HANDLER(h_client, CLIENT_SO);
-    GET_HANDLER(h_engine, ENGINE_SO);
-    GET_HANDLER(h_matsurface, MATSURFACE_SO);
-    GET_HANDLER(h_vgui, VGUI_SO);
-    GET_HANDLER(h_materialsystem, MATERIALSYSTEM_SO);
-    GET_HANDLER(h_vstdlib, VSTDLIB_SO);
-    GET_HANDLER(h_sdl2, SDL_SO);
+    /* Handles */
+    GET_HANDLE(h_client, CLIENT_SO);
+    GET_HANDLE(h_engine, ENGINE_SO);
+    GET_HANDLE(h_matsurface, MATSURFACE_SO);
+    GET_HANDLE(h_vgui, VGUI_SO);
+    GET_HANDLE(h_materialsystem, MATERIALSYSTEM_SO);
+    GET_HANDLE(h_vstdlib, VSTDLIB_SO);
+    GET_HANDLE(h_sdl2, SDL_SO);
 
     /* SDL2 */
     SwapWindowPtr = (SwapWindow_t*)GET_OFFSET(h_sdl2, SWAPWINDOW_OFFSET);

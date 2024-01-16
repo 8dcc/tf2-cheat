@@ -8,7 +8,7 @@
 #include "util.h"
 #include "sdk.h"
 
-/* Module names for handlers */
+/* Module names for handles */
 #define CLIENT_SO         "./tf/bin/client.so"
 #define ENGINE_SO         "./bin/engine.so"
 #define MATSURFACE_SO     "./bin/vguimatsurface.so"
@@ -59,7 +59,7 @@
  *
  * prefix  | meaning
  * --------+-------------------------------
- * h_*     | handler ptr (global scope)
+ * h_*     | handle ptr (global scope)
  * i_*     | interface ptr (global scope)
  * oVMTi_* | original vmt pointer (will be replaced with our own vmt)
  * nVMTi_* | new vmt pointer allocated by us

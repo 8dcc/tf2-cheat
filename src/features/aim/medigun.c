@@ -99,11 +99,11 @@ void automedigun(usercmd_t* cmd) {
 
     if (is_medigun_healing) {
         /* Get index of currently healed player */
-        CBaseHandle healed_handler = GetMedigunHealingHandler(g.localweapon);
-        if (!CBaseHandle_IsValid(healed_handler))
+        CBaseHandle healed_handle = GetMedigunHealingHandle(g.localweapon);
+        if (!CBaseHandle_IsValid(healed_handle))
             return;
 
-        const int healed_idx = CBaseHandle_GetEntryIndex(healed_handler);
+        const int healed_idx = CBaseHandle_GetEntryIndex(healed_handle);
 
         /* If it's already the best possible target, hold it. Otherwise, release
          * attack so we can find the best target on the next tick. */
