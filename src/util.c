@@ -45,7 +45,7 @@ size_t vmt_size(void* vmt) {
 }
 
 /* "E0" -> 224 */
-uint8_t hex_to_byte(const char* hex) {
+static uint8_t hex_to_byte(const char* hex) {
     int ret = 0;
 
     /* Skip leading spaces, if any */

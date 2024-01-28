@@ -126,10 +126,23 @@ void aimbot(usercmd_t* cmd) {
         !attack_key(cmd))
         return;
 
-    /* For now just check if the current weapon is in a valid slot.
-     * TODO: Add projectile aimbot depending on weapon->GetDamageType */
+    /* Make sure the current weapon is in a valid slot. */
     const int wpn_slot = METHOD(g.localweapon, GetSlot);
     if (wpn_slot != WPN_SLOT_PRIMARY && wpn_slot != WPN_SLOT_SECONDARY)
+        return;
+
+    /* Exceptions depending on damage type.
+     * TODO: Add projectile aimbot. */
+    const int dmg_type = METHOD(g.localweapon, GetDamageType);
+    if (dmg_type & DMG_CLUB || dmg_type & DMG_SLASH)
+        return;
+
+    /* Exceptions in the primary and secondary slots */
+    const int wpn_id = METHOD(g.localweapon, GetWeaponId);
+    if (wpn_id == TF_WEAPON_BUILDER || wpn_id == TF_WEAPON_JAR ||
+        wpn_id == TF_WEAPON_JAR_MILK || wpn_id == TF_WEAPON_LUNCHBOX ||
+        wpn_id == TF_WEAPON_BUFF_ITEM || wpn_id == TF_WEAPON_THERMAL_THRUSTER ||
+        wpn_id == TF_WEAPON_GAS_PASSER)
         return;
 
     /* If we have "Aim on key" and the key is 0 (Mouse1), release the attack
@@ -154,7 +167,6 @@ void aimbot(usercmd_t* cmd) {
         return;
 
     /* Get constants once here */
-    const int wpn_id        = METHOD(g.localweapon, GetWeaponId);
     const bool we_can_shoot = can_shoot();
 
     /* If we are using a sniper, check scope stuff */
