@@ -20,7 +20,7 @@ Arch-based distros:
 #+begin_src bash
 # Enable the [multilib] repository in /etc/pacman.conf, then pacman should pull
 # the 32-bit gcc libraries.
-$ sudo pacman -S lib32-sdl lib32-glew
+$ sudo pacman -S lib32-glibc lib32-sdl lib32-glew
 #+end_src
 
 Debian-based distros:
