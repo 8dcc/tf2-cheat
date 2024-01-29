@@ -415,18 +415,15 @@ uint32_t hash_str(const char* str) {
 
 /*----------------------------------------------------------------------------*/
 
-#define PAGE_MASK          (~(PAGE_SZ - 1))
-#define PAGE_ALIGN(x)      ((x + PAGE_SZ - 1) & PAGE_MASK)
-#define PAGE_ALIGN_DOWN(x) (PAGE_ALIGN(x) - PAGE_SZ)
-
 bool protect_addr(void* ptr, int new_flags) {
-    int PAGE_SZ = getpagesize();
-    void* p     = (void*)PAGE_ALIGN_DOWN((uint32_t)ptr);
+    long page_size      = sysconf(_SC_PAGESIZE);
+    long page_mask      = ~(page_size - 1);
+    uintptr_t next_page = ((uintptr_t)ptr + page_size - 1) & page_mask;
+    uintptr_t prev_page = next_page - page_size;
+    void* page          = (void*)prev_page;
 
-    if (mprotect(p, PAGE_SZ, new_flags) == -1) {
-        ERR("Error protecting %p", ptr);
+    if (mprotect(page, page_size, new_flags) == -1)
         return false;
-    }
 
     return true;
 }
