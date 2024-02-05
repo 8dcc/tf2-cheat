@@ -1,16 +1,26 @@
-
 #include <stdbool.h>
 #include <stdio.h>
+#define __USE_GNU
 #include <dlfcn.h>
 #include "include/main.h"
 #include "include/globals.h"
 #include "include/hooks.h"
 
-static bool loaded = false;
+static bool loaded                  = false;
+static const char* library_filename = "";
 
 __attribute__((constructor)) /* Entry point when injected */
 void load(void) {
     printf("Enoch injected!\n");
+
+    /* Get library filename for self_unload() */
+    Dl_info dl_info;
+    if (dladdr((void*)load, &dl_info) != 0) {
+        library_filename = dl_info.dli_fname;
+        // printf("Enoch library path: %s", library_filename);
+    } else {
+        ERR("Warning: Couldn't get library_filename, self_unload() will fail!");
+    }
 
     if (!globals_init()) {
         ERR("Error loading globals, aborting");
@@ -46,9 +56,10 @@ void unload() {
 }
 
 void self_unload(void) {
-    /* FIXME: I think this function always crashes because it is looking for our
-     * lib inside the game's foler. Find a way of adding absolute path here? */
-    void* self = dlopen("libenoch.so", RTLD_LAZY | RTLD_NOLOAD);
+    if (!library_filename || strcmp(library_filename, ""))
+        return;
+
+    void* self = dlopen(library_filename, RTLD_LAZY | RTLD_NOLOAD);
     if (!self)
         return;
 
