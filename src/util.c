@@ -7,6 +7,9 @@
 #include <unistd.h>   /* getpagesize */
 #include <sys/mman.h> /* mprotect */
 
+#define __USE_GNU
+#include <dlfcn.h>
+
 #include "include/sdk.h"
 #include "include/util.h"
 #include "include/math.h"

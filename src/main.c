@@ -56,7 +56,7 @@ void unload() {
 }
 
 void self_unload(void) {
-    if (!library_filename || strcmp(library_filename, ""))
+    if (!library_filename || strcmp(library_filename, "") == 0)
         return;
 
     void* self = dlopen(library_filename, RTLD_LAZY | RTLD_NOLOAD);
