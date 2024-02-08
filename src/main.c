@@ -34,9 +34,6 @@ void load(void) {
         ERR("Error loading hooks, aborting");
         self_unload();
     }
-
-    // DELME
-    self_unload();
 }
 
 __attribute__((destructor)) /* Entry point when unloaded */
