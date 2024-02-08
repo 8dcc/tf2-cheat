@@ -75,13 +75,10 @@ elif [[ "$1" == "debug" ]]; then
    gdb -n -q                                               \
         -ex "attach $pid"                                  \
         -ex "set \$dlopen = (void* (*)(char*, int))dlopen" \
-        -ex "set \$dlclose = (int (*)(void*))dlclose"      \
         -ex "set \$dlerror =  (char* (*)(void))dlerror"    \
         -ex "call \$dlopen(\"$tmp_libpath\", 2)"           \
         -ex "call \$dlerror()"                             \
         -ex "continue" # Comment this line for manual debug
-
-    set +x
 
     echo -e "\nEnoch loaded. Unload cheat using:"
     echo -e "$0 unload $tmp_libpath"
@@ -115,7 +112,6 @@ else
         gdb -n -q -batch                                       \
             -ex "attach $pid"                                  \
             -ex "set \$dlopen = (void* (*)(char*, int))dlopen" \
-            -ex "set \$dlclose = (int (*)(void*))dlclose"      \
             -ex "set \$dlerror =  (char* (*)(void))dlerror"    \
             -ex "call \$dlopen(\"$tmp_libpath\", 2)"           \
             -ex "call \$dlerror()"                             \
@@ -123,11 +119,11 @@ else
             -ex "quit"
     fi
 
-    set +x
-
     echo -e "\nEnoch loaded. Unload cheat using:"
     echo -e "$0 unload $tmp_libpath"
 
     rm "$tmp_libpath"
     echo "$tmp_libpath" > "$old_tmp_libpath_txt"
 fi
+
+set +x
