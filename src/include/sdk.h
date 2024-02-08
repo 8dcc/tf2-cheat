@@ -314,9 +314,9 @@ struct EngineClient {
 
 typedef struct {
     PAD(4 * 3);
-    Entity* (*GetClientEntity)(EntityList*, int entnum); /* 4 */
+    Entity* (*GetClientEntity)(EntityList*, int entnum); /* 3 */
     PAD(4 * 4);
-    int (*GetMaxEntities)(EntityList*); /* 9 */
+    int (*GetMaxEntities)(EntityList*); /* 8 */
 } VMT_EntityList;
 
 struct EntityList {
