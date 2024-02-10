@@ -91,7 +91,9 @@ void autorocketjump(usercmd_t* cmd) {
         !(cmd->buttons & IN_ATTACK2) || !(g.localplayer->flags & FL_ONGROUND))
         return;
 
-    if (METHOD(g.localweapon, GetWeaponId) != TF_WEAPON_ROCKETLAUNCHER)
+    const int wpn_id = METHOD(g.localweapon, GetWeaponId);
+    if (wpn_id != TF_WEAPON_ROCKETLAUNCHER &&
+        wpn_id != TF_WEAPON_ROCKETLAUNCHER_DIRECTHIT)
         return;
 
     if (!can_shoot())
