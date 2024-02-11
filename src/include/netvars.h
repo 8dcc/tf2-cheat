@@ -32,4 +32,8 @@ uint32_t netvars_get_offset_recursive(struct hashmap* netvars, int amount, ...);
     NETVAR(amount, __VA_ARGS__)                \
     return *(type*)((uint32_t)self + netvar_offset)
 
+#define NETVAR_SET(self, type, value, amount, ...) \
+    NETVAR(amount, __VA_ARGS__)                    \
+    *(type*)((uint32_t)self + netvar_offset) = value
+
 #endif /* NETVARS_H_ */
