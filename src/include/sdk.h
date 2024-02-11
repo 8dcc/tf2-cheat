@@ -130,6 +130,69 @@ typedef struct {
     VMatrix m_ViewToProjection;
 } ViewSetup;
 
+typedef enum {
+    INT = 0,
+    FLOAT,
+    VECTOR,
+    VECTOR2D,
+    STRING,
+    ARRAY,
+    DATATABLE,
+    INT64,
+    SENDPROPTYPEMAX
+} SendPropType;
+
+typedef struct DataVariant_s { /* struct unions 4ever */
+    union {
+        float Float;
+        long Int;
+        char* String;
+        void* Data;
+        float Vector[3];
+        int64_t Int64;
+    };
+
+    SendPropType type;
+} DataVariant;
+
+typedef struct RecvProp_s RecvProp;
+typedef struct RecvTable_s {
+    struct RecvProp_s* props;
+    int propsCount;
+    void* decoder;
+    char* tableName;
+    bool initialized;
+    bool inMainList;
+} RecvTable;
+
+typedef struct RecvProp_s {
+    char* varName;
+    SendPropType recvType;
+    int flags;
+    int stringBufferSize;
+    bool insideArray;
+    const void* extraData;
+    RecvProp* arrayProp;
+    void* arrayLengthProxyFn;
+    void* proxyFn;
+    void* dataTableProxyFn;
+    RecvTable* dataTable;
+    int offset;
+    int elementStride;
+    int elements;
+    const char* parentArrayPropName;
+} RecvProp;
+
+typedef struct ClientClass_s {
+    void* CreateClientClassFn;
+    void* CreateEventFn;
+    char* network_name;
+    RecvTable* recv_table;
+    struct ClientClass_s* next;
+    int class_id;
+    const char* map_class_name;
+} ClientClass;
+
 typedef struct {
     VectorAligned m_Start;
     VectorAligned m_Delta;
@@ -271,9 +334,10 @@ typedef struct {
 
 typedef struct {
     PAD(4 * 6);
-    void (*LevelInitPostEntity)(BaseClient*); /* 6 */
-    void (*LevelShutdown)(BaseClient*);       /* 7 */
-    PAD(4 * 2);
+    void (*LevelInitPostEntity)(BaseClient*);           /* 6 */
+    void (*LevelShutdown)(BaseClient*);                 /* 7 */
+    ClientClass* (*GetAllClasses)(BaseClient* thisptr); /* 8 */
+    PAD(4 * 1);
     void (*HudProcessInput)(BaseClient*, bool bActive); /* 10 */
     void (*HudUpdate)(BaseClient*, bool bActive);       /* 11 */
     PAD(4 * 2);

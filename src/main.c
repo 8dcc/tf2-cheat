@@ -1,3 +1,4 @@
+#include "include/netvars.h"
 #include <stdbool.h>
 #include <stdio.h>
 #define __USE_GNU
@@ -41,6 +42,10 @@ void unload() {
     if (globals_loaded && !resore_vtables()) {
         ERR("Error restoring vtables, aborting");
         return;
+    }
+
+    if (g_netvars) {
+        netvars_free(g_netvars);
     }
 
     if (hooks_loaded && !hooks_restore()) {

@@ -54,13 +54,14 @@ void bhop(usercmd_t* cmd) {
         return;
 
     /* Don't do anything in water */
-    if (g.localplayer->flags & FL_INWATER || g.localplayer->flags & FL_SWIM ||
+    int localplayer_flags = GetFlags(g.localplayer);
+    if (localplayer_flags & FL_INWATER || localplayer_flags & FL_SWIM ||
         g.localplayer->m_nWaterLevel > WL_Feet)
         return;
 
     static bool was_jumping = false;
     const bool is_jumping   = (cmd->buttons & IN_JUMP) != 0;
-    const bool is_on_ground = (g.localplayer->flags & FL_ONGROUND) != 0;
+    const bool is_on_ground = (localplayer_flags & FL_ONGROUND) != 0;
 
     /* NOTE: We need `was_jumping' for scout's double-jump */
     if (!is_on_ground && was_jumping) {

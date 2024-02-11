@@ -4,8 +4,8 @@ CFLAGS=-Wall -Wextra -Ofast -m32 -fPIC
 LDFLAGS=-lm -lSDL2 -lGLEW
 INJECTOR_FLAGS=
 
-MAIN_OBJS=main.c.o sdk.c.o globals.c.o hooks.c.o util.c.o settings.c.o menu.c.o
-DEPS_OBJS=cJSON/cJSON.c.o
+MAIN_OBJS=main.c.o sdk.c.o globals.c.o hooks.c.o util.c.o settings.c.o menu.c.o netvars.c.o
+DEPS_OBJS=cJSON/cJSON.c.o hashmap/hashmap.c.o
 FEATURES_OBJS=esp.c.o chams.c.o aim/aimbot.c.o aim/meleebot.c.o aim/medigun.c.o antiaim.c.o movement.c.o misc.c.o visuals.c.o prediction.c.o auto_detonate_stickies.c.o
 
 OBJS=$(addprefix obj/, $(MAIN_OBJS)) \

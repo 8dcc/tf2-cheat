@@ -3,6 +3,12 @@
 
 /* NOTE: This file is included from sdk.h and depends on its declarations */
 
+#include <stdlib.h>
+#include <stddef.h>
+#include <stdio.h>
+
+#include "../netvars.h"
+
 #define MAX_PLAYER_NAME_LENGTH 32
 #define SIGNED_GUID_LEN        32
 #define MAX_CUSTOM_FILES       4
@@ -38,13 +44,6 @@ typedef struct {
 struct Collideable {
     VMT_Collideable* vmt;
 };
-
-typedef struct {
-    PAD(0x8);
-    const char* network_name;
-    PAD(0x8);
-    int class_id; /* enum ETFClientClass */
-} ClientClass;
 
 typedef struct {
     PAD(4 * 2);
@@ -195,6 +194,28 @@ static inline int GetMoveType(Entity* ent) {
     /* Got the offset from the top of CBaseEntity::VPhysicsUpdate() */
     const int offset = 0x194;
     return *(int*)((uint32_t)ent + offset);
+}
+
+static inline int GetFlags(Entity* ent) {
+    /* TODO: Make and use a DYNVAR_RETURN macro simillar to potassium's
+     * https://github.com/icantstandpeople/potassium/blob/master/CNetVars.h
+     */
+    static node_t* netvar = NULL;
+    if (!netvar) {
+        node_t* netvar_baseplayer = NULL;
+        if (netvars_get(g_netvars, "DT_BasePlayer", &netvar_baseplayer)) {
+            /* go deeper */
+            if (!netvar_baseplayer->nodes ||
+                !netvars_get(netvar_baseplayer->nodes, "m_fFlags", &netvar)) {
+                printf("failed to get netvar DT_BasePlayer->m_fFlags\n");
+                exit(1);
+            }
+        } else {
+            printf("failed to get netvar DT_BasePlayer\n");
+            exit(1);
+        }
+    }
+    return *(int*)((uint32_t)ent + netvar->offset);
 }
 
 /* NOTE: Caller should check if `ent' is a CTFGrenadePipebombProjectile */

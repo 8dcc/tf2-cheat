@@ -2,8 +2,10 @@
 #include <stdio.h>
 #include <dlfcn.h>
 #include <sys/mman.h> /* PROT_* */
+#include "dependencies/hashmap/hashmap.h"
 #include "include/math.h"
 #include "include/globals.h"
+#include "include/netvars.h"
 
 /* See wiki */
 #define SWAPWINDOW_OFFSET 0xFD648
@@ -71,6 +73,8 @@ DECL_INTF(CInput, input);
 DECL_INTF(ClientMode, clientmode);
 DECL_CLASS(CClientState, clientstate);
 DECL_CLASS(CGlobalVars, globalvars);
+
+struct hashmap* g_netvars;
 
 /*----------------------------------------------------------------------------*/
 
@@ -220,6 +224,12 @@ bool globals_init(void) {
     /* Individual functions/globals from signatures */
     if (!get_sigs())
         return false;
+
+    /* Initialize global netvars */
+    g_netvars = netvars_init();
+    if (!g_netvars)
+        return false;
+    // netvars_dump(g_netvars);
 
     /* Initialize global cache */
     cache_reset();
