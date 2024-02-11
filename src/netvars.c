@@ -1,4 +1,5 @@
 #include "include/netvars.h"
+#include <stdarg.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
@@ -138,4 +139,48 @@ bool netvars_get(struct hashmap* netvars, const char* name, node_t** netvar) {
         }
     }
     return false;
+}
+
+uint32_t va_netvars_get_offset_recursive(struct hashmap* netvars, int amount,
+                                         va_list argp) {
+    if (amount > 0) {
+        char* arg = va_arg(argp, char*);
+        amount -= 1;
+
+        node_t* netvar = NULL;
+        if (netvars_get(netvars, arg, &netvar) && netvar) {
+            if (amount > 0) {
+                if (netvar->nodes)
+                    return va_netvars_get_offset_recursive(netvar->nodes,
+                                                           amount, argp);
+                else {
+                    ERR("Can't go recursive on netvar %s, recursion amount: %d "
+                        "but nodes "
+                        "are null",
+                        arg, amount);
+                    exit(1);
+                }
+            } else {
+                return netvar->offset;
+            }
+        } else {
+            ERR("Failed to get netvar %s", arg);
+            exit(1);
+        }
+    }
+
+    return 0;
+}
+
+uint32_t netvars_get_offset_recursive(struct hashmap* netvars, int amount,
+                                      ...) {
+    va_list argp;
+    va_start(argp, amount);
+
+    const uint32_t result =
+      va_netvars_get_offset_recursive(netvars, amount, argp);
+
+    va_end(argp);
+
+    return result;
 }

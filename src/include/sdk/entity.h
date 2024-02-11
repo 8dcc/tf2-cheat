@@ -197,25 +197,7 @@ static inline int GetMoveType(Entity* ent) {
 }
 
 static inline int GetFlags(Entity* ent) {
-    /* TODO: Make and use a DYNVAR_RETURN macro simillar to potassium's
-     * https://github.com/icantstandpeople/potassium/blob/master/CNetVars.h
-     */
-    static node_t* netvar = NULL;
-    if (!netvar) {
-        node_t* netvar_baseplayer = NULL;
-        if (netvars_get(g_netvars, "DT_BasePlayer", &netvar_baseplayer)) {
-            /* go deeper */
-            if (!netvar_baseplayer->nodes ||
-                !netvars_get(netvar_baseplayer->nodes, "m_fFlags", &netvar)) {
-                printf("failed to get netvar DT_BasePlayer->m_fFlags\n");
-                exit(1);
-            }
-        } else {
-            printf("failed to get netvar DT_BasePlayer\n");
-            exit(1);
-        }
-    }
-    return *(int*)((uint32_t)ent + netvar->offset);
+    NETVAR_RETURN(ent, int, 2, "DT_BasePlayer", "m_fFlags");
 }
 
 /* NOTE: Caller should check if `ent' is a CTFGrenadePipebombProjectile */
