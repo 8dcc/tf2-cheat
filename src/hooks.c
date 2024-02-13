@@ -133,6 +133,10 @@ bool h_CreateMove(ClientMode* thisptr, float flInputSampleTime,
     if (ret)
         METHOD_ARGS(i_engine, SetViewAngles, &cmd->viewangles);
 
+    if (g.localplayer) {
+        GetFlags(g.localplayer);
+    }
+
     nopush();
     thirdperson();
     bhop(cmd);

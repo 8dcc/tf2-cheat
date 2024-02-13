@@ -196,10 +196,6 @@ static inline int GetMoveType(Entity* ent) {
     return *(int*)((uint32_t)ent + offset);
 }
 
-static inline int GetFlags(Entity* ent) {
-    NETVAR_RETURN(ent, int, 2, "DT_BasePlayer", "m_fFlags");
-}
-
 /* NOTE: Caller should check if `ent' is a CTFGrenadePipebombProjectile */
 static inline bool IsStickyBomb(Entity* ent) {
     /* CTFGrenadePipebombProjectile->m_iType */

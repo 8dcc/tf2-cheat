@@ -663,4 +663,6 @@ void TraceHull(vec3_t start, vec3_t end, vec3_t hull_min, vec3_t hull_max,
 
 bool IsBehindAndFacingTarget(Entity* owner, Entity* target);
 
+int GetFlags(Entity* ent);
+
 #endif /* SDK_H_ */

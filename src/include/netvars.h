@@ -1,6 +1,7 @@
 #ifndef NETVARS_H_
 #define NETVARS_H_
 
+#include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include "../dependencies/hashmap/hashmap.h"
@@ -24,6 +25,7 @@ uint32_t netvars_get_offset_recursive(struct hashmap* netvars, int amount, ...);
 #define NETVAR(amount, ...)                                               \
     static uint32_t netvar_offset = NULL;                                 \
     if (!netvar_offset) {                                                 \
+        printf("getting netvar\n");                                       \
         netvar_offset =                                                   \
           netvars_get_offset_recursive(g_netvars, amount, ##__VA_ARGS__); \
     }

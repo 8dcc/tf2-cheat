@@ -10,6 +10,8 @@
     hashmap_new(sizeof(node_t), 0, 0, 0, node_hash, node_compare, NULL, NULL)
 
 int node_compare(const void* a, const void* b, void* udata) {
+    /* Unused */
+    (void)udata;
     const node_t* na = a;
     const node_t* nb = b;
     return strcmp(na->name, nb->name);
