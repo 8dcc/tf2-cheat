@@ -3,6 +3,12 @@
 
 /* NOTE: This file is included from sdk.h and depends on its declarations */
 
+#include <stdlib.h>
+#include <stddef.h>
+#include <stdio.h>
+
+#include "../netvars.h"
+
 #define MAX_PLAYER_NAME_LENGTH 32
 #define SIGNED_GUID_LEN        32
 #define MAX_CUSTOM_FILES       4
@@ -38,13 +44,6 @@ typedef struct {
 struct Collideable {
     VMT_Collideable* vmt;
 };
-
-typedef struct {
-    PAD(0x8);
-    const char* network_name;
-    PAD(0x8);
-    int class_id; /* enum ETFClientClass */
-} ClientClass;
 
 typedef struct {
     PAD(4 * 2);
