@@ -24,11 +24,12 @@
         return false;                   \
     }
 
-#define GET_SIGNATURE(VAR, SIG)                    \
-    void* VAR = sigscan(SIG);                      \
-    if (!VAR) {                                    \
-        ERR("Couldn't match signature for " #SIG); \
-        return false;                              \
+/* Check out this advanced regex conversion */
+#define GET_SIGNATURE(VAR, MODULE, SIG)                \
+    void* VAR = sigscan_module("^.*" MODULE "$", SIG); \
+    if (!VAR) {                                        \
+        ERR("Couldn't match signature for " #SIG);     \
+        return false;                                  \
     }
 
 /*----------------------------------------------------------------------------*/
@@ -113,36 +114,37 @@ static inline bool get_sigs(void) {
      * in mind that RELATIVE2ABSOLUTE() dereferences the pointer once */
 
     /* MatSurface functions */
-    GET_SIGNATURE(pat_StartDrawing, SIG_StartDrawing);
+    GET_SIGNATURE(pat_StartDrawing, MATSURFACE_SO, SIG_StartDrawing);
     StartDrawing = RELATIVE2ABSOLUTE(pat_StartDrawing + 20);
 
-    GET_SIGNATURE(pat_FinishDrawing, SIG_FinishDrawing);
+    GET_SIGNATURE(pat_FinishDrawing, MATSURFACE_SO, SIG_FinishDrawing);
     FinishDrawing = RELATIVE2ABSOLUTE(pat_FinishDrawing + 13);
 
     /* CL_Move's bSendPacket
      * NOTE: We set PROT_WRITE since since we will change the pointer value */
-    GET_SIGNATURE(pat_bSendPacket, SIG_bSendPacket);
+    GET_SIGNATURE(pat_bSendPacket, ENGINE_SO, SIG_bSendPacket);
     bSendPacket = pat_bSendPacket + 1;
     protect_addr(bSendPacket, PROT_READ | PROT_WRITE | PROT_EXEC);
 
     /* ClientState
      * NOTE: We don't use RELATIVE2ABSOLUTE() since it's an absolute address */
-    GET_SIGNATURE(pat_ClientState, SIG_ClientState);
+    GET_SIGNATURE(pat_ClientState, ENGINE_SO, SIG_ClientState);
     c_clientstate = *(CClientState**)(pat_ClientState + 3);
 
     /* CBaseEntity::SetPredictionRandomSeed() */
-    GET_SIGNATURE(pat_SetPredictionRandomSeed, SIG_SetPredictionRandomSeed);
+    GET_SIGNATURE(pat_SetPredictionRandomSeed, CLIENT_SO,
+                  SIG_SetPredictionRandomSeed);
     SetPredictionRandomSeed =
       RELATIVE2ABSOLUTE(pat_SetPredictionRandomSeed + 19);
 
     /* MD5_PseudoRandom() */
-    GET_SIGNATURE(pat_MD5_PseudoRandom, SIG_MD5_PseudoRandom);
+    GET_SIGNATURE(pat_MD5_PseudoRandom, CLIENT_SO, SIG_MD5_PseudoRandom);
     MD5_PseudoRandom = RELATIVE2ABSOLUTE(pat_MD5_PseudoRandom + 18);
 
     /* IsPlayerOnSteamFriendsList()
      * NOTE: We don't use RELATIVE2ABSOLUTE() and we don't add any offset since
      * this is the signature to the function itself. */
-    GET_SIGNATURE(pat_IsPlayerOnSteamFriendsList,
+    GET_SIGNATURE(pat_IsPlayerOnSteamFriendsList, CLIENT_SO,
                   SIG_IsPlayerOnSteamFriendsList);
     IsPlayerOnSteamFriendsList = pat_IsPlayerOnSteamFriendsList;
 
