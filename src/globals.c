@@ -4,6 +4,7 @@
 #include <sys/mman.h> /* PROT_* */
 #include "include/math.h"
 #include "include/globals.h"
+#include "include/libsigscan.h"
 
 /* See wiki */
 #define SWAPWINDOW_OFFSET 0xFD648
@@ -23,11 +24,12 @@
         return false;                   \
     }
 
-#define GET_SIGNATURE(VAR, MODULE, SIG)            \
-    void* VAR = find_sig(MODULE, SIG);             \
-    if (!VAR) {                                    \
-        ERR("Couldn't match signature for " #SIG); \
-        return false;                              \
+/* Check out this advanced regex conversion */
+#define GET_SIGNATURE(VAR, MODULE, SIG)                \
+    void* VAR = sigscan_module("^.*" MODULE "$", SIG); \
+    if (!VAR) {                                        \
+        ERR("Couldn't match signature for " #SIG);     \
+        return false;                                  \
     }
 
 /*----------------------------------------------------------------------------*/

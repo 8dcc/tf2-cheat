@@ -50,7 +50,6 @@
 
 void* get_interface(void* handle, const char* name);
 size_t vmt_size(void* vmt);
-void* find_sig(const char* module, const byte* ida_pattern);
 
 bool can_shoot(void);
 bool melee_dealing_damage(usercmd_t* cmd);
