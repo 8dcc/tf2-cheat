@@ -7,6 +7,20 @@
 
 #+TOC: headlines 2
 
+* Deprecated. Note about =x86_64=.
+
+I decided to continue the development of the 64-bit version of the cheat
+privately. I don't want to spend time upgrading and fixing the whole project so
+people can use it for making bots or selling a cheat.
+
+I made this project because I enjoyed reversing the game in a platform with not
+much reference, and I enjoy the low level aspect of programming the
+cheat. The "cheating" part is not my main goal, and I publish this projects for
+people who might find the code itself useful. I believe the current state of the
+project serves that purpose.
+
+If you just want to cheat on TF2, search somewhere else.
+
 * Features
 
 You can see the full list of features in [[./FEATURES.org][FEATURES.org]].
