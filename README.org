@@ -21,6 +21,10 @@ project serves that purpose.
 
 If you just want to cheat on TF2, search somewhere else.
 
+#+begin_center
+[[rip.png]]
+#+end_center
+
 * Features
 
 You can see the full list of features in [[./FEATURES.org][FEATURES.org]].
