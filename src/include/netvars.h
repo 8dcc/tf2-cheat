@@ -4,37 +4,46 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
+
 #include "../dependencies/hashmap/hashmap.h"
+
+/* Get number of string __VA_ARGS__. If used somewhere else, we should move it
+ * to util.h */
+#define VA_ARGS_NUM(...) (sizeof((char*[]){ __VA_ARGS__ }) / sizeof(char*))
+
+#define NETVAR(...)                                            \
+    static int32_t netvar_offset = -1;                         \
+    if (netvar_offset < 0) {                                   \
+        netvar_offset = netvars_get_offset_recursive(          \
+          g_netvars, VA_ARGS_NUM(__VA_ARGS__), ##__VA_ARGS__); \
+    }
+
+#define NETVAR_RETURN(SELF, TYPE, ...) \
+    NETVAR(__VA_ARGS__)                \
+    return *(TYPE*)((uintptr_t)SELF + netvar_offset)
+
+#define NETVAR_SET(SELF, TYPE, VALUE, ...) \
+    NETVAR(__VA_ARGS__)                    \
+    *(TYPE*)((uintptr_t)SELF + netvar_offset) = VALUE
+
+/*----------------------------------------------------------------------------*/
 
 typedef struct {
     uint32_t offset;
     char* name;
-    struct hashmap* nodes;
+    Hashmap* nodes;
 } node_t;
 
-struct hashmap* netvars_init();
-void netvars_dump(struct hashmap* netvars);
-void netvars_free(struct hashmap* netvars);
-bool netvars_get(struct hashmap* netvars, const char* name, node_t** netvar);
+/*----------------------------------------------------------------------------*/
 
-/* TODO: Extern it inside global.h */
-extern struct hashmap* g_netvars;
+/* Defined in netvars.c */
+extern Hashmap* g_netvars;
 
-uint32_t netvars_get_offset_recursive(struct hashmap* netvars, int amount, ...);
+Hashmap* netvars_init();
+void netvars_dump(Hashmap* netvars);
+void netvars_free(Hashmap* netvars);
+bool netvars_get(Hashmap* netvars, const char* name, node_t** netvar);
 
-#define NETVAR(amount, ...)                                               \
-    static uint32_t netvar_offset = NULL;                                 \
-    if (!netvar_offset) {                                                 \
-        netvar_offset =                                                   \
-          netvars_get_offset_recursive(g_netvars, amount, ##__VA_ARGS__); \
-    }
-
-#define NETVAR_RETURN(self, type, amount, ...) \
-    NETVAR(amount, __VA_ARGS__)                \
-    return *(type*)((uint32_t)self + netvar_offset)
-
-#define NETVAR_SET(self, type, value, amount, ...) \
-    NETVAR(amount, __VA_ARGS__)                    \
-    *(type*)((uint32_t)self + netvar_offset) = value
+uint32_t netvars_get_offset_recursive(Hashmap* netvars, int amount, ...);
 
 #endif /* NETVARS_H_ */
