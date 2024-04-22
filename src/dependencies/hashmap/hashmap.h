@@ -10,6 +10,7 @@
 #include <stdint.h>
 
 struct hashmap;
+typedef struct hashmap Hashmap;
 
 struct hashmap* hashmap_new(
   size_t elsize, size_t cap, uint64_t seed0, uint64_t seed1,

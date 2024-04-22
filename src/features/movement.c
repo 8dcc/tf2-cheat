@@ -54,7 +54,7 @@ void bhop(usercmd_t* cmd) {
         return;
 
     /* Don't do anything in water */
-    int localplayer_flags = GetFlags(g.localplayer);
+    int localplayer_flags = Entity_GetFlags(g.localplayer);
     if (localplayer_flags & FL_INWATER || localplayer_flags & FL_SWIM ||
         g.localplayer->m_nWaterLevel > WL_Feet)
         return;

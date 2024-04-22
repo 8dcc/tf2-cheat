@@ -1,13 +1,12 @@
 #ifndef SDK_ENTITY_H_
 #define SDK_ENTITY_H_
 
-/* NOTE: This file is included from sdk.h and depends on its declarations */
+/* NOTE: This file is included from sdk.h and depends on its declarations.
+ * NOTE: The netvar.h header was included at the top of sdk.h */
 
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdio.h>
-
-#include "../netvars.h"
 
 #define MAX_PLAYER_NAME_LENGTH 32
 #define SIGNED_GUID_LEN        32
@@ -165,6 +164,11 @@ struct Entity {
     PAD(0x18);
     int nForceTauntCam; /* 0x1E04 */
 };
+
+/*----------------------------------------------------------------------------*/
+/* Defined in src/sdk.c */
+
+int Entity_GetFlags(Entity* ent);
 
 /*----------------------------------------------------------------------------*/
 

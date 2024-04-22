@@ -156,6 +156,9 @@ bool IsBehindAndFacingTarget(Entity* owner, Entity* target) {
     return true;
 }
 
-int GetFlags(Entity* ent) {
-    NETVAR_RETURN(ent, int, 2, "DT_BasePlayer", "m_fFlags");
+/*----------------------------------------------------------------------------*/
+
+/* TODO: Move to separate file? */
+int Entity_GetFlags(Entity* ent) {
+    NETVAR_RETURN(ent, int, "DT_BasePlayer", "m_fFlags");
 }
