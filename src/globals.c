@@ -74,8 +74,6 @@ DECL_INTF(ClientMode, clientmode);
 DECL_CLASS(CClientState, clientstate);
 DECL_CLASS(CGlobalVars, globalvars);
 
-struct hashmap* g_netvars;
-
 /*----------------------------------------------------------------------------*/
 
 /* See: https://github.com/8dcc/bms-cheat/wiki */
@@ -227,9 +225,10 @@ bool globals_init(void) {
 
     /* Initialize global netvars */
     g_netvars = netvars_init();
-    if (!g_netvars)
+    if (!g_netvars) {
+        ERR("Couldn't initialize netvars");
         return false;
-    // netvars_dump(g_netvars);
+    }
 
     /* Initialize global cache */
     cache_reset();

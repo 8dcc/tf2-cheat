@@ -44,9 +44,8 @@ void unload() {
         return;
     }
 
-    if (g_netvars) {
+    if (g_netvars != NULL)
         netvars_free(g_netvars);
-    }
 
     if (hooks_loaded && !hooks_restore()) {
         ERR("Error restoring hooks, aborting");

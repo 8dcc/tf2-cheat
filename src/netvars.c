@@ -9,6 +9,12 @@
 #define NODES_INIT \
     hashmap_new(sizeof(node_t), 0, 0, 0, node_hash, node_compare, NULL, NULL)
 
+/*----------------------------------------------------------------------------*/
+
+Hashmap* g_netvars;
+
+/*----------------------------------------------------------------------------*/
+
 int node_compare(const void* a, const void* b, void* udata) {
     /* Unused */
     (void)udata;
@@ -49,15 +55,11 @@ bool node_init(node_t* node, RecvTable* table, uint32_t offset) {
         node_new.name   = prop->varName;
         node_new.offset = prop_offset;
 
-        // printf("prop %d name %s offset %d\n", i, prop->varName, prop_offset);
-
         if (prop->recvType == DATATABLE && prop->dataTable) {
             node_new.nodes = NODES_INIT;
-            if (node_new.nodes) {
-                /*printf("Trying to initialize subnode %s\n",
-                       prop->dataTable->tableName);*/
+
+            if (node_new.nodes)
                 node_init(&node_new, prop->dataTable, prop_offset);
-            }
         }
 
         hashmap_set(node->nodes, &node_new);
@@ -66,8 +68,8 @@ bool node_init(node_t* node, RecvTable* table, uint32_t offset) {
     return true;
 }
 
-struct hashmap* netvars_init() {
-    struct hashmap* netvars = NODES_INIT;
+Hashmap* netvars_init() {
+    Hashmap* netvars = NODES_INIT;
     if (!netvars)
         return NULL;
 
@@ -76,20 +78,16 @@ struct hashmap* netvars_init() {
         if (client_class && client_class->recv_table) {
             node_t node;
             memset(&node, 0, sizeof(node_t));
-            /*printf("trying to initialize node %s\n",
-                   client_class->recv_table->tableName);*/
-            if (node_init(&node, client_class->recv_table, 0) == true) {
-                /*printf("node %s initialized succesfully\n",
-                       client_class->recv_table->tableName);*/
+
+            if (node_init(&node, client_class->recv_table, 0) == true)
                 hashmap_set(netvars, &node);
-            }
         }
     }
 
     return netvars;
 }
 
-void netvars_dump(struct hashmap* netvars) {
+void netvars_dump(Hashmap* netvars) {
     if (!netvars)
         return;
 
@@ -97,17 +95,18 @@ void netvars_dump(struct hashmap* netvars) {
     void* item;
     while (hashmap_iter(netvars, &iter, &item)) {
         const node_t* node = item;
+
         if (node->name)
             printf("%zu %s (%d)\n", iter, node->name, node->offset);
-        else {
+        else
             printf("%zu unnamed node (%d)\n", iter, node->offset);
-        }
+
         if (node->nodes)
             netvars_dump(node->nodes);
     }
 }
 
-void netvars_free(struct hashmap* netvars) {
+void netvars_free(Hashmap* netvars) {
     if (!netvars)
         return;
 
@@ -115,19 +114,15 @@ void netvars_free(struct hashmap* netvars) {
     void* item;
     while (hashmap_iter(netvars, &iter, &item)) {
         const node_t* node = item;
-        /*if (node->name)
-            printf("%zu Freeing node %s\n", iter, node->name);*/
-        if (node->nodes) {
-            /*printf("%zu node has %zu subnodes\n", iter,
-                   hashmap_count(node->nodes));*/
+
+        if (node->nodes)
             netvars_free(node->nodes);
-        }
     }
 
     hashmap_free(netvars);
 }
 
-bool netvars_get(struct hashmap* netvars, const char* name, node_t** netvar) {
+bool netvars_get(Hashmap* netvars, const char* name, node_t** netvar) {
     if (!netvars || !name)
         return false;
 
@@ -140,11 +135,12 @@ bool netvars_get(struct hashmap* netvars, const char* name, node_t** netvar) {
             return true;
         }
     }
+
     return false;
 }
 
-uint32_t va_netvars_get_offset_recursive(struct hashmap* netvars, int amount,
-                                         va_list argp) {
+static uint32_t va_netvars_get_offset_recursive(Hashmap* netvars, int amount,
+                                                va_list argp) {
     if (amount > 0) {
         char* arg = va_arg(argp, char*);
         amount -= 1;
@@ -152,13 +148,12 @@ uint32_t va_netvars_get_offset_recursive(struct hashmap* netvars, int amount,
         node_t* netvar = NULL;
         if (netvars_get(netvars, arg, &netvar) && netvar) {
             if (amount > 0) {
-                if (netvar->nodes)
+                if (netvar->nodes) {
                     return va_netvars_get_offset_recursive(netvar->nodes,
                                                            amount, argp);
-                else {
+                } else {
                     ERR("Can't go recursive on netvar %s, recursion amount: %d "
-                        "but nodes "
-                        "are null",
+                        "but nodes are null",
                         arg, amount);
                     exit(1);
                 }
@@ -174,8 +169,7 @@ uint32_t va_netvars_get_offset_recursive(struct hashmap* netvars, int amount,
     return 0;
 }
 
-uint32_t netvars_get_offset_recursive(struct hashmap* netvars, int amount,
-                                      ...) {
+uint32_t netvars_get_offset_recursive(Hashmap* netvars, int amount, ...) {
     va_list argp;
     va_start(argp, amount);
 
